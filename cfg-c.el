@@ -21,7 +21,6 @@
 (setq ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1))
 
 ;; ggtags settings
-(autoload 'ggtags-mode "gtags" "" t)
 (setq ggtags-global-ignore-case t)
 ;; let ggtags use split-window with is redefined by ecb mode
 ;;(setq ggtags-split-window-function 'split-window-below)
