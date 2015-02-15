@@ -1,4 +1,4 @@
-;; Time-stamp: <2015-02-14 Sat 20:45:44 kimi>
+;; Time-stamp: <2015-02-15 Sun 08:34:15 kimi>
 ;;==============================================================================
 ;; Global Key Settings
 ;;==============================================================================
@@ -66,8 +66,8 @@
 (define-key ctl-x-m-map "l" 'browse-kill-ring)
 
 ;; C-x r j ?x 打開常用文件
-(set-register ?e '(file . "~/kimim-emacs/emacs-config.el"))
-(set-register ?m '(file . "~/kimim-emacs/kimim.el"))
-(set-register ?o '(file . "~/kimim-emacs/org-config.el"))
-(set-register ?k '(file . "~/kimim-emacs/key-config.el"))
-(set-register ?c '(file . "~/kimim-emacs/c-config.el"))
+(set-register ?e '(file . "~/kimim-emacs/init.el"))
+(set-register ?m '(file . "~/kimim-emacs/cfg-kimim.el"))
+(set-register ?o '(file . "~/kimim-emacs/cfg-org.el"))
+(set-register ?k '(file . "~/kimim-emacs/cfg-keybinding.el"))
+(set-register ?c '(file . "~/kimim-emacs/cfg-c.el"))
