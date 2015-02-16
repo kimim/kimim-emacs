@@ -1,4 +1,3 @@
-;; Time-stamp: <2015-02-14 Sat 20:57:46 kimi>
 ;; self define functions
 (defun now () (interactive)
   (insert (shell-command-to-string "date")))

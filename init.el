@@ -1,12 +1,11 @@
-
-;; Time-stamp: <2015-02-14 Sat 21:06:33 kimi>
 (setq debug-on-error t)                 ; 当有问题出现显示错误信息
 ;;==============================================================================
 ;; System Environment and Path Settings
 ;;==============================================================================
 (setq cygwin-path "C:/cygwin/")
 (add-to-list 'load-path "~/kimim-emacs/")
-(add-to-list 'load-path "~/kimim-emacs/site-lisp/color-theme-kimim")
+(add-to-list 'load-path "~/kimim-emacs/site-lisp/")
+(add-to-list 'load-path "~/kimim-emacs/site-lisp/color-theme-kimim/")
 
 (add-to-list 'Info-default-directory-list "~/info")
 (add-to-list 'Info-default-directory-list (concat cygwin-path "usr/share/info"))

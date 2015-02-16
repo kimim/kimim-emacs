@@ -3,7 +3,7 @@
 ;;============================================================================
 
 ;; exporting format
-(load-file "~/kimim-emacs/site-lisp/ox-mediawiki.el")
+(load "ox-mediawiki.el")
 (load-file "~/.emacs.d/site-lisp/org-reveal/ox-reveal.el")
 (require 'ox-reveal)
 (require 'ox-odt)
@@ -99,9 +99,6 @@
                       ("@office" . ?o) ("@home" . ?h)
                       (:endgroup . nil)
                       ("@team" . ?t) ("@leader" . ?l)
-                      ;; team member tasks
-                      ("betty" . ?b) ("bill" . ?B) ("eric" . ?e) ("fox" . ?f)
-                      ("jacky" . ?j) ("javier" . ?J) ("jerry" . ?E) ("stock" . ?s) ("sven" . ?S) ("yoda" .?y)
                       ("risk" . ?k)
                       ("sync" . ?s)
                       ("reading" . ?r)
