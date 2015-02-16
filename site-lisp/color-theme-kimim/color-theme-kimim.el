@@ -52,6 +52,7 @@ Includes faces for font-lock, widget, custom, speedbar."
      (modeline-buffer-id ((t (:background "gainsboro" :foreground "blue4" :weight bold))))
      (modeline-mousable ((t (:background "gainsboro" :foreground "firebrick"))))
      (modeline-mousable-minor-mode ((t (:background "gainsboro" :foreground "green4"))))
+     (which-func  ((t (:background "gainsboro" :foreground "green4"))))
      (highlight ((t (:foreground nil :background "darkseagreen2"))))
      (bold ((t (:bold t))))
      (italic ((t (:italic t))))

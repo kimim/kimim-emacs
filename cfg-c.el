@@ -34,6 +34,7 @@
             ;;(yas-minor-mode 1)
             ;;(yas-load-directory "~/.emacs.d/snippets")
             (c-set-style "abb-c")
+            (hs-minor-mode t)
             ;;(c-toggle-auto-newline -1)
 			(c-toggle-auto-hungry-state 1)
             (which-function-mode 1)

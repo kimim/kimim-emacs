@@ -1,4 +1,3 @@
-;; Time-stamp: <2015-02-15 Sun 08:34:15 kimi>
 ;;==============================================================================
 ;; Global Key Settings
 ;;==============================================================================
@@ -48,6 +47,7 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 (global-set-key "\C-c=" 'get-file-line)
+(define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
 (define-key global-map "\M-." 'ggtags-find-tag-dwim)
 (global-set-key "\C-c\C-x\C-x" 'org-clock-in-last)
 (global-set-key "\C-c\C-x\C-i" 'org-clock-in)
