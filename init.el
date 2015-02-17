@@ -29,10 +29,11 @@
 (setq diary-file "~/.emacs.d/diary")
 (setq bookmark-default-file "~/.emacs.d/emacs.bmk")
 
+(require 'package)
+(require 'hideshow) ;; hs-toggle-hiding
 ;;==============================================================================
 ;; Initialize Packages
 ;;==============================================================================
-(require 'package)
 (setq package-user-dir "~/.emacs.d/elpa")
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("ELPA" . "http://tromey.com/elpa/")
@@ -195,6 +196,7 @@
       (append '(("\\.py\\'" . python-mode)
                 ("\\.css\\'" . css-mode)
                 ("\\.A\\w*\\'" . asm-mode)
+                ("\\.S\\'" . asm-mode)
                 ("\\.C\\w*\\'" . c-mode)
                 ("\\.md\\'" . markdown-mode)
                 ("\\.markdown\\'" . markdown-mode)
@@ -210,7 +212,6 @@
 ;; Load other configuration files
 ;;==============================================================================
 (load-file "~/.emacs.d/private.el")
-(load-file "~/.emacs.d/site-lisp/ESS/lisp/ess-site.el")
 (load "cfg-org.el")
 (load "cfg-gnus.el")
 (load "cfg-kimim.el")

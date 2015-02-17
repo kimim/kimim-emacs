@@ -28,6 +28,25 @@
                          (local-set-key "\C-c\C-f" 'ggtags-find-file)))
 ;(yas-global-mode 1)
 
+;; define new c variable symbol for thing-at-point, used in
+;; ggtags-find-tag-dwim
+
+;; TODO: how to my own ggtags-bounds-of-tag-function in c-mode only?
+(put 'c-variable 'end-op
+     (lambda ()
+       (re-search-forward "[A-Za-z0-9_]*" nil t)))
+
+(put 'c-variable 'beginning-op
+     (lambda ()
+       (if (re-search-backward "[^A-Za-z0-9_]" nil t)
+           (forward-char)
+         (goto-char (point-min)))))
+
+(defun my-c-mode-ggtags-hook()
+  (setq ggtags-bounds-of-tag-function
+        (lambda ()
+          (bounds-of-thing-at-point 'c-variable))))
+
 (add-hook 'c-mode-common-hook
 		  (lambda ()
             (ggtags-mode 1)

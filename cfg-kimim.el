@@ -162,7 +162,7 @@ This command will also do untabify."
   (untabify (point-min) (point-max)))
 
 (defun fold-long-comment-lines ()
-"This functions allows us to fold long comment lines
+  "This functions allows us to fold long comment lines
  automatically in programming modes. Quite handy."
 (interactive "p")
  (auto-fill-mode 1)
@@ -176,3 +176,10 @@ This command will also do untabify."
   (find-file (concat default-doc-path "/Notes/"
                      (format-time-string "%Y%m-")
                      (read-string (concat "Filename: " (format-time-string "%Y%m-"))) ".org")))
+
+;; (defun fsearch()
+;;   (interactive)
+;;   (re-search-forward "[A-Za-z0-9_]*" nil t))
+;; (defun bsearch()
+;;   (interactive)
+;;   (re-search-backward "[^A-Za-z0-9_]" nil t))
