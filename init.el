@@ -73,6 +73,7 @@
 (show-paren-mode 1)                     ; 高亮显示匹配的括号
 (global-hl-line-mode 1)                 ; 高亮當前行
 (setq fill-column 80)
+(setq inhibit-eol-conversion t)         ; 不要轉換 end-of-line style
 ;; emacs: ~/xxx/yyy/zzz.org
 ;; (setq frame-title-format
 ;;       '("" invocation-name ": "
@@ -98,6 +99,11 @@
 ;        (cursor-type . bar)
         (font . "Bitstream Vera Sans Mono-11")
         ))
+;; (setq default-frame-alist
+;;       '((top . 80) (left . 200) (width . 128) (height . 45)
+;; ;        (cursor-type . bar)
+;;         (font . "Monaco-10")
+;;         ))
 
 (load "color-theme-kimim.el")
 ;;==============================================================================
@@ -107,9 +113,9 @@
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
 (setq-default kill-whole-line t)        ; 在行首 C-k 时，同时删除该行。
 (setq require-final-newline t)          ; 存盘的时候，要求最后一个字符时换行符
-(setq-default tab-width 4)              ; 用space替换tab，tab长度为4
+(setq-default tab-width 8)              ; 用space替换tab，tab长度为4
 (setq tab-stop-list                     ; 当光标在行尾上下移动的时候保持在行尾
-      (number-sequence 4 120 4))
+      (number-sequence 8 120 8))
 (setq track-eol t)
 
 ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时

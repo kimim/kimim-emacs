@@ -3,7 +3,7 @@
 (require 'tempo)
 (setq tempo-interactive t)
 
-(defvar c-tempo-tags nil
+(defvar c-tempo-tagb nil
   "Tempo tags for C mode")
 (defvar c++-tempo-tags nil
   "Tempo tags for C++ mode")

@@ -1,4 +1,61 @@
 
+;; ============================================================================
+;; org for blog system
+;; ============================================================================
+(setq org-publish-project-alist
+      '(
+        ("org-blog-content"
+         ;; Path to your org files.
+         :base-directory "~/kimi.im/_notes"
+         :base-extension "org"
+         ;; Path to your jekyll project.
+         :publishing-directory "~/kimi.im/"
+         :recursive t
+         :publishing-function org-html-publish-to-html
+         :headline-levels 4
+         :section-numbers t
+         :html-extension "html"
+         :body-only t ;; Only export section between <body></body>
+         :with-toc nil
+         )
+        ("org-blog-static"
+         :base-directory "~//kimi.im/_notes/"
+         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php\\|svg"
+         :publishing-directory "~/kimi.im/"
+         :recursive t
+         :publishing-function org-publish-attachment)
+        ("blog" :components ("org-blog-content" "org-blog-static"))
+        ))
+
+(define-key org-mode-map (kbd "C-c p") (lambda ()
+                                         (interactive)
+                                         (org-publish-current-file)
+                                         (with-temp-buffer(dired "~/kimi.im/")
+                                                          (kimim/cyg)
+                                                          (kill-buffer))))
+(defun jekyll-post ()
+  "Post current buffer to kimi.im"
+  (interactive)
+  ;; get categories
+  ;; get buffer file name
+  (let ((category (jekyll-get-category))
+        (filename (file-name-nondirectory buffer-file-name))
+        newfilename)
+        ;; append date to the beginning of the file name
+    (setq newfilename (concat blog-base-dir "/" category "/" (format-time-string "%Y-%m-%d-") filename))
+    ;; mv the file to the categories folder
+    (rename-file buffer-file-name newfilename)
+    (switch-to-buffer (find-file-noselect newfilename))
+;;    (color-theme-initialize)
+;;    (color-theme-jekyll)
+    ;; execute org-publish-current-file
+    (org-publish-current-file)
+;;    (color-theme-eclipse)
+    ;; go to kimi.im folder and execute cyg command
+    (with-temp-buffer(dired "~/kimi.im/")
+                     (kimim/cyg)
+                     (kill-buffer))
+    ))
 
 (defun jekyll-tag ()
 "add new tags"
@@ -55,7 +112,6 @@ catergories and tags are generated from exisiting posts"
   (color-theme-initialize)
   (color-theme-jekyll)
   (org-open-file (org-html-export-to-html nil)))
-
 
 
 (defun color-theme-jekyll ()
