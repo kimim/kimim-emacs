@@ -114,9 +114,9 @@
 (setq-default kill-whole-line t)        ; 在行首 C-k 时，同时删除该行。
 (setq require-final-newline t)          ; 存盘的时候，要求最后一个字符时换行符
 (setq-default tab-width 8)              ; 用space替换tab，tab长度为4
-(setq tab-stop-list                     ; 当光标在行尾上下移动的时候保持在行尾
-      (number-sequence 8 120 8))
-(setq track-eol t)
+(setq tab-stop-list
+      (number-sequence 8 120 8))        ; 每次tab空格數
+(setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
 
 ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
 ;; 候，备份文件是复本，而不是原件。
@@ -171,6 +171,13 @@
 ;; Settings for dired mode
 ;;==============================================================================
 (require 'dired-x)
+(add-hook 'dired-mode-hook
+          (lambda ()
+            ;; Set dired-x buffer-local variables here.  For example:
+            (dired-omit-mode 1)
+            (setq dired-omit-localp t)
+            (setq dired-omit-files "NTUSER\\|ntuser\\|Cookies\\|AppData\\|Application\\|Contacts\\|Links\\|Intel\\|NetHood\\|PrintHood\\|Recent\\|Start\\|SendTo")
+            ))
 ;; Dired buffer 中列出文件时传递给 ls 的参数。加个 "l" 可以使大写的文
 ;; 件名在顶部，临时的改变可以用 C-u s。
 (setq dired-listing-switches "-avhl")
