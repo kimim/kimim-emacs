@@ -42,7 +42,7 @@
         (filename (file-name-nondirectory buffer-file-name))
         newfilename)
         ;; append date to the beginning of the file name
-    (setq newfilename (concat blog-base-dir "/" category "/" (format-time-string "%Y-%m-%d-") filename))
+    (setq newfilename (concat path-jekyll-base "/" category "/" (format-time-string "%Y-%m-%d-") filename))
     ;; mv the file to the categories folder
     (rename-file buffer-file-name newfilename)
     (switch-to-buffer (find-file-noselect newfilename))
@@ -95,7 +95,7 @@ catergories and tags are generated from exisiting posts"
 
 (defun jekyll ()
   (interactive)
-  (find-file (concat blog-draft-dir "/" (read-string "Filename: ") ".org"))
+  (find-file (concat path-jekyll-draft "/" (read-string "Filename: ") ".org"))
   (jekyll-header)
   (save-buffer)
   )
