@@ -56,6 +56,12 @@
 
 (define-key global-map (kbd "RET") 'newline-and-indent)
 
+;; key bindings
+(when (eq system-type 'darwin) ;; mac specific settings
+  (setq mac-option-modifier 'alt)
+  (setq mac-command-modifier 'meta)
+  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+  )
 
 (define-prefix-command 'ctl-x-m-map)
 ;; 定义了一个新的前缀，并且绑定到 C-x m

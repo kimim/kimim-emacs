@@ -38,7 +38,7 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("ELPA" . "http://tromey.com/elpa/")
                          ("elpy" . "http://jorgenschaefer.github.io/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ;;("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
 
@@ -55,7 +55,7 @@
 (set-terminal-coding-system 'gbk)
 (set-selection-coding-system 'utf-8)
 (set-clipboard-coding-system 'utf-16le)
-(set-w32-system-coding-system 'gbk)
+;;(set-w32-system-coding-system 'gbk)
 
 ;;==============================================================================
 ;; Apparance Settings
@@ -94,11 +94,20 @@
 (set-frame-font "Bitstream Vera Sans Mono-11")
 (set-fontset-font "fontset-default" 'han (font-spec :family "Microsoft Yahei":size 18))
 
-(setq default-frame-alist
-      '((top . 80) (left . 200) (width . 128) (height . 45)
-;        (cursor-type . bar)
-        (font . "Bitstream Vera Sans Mono-11")
-        ))
+
+(cond ((eq window-system 'w32)
+       (setq default-frame-alist
+             '((top . 80) (left . 200) (width . 128) (height . 45)
+                                        ;        (cursor-type . bar)
+               (font . "Bitstream Vera Sans Mono-11")
+               )))
+      ((eq window-system 'ns)
+       (setq default-frame-alist
+             '((top . 100) (left . 600) (width . 160) (height . 70)
+                                        ;        (cursor-type . bar)
+               (font . "Bitstream Vera Sans Mono-14")
+               ))))
+
 ;; (setq default-frame-alist
 ;;       '((top . 80) (left . 200) (width . 128) (height . 45)
 ;; ;        (cursor-type . bar)
@@ -224,11 +233,11 @@
 ;;==============================================================================
 ;; Load other configuration files
 ;;==============================================================================
-(load-file "~/.emacs.d/private.el")
+;;(load-file "~/.emacs.d/private.el")
 (load "cfg-org.el")
 (load "cfg-gnus.el")
 (load "cfg-kimim.el")
 (load "cfg-jekyll.el")
 (load "cfg-c.el")
-(load "cfg-python.el")
+;;(load "cfg-python.el")
 (load "cfg-keybinding.el")
