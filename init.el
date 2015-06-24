@@ -73,7 +73,7 @@
 (show-paren-mode 1)                     ; 高亮显示匹配的括号
 (global-hl-line-mode 1)                 ; 高亮當前行
 (setq fill-column 80)
-(setq inhibit-eol-conversion t)         ; 不要轉換 end-of-line style
+(setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
 ;; emacs: ~/xxx/yyy/zzz.org
 ;; (setq frame-title-format
 ;;       '("" invocation-name ": "
@@ -118,7 +118,7 @@
 ;;==============================================================================
 ;; Editor setting
 ;;==============================================================================
-(delete-selection-mode 1)		        ; 輸入的文字覆蓋選中的文字
+(delete-selection-mode 1)		; 輸入的文字覆蓋選中的文字
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
 (setq-default kill-whole-line t)        ; 在行首 C-k 时，同时删除该行。
 (setq require-final-newline t)          ; 存盘的时候，要求最后一个字符时换行符
@@ -141,7 +141,7 @@
 (setq auto-save-default nil)           ; auto-save of every file-visiting buffer
 (setq auto-save-list-file-prefix "~/Temp/auto-saves-")
 (setq auto-save-file-name-transforms `((".*"  , "~/Temp/")))
-
+(setq create-lockfiles nil)
 (setq time-stamp-active t)
 (setq time-stamp-warn-inactive t)
 (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S kimi")
