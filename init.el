@@ -98,21 +98,13 @@
 (cond ((eq window-system 'w32)
        (setq default-frame-alist
              '((top . 80) (left . 200) (width . 128) (height . 45)
-                                        ;        (cursor-type . bar)
                (font . "Bitstream Vera Sans Mono-11")
                )))
       ((eq window-system 'ns)
        (setq default-frame-alist
              '((top . 100) (left . 600) (width . 160) (height . 70)
-                                        ;        (cursor-type . bar)
                (font . "Bitstream Vera Sans Mono-14")
                ))))
-
-;; (setq default-frame-alist
-;;       '((top . 80) (left . 200) (width . 128) (height . 45)
-;; ;        (cursor-type . bar)
-;;         (font . "Monaco-10")
-;;         ))
 
 (load "color-theme-kimim.el")
 ;;==============================================================================
