@@ -225,7 +225,7 @@
 ;;==============================================================================
 ;; Load other configuration files
 ;;==============================================================================
-;;(load-file "~/.emacs.d/private.el")
+(load-file "~/.emacs.d/private.el")
 (load "cfg-org.el")
 (load "cfg-gnus.el")
 (load "cfg-kimim.el")
