@@ -4,7 +4,7 @@
 
 ;; exporting format
 (load "ox-mediawiki.el")
-(require 'ox-reveal)
+;(require 'ox-reveal)
 ;; load htmlize.el , which org-babel export syntax highlight source code need it
 (require 'htmlize)
 (require 'ox-mediawiki)

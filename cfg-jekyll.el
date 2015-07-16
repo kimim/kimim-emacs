@@ -19,7 +19,7 @@
          :with-toc nil
          )
         ("org-blog-static"
-         :base-directory "~//kimi.im/_notes/"
+         :base-directory "~/kimi.im/_notes/"
          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php\\|svg"
          :publishing-directory "~/kimi.im/"
          :recursive t
