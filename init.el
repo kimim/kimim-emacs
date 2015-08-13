@@ -7,9 +7,9 @@
 (add-to-list 'load-path "~/kimim-emacs/site-lisp/")
 (add-to-list 'load-path "~/kimim-emacs/site-lisp/color-theme-kimim/")
 
-(add-to-list 'Info-default-directory-list "~/info")
-(add-to-list 'Info-default-directory-list (concat cygwin-path "usr/share/info"))
-(add-to-list 'Info-default-directory-list (concat cygwin-path "usr/local/share/info"))
+(add-to-list 'Info-additional-directory-list "~/info")
+(add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/share/info"))
+(add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/local/share/info"))
 
 (add-to-list 'exec-path (concat cygwin-path "usr/local/bin"))
 (add-to-list 'exec-path (concat cygwin-path "usr/bin"))

@@ -14,6 +14,8 @@
                          (if ecb-minor-mode
                              (ecb-deactivate)
                            (ecb-activate)))))
+(global-set-key [f7] 'kimim/hiatp)
+(global-set-key (kbd "S-<f7>") 'kimim/unhiatp)
 (global-set-key [f8] (lambda() (interactive) (list-charset-chars 'ascii)))
 (global-set-key [f9] 'kimim/cyg)
 (global-set-key  (kbd "S-<f9>") 'kimim/cmd)
@@ -49,6 +51,7 @@
 (global-set-key "\C-c=" 'get-file-line)
 (define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
 (define-key global-map "\M-." 'ggtags-find-tag-dwim)
+(define-key global-map "\M-*" 'pop-tag-mark)
 (global-set-key "\C-c\C-x\C-x" 'org-clock-in-last)
 (global-set-key "\C-c\C-x\C-i" 'org-clock-in)
 (global-set-key "\C-c\C-x\C-o" 'org-clock-out)

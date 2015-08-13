@@ -183,3 +183,24 @@ This command will also do untabify."
 ;; (defun bsearch()
 ;;   (interactive)
 ;;   (re-search-backward "[^A-Za-z0-9_]" nil t))
+
+(add-hook 'comint-output-filter-functions
+    'shell-strip-ctrl-m nil t)
+(add-hook 'comint-output-filter-functions
+    'comint-watch-for-password-prompt nil t)
+(setq explicit-shell-file-name "bash.exe")
+;; For subprocesses invoked via the shell
+;; (e.g., "shell -c command")
+(setq shell-file-name explicit-shell-file-name)
+
+(defun kimim/hiatp ()
+  "Highlight pattern at the point"
+  (interactive)
+  (highlight-regexp (thing-at-point 'symbol) 'hi-yellow)
+  )
+
+(defun kimim/unhiatp ()
+  "Highlight pattern at the point"
+  (interactive)
+  (unhighlight-regexp (thing-at-point 'symbol))
+  )
