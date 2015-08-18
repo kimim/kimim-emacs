@@ -6,6 +6,7 @@
 (add-to-list 'load-path "~/kimim-emacs/")
 (add-to-list 'load-path "~/kimim-emacs/site-lisp/")
 (add-to-list 'load-path "~/kimim-emacs/site-lisp/color-theme-kimim/")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/ggtags")
 
 (add-to-list 'Info-additional-directory-list "~/info")
 (add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/share/info"))
@@ -39,7 +40,7 @@
                          ("ELPA" . "http://tromey.com/elpa/")
                          ("elpy" . "http://jorgenschaefer.github.io/packages/")
                          ;;("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+                         ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 
 ;;============================================================================
@@ -71,7 +72,7 @@
 (column-number-mode 1)                  ; 显示列号
 (blink-cursor-mode -1)                  ; 光标不闪烁
 (show-paren-mode 1)                     ; 高亮显示匹配的括号
-(global-hl-line-mode 1)                 ; 高亮當前行
+;;(global-hl-line-mode 1)                 ; 高亮當前行
 (setq fill-column 80)
 (setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
 ;; emacs: ~/xxx/yyy/zzz.org
@@ -107,6 +108,7 @@
                ))))
 
 (load "color-theme-kimim.el")
+(load "ggtags.el")
 ;;==============================================================================
 ;; Editor setting
 ;;==============================================================================

@@ -193,13 +193,24 @@ This command will also do untabify."
 ;; (e.g., "shell -c command")
 (setq shell-file-name explicit-shell-file-name)
 
-(defun kimim/hiatp ()
+(setq color-list '(hi-yellow hi-green hi-blue hi-pink));; hi-red-b hi-green-b hi-blue-b))
+(setq color-index 0)
+(setq color-list-length (length color-list))
+
+(defun kimim/toggle-highlight-tap ()
   "Highlight pattern at the point"
   (interactive)
-  (highlight-regexp (thing-at-point 'symbol) 'hi-yellow)
-  )
+  (if (and (listp (get-text-property (point) 'face))
+           (memq (car (get-text-property (point) 'face)) color-list))
+      (unhighlight-regexp (thing-at-point 'symbol))
+    (progn
+      (highlight-regexp (thing-at-point 'symbol) (nth color-index color-list))
+      (setq color-index (+ color-index 1))
+      (if (> color-index color-list-length)
+          (setq color-index 0))
+      )))
 
-(defun kimim/unhiatp ()
+(defun kimim/unhitap ()
   "Highlight pattern at the point"
   (interactive)
   (unhighlight-regexp (thing-at-point 'symbol))
