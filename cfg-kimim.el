@@ -206,7 +206,7 @@ This command will also do untabify."
     (progn
       (highlight-regexp (thing-at-point 'symbol) (nth color-index color-list))
       (setq color-index (+ color-index 1))
-      (if (> color-index color-list-length)
+      (if (>= color-index color-list-length)
           (setq color-index 0))
       )))
 
