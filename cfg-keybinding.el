@@ -1,6 +1,7 @@
 ;;==============================================================================
 ;; Global Key Settings
 ;;==============================================================================
+(require 'hideshow) ;; hs-toggle-hiding
 (global-set-key [f1] 'delete-other-windows)
 (global-set-key (kbd "C-<f1>") 'nuke-other-buffers)
 (global-set-key [f2] 'other-window)

@@ -1,6 +1,7 @@
 ;; This is a way to hook tempo into cc-mode
 ;;; C-Mode Templates and C++-Mode Templates (uses C-Mode Templates also)
 (require 'tempo)
+(require 'ggtags)
 (setq tempo-interactive t)
 
 (defvar c-tempo-tagb nil

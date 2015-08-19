@@ -30,11 +30,10 @@
 (setq diary-file "~/.emacs.d/diary")
 (setq bookmark-default-file "~/.emacs.d/emacs.bmk")
 
-(require 'package)
-(require 'hideshow) ;; hs-toggle-hiding
 ;;==============================================================================
 ;; Initialize Packages
 ;;==============================================================================
+(require 'package)
 (setq package-user-dir "~/.emacs.d/elpa")
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("ELPA" . "http://tromey.com/elpa/")
@@ -61,6 +60,7 @@
 ;;==============================================================================
 ;; Apparance Settings
 ;;==============================================================================
+(require 'color-theme-kimim)
 (setq inhibit-startup-message t)        ; 不显示 Emacs 的开始画面
 (setq initial-scratch-message nil)      ; scratch buffer 默認為空白
 (setq visible-bell t)
@@ -107,8 +107,7 @@
                (font . "Bitstream Vera Sans Mono-14")
                ))))
 
-(load "color-theme-kimim.el")
-(load "ggtags.el")
+
 ;;==============================================================================
 ;; Editor setting
 ;;==============================================================================
