@@ -82,4 +82,3 @@
 (set-register ?o '(file . "~/kimim-emacs/cfg-org.el"))
 (set-register ?k '(file . "~/kimim-emacs/cfg-keybinding.el"))
 (set-register ?c '(file . "~/kimim-emacs/cfg-c.el"))
-(set-register ?p '(file . "~/.emacs.d/private.el")) ;; my private configuration

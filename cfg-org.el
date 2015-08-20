@@ -175,7 +175,7 @@
          ((org-agenda-sorting-strategy '(priority-down))))
         ("d" todo "TODO"
          ((org-agenda-sorting-strategy '(priority-down))))
-        ("h" tags "habit"
+        ("h" tags "habit/-ABORT-CLOSE"
          ((org-agenda-sorting-strategy '(todo-state-down))))))
 
 (setq org-capture-templates

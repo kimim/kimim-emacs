@@ -6,7 +6,8 @@
 (add-to-list 'load-path "~/kimim-emacs/")
 (add-to-list 'load-path "~/kimim-emacs/site-lisp/")
 (add-to-list 'load-path "~/kimim-emacs/site-lisp/color-theme-kimim/")
-(add-to-list 'load-path "~/.emacs.d/site-lisp/ggtags")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/ggtags/")
 
 (add-to-list 'Info-additional-directory-list "~/info")
 (add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/share/info"))
@@ -226,7 +227,8 @@
 ;;==============================================================================
 ;; Load other configuration files
 ;;==============================================================================
-(load-file "~/.emacs.d/private.el")
+(load-file "~/.emacs.d/work.el")
+(load-file "~/.emacs.d/home.el")
 (load "cfg-org.el")
 (load "cfg-gnus.el")
 (load "cfg-kimim.el")
