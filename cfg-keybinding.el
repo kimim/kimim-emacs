@@ -54,7 +54,7 @@
 (define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
 (define-key global-map "\M-." 'ggtags-find-tag-dwim)
 (define-key global-map "\M-*" 'pop-tag-mark)
-(global-set-key "\C-c\C-x\C-x" 'org-clock-in-last)
+(global-set-key "\C-c\C-x\C-l" 'org-clock-in-last)
 (global-set-key "\C-c\C-x\C-i" 'org-clock-in)
 (global-set-key "\C-c\C-x\C-o" 'org-clock-out)
 (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
