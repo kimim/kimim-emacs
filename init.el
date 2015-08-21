@@ -2,6 +2,12 @@
 ;;==============================================================================
 ;; System Environment and Path Settings
 ;;==============================================================================
+(if (not (boundp 'path-home-sync))
+    (setq path-home-sync "~/"))
+(setq path-gtd (concat path-home-sync "gtd/"))
+(setq path-gtd-work (concat path-home-sync "gtd/"))
+(setq path-gtd-home (concat path-home-sync "gtd/"))
+
 (setq cygwin-path "C:/cygwin/")
 (add-to-list 'load-path "~/kimim-emacs/")
 (add-to-list 'load-path "~/kimim-emacs/site-lisp/")
@@ -29,7 +35,7 @@
 (setq abbrev-file-name "~/.emacs.d/emacs.abbrev_defs")
 (setq custom-file "~/.emacs.d/emacs_custom.el")
 (setq diary-file "~/.emacs.d/diary")
-(setq bookmark-default-file "~/.emacs.d/emacs.bmk")
+(setq bookmark-default-file (concat path-home-sync "emacs.bmk"))
 
 ;;==============================================================================
 ;; Initialize Packages
@@ -179,7 +185,8 @@
             ;; Set dired-x buffer-local variables here.  For example:
             (dired-omit-mode 1)
             (setq dired-omit-localp t)
-            (setq dired-omit-files "NTUSER\\|ntuser\\|Cookies\\|AppData\\|Application\\|Contacts\\|Links\\|Intel\\|NetHood\\|PrintHood\\|Recent\\|Start\\|SendTo")
+            (setq dired-omit-files "NTUSER\\|ntuser\\|Cookies\\|AppData\\\
+|Application\\|Contacts\\|Links\\|Intel\\|NetHood\\|PrintHood\\|Recent\\|Start\\|SendTo")
             ))
 ;; Dired buffer 中列出文件时传递给 ls 的参数。加个 "l" 可以使大写的文
 ;; 件名在顶部，临时的改变可以用 C-u s。

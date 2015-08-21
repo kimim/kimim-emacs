@@ -1,6 +1,10 @@
 ;;============================================================================
 ;; org-mode general settings
 ;;============================================================================
+;; file in jekyll base will also be uploaded to github
+(setq path-jekyll-base "~/kimi.im/_notes/_posts")
+;; in order to sync draft with cloud sync driver
+(setq path-jekyll-draft (concat path-home-sync "kimim/_draft/"))
 
 ;; exporting format
 (load "ox-mediawiki.el")
@@ -159,7 +163,7 @@
       (setq org-refile-files (append (list (concat path-gtd-work "capture.org")
                                            (concat path-gtd-work "world.org")
                                            (file-expand-wildcards (concat path-gtd-home "home/*.org")))))
-	  (message "Agenda is from home..."))
+      (message "Agenda is from home..."))
 
 (defun org-toggle-home-or-office()
   (interactive)
