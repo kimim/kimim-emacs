@@ -73,7 +73,10 @@
 (setq visible-bell t)
 (setq ring-bell-function #'ignore)
 (tool-bar-mode -1)
-(menu-bar-mode -1)
+(cond ((eq window-system 'ns)
+       (menu-bar-mode 1))
+      ((eq window-system 'w32)
+       (menu-bar-mode -1)))
 (scroll-bar-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
 (column-number-mode 1)                  ; 显示列号
@@ -113,7 +116,6 @@
              '((top . 100) (left . 600) (width . 160) (height . 70)
                (font . "Bitstream Vera Sans Mono-14")
                ))))
-
 
 ;;==============================================================================
 ;; Editor setting
