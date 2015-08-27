@@ -209,9 +209,3 @@ This command will also do untabify."
       (if (>= color-index color-list-length)
           (setq color-index 0))
       )))
-
-(defun kimim/unhitap ()
-  "Highlight pattern at the point"
-  (interactive)
-  (unhighlight-regexp (thing-at-point 'symbol))
-  )

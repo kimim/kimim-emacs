@@ -105,7 +105,7 @@
                       ("sync" . ?s)
                       ("reading" . ?r)
                       ("writing" . ?w)
-                      ("project" . ?p)
+                      ("project" . ?p) ("category" . ?c)
                       ("habit" . ?H)
                       ("next" . ?n)))
 ;; Level=2 or 3, state is not DONE/ABORT/CLOSED/SOMEDAY
@@ -114,8 +114,12 @@
 ;; subtree contains TODO
 
 (setq org-tags-exclude-from-inheritance '("project"))
-(setq org-stuck-projects (quote ("+LEVEL>=2-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
-                                 ("") nil nil)))
+(add-hook 'org-mode-hook '(lambda ()
+                            (org-defkey org-agenda-mode-map "x" 'org-agenda-list-stuck-projects)))
+(setq org-stuck-projects (quote ("+LEVEL>=2-category-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
+                                 ("TODO" "SCEHD" "OPEN" "WAIT") nil nil)))
+;;(setq org-stuck-projects '("+LEVEL>=2/+project-habit/-OPEN-TODO-SCHED-DONE-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
+;;                                 ("TODO" "SCEHD" "OPEN" "WAIT") ("habit") nil))
 ;; (setq org-stuck-projects (quote ("+LEVEL>=2-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
 ;;                                  ("SOMEDAY") ("project") nil)))
 (setq org-refile-targets '(;; refile to maxlevel 2 of current file
@@ -123,7 +127,8 @@
                            ;; refile to maxlevel 1 of org-refile-files
                            (org-refile-files :maxlevel . 1)
                            ;; refile to item with 'project' tag in org-refile-files
-                           (org-refile-files :tag . "project")))
+                           (org-refile-files :tag . "project")
+                           (org-refile-files :tag . "category")))
 (defadvice org-schedule (after add-todo activate)
   (if (or (string= "OPEN" (org-get-todo-state)) (string= "CLOSE" (org-get-todo-state)))
       (org-todo "WAIT")
@@ -143,10 +148,10 @@
 (defun org-toggle-office ()
   (interactive)
   (setq org-location-home-or-office "office")
-  (setq org-agenda-files (list (concat path-gtd-work "office/")
+  (setq org-agenda-files (list (concat path-gtd-work "capture.org")
+                               (concat path-gtd-work "office/")
                                (concat path-gtd-work "office/projects/")
-                               (concat path-gtd-home "world.org")
-                               (concat path-gtd-work "capture.org")))
+                               (concat path-gtd-home "world.org")))
   (setq org-refile-files (append (list (concat path-gtd-work "capture.org")
                                        (concat path-gtd-home "world.org")
                                        (concat path-gtd-home "home/new-words.org"))
@@ -158,8 +163,9 @@
 (defun org-toggle-home ()
   (interactive)
 	  (setq org-location-home-or-office "home")
-      (setq org-agenda-files (list (concat path-gtd-home "home/")
-                                   (concat path-gtd-home "world.org")))
+          (setq org-agenda-files (list (concat path-gtd-work "capture.org")
+                                       (concat path-gtd-home "home/")
+                                       (concat path-gtd-home "world.org")))
       (setq org-refile-files (append (list (concat path-gtd-work "capture.org")
                                            (concat path-gtd-work "world.org")
                                            (file-expand-wildcards (concat path-gtd-home "home/*.org")))))

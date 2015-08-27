@@ -16,8 +16,6 @@
                              (ecb-deactivate)
                            (ecb-activate)))))
 (global-set-key [f7] 'kimim/toggle-highlight-tap)
-(global-set-key (kbd "S-<f7>") 'kimim/unhitap)
-(global-set-key (kbd "C-<f7>") 'kimim/marktap)
 (global-set-key [f8] (lambda() (interactive) (list-charset-chars 'ascii)))
 (global-set-key [f9] 'kimim/cyg)
 (global-set-key  (kbd "S-<f9>") 'kimim/cmd)
