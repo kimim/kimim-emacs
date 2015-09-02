@@ -113,7 +113,8 @@
 ;; contains no project tag
 ;; subtree contains TODO
 
-(setq org-tags-exclude-from-inheritance '("project"))
+;; 子節點不需要繼承父節點的 tag
+(setq org-tags-exclude-from-inheritance '("project" "category"))
 (add-hook 'org-mode-hook '(lambda ()
                             (org-defkey org-agenda-mode-map "x" 'org-agenda-list-stuck-projects)))
 (setq org-stuck-projects (quote ("+LEVEL>=2-category-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"

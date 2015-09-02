@@ -27,7 +27,7 @@
 ;;(setq ggtags-split-window-function 'split-window-below)
 (add-hook 'dired-mode '(lambda ()
                          (local-set-key "\C-c\C-f" 'ggtags-find-file)))
-;(yas-global-mode 1)
+(yas-global-mode 1)
 
 ;; define new c variable symbol for thing-at-point, used in
 ;; ggtags-find-tag-dwim
@@ -49,9 +49,9 @@
           (bounds-of-thing-at-point 'c-variable))))
 
 (add-hook 'c-mode-common-hook
-		  (lambda ()
+          (lambda ()
             (ggtags-mode 1)
-            ;;(yas-minor-mode 1)
+            (yas-minor-mode 1)
             ;;(yas-load-directory "~/.emacs.d/snippets")
             (hs-minor-mode t)
             (c-set-style "linux")

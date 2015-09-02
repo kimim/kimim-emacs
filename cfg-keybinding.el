@@ -24,6 +24,8 @@
                                   (toggle-frame-fullscreen)))
 (global-set-key [f12] 'org-toggle-home-or-office)
 
+(global-set-key (kbd "<M-SPC>") (lambda () (interactive)
+                                  (insert ?_)))
 (global-set-key "\C-xg" 'grep-find)
 (global-set-key "\C-x\C-b" 'ibuffer-other-window)
 (global-set-key "\C-h" 'delete-backward-char)
