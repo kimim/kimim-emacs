@@ -24,13 +24,14 @@
 (add-to-list 'exec-path (concat cygwin-path "bin"))
 (add-to-list 'exec-path "C:/emacs/bin/")
 
-(setenv "PATH"
-  (concat
-   (concat cygwin-path "usr/local/bin" ";")
-   (concat cygwin-path "usr/bin" ";")
-   (concat cygwin-path "bin" ";")
-   "C:/emacs/bin;"
-   (getenv "PATH")))
+(cond ((eq window-system 'w32)
+       (setenv "PATH"
+               (concat
+                (concat cygwin-path "usr/local/bin" ";")
+                (concat cygwin-path "usr/bin" ";")
+                (concat cygwin-path "bin" ";")
+                "C:/emacs/bin;"
+                (getenv "PATH")))))
 
 (setq abbrev-file-name "~/.emacs.d/emacs.abbrev_defs")
 (setq custom-file "~/.emacs.d/emacs_custom.el")
