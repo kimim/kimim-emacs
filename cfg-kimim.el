@@ -35,6 +35,29 @@ Open windows explorer in the current directory and select the current file"
    (concat "/e,/select," (convert-standard-filename buffer-file-name))
    ))
 
+(defun mac-open-terminal ()
+   (interactive)
+   (let ((dir ""))
+     (cond
+      ((and (local-variable-p 'dired-directory) dired-directory)
+       (setq dir dired-directory))
+      ((stringp (buffer-file-name))
+       (setq dir (file-name-directory (buffer-file-name))))
+      ((stringp default-directory)
+       (setq dir default-directory))
+      )
+     (do-applescript
+      (format "
+ tell application \"Terminal\"
+   activate
+   try
+     do script with command \"cd %s\"
+   on error
+     beep
+   end try
+ end tell" dir))
+     ))
+
 (defun kimim/cmd ()
   "Open cmd.exe from emacs just as you type: Win-R, cmd, return."
   (interactive)
@@ -44,16 +67,17 @@ Open windows explorer in the current directory and select the current file"
 (defun kimim/cyg ()
   "Open cygwin mintty from emacs."
   (interactive)
-  (w32-shell-execute
-   "open" "mintty" " -e bash"))
+  (cond ((eq window-system 'w32)
+         (w32-shell-execute
+          "open" "mintty" " -e bash"))
+        ((eq window-system 'ns)
+         (mac-open-terminal))))
 
 (defun kimim/4nt ()
   "Open 4NT terminal"
   (interactive)
   (w32-shell-execute
    "open" "4nt"))
-
-
 
 ;;(yas-global-mode 1)
 ;; Completing point by some yasnippet key
@@ -209,3 +233,9 @@ This command will also do untabify."
       (if (>= color-index color-list-length)
           (setq color-index 0))
       )))
+
+(defun kimim/unhitap ()
+  "Highlight pattern at the point"
+  (interactive)
+  (unhighlight-regexp (thing-at-point 'symbol))
+  )
