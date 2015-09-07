@@ -201,21 +201,16 @@ This command will also do untabify."
                      (format-time-string "%Y%m-")
                      (read-string (concat "Filename: " (format-time-string "%Y%m-"))) ".org")))
 
-;; (defun fsearch()
-;;   (interactive)
-;;   (re-search-forward "[A-Za-z0-9_]*" nil t))
-;; (defun bsearch()
-;;   (interactive)
-;;   (re-search-backward "[^A-Za-z0-9_]" nil t))
-
 (add-hook 'comint-output-filter-functions
     'shell-strip-ctrl-m nil t)
 (add-hook 'comint-output-filter-functions
     'comint-watch-for-password-prompt nil t)
-(setq explicit-shell-file-name "bash.exe")
+
 ;; For subprocesses invoked via the shell
 ;; (e.g., "shell -c command")
-(setq shell-file-name explicit-shell-file-name)
+(cond ((eq window-system 'w32)
+       (setq explicit-shell-file-name "bash.exe")
+       (setq shell-file-name explicit-shell-file-name)))
 
 (setq color-list '(hi-yellow hi-green hi-blue hi-pink));; hi-red-b hi-green-b hi-blue-b))
 (setq color-index 0)
