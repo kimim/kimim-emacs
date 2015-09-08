@@ -2,7 +2,8 @@
 ;;; C-Mode Templates and C++-Mode Templates (uses C-Mode Templates also)
 (require 'tempo)
 (require 'ggtags)
-(require 'auto-complete-clang)
+(require 'auto-complete-clang-async)
+
 (setq tempo-interactive t)
 
 (defvar c-tempo-tagb nil
@@ -51,8 +52,12 @@
 
 (add-hook 'c-mode-common-hook
           (lambda ()
-            (setq ac-sources
-                  (append '(ac-source-clang ac-source-yasnippet) ac-sources))
+            (setq ac-clang-complete-executable "/usr/local/bin/clang-complete")
+            (setq ac-sources '(ac-source-clang-async))
+;;            (setq ac-sources
+;;                  (append '(ac-source-clang-async ac-source-clang ac-source-yasnippet) ac-sources))
+            (ac-clang-launch-completion-process)
+            (global-auto-complete-mode t)
             (ggtags-mode 1)
             (yas-minor-mode 1)
             ;;(yas-load-directory "~/.emacs.d/snippets")
