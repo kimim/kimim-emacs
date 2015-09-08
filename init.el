@@ -24,6 +24,8 @@
 (add-to-list 'exec-path (concat cygwin-path "bin"))
 (add-to-list 'exec-path "C:/emacs/bin/")
 
+;;(setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
+
 (cond ((eq window-system 'w32)
        (setenv "PATH"
                (concat
@@ -122,6 +124,10 @@
 ;; Editor setting
 ;;==============================================================================
 (delete-selection-mode 1)		; 輸入的文字覆蓋選中的文字
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
+(require 'auto-complete-config)
+(ac-config-default)
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
 (setq-default kill-whole-line t)        ; 在行首 C-k 时，同时删除该行。
 (setq require-final-newline t)          ; 存盘的时候，要求最后一个字符时换行符
