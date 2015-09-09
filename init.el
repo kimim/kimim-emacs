@@ -19,21 +19,29 @@
 (add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/share/info"))
 (add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/local/share/info"))
 
-(add-to-list 'exec-path (concat cygwin-path "usr/local/bin"))
-(add-to-list 'exec-path (concat cygwin-path "usr/bin"))
-(add-to-list 'exec-path (concat cygwin-path "bin"))
-(add-to-list 'exec-path "C:/emacs/bin/")
+
 
 ;;(setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
 
 (cond ((eq window-system 'w32)
+       (add-to-list 'exec-path (concat cygwin-path "usr/local/bin"))
+       (add-to-list 'exec-path (concat cygwin-path "usr/bin"))
+       (add-to-list 'exec-path (concat cygwin-path "bin"))
+       (add-to-list 'exec-path "C:/emacs/bin/")
        (setenv "PATH"
                (concat
                 (concat cygwin-path "usr/local/bin" ";")
                 (concat cygwin-path "usr/bin" ";")
                 (concat cygwin-path "bin" ";")
                 "C:/emacs/bin;"
+                (getenv "PATH"))))
+      ((eq window-system 'ns)
+       (add-to-list 'exec-path "/usr/local/bin")
+       (setenv "PATH"
+               (concat
+                "/usr/local/bin:"
                 (getenv "PATH")))))
+
 
 (setq abbrev-file-name "~/.emacs.d/emacs.abbrev_defs")
 (setq custom-file "~/.emacs.d/emacs_custom.el")
