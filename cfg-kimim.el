@@ -139,7 +139,7 @@ Open windows explorer in the current directory and select the current file"
   (let ((null-device "/dev/null"))
     ad-do-it))
 (ad-activate 'grep-compute-defaults)
-(setq grep-find-command "cygfind . -type f -not -name \"*.svn-base\" -and -not -name \"*#\" -and -not -name \"*.tmp\" -and -not -name \"*.obj\" -and -not -name \"*.386\" -and -not -name \"*.img\" -and -not -name \"*.LNK\" -print0 | xargs -0 -e grep -n -e ")
+(setq grep-find-command "find . -type f -not -name \"*.svn-base\" -and -not -name \"*#\" -and -not -name \"*.tmp\" -and -not -name \"*.obj\" -and -not -name \"*.386\" -and -not -name \"*.img\" -and -not -name \"*.LNK\" -print0 | xargs -0 grep -n -e ")
 
 (defun encode-buffer-to-utf8 ()
   "Sets the buffer-file-coding-system to UTF8."
