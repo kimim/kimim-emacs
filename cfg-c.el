@@ -52,7 +52,7 @@
 
 (add-hook 'c-mode-common-hook
           (lambda ()
-            (setq ac-clang-complete-executable "/usr/local/bin/clang-complete")
+            (setq ac-clang-complete-executable "~/.emacs.d/bin/clang-complete")
             (setq ac-sources '(ac-source-clang-async))
 ;;            (setq ac-sources
 ;;                  (append '(ac-source-clang-async ac-source-clang ac-source-yasnippet) ac-sources))
@@ -104,3 +104,8 @@
    (font-lock-add-keywords
     nil
     '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
+
+(defadvice pop-tag-mark (after pop-tag-mark-advice (arg) activate)
+  "Recenter when back from tag, advice"
+  (interactive "p")
+  (recenter))
