@@ -17,8 +17,8 @@
   (ecb-activate)
   (semantic-mode))
 
-(setq ecb-layout-name "left-kimi0")
-;;(setq ecb-layout-name "left-symboldef")
+;;(setq ecb-layout-name "left-kimi0")
+(setq ecb-layout-name "left-symboldef")
 (setq ecb-tip-of-the-day nil)
 ;; use left click as the primary mouse button
 (setq ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1))
@@ -68,7 +68,8 @@
             (which-function-mode 1)
             (local-set-key "\C-\\" 'tempo-complete-tag)
             (local-set-key "\C-c\C-f" 'ggtags-find-file)
-            (my-c-mode-common-hook-if0)))
+            (my-c-mode-common-hook-if0)
+            (ac-clang-update-cmdlineargs)))
 
 (add-hook 'c-mode-hook '(lambda ()
                           (tempo-use-tag-list 'c-tempo-tags)))

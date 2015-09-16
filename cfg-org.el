@@ -114,7 +114,12 @@
 ;; subtree contains TODO
 
 ;; 子節點不需要繼承父節點的 tag
+;; project 表示這個節點下的是項目任務，任務不需要繼承project tag
+;; category 表示該節點是分類節點
 (setq org-tags-exclude-from-inheritance '("project" "category"))
+(add-hook 'org-mode-hook '(lambda ()
+                            (if (boundp 'org-agenda-mode-map)
+                                (org-defkey org-agenda-mode-map "x" 'org-agenda-list-stuck-projects))))
 (setq org-stuck-projects (quote ("+LEVEL>=2-category-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
                                  ("TODO" "SCEHD" "OPEN" "WAIT") nil nil)))
 ;;(setq org-stuck-projects '("+LEVEL>=2/+project-habit/-OPEN-TODO-SCHED-DONE-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
