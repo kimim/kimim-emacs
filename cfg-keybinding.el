@@ -42,6 +42,7 @@
 (global-set-key "\C-\\" 'tempo-complete-tag)
 (global-set-key "\C-z" 'set-mark-command)
 (global-set-key "\M-/" 'hippie-expand)
+;;(global-set-key "\M-/" 'ac-clang-async-autocomplete-autotrigger)
 (global-set-key "\M-o" 'other-window)
 (global-set-key "\M-n" 'next-error)
 (global-set-key "\M-p" 'previous-error)
