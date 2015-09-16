@@ -100,7 +100,7 @@
                 (setq ac-clang-cflags (cons ac-clang-cflags '("-I../inc" "-I../include")))
               (setq ac-clang-cflags '("-I../inc" "-I../include")))
             (ac-clang-launch-completion-process)
-            (ac-clang-update-cmdlineargs))))
+            (ac-clang-update-cmdlineargs)))
 
 (add-hook 'c-mode-hook '(lambda ()
                           (tempo-use-tag-list 'c-tempo-tags)))
