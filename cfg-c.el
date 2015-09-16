@@ -52,7 +52,7 @@
 
 (add-hook 'c-mode-common-hook
           (lambda ()
-            (setq ac-clang-complete-executable "~/.emacs.d/bin/clang-complete")
+            (setq ac-clang-complete-executable "clang-complete")
             (setq ac-sources '(ac-source-clang-async))
 ;;            (setq ac-sources
 ;;                  (append '(ac-source-clang-async ac-source-clang ac-source-yasnippet) ac-sources))
