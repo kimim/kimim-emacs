@@ -203,7 +203,7 @@
             (dired-omit-mode 1)
             (setq dired-omit-localp t)
             (setq dired-omit-files
-                  "|NTUSER\\|ntuser\\|Cookies\\|AppData\\|Application\\\
+                  "|NTUSER\\|ntuser\\|Cookies\\|AppData\\\
 |Contacts\\|Links\\|Intel\\|NetHood\\|PrintHood\\|Recent\\|Start\\|SendTo\\\
 |^\\.DS_Store")))
 ;; Dired buffer 中列出文件时传递给 ls 的参数。加个 "l" 可以使大写的文
