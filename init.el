@@ -21,7 +21,7 @@
 
 
 
-;;(setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
+(setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
 
 (cond ((eq window-system 'w32)
        (add-to-list 'exec-path (concat cygwin-path "usr/local/bin"))
