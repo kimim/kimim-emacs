@@ -45,49 +45,6 @@
            (forward-char)
          (goto-char (point-min)))))
 
-(defun my-c-mode-ggtags-hook()
-  (setq ggtags-bounds-of-tag-function
-        (lambda ()
-          (bounds-of-thing-at-point 'c-variable))))
-
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (setq ac-clang-complete-executable "~/.emacs.d/bin/clang-complete")
-            (setq ac-sources '(ac-source-clang-async))
-;;            (setq ac-sources
-;;                  (append '(ac-source-clang-async ac-source-clang ac-source-yasnippet) ac-sources))
-            (ac-clang-launch-completion-process)
-            (global-auto-complete-mode t)
-            (ggtags-mode 1)
-            (yas-minor-mode 1)
-            ;;(yas-load-directory "~/.emacs.d/snippets")
-            (hs-minor-mode t)
-            (c-set-style "linux")
-            ;;(c-toggle-auto-newline -1)
-            (c-toggle-auto-hungry-state 1)
-            (which-function-mode 1)
-            (local-set-key "\C-\\" 'tempo-complete-tag)
-            (local-set-key "\C-c\C-f" 'ggtags-find-file)
-            (my-c-mode-common-hook-if0)
-            (ac-clang-update-cmdlineargs)))
-
-(defadvice pop-tag-mark (after pop-tag-mark-advice (arg) activate)
-  "Recenter when back from tag, advice"
-  (interactive "p")
-  (recenter))
-
-
-;;(defadvice 'ac-clang-launch-completion-process (after ac-clang-launch-completion-process-advice (arg) activate)
-;;  "Update cmdlineargs after clang-complete is launched"
-;;  (interactive "p")
-;;  (ac-clang-update-cmdlineargs))
-
-(add-hook 'c-mode-hook '(lambda ()
-                          (tempo-use-tag-list 'c-tempo-tags)))
-(add-hook 'c++-mode-hook '(lambda ()
-                            (tempo-use-tag-list 'c-tempo-tags)
-                            (tempo-use-tag-list 'c++-tempo-tags)))
-
 (defun my-c-mode-font-lock-if0 (limit)
    (save-restriction
      (widen)
@@ -116,7 +73,47 @@
     nil
     '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
 
+(defun my-c-mode-ggtags-hook()
+  (setq ggtags-bounds-of-tag-function
+        (lambda ()
+          (bounds-of-thing-at-point 'c-variable))))
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (ggtags-mode 1)
+            (yas-minor-mode 1)
+            ;;(yas-load-directory "~/.emacs.d/snippets")
+            (hs-minor-mode t)
+            (c-set-style "linux")
+            ;;(c-toggle-auto-newline -1)
+            (c-toggle-auto-hungry-state 1)
+            (which-function-mode 1)
+            (local-set-key "\C-\\" 'tempo-complete-tag)
+            (local-set-key "\C-c\C-f" 'ggtags-find-file)
+            (my-c-mode-common-hook-if0)
+            (global-auto-complete-mode t)
+            (setq ac-clang-complete-executable "clang-complete")
+            (add-to-list 'ac-sources 'ac-source-clang-async)
+            ;; settings inside .dir-locals.el will override this setting!
+            ;; then how can I set the default ac-clang-cflags?
+            (if ac-clang-cflags
+                (setq ac-clang-cflags (cons ac-clang-cflags '("-I../inc" "-I../include")))
+              (setq ac-clang-cflags '("-I../inc" "-I../include")))
+            (ac-clang-launch-completion-process)
+            (ac-clang-update-cmdlineargs)))
+
+(add-hook 'c-mode-hook '(lambda ()
+                          (tempo-use-tag-list 'c-tempo-tags)))
+(add-hook 'c++-mode-hook '(lambda ()
+                            (tempo-use-tag-list 'c-tempo-tags)
+                            (tempo-use-tag-list 'c++-tempo-tags)))
+
+
+
 (defadvice pop-tag-mark (after pop-tag-mark-advice (arg) activate)
   "Recenter when back from tag, advice"
   (interactive "p")
   (recenter))
+
+;; give clang-complete enough time to parse the code
+(setq ac-timer 2)
