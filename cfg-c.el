@@ -71,6 +71,17 @@
             (my-c-mode-common-hook-if0)
             (ac-clang-update-cmdlineargs)))
 
+(defadvice pop-tag-mark (after pop-tag-mark-advice (arg) activate)
+  "Recenter when back from tag, advice"
+  (interactive "p")
+  (recenter))
+
+
+;;(defadvice 'ac-clang-launch-completion-process (after ac-clang-launch-completion-process-advice (arg) activate)
+;;  "Update cmdlineargs after clang-complete is launched"
+;;  (interactive "p")
+;;  (ac-clang-update-cmdlineargs))
+
 (add-hook 'c-mode-hook '(lambda ()
                           (tempo-use-tag-list 'c-tempo-tags)))
 (add-hook 'c++-mode-hook '(lambda ()
