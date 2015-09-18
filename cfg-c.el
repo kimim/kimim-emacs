@@ -108,8 +108,6 @@
                             (tempo-use-tag-list 'c-tempo-tags)
                             (tempo-use-tag-list 'c++-tempo-tags)))
 
-
-
 (defadvice pop-tag-mark (after pop-tag-mark-advice (arg) activate)
   "Recenter when back from tag, advice"
   (interactive "p")
@@ -117,3 +115,6 @@
 
 ;; give clang-complete enough time to parse the code
 (setq ac-timer 2)
+
+(defun ac-cc-mode-setup ()
+  (setq ac-sources (append '(ac-source-clang-async ac-source-yasnippet ac-source-gtags) ac-sources)))

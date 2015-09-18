@@ -18,10 +18,10 @@
 (global-set-key [f7] 'kimim/toggle-highlight-tap)
 (global-set-key [f8] (lambda() (interactive) (list-charset-chars 'ascii)))
 (global-set-key [f9] 'kimim/cyg)
-(global-set-key  (kbd "S-<f9>") 'kimim/cmd)
-(global-set-key (kbd "C-<f11>") (lambda()
-                                  (interactive)
-                                  (toggle-frame-fullscreen)))
+(global-set-key (kbd "S-<f9>") 'kimim/cmd)
+;;(global-set-key (kbd "C-<f11>") (lambda()
+;;                                  (interactive)
+;;                                  (toggle-frame-fullscreen)))
 (global-set-key [f12] 'org-toggle-home-or-office)
 
 (global-set-key (kbd "<M-SPC>") (lambda () (interactive)
@@ -76,6 +76,11 @@
 (define-key ctl-x-m-map "m" 'man-follow)
 ;;查看 kill-ring，都曾经 kill 过哪些文本
 (define-key ctl-x-m-map "l" 'browse-kill-ring)
+;; update ac-clang-complete-async cflags
+(define-key ctl-x-m-map "u" (lambda()
+                              (interactive)
+;;                              (setq ac-sources '(ac-source-clang-async))
+                              (ac-clang-update-cmdlineargs)))
 
 ;; C-x r j ?x 打開常用文件
 (set-register ?e '(file . "~/kimim-emacs/init.el"))

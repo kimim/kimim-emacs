@@ -19,8 +19,6 @@
 (add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/share/info"))
 (add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/local/share/info"))
 
-
-
 (setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
 
 (cond ((eq window-system 'w32)
@@ -41,7 +39,6 @@
                (concat
                 "/usr/local/bin:"
                 (getenv "PATH")))))
-
 
 (setq abbrev-file-name "~/.emacs.d/emacs.abbrev_defs")
 (setq custom-file "~/.emacs.d/emacs_custom.el")
