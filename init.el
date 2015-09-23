@@ -90,7 +90,7 @@
 (column-number-mode 1)                  ; 显示列号
 (blink-cursor-mode -1)                  ; 光标不闪烁
 (show-paren-mode 1)                     ; 高亮显示匹配的括号
-;;(global-hl-line-mode 1)                 ; 高亮當前行
+(global-hl-line-mode 1)                 ; 高亮當前行
 (setq fill-column 80)
 (setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
 ;; emacs: ~/xxx/yyy/zzz.org
