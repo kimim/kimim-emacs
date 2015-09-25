@@ -1,6 +1,7 @@
-;;============================================================================
-;; org-mode general settings
-;;============================================================================
+;; path and system environment setting for orgmode
+(setq path-gtd (concat path-home-sync "gtd/"))
+(setq path-gtd-work (concat path-home-sync "gtd/"))
+(setq path-gtd-home (concat path-home-sync "gtd/"))
 ;; file in jekyll base will also be uploaded to github
 (setq path-jekyll-base "~/kimi.im/_notes/_posts")
 ;; in order to sync draft with cloud sync driver
@@ -50,6 +51,7 @@
 ;;============================================================================
 ;; Calendar and Holiday Settings
 ;;============================================================================
+(setq diary-file "~/.emacs.d/diary")
 (setq calendar-latitude +30.16)
 (setq calendar-longitude +120.12)
 (setq calendar-location-name "Hangzhou")
@@ -312,3 +314,5 @@ file's directory then expand relative links."
 (setq org-support-shift-select t)
 (setq org-src-fontify-natively t)
 (setq org-startup-indented t)
+
+(provide 'cfg-org)

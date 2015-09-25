@@ -88,3 +88,5 @@
 (set-register ?o '(file . "~/kimim-emacs/cfg-org.el"))
 (set-register ?k '(file . "~/kimim-emacs/cfg-keybinding.el"))
 (set-register ?c '(file . "~/kimim-emacs/cfg-c.el"))
+
+(provide 'cfg-keybinding)

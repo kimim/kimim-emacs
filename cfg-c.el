@@ -24,6 +24,10 @@
 (setq ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1))
 
 ;; ggtags settings
+;; Activate cygwin mount for gtags CDPATH issue on W32
+(cond ((eq window-system 'w32)
+		(require 'cygwin-mount)
+		(cygwin-mount-activate)))
 (setq ggtags-global-ignore-case t)
 ;; let ggtags use split-window with is redefined by ecb mode
 ;;(setq ggtags-split-window-function 'split-window-below)
@@ -119,3 +123,5 @@
 
 (defun ac-cc-mode-setup ()
   (setq ac-sources (append '(ac-source-clang-async ac-source-yasnippet ac-source-gtags) ac-sources)))
+
+(provide 'cfg-c)

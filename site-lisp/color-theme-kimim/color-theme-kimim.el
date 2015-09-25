@@ -106,7 +106,52 @@ Includes faces for font-lock, widget, custom, speedbar."
      (org-todo ((t (:foreground "orange red" :weight bold))))
      (org-warning ((t (:foreground "dark orchid" :weight bold)))))))
 
+(defun color-theme-jekyll ()
+  "Customize Sitaramv NT theme like Eclipse default color.
+Black foreground on white background.
+Includes faces for font-lock, widget, custom, speedbar."
+  (interactive)
+  (color-theme-install
+   '(color-theme-jekyll
+     ((foreground-color . "gray80")
+      (background-color . "gray6")
+      (mouse-color . "sienna3")
+      (cursor-color . "yellow")
+      (border-color . "Blue")
+      (background-mode . dark))
+     (mode-line ((t (:background "gray10" :foreground "gainsboro"
+                                 :box (:line-width -1 :style released-button) :height 0.85))))
+     (mode-line-inactive ((t (:background "gray10" :foreground "RoyalBlue"
+                                          :box (:line-width -1 :style released-button) :height 0.85))))
+     (modeline-buffer-id ((t (:background "gray10" :foreground "light blue" :weight bold))))
+     (modeline-mousable ((t (:background "gray10" :foreground "firebrick"))))
+     (modeline-mousable-minor-mode ((t (:background "gray10" :foreground "green4"))))
+     (which-func  ((t (:background "gray10" :foreground "HotPink"))))
+     (hl-line ((t (:background "gray17"))))
+     (highlight ((t (:foreground nil :background "LightSteelBlue4"))))
+     (region ((t (:foreground nil :background "LightSteelBlue4")))) ;; Selected region
+     (secondary-selection ((t (:background "gray25"))))
+     (font-lock-comment-face ((t (:foreground "LimeGreen" :italic t))))
+     (font-lock-string-face ((t (:foreground "SandyBrown"))))
+     (font-lock-keyword-face ((t (:foreground "purple" :bold t))))
+     (font-lock-builtin-face ((t (:foreground "white"))))
+     (font-lock-function-name-face ((t (:foreground "light blue"))))
+     (font-lock-variable-name-face ((t (:foreground "cyan" :italic t))))
+     (font-lock-type-face ((t (:foreground "violet"))))
+     (font-lock-constant-face ((t (:foreground "dark turquoise"))))
+     (font-lock-warning-face ((t (:foreground "firebrick" :bold t))))
+     (jde-java-font-lock-doc-tag-face ((t (:foreground "SkyBlue3" :bold t))))    ;; JDE
+     (jde-java-font-lock-constant-face ((t (:foreground "CadetBlue" :italic t))));; JDE
+     (ff-paths-non-existant-file-face ((t (:foreground "NavyBlue" :bold t))))
+     (show-paren-match-face ((t (:background "blue"))))
+     (show-paren-mismatch-face ((t (:foreground "white" :background "purple"))))
+     (org-scheduled-previously ((t (:foreground "light blue"))))
+     (org-todo ((t (:foreground "orange" :weight bold))))
+     (org-warning ((t (:foreground "orchid" :weight bold)))))))
+
 (color-theme-kimim)
+
+
 
 (provide 'color-theme-kimim)
 

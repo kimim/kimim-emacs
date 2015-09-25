@@ -24,3 +24,5 @@
 (add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
 (add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
 (add-to-list 'gnus-secondary-select-methods '(nnml ""))
+
+(provide 'cfg-gnus)
