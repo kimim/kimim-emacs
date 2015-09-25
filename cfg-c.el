@@ -78,6 +78,18 @@
         (lambda ()
           (bounds-of-thing-at-point 'c-variable))))
 
+(defun kimim/c-mode-ac-complete()
+  (global-auto-complete-mode t)
+  (setq ac-clang-complete-executable "clang-complete")
+  (add-to-list 'ac-sources 'ac-source-clang-async)
+  ;; settings inside .dir-locals.el will override this setting!
+  ;; then how can I set the default ac-clang-cflags?
+  (if ac-clang-cflags
+      (setq ac-clang-cflags (cons ac-clang-cflags '("-I../inc" "-I../include")))
+    (setq ac-clang-cflags '("-I../inc" "-I../include")))
+  (ac-clang-launch-completion-process)
+  (ac-clang-update-cmdlineargs))
+
 (add-hook 'c-mode-common-hook
           (lambda ()
             (ggtags-mode 1)
@@ -91,16 +103,7 @@
             (local-set-key "\C-\\" 'tempo-complete-tag)
             (local-set-key "\C-c\C-f" 'ggtags-find-file)
             (my-c-mode-common-hook-if0)
-            (global-auto-complete-mode t)
-            (setq ac-clang-complete-executable "clang-complete")
-            (add-to-list 'ac-sources 'ac-source-clang-async)
-            ;; settings inside .dir-locals.el will override this setting!
-            ;; then how can I set the default ac-clang-cflags?
-            (if ac-clang-cflags
-                (setq ac-clang-cflags (cons ac-clang-cflags '("-I../inc" "-I../include")))
-              (setq ac-clang-cflags '("-I../inc" "-I../include")))
-            (ac-clang-launch-completion-process)
-            (ac-clang-update-cmdlineargs)))
+            (kimim/c-mode-ac-complete)))
 
 (add-hook 'c-mode-hook '(lambda ()
                           (tempo-use-tag-list 'c-tempo-tags)))
