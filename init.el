@@ -5,7 +5,6 @@
     (setq path-home-sync "~/"))
 (add-to-list 'load-path "~/kimim-emacs/")
 (add-to-list 'load-path "~/kimim-emacs/site-lisp/")
-(add-to-list 'load-path "~/kimim-emacs/site-lisp/color-theme-kimim/")
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 (add-to-list 'load-path "~/.emacs.d/site-lisp/ggtags/")
 
