@@ -1,29 +1,19 @@
-(setq debug-on-error t)                 ; 当有问题出现显示错误信息
-;;==============================================================================
+;; (setq debug-on-error t)
 ;; System Environment and Path Settings
-;;==============================================================================
+(setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
 (if (not (boundp 'path-home-sync))
     (setq path-home-sync "~/"))
-(setq path-gtd (concat path-home-sync "gtd/"))
-(setq path-gtd-work (concat path-home-sync "gtd/"))
-(setq path-gtd-home (concat path-home-sync "gtd/"))
-
-(setq cygwin-path "C:/cygwin/")
 (add-to-list 'load-path "~/kimim-emacs/")
 (add-to-list 'load-path "~/kimim-emacs/site-lisp/")
-(add-to-list 'load-path "~/kimim-emacs/site-lisp/color-theme-kimim/")
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 (add-to-list 'load-path "~/.emacs.d/site-lisp/ggtags/")
 
 (add-to-list 'Info-additional-directory-list "~/info")
-(add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/share/info"))
-(add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/local/share/info"))
-
-
-
-(setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
 
 (cond ((eq window-system 'w32)
+       (setq cygwin-path "C:/cygwin/")
+       (add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/share/info"))
+       (add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/local/share/info"))
        (add-to-list 'exec-path (concat cygwin-path "usr/local/bin"))
        (add-to-list 'exec-path (concat cygwin-path "usr/bin"))
        (add-to-list 'exec-path (concat cygwin-path "bin"))
@@ -42,11 +32,8 @@
                 "/usr/local/bin:"
                 (getenv "PATH")))))
 
-
 (setq abbrev-file-name "~/.emacs.d/emacs.abbrev_defs")
 (setq custom-file "~/.emacs.d/emacs_custom.el")
-(setq diary-file "~/.emacs.d/diary")
-(setq bookmark-default-file (concat path-home-sync "emacs.bmk"))
 
 ;;==============================================================================
 ;; Initialize Packages
@@ -79,24 +66,24 @@
 ;; Apparance Settings
 ;;==============================================================================
 (require 'color-theme-kimim)
-(setq inhibit-startup-message t)        ; 不显示 Emacs 的开始画面
-(setq initial-scratch-message nil)      ; scratch buffer 默認為空白
+(setq inhibit-startup-message t)                ; 不显示 Emacs 的开始画面
+(setq initial-scratch-message nil)              ; scratch buffer 默認為空白
 (setq visible-bell t)
 (setq ring-bell-function #'ignore)
 (tool-bar-mode -1)
 (cond ((eq window-system 'ns)
        (menu-bar-mode 1))
       ((eq window-system 'w32)
+       (setq x-select-enable-clipboard t)      ; Enable copy and paste in Win32
        (menu-bar-mode -1)))
 (scroll-bar-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
 (column-number-mode 1)                  ; 显示列号
 (blink-cursor-mode -1)                  ; 光标不闪烁
 (show-paren-mode 1)                     ; 高亮显示匹配的括号
-;;(global-hl-line-mode 1)                 ; 高亮當前行
+(global-hl-line-mode 1)                 ; 高亮當前行
 (setq fill-column 80)
 (setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
-;; emacs: ~/xxx/yyy/zzz.org
 ;; (setq frame-title-format
 ;;       '("" invocation-name ": "
 ;;         (:eval (if (buffer-file-name)
@@ -132,16 +119,12 @@
 ;; Editor setting
 ;;==============================================================================
 (delete-selection-mode 1)		; 輸入的文字覆蓋選中的文字
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
-(require 'auto-complete-config)
-(ac-config-default)
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
 (setq-default kill-whole-line t)        ; 在行首 C-k 时，同时删除该行。
 (setq require-final-newline t)          ; 存盘的时候，要求最后一个字符时换行符
-(setq-default tab-width 8)              ; 用space替换tab，tab长度为4
+(setq-default tab-width 4)              ; 用space替换tab，tab长度为4
 (setq tab-stop-list
-      (number-sequence 8 120 8))        ; 每次tab空格數
+      (number-sequence 4 120 4))        ; 每次tab空格數
 (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
 
 ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
@@ -174,24 +157,15 @@
 (setq-default indent-tabs-mode nil)
 
 
-;;============================================================================
-;;General environment settings
-;;============================================================================
 ;; 当有两个文件名相同的缓冲时，使用前缀的目录名做 buffer 名字
 (setq uniquify-buffer-name-style 'forward)
+
+;; bookmark setting
+(setq bookmark-default-file (concat path-home-sync "emacs.bmk"))
 ;; 当使用 M-x COMMAND 后，显示该 COMMAND 绑定的键 5 秒鐘時間
 (setq suggest-key-bindings 5)
 ;; 每当设置书签的时候都保存书签文件，否则只在你退出 Emacs 时保存
 (setq bookmark-save-flag 1)
-
-;;==============================================================================
-;; Win32 setting
-;;==============================================================================
-;; Activate cygwin mount for gtags CDPATH issue on W32
-(cond ((eq window-system 'w32)
-		(require 'cygwin-mount)
-		(cygwin-mount-activate)))
-(setq x-select-enable-clipboard t)      ; Enable copy and paste in Win32
 
 ;;==============================================================================
 ;; Settings for dired mode
@@ -245,7 +219,11 @@
                 ("\\.pas\\'" . delphi-mode)
                 )
               auto-mode-alist))
-(setq auto-complete-mode 1)
+
+;; intelligent completion setting
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
+(ac-config-default)
 (icomplete-mode 1)
 (ido-mode 1)
 
@@ -254,10 +232,9 @@
 ;;==============================================================================
 (load-file "~/.emacs.d/work.el")
 (load-file "~/.emacs.d/home.el")
-(load "cfg-org.el")
-(load "cfg-gnus.el")
-(load "cfg-kimim.el")
-(load "cfg-jekyll.el")
-(load "cfg-c.el")
-;;(load "cfg-python.el")
-(load "cfg-keybinding.el")
+(require 'cfg-org)
+(require 'cfg-gnus)
+(require 'cfg-kimim)
+(require 'cfg-jekyll)
+(require 'cfg-c)
+(require 'cfg-keybinding)

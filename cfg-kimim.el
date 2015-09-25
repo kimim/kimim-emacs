@@ -228,3 +228,5 @@ This command will also do untabify."
       (if (>= color-index color-list-length)
           (setq color-index 0))
       )))
+
+(provide 'cfg-kimim)

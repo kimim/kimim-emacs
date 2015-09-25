@@ -24,6 +24,10 @@
 (setq ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1))
 
 ;; ggtags settings
+;; Activate cygwin mount for gtags CDPATH issue on W32
+(cond ((eq window-system 'w32)
+		(require 'cygwin-mount)
+		(cygwin-mount-activate)))
 (setq ggtags-global-ignore-case t)
 ;; let ggtags use split-window with is redefined by ecb mode
 ;;(setq ggtags-split-window-function 'split-window-below)
@@ -97,8 +101,9 @@
             ;;(yas-load-directory "~/.emacs.d/snippets")
             (hs-minor-mode t)
             (c-set-style "linux")
-            ;;(c-toggle-auto-newline -1)
+            (c-toggle-auto-newline -1)
             (c-toggle-auto-hungry-state 1)
+            (c-toggle-syntactic-indentation 1)
             (which-function-mode 1)
             (local-set-key "\C-\\" 'tempo-complete-tag)
             (local-set-key "\C-c\C-f" 'ggtags-find-file)
@@ -111,8 +116,6 @@
                             (tempo-use-tag-list 'c-tempo-tags)
                             (tempo-use-tag-list 'c++-tempo-tags)))
 
-
-
 (defadvice pop-tag-mark (after pop-tag-mark-advice (arg) activate)
   "Recenter when back from tag, advice"
   (interactive "p")
@@ -120,3 +123,8 @@
 
 ;; give clang-complete enough time to parse the code
 (setq ac-timer 2)
+
+(defun ac-cc-mode-setup ()
+  (setq ac-sources (append '(ac-source-clang-async ac-source-yasnippet ac-source-gtags) ac-sources)))
+
+(provide 'cfg-c)
