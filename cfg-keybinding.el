@@ -59,6 +59,7 @@
 (global-set-key "\C-c\C-x\C-i" 'org-clock-in)
 (global-set-key "\C-c\C-x\C-o" 'org-clock-out)
 (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 
 (define-key global-map (kbd "RET") 'newline-and-indent)
 
