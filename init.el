@@ -122,13 +122,10 @@
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
 (setq-default kill-whole-line t)        ; 在行首 C-k 时，同时删除该行。
 (setq require-final-newline t)          ; 存盘的时候，要求最后一个字符时换行符
-(setq-default tab-width 8)              ; 用space替换tab，tab长度为4
+(setq-default tab-width 4)              ; 用space替换tab，tab长度为4
 (setq tab-stop-list
-      (number-sequence 8 120 8))        ; 每次tab空格數
+      (number-sequence 4 120 4))        ; 每次tab空格數
 (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
-(ac-config-default)
 
 ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
 ;; 候，备份文件是复本，而不是原件。
@@ -222,7 +219,11 @@
                 ("\\.pas\\'" . delphi-mode)
                 )
               auto-mode-alist))
-(setq auto-complete-mode 1)
+
+;; intelligent completion setting
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
+(ac-config-default)
 (icomplete-mode 1)
 (ido-mode 1)
 
