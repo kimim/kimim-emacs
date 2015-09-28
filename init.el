@@ -120,6 +120,9 @@
 ;; Editor setting
 ;;==============================================================================
 (setq fill-column 80)
+(require 'ace-isearch)
+(global-ace-isearch-mode +1)
+(require 'ace-window)
 (delete-selection-mode 1)		; 輸入的文字覆蓋選中的文字
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
 (setq-default kill-whole-line t)        ; 在行首 C-k 时，同时删除该行。
