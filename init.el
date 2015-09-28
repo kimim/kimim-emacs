@@ -12,8 +12,10 @@
 
 (cond ((eq window-system 'w32)
        (setq cygwin-path "C:/cygwin/")
-       (add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/share/info"))
-       (add-to-list 'Info-additional-directory-list (concat cygwin-path "usr/local/share/info"))
+       (add-to-list 'Info-additional-directory-list
+                    (concat cygwin-path "usr/share/info"))
+       (add-to-list 'Info-additional-directory-list
+                    (concat cygwin-path "usr/local/share/info"))
        (add-to-list 'exec-path (concat cygwin-path "usr/local/bin"))
        (add-to-list 'exec-path (concat cygwin-path "usr/bin"))
        (add-to-list 'exec-path (concat cygwin-path "bin"))
@@ -82,7 +84,6 @@
 (blink-cursor-mode -1)                  ; 光标不闪烁
 (show-paren-mode 1)                     ; 高亮显示匹配的括号
 (global-hl-line-mode 1)                 ; 高亮當前行
-(setq fill-column 80)
 (setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
 ;; (setq frame-title-format
 ;;       '("" invocation-name ": "
@@ -118,6 +119,7 @@
 ;;==============================================================================
 ;; Editor setting
 ;;==============================================================================
+(setq fill-column 80)
 (delete-selection-mode 1)		; 輸入的文字覆蓋選中的文字
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
 (setq-default kill-whole-line t)        ; 在行首 C-k 时，同时删除该行。
@@ -155,7 +157,6 @@
               (flyspell-mode)
               (visual-line-mode))))
 (setq-default indent-tabs-mode nil)
-
 
 ;; 当有两个文件名相同的缓冲时，使用前缀的目录名做 buffer 名字
 (setq uniquify-buffer-name-style 'forward)
