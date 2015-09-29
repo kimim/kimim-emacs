@@ -76,6 +76,8 @@
 (global-set-key "\C-xm" 'ctl-x-m-map)
 ;; 查看光标处的单词的 man page
 (define-key ctl-x-m-map "m" 'man-follow)
+;; magit-status for git
+(define-key ctl-x-m-map "g" 'magit-status)
 ;;查看 kill-ring，都曾经 kill 过哪些文本
 (define-key ctl-x-m-map "l" 'browse-kill-ring)
 ;; update ac-clang-complete-async cflags
