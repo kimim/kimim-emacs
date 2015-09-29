@@ -3,10 +3,10 @@
 (setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
 (if (not (boundp 'path-home-sync))
     (setq path-home-sync "~/"))
+;; configuration main path
 (add-to-list 'load-path "~/kimim-emacs/")
+;; local settings
 (add-to-list 'load-path "~/kimim-emacs/site-lisp/")
-(add-to-list 'load-path "~/.emacs.d/site-lisp/")
-(add-to-list 'load-path "~/.emacs.d/site-lisp/ggtags/")
 
 (add-to-list 'Info-additional-directory-list "~/info")
 
@@ -56,13 +56,16 @@
 (set-locale-environment "English")
 (set-language-environment 'English)
 (prefer-coding-system 'utf-8)
-(set-file-name-coding-system 'gbk)
 (set-buffer-file-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
-(set-terminal-coding-system 'gbk)
 (set-selection-coding-system 'utf-8)
 (set-clipboard-coding-system 'utf-16le)
-;;(set-w32-system-coding-system 'gbk)
+(cond ((eq window-system 'w32)
+       (set-file-name-coding-system 'gbk)
+       (set-terminal-coding-system 'gbk))
+      ((eq window-system 'ns)
+       (set-file-name-coding-system 'utf-8)
+       (set-terminal-coding-system 'utf-8)))
 
 ;;==============================================================================
 ;; Apparance Settings
