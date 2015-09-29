@@ -119,7 +119,9 @@
 ;; project 表示這個節點下的是項目任務，任務不需要繼承project tag
 ;; category 表示該節點是分類節點
 (setq org-tags-exclude-from-inheritance '("project" "category"))
+
 (add-hook 'org-mode-hook '(lambda ()
+                            (org-display-inline-images)
                             (if (boundp 'org-agenda-mode-map)
                                 (org-defkey org-agenda-mode-map "x" 'org-agenda-list-stuck-projects))))
 (setq org-stuck-projects (quote ("+LEVEL>=2-category-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
@@ -305,9 +307,6 @@ file's directory then expand relative links."
 (require 'org-install)
 
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-(add-hook 'org-mode-hook 'org-display-inline-images)
-(add-hook 'org-mode-hook '(lambda ()
-                            (org-defkey org-agenda-mode-map "x" 'org-agenda-list-stuck-projects)))
 (setq org-confirm-babel-evaluate nil)
 (setq org-export-html-validation-link nil)
 (setq org-export-allow-BIND t)
