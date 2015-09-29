@@ -234,11 +234,11 @@
 ;;==============================================================================
 ;; Load other configuration files
 ;;==============================================================================
-(load-file "~/.emacs.d/work.el")
-(load-file "~/.emacs.d/home.el")
 (require 'cfg-org)
 (require 'cfg-gnus)
 (require 'cfg-kimim)
 (require 'cfg-jekyll)
 (require 'cfg-c)
 (require 'cfg-keybinding)
+(load-file "~/.emacs.d/work.el")
+(load-file "~/.emacs.d/home.el")
