@@ -96,7 +96,7 @@
         ;; for risks, actions, problems
         (sequence "OPEN(o!)" "WAIT(w)" "|" "CLOSE(c@/!)")
         ;; special states
-        (sequence "REPEAT(r)" "|" "SOMEDAY(m)" "ABORT(a@/!)")
+        (type "REPEAT(r)" "|" "SOMEDAY(m)" "ABORT(a@/!)")
         ))
 
 (setq org-tag-alist '((:startgroup . nil)
@@ -138,19 +138,25 @@
                            (org-refile-files :tag . "project")
                            (org-refile-files :tag . "category")))
 (defadvice org-schedule (after add-todo activate)
-  (if (or (string= "OPEN" (org-get-todo-state)) (string= "CLOSE" (org-get-todo-state)))
+  (if (or (string= "OPEN" (org-get-todo-state))
+          (string= "WAIT" (org-get-todo-state))
+          (string= "CLOSE" (org-get-todo-state)))
       (org-todo "WAIT")
     (org-todo "SCHED")))
+
 (defadvice org-deadline (after add-todo activate)
-  (if (or (string= "OPEN" (org-get-todo-state)) (string= "CLOSE" (org-get-todo-state)))
+  (if (or (string= "OPEN" (org-get-todo-state))
+          (string= "WAIT" (org-get-todo-state))
+          (string= "CLOSE" (org-get-todo-state)))
       (org-todo "WAIT")
     (org-todo "SCHED")))
+
 (setq org-log-done t)
 (setq org-todo-repeat-to-state "REPEAT")
 ;; settings for org-agenda-view
 (setq org-agenda-span 'day)
-(setq org-agenda-skip-scheduled-if-done t)
-(setq org-agenda-skip-deadline-if-done t)
+(setq org-agenda-skip-scheduled-if-done nil)
+(setq org-agenda-skip-deadline-if-done nil)
 (setq org-deadline-warning-days 2)
 (defcustom org-location-home-or-office "office" "office")
 (defun org-toggle-office ()

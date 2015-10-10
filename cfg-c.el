@@ -116,10 +116,11 @@
                             (tempo-use-tag-list 'c-tempo-tags)
                             (tempo-use-tag-list 'c++-tempo-tags)))
 
-(defadvice pop-tag-mark (after pop-tag-mark-advice (arg) activate)
-  "Recenter when back from tag, advice"
-  (interactive "p")
-  (recenter))
+
+;; (defadvice pop-tag-mark (after pop-tag-mark-advice activate)
+;;    "Recenter when back from tag, advice"
+;;    (interactive "p")
+;;    (recenter))
 
 ;; give clang-complete enough time to parse the code
 (setq ac-timer 2)
