@@ -123,8 +123,8 @@
 ;; Editor setting
 ;;==============================================================================
 (setq fill-column 80)
-(require 'ace-isearch)
-(global-ace-isearch-mode +1)
+;; (require 'ace-isearch)
+;; (global-ace-isearch-mode 1)
 (require 'ace-window)
 (delete-selection-mode 1)		; 輸入的文字覆蓋選中的文字
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
@@ -134,7 +134,7 @@
 (setq tab-stop-list
       (number-sequence 4 120 4))        ; 每次tab空格數
 (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
-
+(winner-mode t)
 ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
 ;; 候，备份文件是复本，而不是原件。
 (setq backup-directory-alist '(("." . "~/Temp")))
