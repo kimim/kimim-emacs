@@ -87,14 +87,12 @@
 (blink-cursor-mode -1)                  ; 光标不闪烁
 (show-paren-mode 1)                     ; 高亮显示匹配的括号
 (global-hl-line-mode 1)                 ; 高亮當前行
-(setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
-;; (setq frame-title-format
-;;       '("" invocation-name ": "
-;;         (:eval (if (buffer-file-name)
-;;                    (abbreviate-file-name (buffer-file-name))
-;;                  "%b"))))
+(setq inhibit-eol-conversion nil)       ; 不要轉換 end-of-line style
 (setq frame-title-format
-      '("" invocation-name ": " "%f" ))
+      '("" invocation-name ": "
+        (:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
 
 (setq display-time-24hr-format t)
 (setq display-time-day-and-date t)
@@ -104,16 +102,19 @@
 (setq font-lock-global-modes '(not shell-mode text-mode))
 (setq font-lock-verbose t)
 (global-font-lock-mode 1)               ; 开启语法高亮
-(set-frame-font "Bitstream Vera Sans Mono-11")
-(set-fontset-font "fontset-default" 'han (font-spec :family "Microsoft Yahei":size 18))
 
 
 (cond ((eq window-system 'w32)
+       (set-frame-font "Bitstream Vera Sans Mono-11")
+       (set-fontset-font "fontset-default" 'han (font-spec :family "Microsoft Yahei" :size 18))
        (setq default-frame-alist
              '((top . 80) (left . 200) (width . 128) (height . 45)
                (font . "Bitstream Vera Sans Mono-11")
                )))
       ((eq window-system 'ns)
+       (set-fontset-font  "fontset-default" 'han (font-spec :family "Microsoft Yahei" :size 16))
+       ;; OS X 下，不和前一個漢字緊挨著的標點符號的字體不是雅黑，就會顯得很難看，這裡設定一下
+       (set-fontset-font  "fontset-default" 'cjk-misc (font-spec :family "Microsoft Yahei" :size 16))
        (setq default-frame-alist
              '((top . 100) (left . 600) (width . 160) (height . 70)
                (font . "Bitstream Vera Sans Mono-14")
