@@ -225,6 +225,7 @@
                 ("\\.markdown\\'" . markdown-mode)
                 ("\\.svg\\'" . html-mode)
                 ("\\.pas\\'" . delphi-mode)
+                ("\\.txt\\'" . org-mode)
                 )
               auto-mode-alist))
 
