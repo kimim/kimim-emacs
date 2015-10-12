@@ -121,6 +121,7 @@
 (setq org-tags-exclude-from-inheritance '("project" "category"))
 
 (add-hook 'org-mode-hook '(lambda ()
+                            (auto-fill-mode)
                             (org-display-inline-images)
                             (if (boundp 'org-agenda-mode-map)
                                 (org-defkey org-agenda-mode-map "x" 'org-agenda-list-stuck-projects))))
