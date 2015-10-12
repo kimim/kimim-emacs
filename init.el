@@ -34,8 +34,6 @@
                 "/usr/local/bin:"
                 (getenv "PATH")))))
 
-(setq abbrev-file-name "~/.emacs.d/emacs.abbrev_defs")
-(setq custom-file "~/.emacs.d/emacs_custom.el")
 
 ;;==============================================================================
 ;; Initialize Packages

@@ -6,12 +6,9 @@
 ;; in order to sync draft with cloud sync driver
 (setq path-jekyll-draft (concat path-home-sync "kimim/_draft/"))
 
-;; exporting format
-(load "ox-mediawiki.el")
 ;(require 'ox-reveal)
 ;; load htmlize.el , which org-babel export syntax highlight source code need it
 (require 'htmlize)
-(require 'ox-mediawiki)
 (require 'ox-md)
 
 ;; plant uml setting
@@ -181,8 +178,8 @@
                                    (concat org-path-home "world.org")
                                    (concat org-path-home "gtd/")))
       (setq org-refile-files (append (list (concat org-path-home "capture.org")
-                                           (concat org-path-home "world.org")
-                                           (file-expand-wildcards (concat org-path-home "gtd/*.org")))))
+                                           (concat org-path-home "world.org"))
+                                     (file-expand-wildcards (concat org-path-home "gtd/*.org"))))
       (message "Agenda is from home..."))
 
 (defun org-toggle-home-or-office()
