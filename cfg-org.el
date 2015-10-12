@@ -1,6 +1,6 @@
 ;; path and system environment setting for orgmode
-(setq org-path-work (concat sync-path-home "org/"))
 (setq org-path-home (concat sync-path-home "org/"))
+(setq org-path-work (concat sync-path-work "org/"))
 ;; file in jekyll base will also be uploaded to github
 (setq path-jekyll-base "~/kimi.im/_notes/_posts")
 ;; in order to sync draft with cloud sync driver
