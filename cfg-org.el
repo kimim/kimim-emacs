@@ -152,8 +152,8 @@
 (setq org-todo-repeat-to-state "REPEAT")
 ;; settings for org-agenda-view
 (setq org-agenda-span 'day)
-(setq org-agenda-skip-scheduled-if-done nil)
-(setq org-agenda-skip-deadline-if-done nil)
+(setq org-agenda-skip-scheduled-if-done t)
+(setq org-agenda-skip-deadline-if-done t)
 (setq org-deadline-warning-days 2)
 (defcustom org-location-home-or-office "office" "office")
 (defun org-toggle-office ()
