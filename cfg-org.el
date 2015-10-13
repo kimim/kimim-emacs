@@ -190,7 +190,9 @@
 (org-toggle-office)
 
 (setq org-agenda-custom-commands
-      '(("o" todo "OPEN"
+      '(("t" todo "TODO|SCHED|OPEN|WAIT"
+         ((org-agenda-sorting-strategy '(priority-down))))
+        ("o" todo "OPEN"
          ((org-agenda-sorting-strategy '(priority-down))))
         ("w" todo "WAIT"
          ((org-agenda-sorting-strategy '(priority-down))))
