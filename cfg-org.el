@@ -92,7 +92,7 @@
         ;; for risks, actions, problems
         (sequence "OPEN(o!)" "WAIT(w)" "|" "CLOSE(c@/!)")
         ;; special states
-        (type "REPEAT(r)" "|" "SOMEDAY(m)" "ABORT(a@/!)")
+        (type "REPEAT(r)" "SOMEDAY(m)" "|" "ABORT(a@/!)")
         ))
 
 (setq org-tag-alist '((:startgroup . nil)
@@ -210,7 +210,7 @@
          "* OPEN PRC:%?\n/Entered on %U/ \\\\")
         ("h" "Habit - 好的行為習慣" entry (file+headline (concat org-path-home "world.org") "Habit")
          "* %?  :habit:\n/Entered on %U/ \\\\")
-        ("w" "Work Journal - 工作中的感悟" entry (file+datetree (concat org-path-work "work-journal.org"))
+        ("w" "Work Journal - 工作中的感悟" entry (file+datetree (concat org-path-home "work-journal.txt"))
 		 "* %?\n  %i")
         ("m" "Meeting Journal - 會議紀要和討論結果" entry (file+datetree (concat org-path-work "meeting-journal.org"))
 		 "* %?")
