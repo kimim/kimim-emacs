@@ -114,7 +114,7 @@
        ;; OS X 下，不和前一個漢字緊挨著的標點符號的字體不是雅黑，就會顯得很難看，這裡設定一下
        (set-fontset-font  "fontset-default" 'cjk-misc (font-spec :family "Microsoft Yahei" :size 16))
        (setq default-frame-alist
-             '((top . 100) (left . 600) (width . 160) (height . 70)
+             '((top . 100) (left . 600) (width . 166) (height . 70)
                (font . "Bitstream Vera Sans Mono-14")
                ))))
 
