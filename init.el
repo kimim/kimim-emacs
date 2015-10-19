@@ -106,7 +106,7 @@
        (set-frame-font "Bitstream Vera Sans Mono-11")
        (set-fontset-font "fontset-default" 'han (font-spec :family "Microsoft Yahei" :size 18))
        (setq default-frame-alist
-             '((top . 80) (left . 200) (width . 128) (height . 45)
+             '((top . 80) (left . 250) (width . 128) (height . 45)
                (font . "Bitstream Vera Sans Mono-11")
                )))
       ((eq window-system 'ns)
