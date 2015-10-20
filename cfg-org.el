@@ -165,7 +165,7 @@
                                (concat org-path-home "world.org")))
   (setq org-refile-files (append (list (concat org-path-home "capture.org")
                                        (concat org-path-home "world.org")
-                                       (concat org-path-home "gtd/new-words.org")
+                                       (concat org-path-home "org/new-words.org")
                                        (concat org-path-home "gtd/kimi.org"))
                                  (file-expand-wildcards (concat org-path-work "gtd/*.org"))
                                  (file-expand-wildcards (concat org-path-work "gtd/*/*.org"))))
