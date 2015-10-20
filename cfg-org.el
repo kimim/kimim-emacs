@@ -202,9 +202,9 @@
          ((org-agenda-sorting-strategy '(todo-state-down))))))
 
 (setq org-capture-templates
-      '(("t" "Inbox Task" entry (file+headline (concat org-path-work "capture.org") "Inbox")
+      '(("t" "Inbox Task" entry (file+headline (concat org-path-home "capture.org") "Inbox")
 		 "* %?\n/Entered on %U/ \\\\")
-        ("o" "Inbox Actions" entry (file+headline (concat org-path-work "capture.org") "Inbox")
+        ("o" "Inbox Actions" entry (file+headline (concat org-path-home "capture.org") "Inbox")
          "* OPEN %?\n/Entered on %U/ \\\\")
         ("b" "Bugs" entry (file+headline (concat org-path-work "office/projects/prj-maint.org") "Maintenance")
          "* OPEN PRC:%?\n/Entered on %U/ \\\\")
@@ -218,7 +218,7 @@
 		 "* %?")
         ("l" "R&D Journal" entry (file+datetree (concat org-path-work "journal/lab-journal.org"))
 		 "* %?")
-        ("n" "New word" entry (file+headline (concat org-path-home "home/new-words.org") "new-words")
+        ("n" "New word" entry (file+headline (concat org-path-home "new-words.org") "new-words")
 		 "* %?\n")))
 
 ;;============================================================================
