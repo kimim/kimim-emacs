@@ -165,7 +165,7 @@
                                (concat org-path-home "world.org")))
   (setq org-refile-files (append (list (concat org-path-home "capture.org")
                                        (concat org-path-home "world.org")
-                                       (concat org-path-home "org/new-words.org")
+                                       (concat org-path-home "gtd/new-words.org")
                                        (concat org-path-home "gtd/kimi.org"))
                                  (file-expand-wildcards (concat org-path-work "gtd/*.org"))
                                  (file-expand-wildcards (concat org-path-work "gtd/*/*.org"))))
@@ -218,7 +218,7 @@
 		 "* %?")
         ("l" "R&D Journal" entry (file+datetree (concat org-path-work "journal/lab-journal.org"))
 		 "* %?")
-        ("n" "New word" entry (file+headline (concat org-path-home "new-words.org") "new-words")
+        ("n" "New word" entry (file+headline (concat org-path-home "gtd/new-words.org") "new-words")
 		 "* %?\n")))
 
 ;;============================================================================
