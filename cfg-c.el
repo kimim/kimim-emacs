@@ -100,7 +100,7 @@
             (yas-minor-mode 1)
             ;;(yas-load-directory "~/.emacs.d/snippets")
             (hs-minor-mode t)
-            (c-set-style "linux")
+            (c-set-style "k&r")
             (c-toggle-auto-newline -1)
             (c-toggle-auto-hungry-state 1)
             (c-toggle-syntactic-indentation 1)
