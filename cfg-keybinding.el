@@ -19,9 +19,7 @@
 (global-set-key [f8] (lambda() (interactive) (list-charset-chars 'ascii)))
 (global-set-key [f9] 'kimim/cyg)
 (global-set-key (kbd "S-<f9>") 'kimim/cmd)
-;;(global-set-key (kbd "C-<f11>") (lambda()
-;;                                  (interactive)
-;;                                  (toggle-frame-fullscreen)))
+(global-set-key (kbd "C-<f11>") 'compile)
 (global-set-key [f12] 'org-toggle-home-or-office)
 
 (global-set-key (kbd "<M-SPC>") (lambda () (interactive)
