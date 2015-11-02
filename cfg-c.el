@@ -29,6 +29,8 @@
 		(require 'cygwin-mount)
 		(cygwin-mount-activate)))
 (setq ggtags-global-ignore-case t)
+(setq ggtags-sort-by-nearness t)
+(setq ggtags-global-ignore-case nil)
 ;; let ggtags use split-window with is redefined by ecb mode
 ;;(setq ggtags-split-window-function 'split-window-below)
 (add-hook 'dired-mode '(lambda ()
