@@ -1,4 +1,3 @@
-;; (setq debug-on-error t)
 ;; System Environment and Path Settings
 (setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
 (if (not (boundp 'path-home-sync))
