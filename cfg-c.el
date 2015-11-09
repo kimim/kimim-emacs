@@ -17,8 +17,7 @@
   (ecb-activate)
   (semantic-mode))
 
-;;(setq ecb-layout-name "left-kimi0")
-(setq ecb-layout-name "left-symboldef")
+(setq ecb-layout-name "left-kimi0")
 (setq ecb-tip-of-the-day nil)
 ;; use left click as the primary mouse button
 (setq ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1))
@@ -118,7 +117,8 @@
                             (tempo-use-tag-list 'c-tempo-tags)
                             (tempo-use-tag-list 'c++-tempo-tags)))
 
-
+(add-hook 'recenter 'pop-tag-mark)
+;;(advice-add 'pop-tag-mark :around #'recenter)
 ;; (defadvice pop-tag-mark (after pop-tag-mark-advice activate)
 ;;    "Recenter when back from tag, advice"
 ;;    (interactive "p")
@@ -129,5 +129,24 @@
 
 (defun ac-cc-mode-setup ()
   (setq ac-sources (append '(ac-source-clang-async ac-source-yasnippet ac-source-gtags) ac-sources)))
+
+(add-to-list 'special-display-buffer-names '("*Completions*" my-display-completions))
+
+(defun my-display-completions (buf)
+  "put the *completions* buffer in the right spot"
+  (let ((windows (delete (minibuffer-window) (window-list))))
+    (if (eq 1 (length windows))
+        (progn
+          (select-window (car windows))
+          (split-window-vertically)))
+    (let ((parent-window (window-at (frame-width) (- (frame-height) 2)))
+          (pop-up-windows t))
+      (select-window parent-window)
+      (split-window-vertically)
+      (let ((target-window (window-at (frame-width) (- (frame-height) 2)))
+            (pop-up-window t))
+        (select-window target-window)
+        (set-window-buffer target-window buf)
+        target-window))))
 
 (provide 'cfg-c)
