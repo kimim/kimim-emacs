@@ -15,7 +15,17 @@
   ;; start coding mode
   (interactive)
   (ecb-activate)
-  (semantic-mode))
+  (semantic-mode)
+  ;; http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
+  (setq split-height-threshold 0)
+  (setq split-width-threshold nil))
+
+(defun working-mode ()
+  (interactive)
+  (setq split-height-threshold 80)
+  (setq split-width-threshold 80)
+  (ecb-deactivate))
+
 
 (setq ecb-layout-name "left-kimi0")
 (setq ecb-tip-of-the-day nil)
@@ -129,24 +139,5 @@
 
 (defun ac-cc-mode-setup ()
   (setq ac-sources (append '(ac-source-clang-async ac-source-yasnippet ac-source-gtags) ac-sources)))
-
-(add-to-list 'special-display-buffer-names '("*Completions*" my-display-completions))
-
-(defun my-display-completions (buf)
-  "put the *completions* buffer in the right spot"
-  (let ((windows (delete (minibuffer-window) (window-list))))
-    (if (eq 1 (length windows))
-        (progn
-          (select-window (car windows))
-          (split-window-vertically)))
-    (let ((parent-window (window-at (frame-width) (- (frame-height) 2)))
-          (pop-up-windows t))
-      (select-window parent-window)
-      (split-window-vertically)
-      (let ((target-window (window-at (frame-width) (- (frame-height) 2)))
-            (pop-up-window t))
-        (select-window target-window)
-        (set-window-buffer target-window buf)
-        target-window))))
 
 (provide 'cfg-c)
