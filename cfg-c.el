@@ -152,6 +152,10 @@
   (if (bufferp (get-buffer "*grep*"))
       (progn
         (switch-to-buffer "*grep*")
+        (kill-buffer-and-window)))
+  (if (bufferp (get-buffer "*Ibuffer*"))
+      (progn
+        (switch-to-buffer "*Ibuffer*")
         (kill-buffer-and-window))))
 
 ;; close grep window and done ggtags navigation when type C-g
