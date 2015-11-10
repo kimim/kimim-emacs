@@ -17,9 +17,12 @@
   (ecb-activate)
   (semantic-mode)
   ;; http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
+  ;; but with ecb-compile-window-height = 10, this is no longer needed
   (setq split-height-threshold 0)
   (setq split-width-threshold 60)
   ;; minibuffer completion not work in ecb, use helm instead
+  (add-to-list 'ecb-compilation-buffer-names
+               '("*helm-mode-execute-extended-command*" . nil))
   (if (eq window-system 'w32)
       (helm-mode)))
 
@@ -36,6 +39,11 @@
 (setq ecb-tip-of-the-day nil)
 ;; use left click as the primary mouse button
 (setq ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1))
+;; With 'ecb-tree-incremental-search' you can specify if the current
+;; search-pattern must be a real prefix of the node (default) or if any
+;; substring is matched.
+(setq ecb-tree-incremental-search 'substring)
+(setq ecb-compile-window-height 15)
 
 ;; ggtags settings
 ;; Activate cygwin mount for gtags CDPATH issue on W32
