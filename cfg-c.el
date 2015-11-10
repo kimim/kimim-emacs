@@ -18,12 +18,17 @@
   (semantic-mode)
   ;; http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
   (setq split-height-threshold 0)
-  (setq split-width-threshold nil))
+  (setq split-width-threshold 60)
+  ;; minibuffer completion not work in ecb, use helm instead
+  (if (eq window-system 'w32)
+      (helm-mode)))
 
 (defun working-mode ()
   (interactive)
   (setq split-height-threshold 80)
-  (setq split-width-threshold 80)
+  (setq split-width-threshold 160)
+  (if (eq window-system 'w32)
+    (helm-mode -1))
   (ecb-deactivate))
 
 
