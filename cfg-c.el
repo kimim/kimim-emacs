@@ -34,7 +34,6 @@
     (helm-mode -1))
   (ecb-deactivate))
 
-
 (setq ecb-layout-name "left-kimi0")
 (setq ecb-tip-of-the-day nil)
 ;; use left click as the primary mouse button
@@ -44,6 +43,7 @@
 ;; substring is matched.
 (setq ecb-tree-incremental-search 'substring)
 (setq ecb-compile-window-height 15)
+(setq ecb-compile-window-width 'edit-window)
 
 ;; ggtags settings
 ;; Activate cygwin mount for gtags CDPATH issue on W32
@@ -140,17 +140,21 @@
                             (tempo-use-tag-list 'c-tempo-tags)
                             (tempo-use-tag-list 'c++-tempo-tags)))
 
-(add-hook 'recenter 'pop-tag-mark)
-;;(advice-add 'pop-tag-mark :around #'recenter)
-;; (defadvice pop-tag-mark (after pop-tag-mark-advice activate)
-;;    "Recenter when back from tag, advice"
-;;    (interactive "p")
-;;    (recenter))
-
 ;; give clang-complete enough time to parse the code
 (setq ac-timer 2)
 
 (defun ac-cc-mode-setup ()
   (setq ac-sources (append '(ac-source-clang-async ac-source-yasnippet ac-source-gtags) ac-sources)))
+
+(defun kimim/kill-grep-and-ggtags-done()
+  (interactive)
+  (ggtags-navigation-mode-done)
+  (if (bufferp (get-buffer "*grep*"))
+      (progn
+        (switch-to-buffer "*grep*")
+        (kill-buffer-and-window))))
+
+;; close grep window and done ggtags navigation when type C-g
+(advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
 
 (provide 'cfg-c)

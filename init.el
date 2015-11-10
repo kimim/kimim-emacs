@@ -33,6 +33,9 @@
                 "/usr/local/bin:"
                 (getenv "PATH")))))
 
+;; load customization
+(setq custom-file "~/kimim-emacs/cfg-custom.el")
+(load custom-file)
 
 ;;==============================================================================
 ;; Initialize Packages
