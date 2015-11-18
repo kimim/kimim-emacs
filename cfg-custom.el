@@ -21,7 +21,7 @@
      ("*Compile-log*")
      ("*bsh*")
      ("*Messages*")
-     ("*helm-mode-execute-extended-command*"))))
+     ("\\*helm-mode-.*\\*" . t))))
  '(ecb-compile-window-width (quote edit-window))
  '(ecb-layout-name "left-kimi0")
  '(ecb-layout-window-sizes
@@ -37,6 +37,11 @@
  '(ecb-minor-mode-text "")
  '(ecb-options-version "2.40")
  '(ecb-source-path (quote (("C:\\Users\\CNKIMA\\Workspace" "workspace"))))
+ '(ecb-tag-visit-post-actions
+   (quote
+    ((default ecb-tag-visit-smart-tag-start ecb-tag-visit-highlight-tag-header ecb-tag-visit-recenter-top)
+     (java-mode ecb-tag-visit-goto-doc-start)
+     (jde-mode ecb-tag-visit-goto-doc-start))))
  '(ecb-tip-of-the-day nil)
  '(fill-column 80)
  '(ggtags-find-tag-hook (quote (recenter)))
@@ -49,4 +54,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(ecb-default-general-face ((t (:height 0.8)))))

@@ -22,7 +22,8 @@
   (setq split-width-threshold 60)
   ;; minibuffer completion not work in ecb, use helm instead
   (add-to-list 'ecb-compilation-buffer-names
-               '("*helm-mode-execute-extended-command*" . nil))
+               '("*helm-mode-execute-extended-command*" . nil)
+               '("*helm-mode-bookmark-jump*" . nill))
   (if (eq window-system 'w32)
       (helm-mode)))
 
@@ -148,6 +149,7 @@
 
 (defun kimim/kill-grep-and-ggtags-done()
   (interactive)
+;;  (org-agenda-quit)
   (ggtags-navigation-mode-done)
   (if (bufferp (get-buffer "*grep*"))
       (progn
@@ -160,5 +162,10 @@
 
 ;; close grep window and done ggtags navigation when type C-g
 (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
+(defun kimim/recenter()
+  (interactive)
+  (recenter))
+
+(advice-add 'pop-tag-mark :after #'kimim/recenter)
 
 (provide 'cfg-c)
