@@ -36,6 +36,11 @@
       (ecb-methods-buffer-name 0.1813186813186813 . 0.9814814814814815)))))
  '(ecb-minor-mode-text "")
  '(ecb-options-version "2.40")
+ '(ecb-source-file-regexps
+   (quote
+    ((".*"
+      ("\\(^\\(\\.\\|#\\)\\|\\(~$\\|\\.\\(elc\\|obj\\|o\\|class\\|lib\\|dll\\|a\\|so\\|cache\\|scc\\)$\\)\\)" "^GPATH$" "^GRTAGS$" "^GTAGS$")
+      ("^\\.\\(emacs\\|gnus\\)$")))))
  '(ecb-source-path (quote (("C:\\Users\\CNKIMA\\Workspace" "workspace"))))
  '(ecb-tag-visit-post-actions
    (quote
