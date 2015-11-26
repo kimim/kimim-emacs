@@ -1,0 +1,22 @@
+* Config file structure
+** init
+- system setting
+  - system variables
+  - dir path:  load path, info path, exec path, PATH
+  - file path: abbrev, custom-file
+- package system
+- language and encoding
+- appearance, color, font, display
+- general edit setting
+- backup and auto save
+- bookmark
+- dired and dired-x
+- global mode alist
+- auto completion
+** cfg-org
+** cfg-gnus
+** cfg-kimim
+** cfg-jekyll
+** cfg-c
+** cfg-python
+** cfg-keybinding
