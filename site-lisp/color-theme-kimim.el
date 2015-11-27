@@ -151,8 +151,6 @@ Includes faces for font-lock, widget, custom, speedbar."
 
 (color-theme-kimim)
 
-
-
 (provide 'color-theme-kimim)
 
 ;;; color-theme-kimim.el ends here

@@ -3,6 +3,7 @@
 (require 'tempo)
 (require 'ggtags)
 (require 'auto-complete-clang-async)
+(require 'syntax-subword)
 
 (setq tempo-interactive t)
 
@@ -123,6 +124,7 @@
           (lambda ()
             (ggtags-mode 1)
             (yas-minor-mode 1)
+            (syntax-subword-mode 1)
             ;;(yas-load-directory "~/.emacs.d/snippets")
             (hs-minor-mode t)
             (c-set-style "k&r")
@@ -131,6 +133,7 @@
             (c-toggle-syntactic-indentation 1)
             (which-function-mode 1)
             (local-set-key "\C-\\" 'tempo-complete-tag)
+            (local-set-key "\C-co" 'ff-find-other-file)
             (local-set-key "\C-c\C-f" 'ggtags-find-file)
             (my-c-mode-common-hook-if0)
             (kimim/c-mode-ac-complete)))

@@ -21,6 +21,7 @@
      ("*Compile-log*")
      ("*bsh*")
      ("*Messages*")
+     ("\\*helm.*\\*" . t)
      ("\\*helm-mode-.*\\*" . t))))
  '(ecb-compile-window-width (quote edit-window))
  '(ecb-layout-name "left-kimi0")
@@ -59,4 +60,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ecb-bucket-node-face ((t nil)))
  '(ecb-default-general-face ((t (:height 0.8)))))
