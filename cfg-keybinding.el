@@ -43,6 +43,7 @@
 (global-set-key "\C-z" 'set-mark-command)
 ;;(global-set-key "\M-/" 'hippie-expand)
 ;;(global-set-key "\M-/" 'ac-clang-async-autocomplete-autotrigger)
+(global-set-key "\M-\\" 'ac-complete-clang-async)
 (global-set-key "\M-/" 'ac-complete-imenu)
 (global-set-key "\M-o" 'other-window)
 (global-set-key "\M-n" 'next-error)
