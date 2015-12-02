@@ -234,4 +234,10 @@ This command will also do untabify."
           (setq color-index 0))
       )))
 
+(defun kimim/look-from-mydict()
+     (interactive)
+     (browse-url (concat "http://www.mydict.com/index.php?controller=Dict_German&action=Search&keyword="
+			 (buffer-substring-no-properties (region-beginning) (region-end)))))
+
+
 (provide 'cfg-kimim)
