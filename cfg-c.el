@@ -114,9 +114,9 @@
   (add-to-list 'ac-sources 'ac-source-clang-async)
   ;; settings inside .dir-locals.el will override this setting!
   ;; then how can I set the default ac-clang-cflags?
-  (if ac-clang-cflags
-      (setq ac-clang-cflags (cons ac-clang-cflags '("-I../inc" "-I../include")))
-    (setq ac-clang-cflags '("-I../inc" "-I../include")))
+  ;; (if ac-clang-cflags
+  ;;     (setq ac-clang-cflags (cons ac-clang-cflags '("-I../inc" "-I../include")))
+  ;;   (setq ac-clang-cflags '("-I../inc" "-I../include")))
   (ac-clang-launch-completion-process)
   (ac-clang-update-cmdlineargs))
 
@@ -164,7 +164,8 @@
         (kill-buffer-and-window))))
 
 ;; close grep window and done ggtags navigation when type C-g
-(advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
+;; but some times it will close all the ecb windows, so remove this advice.
+;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
 (defun kimim/recenter()
   (interactive)
   (recenter))

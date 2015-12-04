@@ -21,6 +21,7 @@
      ("*Compile-log*")
      ("*bsh*")
      ("*Messages*")
+     ("Calendar")
      ("\\*helm.*\\*" . t)
      ("\\*helm-mode-.*\\*" . t))))
  '(ecb-compile-window-width (quote edit-window))
@@ -51,7 +52,7 @@
  '(ecb-tip-of-the-day nil)
  '(fill-column 80)
  '(ggtags-find-tag-hook (quote (recenter)))
- '(ggtags-split-window-function (quote split-window-vertically))
+;; '(ggtags-split-window-function (quote split-window-vertically))
  '(safe-local-variable-values
    (quote
     ((ac-clang-cflags "-I/Users/kimim/Workspace/kimix/include" "-I/Users/kimim/Workspace/kimix/sys/include" "-I/Users/kimim/Workspace/kimix/usr/include" "-I../include")))))
@@ -61,4 +62,5 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ecb-bucket-node-face ((t nil)))
- '(ecb-default-general-face ((t (:height 0.8)))))
+ '(ecb-default-general-face ((t (:height 0.8))))
+ '(ecb-source-read-only-face ((t (:foreground "steel blue")))))

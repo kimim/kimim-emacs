@@ -54,6 +54,7 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 (global-set-key "\C-c=" 'get-file-line)
+(global-set-key "\C-cs" 'helm-swoop)
 (define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
 (define-key global-map "\M-." 'ggtags-find-tag-dwim)
 (define-key global-map "\M-*" 'pop-tag-mark)
@@ -79,6 +80,7 @@
 (define-prefix-command 'ctl-x-m-map)
 ;; 定义了一个新的前缀，并且绑定到 C-x m
 (global-set-key "\C-xm" 'ctl-x-m-map)
+(define-key ctl-x-m-map "c" 'calculator)
 ;; 查看光标处的单词的 man page
 (define-key ctl-x-m-map "m" 'man-follow)
 ;; magit-status for git

@@ -110,11 +110,12 @@
        ;;         (font . "Bitstream Vera Sans Mono-11")
        ;;         ))
        ;; cleaner font setting
-       (set-fontset-font "fontset-default" 'han (font-spec :family "NSimSun" :size 15))
+       (set-fontset-font "fontset-default" 'han (font-spec :family "NSimSun" :size 16))
        (setq default-frame-alist
              '((top . 80) (left . 250) (width . 128) (height . 45)
                ;;(font . "Bitstream Vera Sans Mono-11")
-               (font . "NSimSun-11")
+               ;;(font . "Monaco-10.5") ;; Anti-alias for Monaco is disabled with MacType
+	       (font . "Inconsolata-11") ;; if you like anti-alias, use this to have a try
                ))
        )
       ((eq window-system 'ns)
