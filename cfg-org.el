@@ -90,7 +90,7 @@
         ;; for tasks
         (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
         ;; for risks, actions, problems
-        (sequence "OPEN(o!)" "WAIT(w)" "|" "CLOSE(c@/!)")
+        (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
         ;; special states
         (type "REPEAT(r)" "SOMEDAY(m)" "|" "ABORT(a@/!)")
         ))
