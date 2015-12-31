@@ -136,6 +136,7 @@
             (local-set-key "\C-co" 'ff-find-other-file)
             (local-set-key "\C-c\C-f" 'ggtags-find-file)
             (my-c-mode-common-hook-if0)
+	    (setq c-basic-offset 4)
             (kimim/c-mode-ac-complete)))
 
 (add-hook 'c-mode-hook '(lambda ()
@@ -171,5 +172,7 @@
   (recenter))
 
 (advice-add 'pop-tag-mark :after #'kimim/recenter)
+;;(advice-add 'next-error :after #'kimim/recenter)
+;;(advice-add 'previous-error :after #'kimim/recenter)
 
 (provide 'cfg-c)
