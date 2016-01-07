@@ -50,7 +50,7 @@
      (java-mode ecb-tag-visit-goto-doc-start)
      (jde-mode ecb-tag-visit-goto-doc-start))))
  '(ecb-tip-of-the-day nil)
- '(fill-column 102)
+ '(fill-column 100)
  '(ggtags-find-tag-hook (quote (recenter)))
 ;; '(ggtags-split-window-function (quote split-window-vertically))
  '(safe-local-variable-values

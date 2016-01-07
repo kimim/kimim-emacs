@@ -131,7 +131,7 @@
 ;;==============================================================================
 ;; Editor setting
 ;;==============================================================================
-(setq fill-column 102)
+(setq fill-column 100)
 (delete-selection-mode 1)               ; 輸入的文字覆蓋選中的文字
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
 (setq kill-whole-line t)                ; 在行首 C-k 时，同时删除该行。
@@ -168,7 +168,7 @@
 			(when (derived-mode-p 'org-mode 'markdown-mode 'text-mode)
               (flyspell-mode)
               (visual-line-mode))))
-(setq indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
 
 ;; 当有两个文件名相同的缓冲时，使用前缀的目录名做 buffer 名字
 (setq uniquify-buffer-name-style 'forward)

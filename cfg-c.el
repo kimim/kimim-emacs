@@ -3,7 +3,7 @@
 (require 'tempo)
 (require 'ggtags)
 (require 'auto-complete-clang-async)
-(require 'syntax-subword)
+;;(require 'syntax-subword)
 
 (setq tempo-interactive t)
 
@@ -124,7 +124,7 @@
           (lambda ()
             (ggtags-mode 1)
             (yas-minor-mode 1)
-            (syntax-subword-mode 1)
+;;            (syntax-subword-mode 1)
             ;;(yas-load-directory "~/.emacs.d/snippets")
             (hs-minor-mode t)
             (c-set-style "k&r")
