@@ -69,7 +69,7 @@
 (define-key global-map (kbd "C-\"") 'ace-window)
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 (define-key global-map (kbd "RET") 'newline-and-indent)
-
+(define-key global-map (kbd "<M-S-mouse-1>") 'pop-tag-mark)
 ;; key bindings
 (when (eq system-type 'darwin) ;; mac specific settings
   (setq mac-option-modifier 'alt)
