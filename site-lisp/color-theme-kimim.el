@@ -62,6 +62,7 @@ Includes faces for font-lock, widget, custom, speedbar."
      (underline ((t (:underline t))))
      (lazy-highlight-face ((t (:foreground "dark magenta" :bold t))))
      (font-lock-comment-face ((t (:foreground "ForestGreen" :italic t))))
+     (font-lock-if0-face ((t (:foreground "gray30"))));; for #if 0 block
      (font-lock-string-face ((t (:foreground "RoyalBlue3"))))
      (font-lock-keyword-face ((t (:foreground "dark magenta" :bold t))))
      (font-lock-builtin-face ((t (:foreground "black"))))
@@ -133,7 +134,7 @@ Includes faces for font-lock, widget, custom, speedbar."
      (secondary-selection ((t (:background "gray25"))))
      (font-lock-comment-face ((t (:foreground "LimeGreen" :italic t))))
      (font-lock-string-face ((t (:foreground "SandyBrown"))))
-     (font-lock-keyword-face ((t (:foreground "purple" :bold t))))
+     (font-lock-keyword-face ((t (:foreground "magenta" :bold t))))
      (font-lock-builtin-face ((t (:foreground "white"))))
      (font-lock-function-name-face ((t (:foreground "light blue"))))
      (font-lock-variable-name-face ((t (:foreground "cyan" :italic t))))

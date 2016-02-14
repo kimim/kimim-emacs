@@ -14,6 +14,13 @@ e.g. 2000-10-12."
   (interactive)                 ; permit invocation in minibuffer
   (insert (format-time-string "%Y-%m-%d")))
 
+(defun toyear ()
+  "Insert string for today's date nicely formatted in American style,
+e.g. 2000."
+  (interactive)                 ; permit invocation in minibuffer
+  (insert (format-time-string "%Y")))
+
+
 (defun get-file-line ()
   "Show (and set kill-ring) current file and line"
   (interactive)

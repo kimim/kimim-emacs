@@ -86,6 +86,8 @@
 (blink-cursor-mode -1)                  ; 光标不闪烁
 (show-paren-mode 1)                     ; 高亮显示匹配的括号
 (global-hl-line-mode 1)                 ; 高亮當前行
+(require 'fill-column-indicator)
+(setq fci-always-use-textual-rule t)
 (setq inhibit-eol-conversion nil)       ; 不要轉換 end-of-line style
 (setq frame-title-format
       '("" invocation-name ": "
