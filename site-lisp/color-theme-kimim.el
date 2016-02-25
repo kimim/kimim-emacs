@@ -148,6 +148,7 @@ Includes faces for font-lock, widget, custom, speedbar."
      (show-paren-mismatch-face ((t (:foreground "white" :background "purple"))))
      (org-scheduled-previously ((t (:foreground "light blue"))))
      (org-todo ((t (:foreground "orange" :weight bold))))
+     (outline-3 ((t (:foreground "deep sky blue"))))
      (org-warning ((t (:foreground "orchid" :weight bold)))))))
 
 (color-theme-kimim)

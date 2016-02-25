@@ -123,7 +123,7 @@
           (lambda ()
             (ggtags-mode 1)
             (yas-minor-mode 1)
-            (fci-mode 1)
+;;            (fci-mode 1) ;; conflict with autocomplete, menu will disordered.
 ;;            (syntax-subword-mode 1)
             ;;(yas-load-directory "~/.emacs.d/snippets")
             (hs-minor-mode t)

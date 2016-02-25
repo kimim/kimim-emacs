@@ -24,6 +24,11 @@
 
 (global-set-key (kbd "<M-SPC>") (lambda () (interactive)
                                   (insert ?_)))
+;;(global-set-key (kbd "-") (lambda () (interactive)
+;;                            (insert ?_)))
+;;(global-set-key (kbd "_") (lambda () (interactive)
+;;                            (insert ?-)))
+
 (global-set-key "\M-x" 'helm-M-x)
 (global-set-key "\C-x\C-f" 'helm-find-files)
 (global-set-key "\C-xg" 'grep-find)

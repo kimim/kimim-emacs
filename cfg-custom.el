@@ -24,8 +24,8 @@
      ("Calendar")
      ("\\*helm.*\\*" . t)
      ("\\*helm-mode-.*\\*" . t))))
- '(ecb-compile-window-width (quote edit-window))
- '(ecb-layout-name "left-kimi0")
+ '(ecb-compile-window-width (quote edit-window) t)
+ '(ecb-layout-name "left-kimi0" t)
  '(ecb-layout-window-sizes
    (quote
     (("left-kimi0"
@@ -49,10 +49,12 @@
     ((default ecb-tag-visit-smart-tag-start ecb-tag-visit-highlight-tag-header ecb-tag-visit-recenter-top)
      (java-mode ecb-tag-visit-goto-doc-start)
      (jde-mode ecb-tag-visit-goto-doc-start))))
- '(ecb-tip-of-the-day nil)
+ '(ecb-tip-of-the-day nil t)
  '(fill-column 100)
  '(ggtags-find-tag-hook (quote (recenter)))
-;; '(ggtags-split-window-function (quote split-window-vertically))
+ '(package-selected-packages
+   (quote
+    (drag-stuff writegood-mode whole-line-or-region w32-registry thingatpt+ smartparens python-mode ox-reveal ox-html5slide multiple-cursors markdown-mode magit irony icicles htmlize graphviz-dot-mode google-c-style gnuplot find-file-in-repository fill-column-indicator everything elpy ecb cygwin-mount color-theme-github browse-kill-ring bbdb auto-complete-clang-async auto-complete-clang ace-window ace-isearch ac-clang)))
  '(safe-local-variable-values
    (quote
     ((ac-clang-cflags "-I/Users/kimim/Workspace/kimix/include" "-I/Users/kimim/Workspace/kimix/sys/include" "-I/Users/kimim/Workspace/kimix/usr/include" "-I../include")))))
@@ -63,4 +65,7 @@
  ;; If there is more than one, they won't work right.
  '(ecb-bucket-node-face ((t nil)))
  '(ecb-default-general-face ((t (:height 0.8))))
- '(ecb-source-read-only-face ((t (:foreground "steel blue")))))
+ '(ecb-source-read-only-face ((t (:foreground "steel blue"))))
+ '(helm-selection ((t (:background "medium spring green" :distant-foreground "black"))))
+ '(org-level-3 ((t (:inherit outline-3 :foreground "deep sky blue" :weight normal))))
+ '(outline-3 ((t (:inherit font-lock-keyword-face :width normal)))))

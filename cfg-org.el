@@ -119,6 +119,7 @@
 (add-hook 'org-mode-hook '(lambda ()
                             (auto-fill-mode)
                             (org-display-inline-images)
+                            (drag-stuff-mode -1)
                             (if (boundp 'org-agenda-mode-map)
                                 (org-defkey org-agenda-mode-map "x" 'org-agenda-list-stuck-projects))))
 (setq org-stuck-projects (quote ("+LEVEL>=2-category-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"

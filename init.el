@@ -134,6 +134,7 @@
 ;; Editor setting
 ;;==============================================================================
 (setq fill-column 100)
+(drag-stuff-global-mode 1)              ; use Alt-up/down to drag line or region
 (delete-selection-mode 1)               ; 輸入的文字覆蓋選中的文字
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
 (setq kill-whole-line t)                ; 在行首 C-k 时，同时删除该行。
