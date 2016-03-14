@@ -122,7 +122,7 @@
                             (drag-stuff-mode -1)
                             (if (boundp 'org-agenda-mode-map)
                                 (org-defkey org-agenda-mode-map "x" 'org-agenda-list-stuck-projects))))
-(setq org-stuck-projects (quote ("+LEVEL>=2-category-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
+(setq org-stuck-projects (quote ("+LEVEL>=2-category-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
                                  ("TODO" "SCEHD" "OPEN" "WAIT") nil nil)))
 ;;(setq org-stuck-projects '("+LEVEL>=2/+project-habit/-OPEN-TODO-SCHED-DONE-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
 ;;                                 ("TODO" "SCEHD" "OPEN" "WAIT") ("habit") nil))
@@ -135,6 +135,7 @@
                            ;; refile to item with 'project' tag in org-refile-files
                            (org-refile-files :tag . "project")
                            (org-refile-files :tag . "category")))
+
 (defadvice org-schedule (after add-todo activate)
   (if (or (string= "OPEN" (org-get-todo-state))
           (string= "WAIT" (org-get-todo-state))
@@ -191,16 +192,18 @@
 (org-toggle-office)
 
 (setq org-agenda-custom-commands
-      '(("t" todo "TODO|SCHED|OPEN|WAIT"
+      '(("n" todo "TODO|OPEN"
+         ((org-agenda-sorting-strategy '(priority-down))))
+        ("t" todo "TODO"
          ((org-agenda-sorting-strategy '(priority-down))))
         ("o" todo "OPEN"
          ((org-agenda-sorting-strategy '(priority-down))))
         ("w" todo "WAIT"
          ((org-agenda-sorting-strategy '(priority-down))))
-        ("d" todo "TODO"
-         ((org-agenda-sorting-strategy '(priority-down))))
         ("h" tags "habit/-ABORT-CLOSE"
-         ((org-agenda-sorting-strategy '(todo-state-down))))))
+         ((org-agenda-sorting-strategy '(todo-state-down))))
+        ("l" tags "clock"
+         ((org-agenda-sorting-strategy '(priority-down))))))
 
 (setq org-capture-templates
       '(("c" "Capture" entry (file+headline (concat org-path-home "capture.org") "Inbox")
