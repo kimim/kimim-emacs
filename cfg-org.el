@@ -192,9 +192,9 @@
 (org-toggle-office)
 
 (setq org-agenda-custom-commands
-      '(("n" todo "TODO|OPEN"
+      '(("t" todo "TODO|OPEN"               ;; TODO list
          ((org-agenda-sorting-strategy '(priority-down))))
-        ("t" todo "TODO"
+        ("d" todo "TODO|SCHED|OPEN|WAIT"    ;; all task should be done or doing
          ((org-agenda-sorting-strategy '(priority-down))))
         ("o" todo "OPEN"
          ((org-agenda-sorting-strategy '(priority-down))))
@@ -202,30 +202,30 @@
          ((org-agenda-sorting-strategy '(priority-down))))
         ("h" tags "habit/-ABORT-CLOSE"
          ((org-agenda-sorting-strategy '(todo-state-down))))
-        ("l" tags "clock"
+        ("c" tags "clock"
          ((org-agenda-sorting-strategy '(priority-down))))))
 
 (setq org-capture-templates
       '(("c" "Capture" entry (file+headline (concat org-path-home "capture.org") "Inbox")
-         "* %?\n/Entered on %U/ \\\\")
+         "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
         ("t" "TODO" entry (file+headline (concat org-path-home "capture.org") "Inbox")
-         "* TODO %?\n/Entered on %U/ \\\\")
+         "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
         ("o" "Action" entry (file+headline (concat org-path-home "capture.org") "Inbox")
-         "* OPEN %?\n/Entered on %U/ \\\\")
+         "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
         ("b" "Bug" entry (file+headline (concat org-path-work "gtd-work/projects/prj-maint.org") "Maintenance")
-         "* OPEN PRC:%?\n/Entered on %U/ \\\\")
+         "* OPEN PRC:%?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
         ("h" "Habit" entry (file+headline (concat org-path-home "world.org") "Habit")
-         "* %?  :habit:\n/Entered on %U/ \\\\")
+         "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
         ("l" "Line" entry (file+datetree (concat org-path-work "journal/line-journal.org"))
          "* %?\n%U")
         ("e" "Team" entry (file+datetree (concat org-path-work "journal/team-journal.org"))
          "* %?\n%U")
         ("w" "Work" entry (file+datetree (concat org-path-home "journal/work-journal.txt"))
-         "* %?\n  %i")
+         "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
         ("k" "Life" entry (file+datetree (concat org-path-home "journal/life-journal.txt"))
-         "* %?\n%U")
+         "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
         ("n" "Word" entry (file+headline (concat org-path-home "new-words.org") "new-words")
-         "* %?\n")))
+         "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
 ;;============================================================================
 ;; org-mode-reftex-search
