@@ -86,6 +86,12 @@ Open windows explorer in the current directory and select the current file"
   (w32-shell-execute
    "open" "4nt"))
 
+(defun kimim/dc ()
+  "Open file location in double commander"
+  (interactive)
+  (w32-shell-execute
+   "open" "doublecmd" (concat "-L " (replace-regexp-in-string "/" "\\\\" (pwd)))))
+
 ;;(yas-global-mode 1)
 ;; Completing point by some yasnippet key
 ;; (defun yas-ido-expand ()
