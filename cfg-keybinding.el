@@ -19,6 +19,7 @@
 (global-set-key [f8] (lambda() (interactive) (list-charset-chars 'ascii)))
 (global-set-key [f9] 'kimim/cyg)
 (global-set-key (kbd "S-<f9>") 'kimim/cmd)
+(global-set-key [f10] 'kimim/dc)
 (global-set-key (kbd "C-<f11>") 'compile)
 (global-set-key [f12] 'org-toggle-home-or-office)
 
@@ -31,6 +32,7 @@
 
 (global-set-key "\M-x" 'helm-M-x)
 (global-set-key "\C-x\C-f" 'helm-find-files)
+(global-set-key "\C-x/" 'helm-global-mark-ring)
 (global-set-key "\C-xg" 'grep-find)
 (global-set-key "\C-x\C-b" 'ibuffer-other-window)
 (global-set-key "\C-h" 'delete-backward-char)
@@ -43,7 +45,6 @@
 (global-set-key "\C-x\C-v" 'view-file-other-window)
 (global-set-key "\C-c\C-o" 'occur)
 ;;(global-set-key "\C-c;" 'flyspell-correct-word-before-point) not available in org mode
-(global-set-key "\C-x/" 'pop-global-mark)
 (global-set-key "\C-\\" 'tempo-complete-tag)
 (global-set-key "\C-z" 'set-mark-command)
 ;;(global-set-key "\M-/" 'hippie-expand)
@@ -67,7 +68,7 @@
 (global-set-key "\C-c\C-x\C-i" 'org-clock-in)
 (global-set-key "\C-c\C-x\C-o" 'org-clock-out)
 (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
-(define-key global-map "\C-cg" 'kimim/grep-find)
+(define-key global-map "\C-cg" 'ggtags-grep)
 (define-key global-map "\C-cd" 'kimim/look-from-mydict)
 (define-key global-map (kbd "C-`") 'ace-jump-mode)
 (define-key global-map (kbd "<apps>") 'ace-jump-mode)
@@ -86,6 +87,10 @@
 ;; 定义了一个新的前缀，并且绑定到 C-x m
 (global-set-key "\C-xm" 'ctl-x-m-map)
 (define-key ctl-x-m-map "c" 'calculator)
+;; Make a new frame
+(define-key ctl-x-m-map "f" 'make-frame)
+;; Make a new frame
+(define-key ctl-x-m-map "p" 'helm-global-mark-ring)
 ;; 查看光标处的单词的 man page
 (define-key ctl-x-m-map "m" 'man-follow)
 ;; magit-status for git
