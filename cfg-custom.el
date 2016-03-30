@@ -50,11 +50,11 @@
      (java-mode ecb-tag-visit-goto-doc-start)
      (jde-mode ecb-tag-visit-goto-doc-start))))
  '(ecb-tip-of-the-day nil t)
- '(fill-column 100)
+ '(fill-column 80)
  '(ggtags-find-tag-hook (quote (recenter)))
  '(package-selected-packages
    (quote
-    (drag-stuff writegood-mode whole-line-or-region w32-registry thingatpt+ smartparens python-mode ox-reveal ox-html5slide multiple-cursors markdown-mode magit irony icicles htmlize graphviz-dot-mode google-c-style gnuplot find-file-in-repository fill-column-indicator everything elpy ecb cygwin-mount color-theme-github browse-kill-ring bbdb auto-complete-clang-async auto-complete-clang ace-window ace-isearch ac-clang)))
+    (history drag-stuff writegood-mode whole-line-or-region w32-registry thingatpt+ smartparens python-mode ox-reveal ox-html5slide multiple-cursors markdown-mode magit irony icicles htmlize graphviz-dot-mode google-c-style gnuplot find-file-in-repository fill-column-indicator everything elpy ecb cygwin-mount color-theme-github browse-kill-ring bbdb auto-complete-clang-async auto-complete-clang ace-window ace-isearch ac-clang)))
  '(safe-local-variable-values
    (quote
     ((ac-clang-cflags "-I/Users/kimim/Workspace/kimix/include" "-I/Users/kimim/Workspace/kimix/sys/include" "-I/Users/kimim/Workspace/kimix/usr/include" "-I../include")))))

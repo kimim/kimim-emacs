@@ -16,7 +16,7 @@
        (add-to-list 'exec-path (concat cygwin-path "usr/local/bin"))
        (add-to-list 'exec-path (concat cygwin-path "usr/bin"))
        (add-to-list 'exec-path (concat cygwin-path "bin"))
-       (add-to-list 'exec-path "C:/emacs/bin/")
+       (add-to-list 'exec-path "C:/kimikit/emacs/bin/")
        (setenv "PATH"
                (concat
                 (concat cygwin-path "usr/local/bin" ";")
@@ -133,7 +133,7 @@
 ;;==============================================================================
 ;; Editor setting
 ;;==============================================================================
-(setq fill-column 100)
+(setq fill-column 80)
 (drag-stuff-global-mode 1)              ; use Alt-up/down to drag line or region
 (delete-selection-mode 1)               ; 輸入的文字覆蓋選中的文字
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
@@ -144,6 +144,7 @@
       (number-sequence 4 120 4))        ; 每次tab空格數
 (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
 (winner-mode t)
+(abbrev-mode -1)
 ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
 ;; 候，备份文件是复本，而不是原件。
 (setq backup-directory-alist '(("." . "~/Temp")))

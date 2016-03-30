@@ -2,7 +2,7 @@
 ;;; C-Mode Templates and C++-Mode Templates (uses C-Mode Templates also)
 (require 'tempo)
 (require 'ggtags)
-(require 'auto-complete-clang-async)
+;;(require 'auto-complete-clang-async)
 ;;(require 'syntax-subword)
 (setq tempo-interactive t)
 
@@ -109,15 +109,16 @@
 
 (defun kimim/c-mode-ac-complete()
   (global-auto-complete-mode t)
-  (setq ac-clang-complete-executable "clang-complete")
-  (add-to-list 'ac-sources 'ac-source-clang-async)
+  ;;(setq ac-clang-complete-executable "clang-complete")
+  ;;(add-to-list 'ac-sources 'ac-source-clang-async)
   ;; settings inside .dir-locals.el will override this setting!
   ;; then how can I set the default ac-clang-cflags?
   ;; (if ac-clang-cflags
   ;;     (setq ac-clang-cflags (cons ac-clang-cflags '("-I../inc" "-I../include")))
   ;;   (setq ac-clang-cflags '("-I../inc" "-I../include")))
-  (ac-clang-launch-completion-process)
-  (ac-clang-update-cmdlineargs))
+  ;;(ac-clang-launch-completion-process)
+  ;;(ac-clang-update-cmdlineargs)
+  )
 
 (add-hook 'c-mode-common-hook
           (lambda ()
@@ -149,7 +150,8 @@
 (setq ac-timer 2)
 
 (defun ac-cc-mode-setup ()
-  (setq ac-sources (append '(ac-source-clang-async ac-source-yasnippet ac-source-gtags) ac-sources)))
+;;  (setq ac-sources (append '(ac-source-clang-async ac-source-yasnippet ac-source-gtags) ac-sources)))
+  (setq ac-sources (append '(ac-source-yasnippet ac-source-gtags) ac-sources)))
 
 (defun kimim/kill-grep-and-ggtags-done()
   (interactive)
