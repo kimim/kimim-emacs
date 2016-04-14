@@ -11,6 +11,7 @@
 (setq message-directory "~/../../Gnus/Mail/")
 (setq gnus-directory "~/../../Gnus/News/")
 (setq nnfolder-directory "~/../../Gnus/Mail/Archive")
+
 (setq gnus-agent t)
 (setq gnus-agent-expire-days 90)
 ; prompt for how many articles only for larger than 1000 articles
@@ -24,5 +25,6 @@
 (add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
 (add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
 (add-to-list 'gnus-secondary-select-methods '(nnml ""))
+
 
 (provide 'cfg-gnus)

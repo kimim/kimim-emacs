@@ -14,7 +14,7 @@
 ;; plant uml setting
 (require 'ob-plantuml)
 (setenv "GRAPHVIZ_DOT" "C:\\cygwin\\bin\\dot.exe")
-(setq org-plantuml-jar-path "~/../Tools/plantuml.jar")
+(setq org-plantuml-jar-path "C:\\kimikit\\plantuml\\plantuml.jar")
 
 (setq org-hide-leading-stars t)
 (setq org-footnote-auto-adjust t)
