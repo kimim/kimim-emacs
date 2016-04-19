@@ -1,10 +1,6 @@
 ;; path and system environment setting for orgmode
 (setq org-path-home (concat sync-path-home "org/"))
 (setq org-path-work (concat sync-path-work "org/"))
-;; file in jekyll base will also be uploaded to github
-(setq path-jekyll-base "~/kimi.im/_notes/_posts")
-;; in order to sync draft with cloud sync driver
-(setq path-jekyll-draft (concat sync-path-home "kimim/_draft/"))
 
 ;(require 'ox-reveal)
 ;; load htmlize.el , which org-babel export syntax highlight source code need it
@@ -225,7 +221,7 @@
         ("k" "Life" entry (file+datetree (concat org-path-home "journal/life-journal.txt"))
          "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
         ("n" "Word" entry (file+headline (concat org-path-home "new-words.org") "new-words")
-         "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
+         "* %?\n")))
 
 ;;============================================================================
 ;; org-mode-reftex-search
