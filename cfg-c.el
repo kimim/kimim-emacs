@@ -147,7 +147,7 @@
                             (tempo-use-tag-list 'c++-tempo-tags)))
 
 ;; give clang-complete enough time to parse the code
-(setq ac-timer 2)
+;;(setq ac-timer 1)
 
 (defun ac-cc-mode-setup ()
 ;;  (setq ac-sources (append '(ac-source-clang-async ac-source-yasnippet ac-source-gtags) ac-sources)))

@@ -6,6 +6,7 @@
 (global-set-key (kbd "C-<f1>") 'nuke-other-buffers)
 (global-set-key [f2] 'other-window)
 (global-set-key [f3] 'other-frame)
+(global-set-key (kbd "C-<tab>") 'other-frame)
 (global-set-key [f4] 'delete-window)
 (global-set-key [f5] (lambda() (interactive)
                        (switch-to-buffer "*scratch*") (delete-other-windows)))

@@ -1,6 +1,11 @@
 ;; ============================================================================
 ;; org for blog system
 ;; ============================================================================
+;; file in jekyll base will also be uploaded to github
+(setq path-jekyll-base "~/kimi.im/_notes/_posts")
+;; in order to sync draft with cloud sync driver
+(setq path-jekyll-draft (concat sync-path-home "jekyll/_draft/"))
+
 (setq org-publish-project-alist
       '(
         ("org-blog-content"

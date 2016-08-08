@@ -248,6 +248,9 @@
 ;;==============================================================================
 ;; Load other configuration files
 ;;==============================================================================
+(require 'yasnippet)
+(yas/global-mode 1)
+(yas-load-directory (concat sync-path-home "tools/snippets"))
 (require 'cfg-org)
 (require 'cfg-gnus)
 (require 'cfg-kimim)

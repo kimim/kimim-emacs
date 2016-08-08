@@ -1,6 +1,7 @@
 ;; path and system environment setting for orgmode
 (setq org-path-home (concat sync-path-home "org/"))
 (setq org-path-work (concat sync-path-work "org/"))
+
 ;; file in jekyll base will also be uploaded to github
 (setq path-jekyll-base "~/kimi.im/_notes/_posts")
 ;; in order to sync draft with cloud sync driver
@@ -14,7 +15,7 @@
 ;; plant uml setting
 (require 'ob-plantuml)
 (setenv "GRAPHVIZ_DOT" "C:\\cygwin\\bin\\dot.exe")
-(setq org-plantuml-jar-path "~/../Tools/plantuml.jar")
+(setq org-plantuml-jar-path "C:\\kimikit\\plantuml\\plantuml.jar")
 
 (setq org-hide-leading-stars t)
 (setq org-footnote-auto-adjust t)
@@ -225,7 +226,7 @@
         ("k" "Life" entry (file+datetree (concat org-path-home "journal/life-journal.txt"))
          "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
         ("n" "Word" entry (file+headline (concat org-path-home "new-words.org") "new-words")
-         "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
+         "* %?\n")))
 
 ;;============================================================================
 ;; org-mode-reftex-search
