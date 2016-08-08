@@ -63,11 +63,13 @@
   (goto-char (point-min))
 ;;  (search-forward "tags: [")
   (re-search-forward "tags: \\[" nil t)
-  (insert (ido-completing-read "tags: " '("travel" "photography" "emacs" "org-mode"
-                                          "holiday" "street-shots" "Windows"
-                                          "baby care" "Deutsch" "Français"
-                                          "c prog" "management" "team"
-                                          "cygwin")))
+  (insert (ido-completing-read "tags: " '(
+                                          "emacs" "org-mode"
+                                          "Deutsch" "Français" "English"
+                                          "Windows" "RTOS" "industry"
+                                          "travel"  "street-shots" "photography"
+                                          "leadership"
+                                          )))
   (insert ", ")
   )
 
@@ -78,9 +80,12 @@ catergories and tags are generated from exisiting posts"
   (insert "#+BEGIN_HTML\n---\nlayout: post\ntitle: ")
   (insert (read-string "Title: "))
   (insert "\ncategories: [")
-  (insert (ido-completing-read "categories: " '("education" "language" "photography"
-                                                "psychology" "fasion"  "management"
-                                                "programming" "productivity")))
+  (insert (ido-completing-read "categories: " '(
+                                                "technology"
+                                                "productivity" "leadership"
+                                                "psychology" "language"
+                                                "education" "photography"
+                                                )))
   (insert "]")
   (insert "\ntags: [")
   (insert (ido-completing-read "tags: " '("travel" "photography" "emacs" "org-mode"
