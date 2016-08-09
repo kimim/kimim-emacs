@@ -221,7 +221,7 @@
         ("k" "Life" entry (file+datetree (concat org-path-home "journal/life-journal.txt"))
          "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
         ("n" "Word" entry (file+headline (concat org-path-home "new-words.org") "new-words")
-         "* %?\n")))
+         "* %?\n\n\n/Example:/\n")))
 
 ;;============================================================================
 ;; org-mode-reftex-search
