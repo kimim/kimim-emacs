@@ -42,6 +42,12 @@ Open windows explorer in the current directory and select the current file"
    (concat "/e,/select," (convert-standard-filename buffer-file-name))
    ))
 
+(defun kimim/lookinsight ()
+  (interactive)
+  (kill-ring-save (region-beginning) (region-end))
+  (w32-shell-execute
+   "open" "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe" "c:\\kimikit\\Autohotkey\\lookinsight.ahk"))
+
 (defun mac-open-terminal ()
    (interactive)
    (let ((dir ""))
@@ -252,5 +258,72 @@ This command will also do untabify."
      (browse-url (concat "http://www.mydict.com/index.php?controller=Dict_German&action=Search&keyword="
 			 (buffer-substring-no-properties (region-beginning) (region-end)))))
 
+
+(defun my-blink(begin end)
+  "blink a region. used for copy and delete"
+  (interactive)
+  (let* ((rh (make-overlay begin end)))
+    (progn
+      (overlay-put rh 'face '(:background "DodgerBlue" :foreground "White"))
+      (sit-for 0.2 t)
+      (delete-overlay rh)
+      )))
+
+(defun get-point (symbol &optional arg)
+  "get the point"
+  (funcall symbol arg)
+  (point)
+  )
+
+(defun copy-thing (begin-of-thing end-of-thing &optional arg)
+  "Copy thing between beg & end into kill ring. Remove leading and
+trailing whitespace while we're at it. Also, remove whitespace before
+column, if any. Also, font-lock will be removed, if any. Also, the
+copied region will be highlighted shortly (it 'blinks')."
+  (save-excursion
+    (let* ((beg (get-point begin-of-thing 1))
+           (end (get-point end-of-thing arg)))
+      (progn
+        (copy-region-as-kill beg end)
+        (with-temp-buffer
+          (yank)
+          (goto-char 1)
+          (while (looking-at "[ \t\n\r]")
+            (delete-char 1))
+          (delete-trailing-whitespace)
+          (delete-whitespace-rectangle (point-min) (point-max)) ;; del column \s, hehe
+           (font-lock-unfontify-buffer) ;; reset font lock
+           (kill-region (point-min) (point-max))
+          )
+        ))))
+
+(defun copy-word (&optional arg)
+  "Copy word at point into kill-ring"
+  (interactive "P")
+  (my-blink (get-point 'backward-word 1) (get-point 'forward-word 1))
+  (copy-thing 'backward-word 'forward-word arg)
+  (message "word at point copied"))
+
+(defun copy-line (&optional arg)
+  "Copy line at point into kill-ring, truncated"
+  (interactive "P")
+  (my-blink (get-point 'beginning-of-line 1) (get-point 'end-of-line 1))
+  (copy-thing 'beginning-of-line 'end-of-line arg)
+  (message "line at point copied"))
+
+(defun copy-paragraph (&optional arg)
+  "Copy paragraph at point into kill-ring, truncated"
+  (interactive "P")
+  (my-blink (get-point 'backward-paragraph 1) (get-point 'forward-paragraph 1))
+  (copy-thing 'backward-paragraph 'forward-paragraph arg)
+  (message "paragraph at point copied"))
+
+(defun copy-buffer(&optional arg)
+  "Copy the whole buffer into kill-ring, as-is"
+  (interactive "P")
+  (progn
+    (my-blink (point-min) (point-max))
+    (copy-region-as-kill (point-min) (point-max))
+    (message "buffer copied")))
 
 (provide 'cfg-kimim)
