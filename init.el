@@ -126,7 +126,7 @@
        (set-fontset-font  "fontset-default" 'cjk-misc (font-spec :family "Microsoft Yahei" :size 16))
        (setq default-frame-alist
              '((top . 100) (left . 600) (width . 166) (height . 70)
-               (font . "Bitstream Vera Sans Mono-14")
+;;               (font . "Bitstream Vera Sans Mono-14")
                ))))
 (require 'color-theme-kimim)
 

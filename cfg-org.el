@@ -2,6 +2,11 @@
 (setq org-path-home (concat sync-path-home "org/"))
 (setq org-path-work (concat sync-path-work "org/"))
 
+;; file in jekyll base will also be uploaded to github
+(setq path-jekyll-base "~/kimi.im/_notes/_posts")
+;; in order to sync draft with cloud sync driver
+(setq path-jekyll-draft (concat sync-path-home "kimim/_draft/"))
+
 ;(require 'ox-reveal)
 ;; load htmlize.el , which org-babel export syntax highlight source code need it
 (require 'htmlize)
