@@ -63,6 +63,9 @@
 (global-set-key "\C-c=" 'get-file-line)
 (global-set-key "\C-cs" 'helm-swoop)
 (global-set-key "\C-cd" 'kimim/lookinsight)
+(global-set-key "\C-cj" 'jekyll)
+(global-set-key "\C-c\C-jp" 'jekyll-post)
+
 (define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
 (define-key global-map "\M-." 'ggtags-find-tag-dwim)
 (define-key global-map "\M-*" 'pop-tag-mark)
