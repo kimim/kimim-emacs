@@ -84,6 +84,17 @@
 (setq org-reveal-hlevel 2)
 
 ;;============================================================================
+;; new link to use everything/? to locate a file with unique ID
+;;============================================================================
+(org-add-link-type "match" 'org-match-open)
+
+(defun org-match-open (path)
+  "Visit the match search on PATH.
+     PATH should be a topic that can be thrown at everything/?."
+  (w32-shell-execute
+   "open" "Everything" (concat "-search " path)))
+
+;;============================================================================
 ;; org as GTD system
 ;;============================================================================
 (setq org-todo-keywords
@@ -217,13 +228,15 @@
          "* OPEN PRC:%?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
         ("h" "Habit" entry (file+headline (concat org-path-home "world.org") "Habit")
          "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-        ("l" "Line" entry (file+datetree (concat org-path-work "journal/line-journal.txt"))
-         "* %?\n%U")
-        ("e" "Team" entry (file+datetree (concat org-path-work "journal/team-journal.txt"))
-         "* %?\n%U")
         ("p" "Proj" entry (file+datetree (concat org-path-home "journal/proj-journal.txt"))
          "* %?\n")
+        ("l" "Line" entry (file+datetree (concat org-path-work "journal/line-journal.txt"))
+         "* %?\n")
+        ("g" "pact" entry (file+datetree (concat org-path-work "journal/pact-journal.txt"))
+         "* %?\n")
         ("w" "Work" entry (file+datetree (concat org-path-home "journal/work-journal.txt"))
+         "* %?\n")
+        ("e" "Team" entry (file+datetree (concat org-path-work "journal/team-journal.txt"))
          "* %?\n")
         ("k" "Life" entry (file+datetree (concat org-path-home "journal/life-journal.txt"))
          "* %?\n")

@@ -49,8 +49,8 @@
 ;; ggtags settings
 ;; Activate cygwin mount for gtags CDPATH issue on W32
 (cond ((eq window-system 'w32)
-		(require 'cygwin-mount)
-		(cygwin-mount-activate)))
+       (require 'cygwin-mount)
+       (cygwin-mount-activate)))
 (setq ggtags-global-ignore-case t)
 (setq ggtags-sort-by-nearness t)
 (setq ggtags-global-ignore-case nil)
@@ -137,7 +137,7 @@
             (local-set-key "\C-co" 'ff-find-other-file)
             (local-set-key "\C-c\C-f" 'ggtags-find-file)
             (my-c-mode-common-hook-if0)
-	    (setq c-basic-offset 4)
+            (setq c-basic-offset 4)
             (kimim/c-mode-ac-complete)))
 
 (add-hook 'c-mode-hook '(lambda ()

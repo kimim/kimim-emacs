@@ -117,7 +117,7 @@
              '((top . 80) (left . 250) (width . 128) (height . 45)
                ;;(font . "Bitstream Vera Sans Mono-11")
                ;;(font . "Monaco-10.5") ;; Anti-alias for Monaco is disabled with MacType
-	       (font . "Inconsolata-11") ;; if you like anti-alias, use this to have a try
+               (font . "Inconsolata-11") ;; if you like anti-alias, use this to have a try
                ))
        )
       ((eq window-system 'ns)
@@ -134,6 +134,7 @@
 ;; Editor setting
 ;;==============================================================================
 (setq fill-column 80)
+(whitespace-mode 1)
 (drag-stuff-global-mode 1)              ; use Alt-up/down to drag line or region
 (delete-selection-mode 1)               ; 輸入的文字覆蓋選中的文字
 (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
