@@ -132,6 +132,7 @@
             (c-toggle-auto-newline 0)
             (c-toggle-auto-hungry-state 0)
             (c-toggle-syntactic-indentation 1)
+            (highlight-indentation-mode 1)
             (which-function-mode 1)
             (local-set-key "\C-\\" 'tempo-complete-tag)
             (local-set-key "\C-co" 'ff-find-other-file)

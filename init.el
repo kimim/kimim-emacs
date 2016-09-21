@@ -257,6 +257,7 @@
 (require 'cfg-kimim)
 (require 'cfg-jekyll)
 (require 'cfg-c)
+(require 'cfg-python)
 (require 'cfg-keybinding)
 (load-file "~/.emacs.d/work.el")
 (load-file "~/.emacs.d/home.el")

@@ -21,6 +21,8 @@
 (setq org-footnote-auto-adjust t)
 (setq org-html-validation-link nil)
 (setq org-export-creator-string "")
+;; no empty line after collapsed
+(setq org-cycle-separator-lines 0)
 ;; src block setting
 (setq org-src-window-setup 'current-window)
 (setq org-src-fontify-natively t)
