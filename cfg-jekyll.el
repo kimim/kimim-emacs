@@ -93,11 +93,9 @@ catergories and tags are generated from exisiting posts"
                                                 )))
   (insert "]")
   (insert "\ntags: [")
-  (insert (ido-completing-read "tags: " '("travel" "photography" "emacs" "org-mode"
-                                          "holiday" "street-shots" "Windows"
-                                          "baby care" "Deutsch" "Français"
-                                          "c prog" "management" "team"
-                                          "cygwin")))
+  (insert (ido-completing-read "tags: " '("emacs" "org-mode" "c prog"
+                                          "Deutsch" "Français" "English"
+                                          "management")))
   (insert "]\n---\n#+END_HTML\n\n")
   )
 

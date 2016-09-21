@@ -26,7 +26,14 @@
 ;; src block setting
 (setq org-src-window-setup 'current-window)
 (setq org-src-fontify-natively t)
-
+(define-key org-mode-map (kbd "C-c C-x h") (lambda()
+                                             (interactive)
+                                             (insert "^{()}")
+                                             (backward-char 2)))
+(define-key org-mode-map (kbd "C-c C-x l") (lambda()
+                                             (interactive)
+                                             (insert "_{}")
+                                             (backward-char 1)))
 ;; (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f"
 ;; 							  "xelatex -interaction nonstopmode %f"))
 ;;(setq org-latex-pdf-process '("pdflatex -interaction nonstopmode %f"))
@@ -275,6 +282,8 @@
         (?h . "** %t\n:PROPERTIES:\n:Custom_ID: %l\n:END:\n[[papers:%l][%l-paper]]")))))
   (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
   (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search))
+
+
 
 
 (defadvice org-html-paragraph (before fsh-org-html-paragraph-advice
