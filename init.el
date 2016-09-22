@@ -75,7 +75,6 @@
 (setq visible-bell t)                           ; 關閉視覺告警
 (setq ring-bell-function #'ignore)
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
 (cond ((eq window-system 'ns)
        (menu-bar-mode 1))
       ((eq window-system 'w32)
@@ -261,3 +260,6 @@
 (require 'cfg-keybinding)
 (load-file "~/.emacs.d/work.el")
 (load-file "~/.emacs.d/home.el")
+;; dont know why, only put disable scroll-bar at the end of .emacs, the new
+;; created frame can inherit this setting
+(scroll-bar-mode -1)

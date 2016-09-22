@@ -93,10 +93,7 @@
 (global-set-key "\C-xm" 'ctl-x-m-map)
 (define-key ctl-x-m-map "c" 'calculator)
 ;; Make a new frame
-(define-key ctl-x-m-map "f" (lambda()
-                              (interactive)
-                              (setq scroll-bar-mode nil)
-                              (make-frame '((minibuffer . nil)))))
+(define-key ctl-x-m-map "f" 'make-frame)
 ;; Make a new frame
 (define-key ctl-x-m-map "p" 'helm-global-mark-ring)
 ;; 查看光标处的单词的 man page
