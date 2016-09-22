@@ -26,6 +26,7 @@
 ;; src block setting
 (setq org-src-window-setup 'current-window)
 (setq org-src-fontify-natively t)
+(setq org-export-with-sub-superscripts '{})
 (define-key org-mode-map (kbd "C-c C-x h") (lambda()
                                              (interactive)
                                              (insert "^{()}")
