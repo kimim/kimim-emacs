@@ -75,7 +75,7 @@ Open windows explorer in the current directory and select the current file"
   "Open cmd.exe from emacs just as you type: Win-R, cmd, return."
   (interactive)
   (w32-shell-execute
-   "open" "cmd"))
+   "open" "c:\\kimikit\\PyCmd\\PyCmd.exe"))
 
 (defun kimim/cyg ()
   "Open cygwin mintty from emacs."
