@@ -242,6 +242,9 @@
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
 (ac-config-default)
+;; unfortunately, company-mode is lack of docstring hints
+;; and conflict with yasnippet
+;;(add-hook 'after-init-hook 'global-company-mode)
 ;;(icomplete-mode 1)
 ;;(ido-mode 1)
 (ivy-mode 1)
