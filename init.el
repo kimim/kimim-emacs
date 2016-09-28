@@ -242,9 +242,9 @@
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
 (ac-config-default)
-(icomplete-mode 1)
-(ido-mode 1)
-
+;;(icomplete-mode 1)
+;;(ido-mode 1)
+(ivy-mode 1)
 ;;==============================================================================
 ;; Load other configuration files
 ;;==============================================================================

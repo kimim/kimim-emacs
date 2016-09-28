@@ -35,6 +35,8 @@
                                              (interactive)
                                              (insert "_{}")
                                              (backward-char 1)))
+;; insert time stamp even in chinese input method
+(define-key org-mode-map (kbd "C-c 。") 'org-time-stamp)
 ;; (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f"
 ;; 							  "xelatex -interaction nonstopmode %f"))
 ;;(setq org-latex-pdf-process '("pdflatex -interaction nonstopmode %f"))

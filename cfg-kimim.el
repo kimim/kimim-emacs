@@ -1,4 +1,5 @@
 ;; self define functions
+
 (defun now () (interactive)
   (insert (shell-command-to-string "date")))
 
@@ -325,5 +326,36 @@ copied region will be highlighted shortly (it 'blinks')."
     (my-blink (point-min) (point-max))
     (copy-region-as-kill (point-min) (point-max))
     (message "buffer copied")))
+
+
+(defvar kimim/last-edit-list nil)
+;; ((file location) (file location))
+;;   1              2
+
+(defun kimim/backward-last-edit ()
+  (interactive)
+  (let ((position (car kimim/last-edit-list)))
+    (when position
+      ;;(print position)
+      ;;(print kimim/last-edit-list)
+      (find-file (car position))
+      (goto-char (cdr position))
+      (setq kimim/last-edit-list (cdr kimim/last-edit-list)))))
+
+
+;; TODO shrink list if more items
+(defun kimim/buffer-edit-hook (beg end len)
+  (interactive)
+   (let ((bfn (buffer-file-name)))
+     ;; insert modification in current index
+     ;; remove forward locations
+     ;; if longer than 100, remove old locations
+     (when bfn
+       (progn
+         (add-to-list 'kimim/last-edit-list (cons bfn end))))))
+
+
+(add-hook 'after-change-functions 'kimim/buffer-edit-hook)
+(global-set-key (kbd "M-`") 'kimim/backward-last-edit)
 
 (provide 'cfg-kimim)
