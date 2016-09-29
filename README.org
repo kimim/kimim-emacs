@@ -1,5 +1,11 @@
 * Introduction
+
+This emacs configuration file is written with literate programming method. =.el=
+file is loaded by extract source code from this document.
+
 * Installation
+
+** Windows Executable
 
 Because I want to let =emacs= executed to a specific =home= directory, so I
 create a =.bat= file =emacs.bat= to set the environment and run =emacs=:
@@ -10,8 +16,11 @@ set HOME=C:\Users\kimim\home
 :: execute emacs with debug enable
 C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
+
 * Initialization
+
 ** System Environment and PATH
+
 #+BEGIN_SRC emacs-lisp
 ;; System Environment and Path Settings
 (setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
@@ -38,6 +47,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
                 (concat cygwin-path "usr/bin" ";")
                 (concat cygwin-path "bin" ";")
                 "C:/emacs/bin;"
+                "~/.cask/bin;"
                 (getenv "PATH"))))
       ((eq window-system 'ns)
        (add-to-list 'exec-path "/usr/local/bin")
@@ -89,7 +99,9 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 (setq custom-file "~/kimim-emacs/cfg-custom.el")
 (load custom-file)
 #+END_SRC
+
 ** Package
+
 #+BEGIN_SRC emacs-lisp
 ;;==============================================================================
 ;; Initialize Packages
@@ -103,7 +115,9 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
                          ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 #+END_SRC
+
 ** Language
+
 #+BEGIN_SRC emacs-lisp
 ;;============================================================================
 ;; Language and Encoding Settings
@@ -123,7 +137,9 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
        (set-file-name-coding-system 'utf-8)
        (set-terminal-coding-system 'utf-8)))
 #+END_SRC
+
 ** Appearance
+
 #+BEGIN_SRC emacs-lisp
 ;;==============================================================================
 ;; Apparance Settings
@@ -187,7 +203,9 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
                ))))
 (require 'color-theme-kimim)
 #+END_SRC
+
 ** Edit Setting
+
 #+BEGIN_SRC emacs-lisp
 
 ;;==============================================================================
@@ -319,6 +337,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
 
 * orgmode
+
 #+BEGIN_SRC emacs-lisp
 ;; path and system environment setting for orgmode
 (setq org-path-home (concat sync-path-home "org/"))
@@ -1397,6 +1416,10 @@ catergories and tags are generated from exisiting posts"
 
 #+END_SRC
 * Key Binding
+:PROPERTIES:
+:header-args: :exports none
+:END:
+
 #+BEGIN_SRC emacs-lisp
 ;;==============================================================================
 ;; Global Key Settings
