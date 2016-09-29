@@ -1396,7 +1396,7 @@ catergories and tags are generated from exisiting posts"
 (elpy-enable)
 
 #+END_SRC
-* Keybinding
+* Key Binding
 #+BEGIN_SRC emacs-lisp
 ;;==============================================================================
 ;; Global Key Settings
@@ -1523,5 +1523,4 @@ catergories and tags are generated from exisiting posts"
 ;; dont know why, only put disable scroll-bar at the end of .emacs, the new
 ;; created frame can inherit this setting
 (scroll-bar-mode -1)
-(delete-file "~/kimim-emacs/README.el")
 #+END_SRC

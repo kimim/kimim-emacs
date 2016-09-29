@@ -14,6 +14,19 @@
 (setq debug-on-error t)
 
 (require 'org)
-(org-babel-load-file
-  (expand-file-name "~/kimim-emacs/README.org"
-		    user-emacs-directory))
+
+
+(if (>
+     (nth 1 (nth 5 (file-attributes "~/kimim-emacs/README.org")))
+     (nth 1 (nth 5 (file-attributes "~/kimim-emacs/README.el"))))
+    (progn
+      (print "org is new")
+      (org-babel-load-file "~/kimim-emacs/README.org")
+      (byte-compile-file "~/kimim-emacs/README.el"))
+  (load-file  "~/kimim-emacs/README.el"))
+
+(if (>
+     (nth 1 (nth 5 (file-attributes "~/kimim-emacs/README.org")))
+     (nth 1 (nth 5 (file-attributes "~/kimim-emacs/README.el"))))
+    (print "org is newer")
+  (print "org is older"))
