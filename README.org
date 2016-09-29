@@ -1,6 +1,18 @@
-* Initialization
-#+BEGIN_SRC emacs-lisp
+* Introduction
+* Installation
 
+Because I want to let =emacs= executed to a specific =home= directory, so I
+create a =.bat= file =emacs.bat= to set the environment and run =emacs=:
+
+#+BEGIN_SRC cmd
+:: set home path for emacs
+set HOME=C:\Users\kimim\home
+:: execute emacs with debug enable
+C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
+#+END_SRC
+* Initialization
+** System Environment and PATH
+#+BEGIN_SRC emacs-lisp
 ;; System Environment and Path Settings
 (setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
 (if (not (boundp 'path-home-sync))
@@ -76,7 +88,9 @@
 ;; load customization
 (setq custom-file "~/kimim-emacs/cfg-custom.el")
 (load custom-file)
-
+#+END_SRC
+** Package
+#+BEGIN_SRC emacs-lisp
 ;;==============================================================================
 ;; Initialize Packages
 ;;==============================================================================
@@ -88,7 +102,9 @@
                          ;;("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
-
+#+END_SRC
+** Language
+#+BEGIN_SRC emacs-lisp
 ;;============================================================================
 ;; Language and Encoding Settings
 ;;============================================================================
@@ -106,7 +122,9 @@
       ((eq window-system 'ns)
        (set-file-name-coding-system 'utf-8)
        (set-terminal-coding-system 'utf-8)))
-
+#+END_SRC
+** Appearance
+#+BEGIN_SRC emacs-lisp
 ;;==============================================================================
 ;; Apparance Settings
 ;;==============================================================================
@@ -168,6 +186,9 @@
 ;;               (font . "Bitstream Vera Sans Mono-14")
                ))))
 (require 'color-theme-kimim)
+#+END_SRC
+** Edit Setting
+#+BEGIN_SRC emacs-lisp
 
 ;;==============================================================================
 ;; Editor setting
