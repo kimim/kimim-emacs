@@ -1510,10 +1510,7 @@ catergories and tags are generated from exisiting posts"
 
 ;; C-x r j ?x 打開常用文件
 (set-register ?e '(file . "~/kimim-emacs/init.el"))
-(set-register ?m '(file . "~/kimim-emacs/cfg-kimim.el"))
-(set-register ?o '(file . "~/kimim-emacs/cfg-org.el"))
-(set-register ?k '(file . "~/kimim-emacs/cfg-keybinding.el"))
-(set-register ?c '(file . "~/kimim-emacs/cfg-c.el"))
+(set-register ?o '(file . "~/kimim-emacs/README.org"))
 
 #+END_SRC
 * Finalization
