@@ -3,8 +3,7 @@
 This emacs configuration file is written with literate programming method. =.el=
 file is loaded by extract source code from this document.
 
-* Installation
-
+* Preparation
 ** Windows Executable
 
 Because I want to let =emacs= executed to a specific =home= directory, so I
@@ -17,9 +16,7 @@ set HOME=C:\Users\kimim\home
 C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
 
-* Initialization
-
-** System Environment and PATH
+* System Environment
 
 #+BEGIN_SRC emacs-lisp
   ;; System Environment and Path Settings
@@ -62,7 +59,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (load custom-file);; System Environment and Path Settings
 #+END_SRC
 
-** Package
+* Package
 
 #+BEGIN_SRC emacs-lisp
 ;;==============================================================================
@@ -78,7 +75,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 (package-initialize)
 #+END_SRC
 
-** Language
+* Language
 
 #+BEGIN_SRC emacs-lisp
   ;;============================================================================
@@ -102,7 +99,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
          (set-terminal-coding-system 'utf-8)))
 #+END_SRC
 
-** Appearance
+* Appearance
 
 #+BEGIN_SRC emacs-lisp
 ;;==============================================================================
@@ -168,7 +165,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 (require 'color-theme-kimim)
 #+END_SRC
 
-** Edit Setting
+* Edit Setting
 
 #+BEGIN_SRC emacs-lisp
 
