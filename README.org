@@ -61,43 +61,6 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 ;; load customization
 (setq custom-file "~/kimim-emacs/cfg-custom.el")
 (load custom-file);; System Environment and Path Settings
-(setenv "LC_CTYPE" "en_US") ;; remove svn log LC_TYPE not defined warning.
-(if (not (boundp 'path-home-sync))
-    (setq path-home-sync "~/"))
-;; configuration main path
-(add-to-list 'load-path "~/kimim-emacs/")
-;; local settings
-(add-to-list 'load-path "~/kimim-emacs/site-lisp/")
-
-(cond ((eq window-system 'w32)
-       (setq cygwin-path "C:/cygwin/")
-       (add-to-list 'Info-additional-directory-list
-                    (concat cygwin-path "usr/share/info"))
-       (add-to-list 'Info-additional-directory-list
-                    (concat cygwin-path "usr/local/share/info"))
-       (add-to-list 'exec-path (concat cygwin-path "usr/local/bin"))
-       (add-to-list 'exec-path (concat cygwin-path "usr/bin"))
-       (add-to-list 'exec-path (concat cygwin-path "bin"))
-       (add-to-list 'exec-path "C:/kimikit/emacs/bin/")
-       (setenv "PATH"
-               (concat
-                (concat cygwin-path "usr/local/bin" ";")
-                (concat cygwin-path "usr/bin" ";")
-                (concat cygwin-path "bin" ";")
-                "C:/emacs/bin;"
-                (getenv "PATH"))))
-      ((eq window-system 'ns)
-       (add-to-list 'exec-path "/usr/local/bin")
-       (setenv "PATH"
-               (concat
-                "/usr/local/bin:"
-                (getenv "PATH")))))
-
-(add-to-list 'Info-additional-directory-list "~/info")
-
-;; load customization
-(setq custom-file "~/kimim-emacs/cfg-custom.el")
-(load custom-file)
 #+END_SRC
 
 ** Package
@@ -152,7 +115,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 (cond ((eq window-system 'ns)
        (menu-bar-mode 1))
       ((eq window-system 'w32)
-       (setq x-select-enable-clipboard t)      ; Enable copy and paste in Win32
+       (setq select-enable-clipboard t)      ; Enable copy and paste in Win32
        (menu-bar-mode -1)))
 (fset 'yes-or-no-p 'y-or-n-p)
 (column-number-mode 1)                  ; 显示列号
@@ -331,7 +294,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 ;; Load other configuration files
 ;;==============================================================================
 (require 'yasnippet)
-(yas/global-mode 1)
+(yas-global-mode 1)
 (yas-load-directory (concat sync-path-home "tools/snippets"))
 
 #+END_SRC

@@ -1,9 +1,3 @@
-;; (require 'cask "~/.cask/cask.el")
-;; (cask-initialize)
-;; (require 'pallet)
-;; (pallet-mode t)
-;; (setq debug-on-error t)
-
 (require 'org)
 
 ;;(require 'cask "~/kimim-emacs/cask.el")
