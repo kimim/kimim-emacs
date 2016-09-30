@@ -1,7 +1,3 @@
-;; (require 'cask "~/.cask/cask.el")
-;; (cask-initialize)
-;; (require 'pallet)
-;; (pallet-mode t)
 
 (require 'package)
 (setq package-user-dir "~/.emacs.d/elpa")
@@ -12,6 +8,11 @@
                          ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 (setq debug-on-error t)
+
+;;(require 'cask "~/kimim-emacs/cask.el")
+;;(cask-initialize)
+;;(require 'pallet)
+;;(pallet-mode t)
 
 ;; load the latest configuration
 (if (>
