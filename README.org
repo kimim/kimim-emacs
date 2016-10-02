@@ -6,7 +6,7 @@ file is loaded by extract source code from this document.
 * Preparation
 ** Windows Executable
 
-Because I want to let =emacs= executed to a specific =home= directory, so I
+Because I want to let =emacs= be executed in a specific =home= directory, so I
 create a =.bat= file =emacs.bat= to set the environment and run =emacs=:
 
 #+BEGIN_SRC cmd
@@ -42,8 +42,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
                   (concat cygwin-path "usr/local/bin" ";")
                   (concat cygwin-path "usr/bin" ";")
                   (concat cygwin-path "bin" ";")
-                  "C:/emacs/bin;"
-                  "~/.cask/bin;"
+                  "C:/kimikit/emacs/bin;"
                   (getenv "PATH"))))
         ((eq window-system 'ns)
          (add-to-list 'exec-path "/usr/local/bin")
@@ -55,7 +54,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (add-to-list 'Info-additional-directory-list "~/info")
 
   ;; load customization
-  (setq custom-file "~/kimim-emacs/cfg-custom.el")
+  (setq custom-file "~/kimim-emacs/custom.el")
   (load custom-file);; System Environment and Path Settings
 #+END_SRC
 

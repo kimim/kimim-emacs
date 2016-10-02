@@ -1,10 +1,5 @@
 (require 'org)
 
-;;(require 'cask "~/kimim-emacs/cask.el")
-;;(cask-initialize)
-;;(require 'pallet)
-;;(pallet-mode t)
-
 ;; load the latest configuration
 (if (>
      (nth 1 (nth 5 (file-attributes "~/kimim-emacs/README.org")))
