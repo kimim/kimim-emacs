@@ -151,8 +151,6 @@ Includes faces for font-lock, widget, custom, speedbar."
      (outline-3 ((t (:foreground "deep sky blue"))))
      (org-warning ((t (:foreground "orchid" :weight bold)))))))
 
-(color-theme-kimim)
-
 (provide 'color-theme-kimim)
 
 ;;; color-theme-kimim.el ends here
