@@ -177,7 +177,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (setq tab-stop-list
         (number-sequence 4 120 4))        ; 每次tab空格數
   (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
-  (winner-mode t)
+  (winner-mode t)                       ; restore windows configuration
   (abbrev-mode -1)
   ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
   ;; 候，备份文件是复本，而不是原件。
