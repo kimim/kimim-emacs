@@ -415,32 +415,6 @@ Open windows explorer in the current directory and select the current file"
   (w32-shell-execute
    "open" "doublecmd" (concat "-L " (replace-regexp-in-string "/" "\\\\" (pwd)))))
 
-;;(yas-global-mode 1)
-;; Completing point by some yasnippet key
-;; (defun yas-ido-expand ()
-;;   "Lets you select (and expand) a yasnippet key"
-;;   (interactive)
-;;     (let ((original-point (point)))
-;;       (while (and
-;;               (not (= (point) (point-min) ))
-;;               (not
-;;                (string-match "[[:space:]\n]" (char-to-string (char-before)))))
-;;         (backward-word 1))
-;;     (let* ((init-word (point))
-;;            (word (buffer-substring init-word original-point))
-;;            (list (yas-active-keys)))
-;;       (goto-char original-point)
-;;       (let ((key (remove-if-not
-;;                   (lambda (s) (string-match (concat "^" word) s)) list)))
-;;         (if (= (length key) 1)
-;;             (setq key (pop key))
-;;           (setq key (ido-completing-read "key: " list nil nil word)))
-;;         (delete-char (- init-word original-point))
-;;         (insert key)
-;;         (yas-expand)))))
-
-;; (define-key yas-minor-mode-map (kbd "C-<tab>") 'yas-ido-expand)
-
 (setq everything-cmd "~/../Tools/es.exe")
 
 
@@ -1262,7 +1236,6 @@ catergories and tags are generated from exisiting posts"
 ;;(setq ggtags-split-window-function 'split-window-below)
 (add-hook 'dired-mode '(lambda ()
                          (local-set-key "\C-c\C-f" 'ggtags-find-file)))
-(yas-global-mode 1)
 
 ;; define new c variable symbol for thing-at-point, used in
 ;; ggtags-find-tag-dwim
