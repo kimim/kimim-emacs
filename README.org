@@ -1300,10 +1300,8 @@ catergories and tags are generated from exisiting posts"
 (add-hook 'c-mode-common-hook
           (lambda ()
             (ggtags-mode 1)
-            (yas-minor-mode 1)
 ;;            (fci-mode 1) ;; conflict with autocomplete, menu will disordered.
 ;;            (syntax-subword-mode 1)
-            ;;(yas-load-directory "~/.emacs.d/snippets")
             (hs-minor-mode t)
             (c-set-style "S800")
             (c-toggle-auto-newline 0)
