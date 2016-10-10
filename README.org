@@ -124,10 +124,10 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 (show-paren-mode 1)                       ; 高亮显示匹配的括号
 (global-hl-line-mode 1)                   ; 高亮當前行
 (blink-cursor-mode 0)                     ; 光标不闪烁
-(use-package fill-column-indicator
-  :config
-  (setq fci-always-use-textual-rule t)
-  :diminish fill-column-indicator)        ; show column indicator
+;;(use-package fill-column-indicator
+;;  :config
+;;  (setq fci-always-use-textual-rule t)
+;;  :diminish fill-column-indicator)        ; show column indicator
 (setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
 (setq display-time-24hr-format t)
 (setq display-time-day-and-date t)
@@ -281,10 +281,10 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (setq-default save-place t)
   (setq save-place-file (expand-file-name "saveplace" "~"))
 
-  (use-package volatile-highlights
-    :config
-    (volatile-highlights-mode t)
-    :diminish volatile-highlights-mode)
+;;  (use-package volatile-highlights
+;;    :config
+;;    (volatile-highlights-mode t)
+;;    :diminish volatile-highlights-mode)
 #+END_SRC
 
 * auto-complete
