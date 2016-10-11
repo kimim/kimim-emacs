@@ -202,8 +202,8 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 
   (setq ispell-program-name "aspell")
   (add-hook 'text-mode-hook
-                    (lambda ()
-                          (when (derived-mode-p 'org-mode 'markdown-mode 'text-mode)
+            (lambda ()
+              (when (derived-mode-p 'org-mode 'markdown-mode 'text-mode)
                 (flyspell-mode)
                 (visual-line-mode))))
   (setq-default indent-tabs-mode nil)
@@ -229,8 +229,8 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
               (setq dired-omit-localp t)
               (setq dired-omit-files
                     "|NTUSER\\|ntuser\\|Cookies\\|AppData\\\
-  |Contacts\\|Links\\|Intel\\|NetHood\\|PrintHood\\|Recent\\|Start\\|SendTo\\\
-  |^\\.DS_Store")))
+    |Contacts\\|Links\\|Intel\\|NetHood\\|PrintHood\\|Recent\\|Start\\|SendTo\\\
+    |^\\.DS_Store")))
   ;; Dired buffer 中列出文件时传递给 ls 的参数。加个 "l" 可以使大写的文
   ;; 件名在顶部，临时的改变可以用 C-u s。
   (setq dired-listing-switches "-avhl")
@@ -281,10 +281,13 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (setq-default save-place t)
   (setq save-place-file (expand-file-name "saveplace" "~"))
 
-;;  (use-package volatile-highlights
-;;    :config
-;;    (volatile-highlights-mode t)
-;;    :diminish volatile-highlights-mode)
+  (window-numbering-mode 1)
+  (which-key-mode 1)
+
+  ;;  (use-package volatile-highlights
+  ;;    :config
+  ;;    (volatile-highlights-mode t)
+  ;;    :diminish volatile-highlights-mode)
 #+END_SRC
 
 * auto-complete
