@@ -1345,6 +1345,8 @@ catergories and tags are generated from exisiting posts"
 ** Python
 #+BEGIN_SRC emacs-lisp
 (elpy-enable)
+(setq elpy-rpc-backend "jedi")
+;;(setq jedi:complete-on-dot t)
 #+END_SRC
 * Key Binding
 :PROPERTIES:
