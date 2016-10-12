@@ -179,6 +179,8 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
   (winner-mode t)                       ; restore windows configuration
   (abbrev-mode -1)
+  ;; add pair parenthis and quote automatically
+  (smartparens-global-mode 1)
   ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
   ;; 候，备份文件是复本，而不是原件。
   (setq backup-directory-alist '(("." . "~/Temp")))
@@ -282,7 +284,10 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (setq save-place-file (expand-file-name "saveplace" "~"))
 
   (window-numbering-mode 1)
+  ;; https://github.com/justbur/emacs-which-key
   (which-key-mode 1)
+  ;; use minibuffer as the popup type, otherwise conflict in ecb mode
+  (setq which-key-popup-type 'minibuffer)
 
   ;;  (use-package volatile-highlights
   ;;    :config
@@ -1175,7 +1180,6 @@ catergories and tags are generated from exisiting posts"
   "Tempo tags for C mode")
 (defvar c++-tempo-tags nil
   "Tempo tags for C++ mode")
-
 (defun coding-mode ()
   ;; start coding mode
   (interactive)
@@ -1188,16 +1192,12 @@ catergories and tags are generated from exisiting posts"
   ;; minibuffer completion not work in ecb, use helm instead
   (add-to-list 'ecb-compilation-buffer-names
                '("*helm-mode-execute-extended-command*" . nil)
-               '("*helm-mode-bookmark-jump*" . nill))
-  (if (eq window-system 'w32)
-      (helm-mode)))
+               '("*helm-mode-bookmark-jump*" . nill)))
 
 (defun working-mode ()
   (interactive)
   (setq split-height-threshold 80)
   (setq split-width-threshold 160)
-  (if (eq window-system 'w32)
-    (helm-mode -1))
   (ecb-deactivate))
 
 (setq ecb-layout-name "left-kimi0")
