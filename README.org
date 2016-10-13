@@ -161,7 +161,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (color-theme-kimim)
 #+END_SRC
 
-* Edit Setting
+* Editing
 
 #+BEGIN_SRC emacs-lisp
 
@@ -181,8 +181,6 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
   (winner-mode t)                       ; restore windows configuration
   (abbrev-mode -1)
-  ;; add pair parenthis and quote automatically
-  (autopair-global-mode 1)
   ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
   ;; 候，备份文件是复本，而不是原件。
   (setq backup-directory-alist '(("." . "~/Temp")))
@@ -299,6 +297,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 
 * auto-complete
 ** yasnippet
+
 #+BEGIN_SRC emacs-lisp
   (require 'yasnippet)
   (yas-global-mode 1)
@@ -306,22 +305,28 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
 
 ** ivy-mode
+
 #+BEGIN_SRC emacs-lisp
   (ivy-mode 1)
 #+END_SRC
+
 ** auto-complete
 #+BEGIN_SRC emacs-lisp
   ;; intelligent completion setting
   (require 'auto-complete-config)
   (add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
   (ac-config-default)
+
+  ;; add pair parenthis and quote automatically
+  (autopair-global-mode 1)
+
   ;; unfortunately, company-mode is lack of docstring hints
   ;; and conflict with yasnippet
   ;;(add-hook 'after-init-hook 'global-company-mode)
   ;;(icomplete-mode 1)
   ;;(ido-mode 1)
 #+END_SRC
-* kimim
+* kimim functions
 #+BEGIN_SRC emacs-lisp
 
   ;; self define functions
@@ -1040,9 +1045,9 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (setq org-startup-indented t)
 
 #+END_SRC
-* gnus
-#+BEGIN_SRC emacs-lisp
+* erc and gnus
 
+#+BEGIN_SRC emacs-lisp
   ;; erc settings
   (require 'erc-join)
   (erc-autojoin-mode 1)
@@ -1403,9 +1408,6 @@ pip install virtualenv
 #+END_SRC
 
 * Key Binding
-:PROPERTIES:
-:header-args: :exports none
-:END:
 
 #+BEGIN_SRC emacs-lisp
   ;;==============================================================================
@@ -1521,6 +1523,7 @@ pip install virtualenv
 
 #+END_SRC
 * Finalization
+
 #+BEGIN_SRC emacs-lisp
   (load-file "~/.emacs.d/work.el")
   (load-file "~/.emacs.d/home.el")
