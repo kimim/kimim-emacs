@@ -63,17 +63,17 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 * Package
 
 #+BEGIN_SRC emacs-lisp
-;;==============================================================================
-;; Initialize Packages
-;;==============================================================================
-(require 'package)
-(setq package-user-dir "~/.emacs.d/elpa")
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("ELPA" . "http://tromey.com/elpa/")
-                         ("elpy" . "http://jorgenschaefer.github.io/packages/")
-                         ;;("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.org/packages/")))
-(package-initialize)
+  ;;==============================================================================
+  ;; Initialize Packages
+  ;;==============================================================================
+  (require 'package)
+  (setq package-user-dir "~/.emacs.d/elpa")
+  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                           ("ELPA" . "http://tromey.com/elpa/")
+                           ("elpy" . "http://jorgenschaefer.github.io/packages/")
+                           ;;("marmalade" . "http://marmalade-repo.org/packages/")
+                           ("melpa" . "http://melpa.org/packages/")))
+  (package-initialize)
 #+END_SRC
 
 * Language
@@ -103,62 +103,62 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 * Appearance
 
 #+BEGIN_SRC emacs-lisp
-;;==============================================================================
-;; Apparance Settings
-;;==============================================================================
-(setq frame-title-format
-      '("" invocation-name ": "
-        (:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name))
-                 "%b"))))
-(setq inhibit-startup-message t)          ; 不顯示開始畫面
-(setq initial-scratch-message nil)        ; scratch 默認為空
-(setq visible-bell t)                     ; 關閉視覺告警
-(setq ring-bell-function #'ignore)
-(cond ((eq window-system 'w32)
-       (setq select-enable-clipboard t)   ; Enable copy and paste in Win32
-       (menu-bar-mode 0))
-      ((eq window-system 'ns)
-       (menu-bar-mode 1)))
-(tool-bar-mode -1)
-(fset 'yes-or-no-p 'y-or-n-p)
-(column-number-mode 1)                    ; show column num in mode line
-(show-paren-mode 1)                       ; 高亮显示匹配的括号
-(global-hl-line-mode 1)                   ; 高亮當前行
-(blink-cursor-mode 0)                     ; 光标不闪烁
-;;(use-package fill-column-indicator
-;;  :config
-;;  (setq fci-always-use-textual-rule t)
-;;  :diminish fill-column-indicator)        ; show column indicator
-(setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
-(setq display-time-24hr-format t)
-(setq display-time-day-and-date t)
-(setq display-time-interval 10)
-(display-time-mode t)                     ; 在 mode-line 上显示时间
-(setq font-lock-maximum-decoration t)
-(setq font-lock-global-modes '(not shell-mode text-mode))
-(setq font-lock-verbose t)
-(global-font-lock-mode 1)                 ; 开启语法高亮
+  ;;==============================================================================
+  ;; Apparance Settings
+  ;;==============================================================================
+  (setq frame-title-format
+        '("" invocation-name ": "
+          (:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name))
+                   "%b"))))
+  (setq inhibit-startup-message t)          ; 不顯示開始畫面
+  (setq initial-scratch-message nil)        ; scratch 默認為空
+  (setq visible-bell t)                     ; 關閉視覺告警
+  (setq ring-bell-function #'ignore)
+  (cond ((eq window-system 'w32)
+         (setq select-enable-clipboard t)   ; Enable copy and paste in Win32
+         (menu-bar-mode 0))
+        ((eq window-system 'ns)
+         (menu-bar-mode 1)))
+  (tool-bar-mode -1)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (column-number-mode 1)                    ; show column num in mode line
+  (show-paren-mode 1)                       ; 高亮显示匹配的括号
+  (global-hl-line-mode 1)                   ; 高亮當前行
+  (blink-cursor-mode 0)                     ; 光标不闪烁
+  ;;(use-package fill-column-indicator
+  ;;  :config
+  ;;  (setq fci-always-use-textual-rule t)
+  ;;  :diminish fill-column-indicator)        ; show column indicator
+  (setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
+  (setq display-time-24hr-format t)
+  (setq display-time-day-and-date t)
+  (setq display-time-interval 10)
+  (display-time-mode t)                     ; 在 mode-line 上显示时间
+  (setq font-lock-maximum-decoration t)
+  (setq font-lock-global-modes '(not shell-mode text-mode))
+  (setq font-lock-verbose t)
+  (global-font-lock-mode 1)                 ; 开启语法高亮
 
-(cond ((eq window-system 'w32)
-       ;; cleaner font setting
-       (set-fontset-font "fontset-default" 'han (font-spec :family "NSimSun" :size 16))
-       (setq default-frame-alist
-             '((top . 80) (left . 250) (width . 128) (height . 45)
-               (font . "Inconsolata-11") ;; if you like anti-alias, use this to have a try
-               ))
-       )
-      ((eq window-system 'ns)
-       (set-fontset-font  "fontset-default" 'han (font-spec :family "Microsoft Yahei" :size 16))
-       ;; OS X 下，不和前一個漢字緊挨著的標點符號的字體不是雅黑，就會顯得很難看，這裡設定一下
-       (set-fontset-font  "fontset-default" 'cjk-misc (font-spec :family "Microsoft Yahei" :size 16))
-       (setq default-frame-alist
-             '((top . 100) (left . 600) (width . 166) (height . 70)
-               ;;               (font . "Bitstream Vera Sans Mono-14")
-               ))))
+  (cond ((eq window-system 'w32)
+         ;; cleaner font setting
+         (set-fontset-font "fontset-default" 'han (font-spec :family "NSimSun" :size 16))
+         (setq default-frame-alist
+               '((top . 80) (left . 250) (width . 128) (height . 45)
+                 (font . "Inconsolata-11") ;; if you like anti-alias, use this to have a try
+                 ))
+         )
+        ((eq window-system 'ns)
+         (set-fontset-font  "fontset-default" 'han (font-spec :family "Microsoft Yahei" :size 16))
+         ;; OS X 下，不和前一個漢字緊挨著的標點符號的字體不是雅黑，就會顯得很難看，這裡設定一下
+         (set-fontset-font  "fontset-default" 'cjk-misc (font-spec :family "Microsoft Yahei" :size 16))
+         (setq default-frame-alist
+               '((top . 100) (left . 600) (width . 166) (height . 70)
+                 ;;               (font . "Bitstream Vera Sans Mono-14")
+                 ))))
 
-(require 'color-theme-kimim)
-(color-theme-kimim)
+  (require 'color-theme-kimim)
+  (color-theme-kimim)
 #+END_SRC
 
 * Edit Setting
@@ -181,6 +181,8 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
   (winner-mode t)                       ; restore windows configuration
   (abbrev-mode -1)
+  ;; add pair parenthis and quote automatically
+  (smartparens-global-mode 1)
   ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
   ;; 候，备份文件是复本，而不是原件。
   (setq backup-directory-alist '(("." . "~/Temp")))
@@ -284,7 +286,10 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (setq save-place-file (expand-file-name "saveplace" "~"))
 
   (window-numbering-mode 1)
+  ;; https://github.com/justbur/emacs-which-key
   (which-key-mode 1)
+  ;; use minibuffer as the popup type, otherwise conflict in ecb mode
+  (setq which-key-popup-type 'minibuffer)
 
   ;;  (use-package volatile-highlights
   ;;    :config
@@ -295,1052 +300,1078 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 * auto-complete
 ** yasnippet
 #+BEGIN_SRC emacs-lisp
-(require 'yasnippet)
-(yas-global-mode 1)
-(yas-load-directory (concat sync-path-home "tools/snippets"))
+  (require 'yasnippet)
+  (yas-global-mode 1)
+  (yas-load-directory (concat sync-path-home "tools/snippets"))
 #+END_SRC
 
 ** ivy-mode
 #+BEGIN_SRC emacs-lisp
-(ivy-mode 1)
+  (ivy-mode 1)
 #+END_SRC
 ** auto-complete
 #+BEGIN_SRC emacs-lisp
-;; intelligent completion setting
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
-(ac-config-default)
-;; unfortunately, company-mode is lack of docstring hints
-;; and conflict with yasnippet
-;;(add-hook 'after-init-hook 'global-company-mode)
-;;(icomplete-mode 1)
-;;(ido-mode 1)
+  ;; intelligent completion setting
+  (require 'auto-complete-config)
+  (add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
+  (ac-config-default)
+  ;; unfortunately, company-mode is lack of docstring hints
+  ;; and conflict with yasnippet
+  ;;(add-hook 'after-init-hook 'global-company-mode)
+  ;;(icomplete-mode 1)
+  ;;(ido-mode 1)
 #+END_SRC
 * kimim
 #+BEGIN_SRC emacs-lisp
 
-;; self define functions
+  ;; self define functions
 
-(defun now () (interactive)
-  (insert (shell-command-to-string "date")))
+  (defun now () (interactive)
+    (insert (shell-command-to-string "date")))
 
-(defun day ()
-  "Insert string for today's date nicely formatted in American style,
-e.g. Sunday, September 17, 2000."
-  (interactive)                 ; permit invocation in minibuffer
-  (insert (format-time-string "%A, %B %e, %Y")))
+  (defun day ()
+    "Insert string for today's date nicely formatted in American style,
+  e.g. Sunday, September 17, 2000."
+    (interactive)                 ; permit invocation in minibuffer
+    (insert (format-time-string "%A, %B %e, %Y")))
 
-(defun today ()
-  "Insert string for today's date nicely formatted in American style,
-e.g. 2000-10-12."
-  (interactive)                 ; permit invocation in minibuffer
-  (insert (format-time-string "%Y-%m-%d")))
+  (defun today ()
+    "Insert string for today's date nicely formatted in American style,
+  e.g. 2000-10-12."
+    (interactive)                 ; permit invocation in minibuffer
+    (insert (format-time-string "%Y-%m-%d")))
 
-(defun toyear ()
-  "Insert string for today's date nicely formatted in American style,
-e.g. 2000."
-  (interactive)                 ; permit invocation in minibuffer
-  (insert (format-time-string "%Y")))
-
-
-(defun get-file-line ()
-  "Show (and set kill-ring) current file and line"
-  (interactive)
-  (unless (buffer-file-name)
-    (error "No file for buffer %s" (buffer-name)))
-  (let ((msg (format "%s::%d"
-                     (file-truename (buffer-file-name))
-                     (line-number-at-pos))))
-    (kill-new msg)
-    (message msg)))
+  (defun toyear ()
+    "Insert string for today's date nicely formatted in American style,
+  e.g. 2000."
+    (interactive)                 ; permit invocation in minibuffer
+    (insert (format-time-string "%Y")))
 
 
-(defun open-folder-in-explorer ()
-  "Call when editing a file in a buffer.
-Open windows explorer in the current directory and select the current file"
-  (interactive)
-  (w32-shell-execute
-   "open" "explorer"
-   (concat "/e,/select," (convert-standard-filename buffer-file-name))
-   ))
+  (defun get-file-line ()
+    "Show (and set kill-ring) current file and line"
+    (interactive)
+    (unless (buffer-file-name)
+      (error "No file for buffer %s" (buffer-name)))
+    (let ((msg (format "%s::%d"
+                       (file-truename (buffer-file-name))
+                       (line-number-at-pos))))
+      (kill-new msg)
+      (message msg)))
 
-(defun kimim/lookinsight ()
-  (interactive)
-  (kill-ring-save (region-beginning) (region-end))
-  (w32-shell-execute
-   "open" "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe" "c:\\kimikit\\Autohotkey\\lookinsight.ahk"))
 
-(defun mac-open-terminal ()
-   (interactive)
-   (let ((dir ""))
-     (cond
-      ((and (local-variable-p 'dired-directory) dired-directory)
-       (setq dir dired-directory))
-      ((stringp (buffer-file-name))
-       (setq dir (file-name-directory (buffer-file-name))))
-      ((stringp default-directory)
-       (setq dir default-directory))
-      )
-     (do-applescript
-      (format "
- tell application \"Terminal\"
-   activate
-   try
-     do script with command \"cd %s\"
-   on error
-     beep
-   end try
- end tell" dir))
+  (defun open-folder-in-explorer ()
+    "Call when editing a file in a buffer.
+  Open windows explorer in the current directory and select the current file"
+    (interactive)
+    (w32-shell-execute
+     "open" "explorer"
+     (concat "/e,/select," (convert-standard-filename buffer-file-name))
      ))
 
-(defun kimim/cmd ()
-  "Open cmd.exe from emacs just as you type: Win-R, cmd, return."
-  (interactive)
-  (w32-shell-execute
-   "open" "c:\\kimikit\\PyCmd\\PyCmd.exe"))
+  (defun kimim/lookinsight ()
+    (interactive)
+    (kill-ring-save (region-beginning) (region-end))
+    (w32-shell-execute
+     "open" "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe" "c:\\kimikit\\Autohotkey\\lookinsight.ahk"))
 
-(defun kimim/cyg ()
-  "Open cygwin mintty from emacs."
-  (interactive)
+  (defun mac-open-terminal ()
+     (interactive)
+     (let ((dir ""))
+       (cond
+        ((and (local-variable-p 'dired-directory) dired-directory)
+         (setq dir dired-directory))
+        ((stringp (buffer-file-name))
+         (setq dir (file-name-directory (buffer-file-name))))
+        ((stringp default-directory)
+         (setq dir default-directory))
+        )
+       (do-applescript
+        (format "
+   tell application \"Terminal\"
+     activate
+     try
+       do script with command \"cd %s\"
+     on error
+       beep
+     end try
+   end tell" dir))
+       ))
+
+  (defun kimim/cmd ()
+    "Open cmd.exe from emacs just as you type: Win-R, cmd, return."
+    (interactive)
+    (w32-shell-execute
+     "open" "c:\\kimikit\\PyCmd\\PyCmd.exe"))
+
+  (defun kimim/cyg ()
+    "Open cygwin mintty from emacs."
+    (interactive)
+    (cond ((eq window-system 'w32)
+           (w32-shell-execute
+            "open" "mintty" " -e bash"))
+          ((eq window-system 'ns)
+           (mac-open-terminal))))
+
+  (defun kimim/4nt ()
+    "Open 4NT terminal"
+    (interactive)
+    (w32-shell-execute
+     "open" "4nt"))
+
+  (defun kimim/dc ()
+    "Open file location in double commander"
+    (interactive)
+    (w32-shell-execute
+     "open" "doublecmd" (concat "-L " (replace-regexp-in-string "/" "\\\\" (pwd)))))
+
+  (setq everything-cmd "~/../Tools/es.exe")
+
+
+
+  (defun kill-dired-buffers()
+    "Kill all dired buffers."
+    (interactive)
+    (save-excursion
+      (let((count 0))
+        (dolist(buffer (buffer-list))
+          (set-buffer buffer)
+          (when (equal major-mode 'dired-mode)
+            (setq count (1+ count))
+            (kill-buffer buffer)))
+        (message "Killed %i dired buffer(s)." count ))))
+
+  ;;设置 sentence-end 可以识别中文标点。不用在 fill 时在句号后插入两个空格。
+  (setq sentence-end "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*")
+
+  (setq scroll-margin                   0 )
+  (setq scroll-conservatively      100000 )
+                                          ;(setq scroll-preserve-screen-position 1 )
+  (setq scroll-up-aggressively       0.01 )
+  (setq scroll-down-aggressively     0.01 )
+
+
+  ;;============================================================================
+  ;; Default Grep settings
+  ;;============================================================================
+  (defadvice grep-compute-defaults (around grep-compute-defaults-advice-null-device)
+    "Use cygwin's /dev/null as the null-device."
+    (let ((null-device "/dev/null"))
+      ad-do-it))
+  (ad-activate 'grep-compute-defaults)
+  (setq grep-find-command "find . -type f -not -name \"*.svn-base\" -and -not -name \"*#\" -and -not -name \"*.tmp\" -and -not -name \"*.obj\" -and -not -name \"*.386\" -and -not -name \"*.img\" -and -not -name \"*.LNK\" -and -not -name GTAGS -print0 | xargs -0 grep -n -e ")
+
+  (defun kimim/grep-find()
+       (interactive)
+       (grep-find (concat grep-find-command (buffer-substring-no-properties (region-beginning) (region-end))))
+       )
+
+  (defun encode-buffer-to-utf8 ()
+    "Sets the buffer-file-coding-system to UTF8."
+    (interactive)
+    (set-buffer-file-coding-system 'utf-8 nil))
+
+  (defun save-buffer-always ()
+    "Save the buffer even if it is not modified."
+    (interactive)
+    (set-buffer-modified-p t)
+    (save-buffer))
+
+  ;; (defun nuke-all-buffers ()
+  ;;   "Kill all buffers, leaving *scratch* only."
+  ;;   (interactive)
+  ;;   (mapcar (lambda (x) (if (not (member (buffer-name x)
+  ;;                                        '(" *ECB Sources*" " *ECB History*" " *ECB Methods*" " *Minibuf-1*" " *Minibuf-0*" " *ECB Analyse*" " *ECB Directories*")))
+  ;;                           (kill-buffer x)
+  ;;                           ))
+  ;;           (buffer-list))
+  ;;   (delete-other-windows))
+
+  (defun nuke-other-buffers ()
+    "Kill all buffers, leaving current-buffer only."
+    (interactive)
+    (mapcar (lambda (x)
+              (if (not (or (eq x (current-buffer))
+                           (member (buffer-name x)
+                                   ;; all ecb related buffers
+                                   '(" *ECB Sources*" " *ECB History*" " *ECB Methods*"
+                                     " *Minibuf-1*" " *Minibuf-0*" " *ECB Analyse*"
+                                     " *ECB Directories*"))))
+                  (kill-buffer x)))
+            (buffer-list))
+    (delete-other-windows)
+    (message "All other buffers clear"))
+
+  (defun indent-whole-buffer ()
+    "Indent whole buffer and delete trailing whitespace.
+  This command will also do untabify."
+    (interactive)
+    (delete-trailing-whitespace)
+    (indent-region (point-min) (point-max))
+    (untabify (point-min) (point-max)))
+
+  (defun fold-long-comment-lines ()
+    "This functions allows us to fold long comment lines
+   automatically in programming modes. Quite handy."
+  (interactive "p")
+   (auto-fill-mode 1)
+   (set (make-local-variable 'fill-no-break-predicate)
+       (lambda ()
+           (not (eq (get-text-property (point) 'face)
+                  'font-lock-comment-face)))))
+
+  (defun new-note ()
+    (interactive)
+    (find-file (concat default-doc-path "/Notes/"
+                       (format-time-string "%Y%m-")
+                       (read-string (concat "Filename: " (format-time-string "%Y%m-"))) ".org")))
+
+  (add-hook 'comint-output-filter-functions
+      'shell-strip-ctrl-m nil t)
+  (add-hook 'comint-output-filter-functions
+      'comint-watch-for-password-prompt nil t)
+
+  ;; For subprocesses invoked via the shell
+  ;; (e.g., "shell -c command")
   (cond ((eq window-system 'w32)
-         (w32-shell-execute
-          "open" "mintty" " -e bash"))
-        ((eq window-system 'ns)
-         (mac-open-terminal))))
+         (setq explicit-shell-file-name "bash.exe")
+         (setq shell-file-name explicit-shell-file-name)))
 
-(defun kimim/4nt ()
-  "Open 4NT terminal"
-  (interactive)
-  (w32-shell-execute
-   "open" "4nt"))
+  (setq color-list '(hi-yellow hi-green hi-blue hi-pink));; hi-red-b hi-green-b hi-blue-b))
+  (setq color-index 0)
+  (setq color-list-length (length color-list))
 
-(defun kimim/dc ()
-  "Open file location in double commander"
-  (interactive)
-  (w32-shell-execute
-   "open" "doublecmd" (concat "-L " (replace-regexp-in-string "/" "\\\\" (pwd)))))
-
-(setq everything-cmd "~/../Tools/es.exe")
-
-
-
-(defun kill-dired-buffers()
-  "Kill all dired buffers."
-  (interactive)
-  (save-excursion
-    (let((count 0))
-      (dolist(buffer (buffer-list))
-        (set-buffer buffer)
-        (when (equal major-mode 'dired-mode)
-          (setq count (1+ count))
-          (kill-buffer buffer)))
-      (message "Killed %i dired buffer(s)." count ))))
-
-;;设置 sentence-end 可以识别中文标点。不用在 fill 时在句号后插入两个空格。
-(setq sentence-end "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*")
-
-(setq scroll-margin                   0 )
-(setq scroll-conservatively      100000 )
-                                        ;(setq scroll-preserve-screen-position 1 )
-(setq scroll-up-aggressively       0.01 )
-(setq scroll-down-aggressively     0.01 )
-
-
-;;============================================================================
-;; Default Grep settings
-;;============================================================================
-(defadvice grep-compute-defaults (around grep-compute-defaults-advice-null-device)
-  "Use cygwin's /dev/null as the null-device."
-  (let ((null-device "/dev/null"))
-    ad-do-it))
-(ad-activate 'grep-compute-defaults)
-(setq grep-find-command "find . -type f -not -name \"*.svn-base\" -and -not -name \"*#\" -and -not -name \"*.tmp\" -and -not -name \"*.obj\" -and -not -name \"*.386\" -and -not -name \"*.img\" -and -not -name \"*.LNK\" -and -not -name GTAGS -print0 | xargs -0 grep -n -e ")
-
-(defun kimim/grep-find()
-     (interactive)
-     (grep-find (concat grep-find-command (buffer-substring-no-properties (region-beginning) (region-end))))
-     )
-
-(defun encode-buffer-to-utf8 ()
-  "Sets the buffer-file-coding-system to UTF8."
-  (interactive)
-  (set-buffer-file-coding-system 'utf-8 nil))
-
-(defun save-buffer-always ()
-  "Save the buffer even if it is not modified."
-  (interactive)
-  (set-buffer-modified-p t)
-  (save-buffer))
-
-;; (defun nuke-all-buffers ()
-;;   "Kill all buffers, leaving *scratch* only."
-;;   (interactive)
-;;   (mapcar (lambda (x) (if (not (member (buffer-name x)
-;;                                        '(" *ECB Sources*" " *ECB History*" " *ECB Methods*" " *Minibuf-1*" " *Minibuf-0*" " *ECB Analyse*" " *ECB Directories*")))
-;;                           (kill-buffer x)
-;;                           ))
-;;           (buffer-list))
-;;   (delete-other-windows))
-
-(defun nuke-other-buffers ()
-  "Kill all buffers, leaving current-buffer only."
-  (interactive)
-  (mapcar (lambda (x)
-            (if (not (or (eq x (current-buffer))
-                         (member (buffer-name x)
-                                 ;; all ecb related buffers
-                                 '(" *ECB Sources*" " *ECB History*" " *ECB Methods*"
-                                   " *Minibuf-1*" " *Minibuf-0*" " *ECB Analyse*"
-                                   " *ECB Directories*"))))
-                (kill-buffer x)))
-          (buffer-list))
-  (delete-other-windows)
-  (message "All other buffers clear"))
-
-(defun indent-whole-buffer ()
-  "Indent whole buffer and delete trailing whitespace.
-This command will also do untabify."
-  (interactive)
-  (delete-trailing-whitespace)
-  (indent-region (point-min) (point-max))
-  (untabify (point-min) (point-max)))
-
-(defun fold-long-comment-lines ()
-  "This functions allows us to fold long comment lines
- automatically in programming modes. Quite handy."
-(interactive "p")
- (auto-fill-mode 1)
- (set (make-local-variable 'fill-no-break-predicate)
-     (lambda ()
-         (not (eq (get-text-property (point) 'face)
-                'font-lock-comment-face)))))
-
-(defun new-note ()
-  (interactive)
-  (find-file (concat default-doc-path "/Notes/"
-                     (format-time-string "%Y%m-")
-                     (read-string (concat "Filename: " (format-time-string "%Y%m-"))) ".org")))
-
-(add-hook 'comint-output-filter-functions
-    'shell-strip-ctrl-m nil t)
-(add-hook 'comint-output-filter-functions
-    'comint-watch-for-password-prompt nil t)
-
-;; For subprocesses invoked via the shell
-;; (e.g., "shell -c command")
-(cond ((eq window-system 'w32)
-       (setq explicit-shell-file-name "bash.exe")
-       (setq shell-file-name explicit-shell-file-name)))
-
-(setq color-list '(hi-yellow hi-green hi-blue hi-pink));; hi-red-b hi-green-b hi-blue-b))
-(setq color-index 0)
-(setq color-list-length (length color-list))
-
-(defun kimim/toggle-highlight-tap ()
-  "Highlight pattern at the point"
-  (interactive)
-  (if (and (listp (get-text-property (point) 'face))
-           (memq (car (get-text-property (point) 'face)) color-list))
-      (unhighlight-regexp (thing-at-point 'symbol))
-    (progn
-      (highlight-regexp (thing-at-point 'symbol) (nth color-index color-list))
-      (setq color-index (+ color-index 1))
-      (if (>= color-index color-list-length)
-          (setq color-index 0))
-      )))
-
-(defun kimim/look-from-mydict()
-     (interactive)
-     (browse-url (concat "http://www.mydict.com/index.php?controller=Dict_German&action=Search&keyword="
-			 (buffer-substring-no-properties (region-beginning) (region-end)))))
-
-
-(defun my-blink(begin end)
-  "blink a region. used for copy and delete"
-  (interactive)
-  (let* ((rh (make-overlay begin end)))
-    (progn
-      (overlay-put rh 'face '(:background "DodgerBlue" :foreground "White"))
-      (sit-for 0.2 t)
-      (delete-overlay rh)
-      )))
-
-(defun get-point (symbol &optional arg)
-  "get the point"
-  (funcall symbol arg)
-  (point)
-  )
-
-(defun copy-thing (begin-of-thing end-of-thing &optional arg)
-  "Copy thing between beg & end into kill ring. Remove leading and
-trailing whitespace while we're at it. Also, remove whitespace before
-column, if any. Also, font-lock will be removed, if any. Also, the
-copied region will be highlighted shortly (it 'blinks')."
-  (save-excursion
-    (let* ((beg (get-point begin-of-thing 1))
-           (end (get-point end-of-thing arg)))
+  (defun kimim/toggle-highlight-tap ()
+    "Highlight pattern at the point"
+    (interactive)
+    (if (and (listp (get-text-property (point) 'face))
+             (memq (car (get-text-property (point) 'face)) color-list))
+        (unhighlight-regexp (thing-at-point 'symbol))
       (progn
-        (copy-region-as-kill beg end)
-        (with-temp-buffer
-          (yank)
-          (goto-char 1)
-          (while (looking-at "[ \t\n\r]")
-            (delete-char 1))
-          (delete-trailing-whitespace)
-          (delete-whitespace-rectangle (point-min) (point-max)) ;; del column \s, hehe
-           (font-lock-unfontify-buffer) ;; reset font lock
-           (kill-region (point-min) (point-max))
-          )
-        ))))
+        (highlight-regexp (thing-at-point 'symbol) (nth color-index color-list))
+        (setq color-index (+ color-index 1))
+        (if (>= color-index color-list-length)
+            (setq color-index 0))
+        )))
 
-(defun copy-word (&optional arg)
-  "Copy word at point into kill-ring"
-  (interactive "P")
-  (my-blink (get-point 'backward-word 1) (get-point 'forward-word 1))
-  (copy-thing 'backward-word 'forward-word arg)
-  (message "word at point copied"))
-
-(defun copy-line (&optional arg)
-  "Copy line at point into kill-ring, truncated"
-  (interactive "P")
-  (my-blink (get-point 'beginning-of-line 1) (get-point 'end-of-line 1))
-  (copy-thing 'beginning-of-line 'end-of-line arg)
-  (message "line at point copied"))
-
-(defun copy-paragraph (&optional arg)
-  "Copy paragraph at point into kill-ring, truncated"
-  (interactive "P")
-  (my-blink (get-point 'backward-paragraph 1) (get-point 'forward-paragraph 1))
-  (copy-thing 'backward-paragraph 'forward-paragraph arg)
-  (message "paragraph at point copied"))
-
-(defun copy-buffer(&optional arg)
-  "Copy the whole buffer into kill-ring, as-is"
-  (interactive "P")
-  (progn
-    (my-blink (point-min) (point-max))
-    (copy-region-as-kill (point-min) (point-max))
-    (message "buffer copied")))
+  (defun kimim/look-from-mydict()
+       (interactive)
+       (browse-url (concat "http://www.mydict.com/index.php?controller=Dict_German&action=Search&keyword="
+                           (buffer-substring-no-properties (region-beginning) (region-end)))))
 
 
-(defvar kimim/last-edit-list nil)
-;; ((file location) (file location))
-;;   1              2
+  (defun my-blink(begin end)
+    "blink a region. used for copy and delete"
+    (interactive)
+    (let* ((rh (make-overlay begin end)))
+      (progn
+        (overlay-put rh 'face '(:background "DodgerBlue" :foreground "White"))
+        (sit-for 0.2 t)
+        (delete-overlay rh)
+        )))
 
-(defun kimim/backward-last-edit ()
-  (interactive)
-  (let ((position (car kimim/last-edit-list)))
-    (when position
-      ;;(print position)
-      ;;(print kimim/last-edit-list)
-      (find-file (car position))
-      (goto-char (cdr position))
-      (setq kimim/last-edit-list (cdr kimim/last-edit-list)))))
+  (defun get-point (symbol &optional arg)
+    "get the point"
+    (funcall symbol arg)
+    (point)
+    )
+
+  (defun copy-thing (begin-of-thing end-of-thing &optional arg)
+    "Copy thing between beg & end into kill ring. Remove leading and
+  trailing whitespace while we're at it. Also, remove whitespace before
+  column, if any. Also, font-lock will be removed, if any. Also, the
+  copied region will be highlighted shortly (it 'blinks')."
+    (save-excursion
+      (let* ((beg (get-point begin-of-thing 1))
+             (end (get-point end-of-thing arg)))
+        (progn
+          (copy-region-as-kill beg end)
+          (with-temp-buffer
+            (yank)
+            (goto-char 1)
+            (while (looking-at "[ \t\n\r]")
+              (delete-char 1))
+            (delete-trailing-whitespace)
+            (delete-whitespace-rectangle (point-min) (point-max)) ;; del column \s, hehe
+             (font-lock-unfontify-buffer) ;; reset font lock
+             (kill-region (point-min) (point-max))
+            )
+          ))))
+
+  (defun copy-word (&optional arg)
+    "Copy word at point into kill-ring"
+    (interactive "P")
+    (my-blink (get-point 'backward-word 1) (get-point 'forward-word 1))
+    (copy-thing 'backward-word 'forward-word arg)
+    (message "word at point copied"))
+
+  (defun copy-line (&optional arg)
+    "Copy line at point into kill-ring, truncated"
+    (interactive "P")
+    (my-blink (get-point 'beginning-of-line 1) (get-point 'end-of-line 1))
+    (copy-thing 'beginning-of-line 'end-of-line arg)
+    (message "line at point copied"))
+
+  (defun copy-paragraph (&optional arg)
+    "Copy paragraph at point into kill-ring, truncated"
+    (interactive "P")
+    (my-blink (get-point 'backward-paragraph 1) (get-point 'forward-paragraph 1))
+    (copy-thing 'backward-paragraph 'forward-paragraph arg)
+    (message "paragraph at point copied"))
+
+  (defun copy-buffer(&optional arg)
+    "Copy the whole buffer into kill-ring, as-is"
+    (interactive "P")
+    (progn
+      (my-blink (point-min) (point-max))
+      (copy-region-as-kill (point-min) (point-max))
+      (message "buffer copied")))
 
 
-;; TODO shrink list if more items
-(defun kimim/buffer-edit-hook (beg end len)
-  (interactive)
-   (let ((bfn (buffer-file-name)))
-     ;; insert modification in current index
-     ;; remove forward locations
-     ;; if longer than 100, remove old locations
-     (when bfn
-       (progn
-         (add-to-list 'kimim/last-edit-list (cons bfn end))))))
+  (defvar kimim/last-edit-list nil)
+  ;; ((file location) (file location))
+  ;;   1              2
+
+  (defun kimim/backward-last-edit ()
+    (interactive)
+    (let ((position (car kimim/last-edit-list)))
+      (when position
+        ;;(print position)
+        ;;(print kimim/last-edit-list)
+        (find-file (car position))
+        (goto-char (cdr position))
+        (setq kimim/last-edit-list (cdr kimim/last-edit-list)))))
 
 
-(add-hook 'after-change-functions 'kimim/buffer-edit-hook)
-(global-set-key (kbd "M-`") 'kimim/backward-last-edit)
+  ;; TODO shrink list if more items
+  (defun kimim/buffer-edit-hook (beg end len)
+    (interactive)
+     (let ((bfn (buffer-file-name)))
+       ;; insert modification in current index
+       ;; remove forward locations
+       ;; if longer than 100, remove old locations
+       (when bfn
+         (progn
+           (add-to-list 'kimim/last-edit-list (cons bfn end))))))
 
-(provide 'cfg-kimim)
+
+  (add-hook 'after-change-functions 'kimim/buffer-edit-hook)
+  (global-set-key (kbd "M-`") 'kimim/backward-last-edit)
+
+  (defun ibuffer-visit-buffer-other-window (&optional noselect)
+    "Visit the buffer on this line in another window."
+    (interactive)
+    (let ((buf (ibuffer-current-buffer t)))
+      (bury-buffer (current-buffer))
+      (if noselect
+          (let ((curwin (selected-window)))
+            (pop-to-buffer buf)
+            (select-window curwin))
+        (switch-to-buffer-other-window buf)
+        (kill-buffer-and-its-windows "*Ibuffer*")
+        )))
+
+;; Use human readable Size column instead of original one
+(define-ibuffer-column size-h
+  (:name "Size" :inline t)
+  (cond
+   ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+   ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+   ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+   (t (format "%8d" (buffer-size)))))
+
+;; Modify the default ibuffer-formats
+  (setq ibuffer-formats
+	'((mark modified read-only " "
+		(name 18 18 :left :elide)
+		" "
+		(size-h 9 -1 :right)
+		" "
+		(mode 16 16 :left :elide)
+		" "
+		filename-and-process)))
 
 
 #+END_SRC
 * orgmode
 
 #+BEGIN_SRC emacs-lisp
-;; path and system environment setting for orgmode
-(setq org-path-home (concat sync-path-home "org/"))
-(setq org-path-work (concat sync-path-work "org/"))
+  ;; path and system environment setting for orgmode
+  (setq org-path-home (concat sync-path-home "org/"))
+  (setq org-path-work (concat sync-path-work "org/"))
 
-;; file in jekyll base will also be uploaded to github
-(setq path-jekyll-base "~/kimi.im/_notes/_posts")
-;; in order to sync draft with cloud sync driver
-(setq path-jekyll-draft (concat sync-path-home "kimim/_draft/"))
+  ;; file in jekyll base will also be uploaded to github
+  (setq path-jekyll-base "~/kimi.im/_notes/_posts")
+  ;; in order to sync draft with cloud sync driver
+  (setq path-jekyll-draft (concat sync-path-home "kimim/_draft/"))
 
-;(require 'ox-reveal)
-;; load htmlize.el , which org-babel export syntax highlight source code need it
-(require 'htmlize)
-(require 'ox-md)
+  ;(require 'ox-reveal)
+  ;; load htmlize.el , which org-babel export syntax highlight source code need it
+  (require 'htmlize)
+  (require 'ox-md)
 
-;; plant uml setting
-(require 'ob-plantuml)
-(setenv "GRAPHVIZ_DOT" "C:\\cygwin\\bin\\dot.exe")
-(setq org-plantuml-jar-path "C:\\kimikit\\plantuml\\plantuml.jar")
+  ;; plant uml setting
+  (require 'ob-plantuml)
+  (setenv "GRAPHVIZ_DOT" "C:\\cygwin\\bin\\dot.exe")
+  (setq org-plantuml-jar-path "C:\\kimikit\\plantuml\\plantuml.jar")
 
-(setq org-hide-leading-stars t)
-(setq org-footnote-auto-adjust t)
-(setq org-html-validation-link nil)
-(setq org-export-creator-string "")
-;; no empty line after collapsed
-(setq org-cycle-separator-lines 0)
-;; src block setting
-(setq org-src-window-setup 'current-window)
-(setq org-src-fontify-natively t)
-(setq org-export-with-sub-superscripts '{})
-(define-key org-mode-map (kbd "C-c C-x h") (lambda()
-                                             (interactive)
-                                             (insert "^{()}")
-                                             (backward-char 2)))
-(define-key org-mode-map (kbd "C-c C-x l") (lambda()
-                                             (interactive)
-                                             (insert "_{}")
-                                             (backward-char 1)))
-;; insert time stamp even in chinese input method
-(define-key org-mode-map (kbd "C-c 。") 'org-time-stamp)
-;; (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f"
-;; 							  "xelatex -interaction nonstopmode %f"))
-;;(setq org-latex-pdf-process '("pdflatex -interaction nonstopmode %f"))
-;; active Babel languages
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((C . t)
-   (python .t)
-   (emacs-lisp . t)
-   (sh . t)
-   (dot . t)
-   (ditaa . t)
-   (js . t)
-   (latex . t)
-   (plantuml . t)
-   (clojure .t)
-   (org . t)
-   (R . t)
-   ))
+  (setq org-hide-leading-stars t)
+  (setq org-footnote-auto-adjust t)
+  (setq org-html-validation-link nil)
+  (setq org-export-creator-string "")
+  ;; no empty line after collapsed
+  (setq org-cycle-separator-lines 0)
+  ;; src block setting
+  (setq org-src-window-setup 'current-window)
+  (setq org-src-fontify-natively t)
+  (setq org-export-with-sub-superscripts '{})
+  (define-key org-mode-map (kbd "C-c C-x h") (lambda()
+                                               (interactive)
+                                               (insert "^{()}")
+                                               (backward-char 2)))
+  (define-key org-mode-map (kbd "C-c C-x l") (lambda()
+                                               (interactive)
+                                               (insert "_{}")
+                                               (backward-char 1)))
+  ;; insert time stamp even in chinese input method
+  (define-key org-mode-map (kbd "C-c 。") 'org-time-stamp)
+  ;; (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f"
+  ;;                                                        "xelatex -interaction nonstopmode %f"))
+  ;;(setq org-latex-pdf-process '("pdflatex -interaction nonstopmode %f"))
+  ;; active Babel languages
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((C . t)
+     (python .t)
+     (emacs-lisp . t)
+     (sh . t)
+     (dot . t)
+     (ditaa . t)
+     (js . t)
+     (latex . t)
+     (plantuml . t)
+     (clojure .t)
+     (org . t)
+     (R . t)
+     ))
 
-;;============================================================================
-;; Calendar and Holiday Settings
-;;============================================================================
-(setq diary-file "~/.emacs.d/diary")
-(setq calendar-latitude +30.16)
-(setq calendar-longitude +120.12)
-(setq calendar-location-name "Hangzhou")
-(setq calendar-remove-frame-by-deleting t)
-(setq calendar-week-start-day 1)
-(setq holiday-christian-holidays nil)
-(setq holiday-hebrew-holidays nil)
-(setq holiday-islamic-holidays nil)
-(setq holiday-solar-holidays nil)
-(setq holiday-bahai-holidays nil)
-(setq holiday-general-holidays '((holiday-fixed 1 1 "元旦")
-                         (holiday-fixed 4 1 "愚人節")
-                         (holiday-float 5 0 2 "父親節")
-                         (holiday-float 6 0 3 "母親節")))
-(setq calendar-mark-diary-entries-flag t)
-(setq calendar-mark-holidays-flag nil)
-(setq calendar-view-holidays-initially-flag nil)
-(setq chinese-calendar-celestial-stem
-      ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
-(setq chinese-calendar-terrestrial-branch
-      ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
+  ;;============================================================================
+  ;; Calendar and Holiday Settings
+  ;;============================================================================
+  (setq diary-file "~/.emacs.d/diary")
+  (setq calendar-latitude +30.16)
+  (setq calendar-longitude +120.12)
+  (setq calendar-location-name "Hangzhou")
+  (setq calendar-remove-frame-by-deleting t)
+  (setq calendar-week-start-day 1)
+  (setq holiday-christian-holidays nil)
+  (setq holiday-hebrew-holidays nil)
+  (setq holiday-islamic-holidays nil)
+  (setq holiday-solar-holidays nil)
+  (setq holiday-bahai-holidays nil)
+  (setq holiday-general-holidays '((holiday-fixed 1 1 "元旦")
+                           (holiday-fixed 4 1 "愚人節")
+                           (holiday-float 5 0 2 "父親節")
+                           (holiday-float 6 0 3 "母親節")))
+  (setq calendar-mark-diary-entries-flag t)
+  (setq calendar-mark-holidays-flag nil)
+  (setq calendar-view-holidays-initially-flag nil)
+  (setq chinese-calendar-celestial-stem
+        ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
+  (setq chinese-calendar-terrestrial-branch
+        ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
 
-;;============================================================================
-;; org-reveal settings for html5 ppt
-;;============================================================================
-(setq org-reveal-root "reveal.js")
-;;(setq org-reveal-root "~/../Tools/reveal.js")
-;;(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
-(setq org-reveal-theme "simple")
-(setq org-reveal-width 1200)
-(setq org-reveal-height 750)
-(setq org-reveal-transition "fade")
-(setq org-reveal-hlevel 2)
+  ;;============================================================================
+  ;; org-reveal settings for html5 ppt
+  ;;============================================================================
+  (setq org-reveal-root "reveal.js")
+  ;;(setq org-reveal-root "~/../Tools/reveal.js")
+  ;;(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
+  (setq org-reveal-theme "simple")
+  (setq org-reveal-width 1200)
+  (setq org-reveal-height 750)
+  (setq org-reveal-transition "fade")
+  (setq org-reveal-hlevel 2)
 
-;;============================================================================
-;; new link to use everything/? to locate a file with unique ID
-;;============================================================================
-(org-add-link-type "match" 'org-match-open)
+  ;;============================================================================
+  ;; new link to use everything/? to locate a file with unique ID
+  ;;============================================================================
+  (org-add-link-type "match" 'org-match-open)
 
-(defun org-match-open (path)
-  "Visit the match search on PATH.
-     PATH should be a topic that can be thrown at everything/?."
-  (w32-shell-execute
-   "open" "Everything" (concat "-search " path)))
+  (defun org-match-open (path)
+    "Visit the match search on PATH.
+       PATH should be a topic that can be thrown at everything/?."
+    (w32-shell-execute
+     "open" "Everything" (concat "-search " path)))
 
-;;============================================================================
-;; org as GTD system
-;;============================================================================
-(setq org-todo-keywords
-	  '(
-        ;; for tasks
-        (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
-        ;; for risks, actions, problems
-        (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
-        ;; special states
-        (type "REPEAT(r)" "SOMEDAY(m)" "|" "ABORT(a@/!)")
-        ))
+  ;;============================================================================
+  ;; org as GTD system
+  ;;============================================================================
+  (setq org-todo-keywords
+            '(
+          ;; for tasks
+          (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
+          ;; for risks, actions, problems
+          (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
+          ;; special states
+          (type "REPEAT(r)" "SOMEDAY(m)" "|" "ABORT(a@/!)")
+          ))
 
-(setq org-tag-alist '((:startgroup . nil)
-                      ("@office" . ?o) ("@home" . ?h)
-                      (:endgroup . nil)
-                      ("@team" . ?t) ("@leader" . ?l)
-                      ("risk" . ?k)
-                      ("sync" . ?s)
-                      ("reading" . ?r)
-                      ("writing" . ?w)
-                      ("project" . ?p) ("category" . ?c)
-                      ("habit" . ?H)
-                      ("next" . ?n)))
-;; Level=2 or 3, state is not DONE/ABORT/CLOSED/SOMEDAY
-;; contains no TODO keywords or SOMEDAY
-;; contains no project tag
-;; subtree contains TODO
+  (setq org-tag-alist '((:startgroup . nil)
+                        ("@office" . ?o) ("@home" . ?h)
+                        (:endgroup . nil)
+                        ("@team" . ?t) ("@leader" . ?l)
+                        ("risk" . ?k)
+                        ("sync" . ?s)
+                        ("reading" . ?r)
+                        ("writing" . ?w)
+                        ("project" . ?p) ("category" . ?c)
+                        ("habit" . ?H)
+                        ("next" . ?n)))
+  ;; Level=2 or 3, state is not DONE/ABORT/CLOSED/SOMEDAY
+  ;; contains no TODO keywords or SOMEDAY
+  ;; contains no project tag
+  ;; subtree contains TODO
 
-;; 子節點不需要繼承父節點的 tag
-;; project 表示這個節點下的是項目任務，任務不需要繼承project tag
-;; category 表示該節點是分類節點
-(setq org-tags-exclude-from-inheritance '("project" "category"))
+  ;; 子節點不需要繼承父節點的 tag
+  ;; project 表示這個節點下的是項目任務，任務不需要繼承project tag
+  ;; category 表示該節點是分類節點
+  (setq org-tags-exclude-from-inheritance '("project" "category"))
 
-(add-hook 'org-mode-hook '(lambda ()
-                            (auto-fill-mode)
-                            (org-display-inline-images)
-                            (drag-stuff-mode -1)
-                            (if (boundp 'org-agenda-mode-map)
-                                (org-defkey org-agenda-mode-map "x" 'org-agenda-list-stuck-projects))))
-(setq org-stuck-projects (quote ("+LEVEL>=2-category-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
-                                 ("TODO" "SCEHD" "OPEN" "WAIT") nil nil)))
-;;(setq org-stuck-projects '("+LEVEL>=2/+project-habit/-OPEN-TODO-SCHED-DONE-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
-;;                                 ("TODO" "SCEHD" "OPEN" "WAIT") ("habit") nil))
-;; (setq org-stuck-projects (quote ("+LEVEL>=2-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
-;;                                  ("SOMEDAY") ("project") nil)))
-(setq org-refile-targets '(;; refile to maxlevel 2 of current file
-                           (nil . (:maxlevel . 1))
-                           ;; refile to maxlevel 1 of org-refile-files
-                           (org-refile-files :maxlevel . 1)
-                           ;; refile to item with 'project' tag in org-refile-files
-                           (org-refile-files :tag . "project")
-                           (org-refile-files :tag . "category")))
+  (add-hook 'org-mode-hook '(lambda ()
+                              (auto-fill-mode)
+                              (org-display-inline-images)
+                              (drag-stuff-mode -1)
+                              (if (boundp 'org-agenda-mode-map)
+                                  (org-defkey org-agenda-mode-map "x" 'org-agenda-list-stuck-projects))))
+  (setq org-stuck-projects (quote ("+LEVEL>=2-category-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
+                                   ("TODO" "SCEHD" "OPEN" "WAIT") nil nil)))
+  ;;(setq org-stuck-projects '("+LEVEL>=2/+project-habit/-OPEN-TODO-SCHED-DONE-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
+  ;;                                 ("TODO" "SCEHD" "OPEN" "WAIT") ("habit") nil))
+  ;; (setq org-stuck-projects (quote ("+LEVEL>=2-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
+  ;;                                  ("SOMEDAY") ("project") nil)))
+  (setq org-refile-targets '(;; refile to maxlevel 2 of current file
+                             (nil . (:maxlevel . 1))
+                             ;; refile to maxlevel 1 of org-refile-files
+                             (org-refile-files :maxlevel . 1)
+                             ;; refile to item with 'project' tag in org-refile-files
+                             (org-refile-files :tag . "project")
+                             (org-refile-files :tag . "category")))
 
-(defadvice org-schedule (after add-todo activate)
-  (if (or (string= "OPEN" (org-get-todo-state))
-          (string= "WAIT" (org-get-todo-state))
-          (string= "CLOSE" (org-get-todo-state)))
-      (org-todo "WAIT")
-    (org-todo "SCHED")))
+  (defadvice org-schedule (after add-todo activate)
+    (if (or (string= "OPEN" (org-get-todo-state))
+            (string= "WAIT" (org-get-todo-state))
+            (string= "CLOSE" (org-get-todo-state)))
+        (org-todo "WAIT")
+      (org-todo "SCHED")))
 
-(defadvice org-deadline (after add-todo activate)
-  (if (or (string= "OPEN" (org-get-todo-state))
-          (string= "WAIT" (org-get-todo-state))
-          (string= "CLOSE" (org-get-todo-state)))
-      (org-todo "WAIT")
-    (org-todo "SCHED")))
+  (defadvice org-deadline (after add-todo activate)
+    (if (or (string= "OPEN" (org-get-todo-state))
+            (string= "WAIT" (org-get-todo-state))
+            (string= "CLOSE" (org-get-todo-state)))
+        (org-todo "WAIT")
+      (org-todo "SCHED")))
 
-(setq org-log-done t)
-(setq org-todo-repeat-to-state "REPEAT")
-;; settings for org-agenda-view
-(setq org-agenda-span 'day)
-(setq org-agenda-skip-scheduled-if-done t)
-(setq org-agenda-skip-deadline-if-done t)
-(setq org-deadline-warning-days 2)
-(defcustom org-location-home-or-office "office" "office")
-(defun org-toggle-office ()
-  (interactive)
-  (setq org-location-home-or-office "office")
-  (setq org-agenda-files (list (concat org-path-home "capture.org")
-                               (concat org-path-work "gtd-work/")
-                               (concat org-path-work "gtd-work/projects/")
-                               (concat org-path-home "world.org")))
-  (setq org-refile-files (append (list (concat org-path-home "capture.org")
-                                       (concat org-path-home "world.org")
-                                       (concat org-path-home "new-words.org")
-                                       (concat org-path-home "gtd-home/kimi.org"))
-                                 (file-expand-wildcards (concat org-path-work "gtd-work/*.org"))
-                                 (file-expand-wildcards (concat org-path-work "gtd-work/*/*.org"))))
-  (message "Agenda is from office..."))
+  (setq org-log-done t)
+  (setq org-todo-repeat-to-state "REPEAT")
+  ;; settings for org-agenda-view
+  (setq org-agenda-span 'day)
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-deadline-warning-days 2)
+  (defcustom org-location-home-or-office "office" "office")
+  (defun org-toggle-office ()
+    (interactive)
+    (setq org-location-home-or-office "office")
+    (setq org-agenda-files (list (concat org-path-home "capture.org")
+                                 (concat org-path-work "gtd-work/")
+                                 (concat org-path-work "gtd-work/projects/")
+                                 (concat org-path-home "world.org")))
+    (setq org-refile-files (append (list (concat org-path-home "capture.org")
+                                         (concat org-path-home "world.org")
+                                         (concat org-path-home "new-words.org")
+                                         (concat org-path-home "gtd-home/kimi.org"))
+                                   (file-expand-wildcards (concat org-path-work "gtd-work/*.org"))
+                                   (file-expand-wildcards (concat org-path-work "gtd-work/*/*.org"))))
+    (message "Agenda is from office..."))
 
-(defun org-toggle-home ()
-  (interactive)
-	  (setq org-location-home-or-office "home")
-      (setq org-agenda-files (list (concat org-path-home "capture.org")
-                                   (concat org-path-home "world.org")
-                                   (concat org-path-home "gtd-home/")))
-      (setq org-refile-files (append (list (concat org-path-home "capture.org")
-                                           (concat org-path-home "world.org"))
-                                     (file-expand-wildcards (concat org-path-home "gtd-home/*.org"))))
-      (message "Agenda is from home..."))
+  (defun org-toggle-home ()
+    (interactive)
+            (setq org-location-home-or-office "home")
+        (setq org-agenda-files (list (concat org-path-home "capture.org")
+                                     (concat org-path-home "world.org")
+                                     (concat org-path-home "gtd-home/")))
+        (setq org-refile-files (append (list (concat org-path-home "capture.org")
+                                             (concat org-path-home "world.org"))
+                                       (file-expand-wildcards (concat org-path-home "gtd-home/*.org"))))
+        (message "Agenda is from home..."))
 
-(defun org-toggle-home-or-office()
-  (interactive)
-  (if (string= org-location-home-or-office "home")
-	  (org-toggle-office)
-    (org-toggle-home)))
-(org-toggle-office)
+  (defun org-toggle-home-or-office()
+    (interactive)
+    (if (string= org-location-home-or-office "home")
+            (org-toggle-office)
+      (org-toggle-home)))
+  (org-toggle-office)
 
-(setq org-agenda-custom-commands
-      '(("t" todo "TODO|OPEN"               ;; TODO list
-         ((org-agenda-sorting-strategy '(priority-down))))
-        ("d" todo "TODO|SCHED|OPEN|WAIT"    ;; all task should be done or doing
-         ((org-agenda-sorting-strategy '(priority-down))))
-        ("o" todo "OPEN"
-         ((org-agenda-sorting-strategy '(priority-down))))
-        ("w" todo "WAIT"
-         ((org-agenda-sorting-strategy '(priority-down))))
-        ("h" tags "habit/-ABORT-CLOSE"
-         ((org-agenda-sorting-strategy '(todo-state-down))))
-        ("c" tags "clock"
-         ((org-agenda-sorting-strategy '(priority-down))))))
+  (setq org-agenda-custom-commands
+        '(("t" todo "TODO|OPEN"               ;; TODO list
+           ((org-agenda-sorting-strategy '(priority-down))))
+          ("d" todo "TODO|SCHED|OPEN|WAIT"    ;; all task should be done or doing
+           ((org-agenda-sorting-strategy '(priority-down))))
+          ("o" todo "OPEN"
+           ((org-agenda-sorting-strategy '(priority-down))))
+          ("w" todo "WAIT"
+           ((org-agenda-sorting-strategy '(priority-down))))
+          ("h" tags "habit/-ABORT-CLOSE"
+           ((org-agenda-sorting-strategy '(todo-state-down))))
+          ("c" tags "clock"
+           ((org-agenda-sorting-strategy '(priority-down))))))
 
-(setq org-capture-templates
-      '(("c" "Capture" entry (file+headline (concat org-path-home "capture.org") "Inbox")
-         "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-        ("t" "TODO" entry (file+headline (concat org-path-home "capture.org") "Inbox")
-         "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-        ("o" "Action" entry (file+headline (concat org-path-home "capture.org") "Inbox")
-         "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-        ("h" "Habit" entry (file+headline (concat org-path-home "world.org") "Habit")
-         "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
+  (setq org-capture-templates
+        '(("c" "Capture" entry (file+headline (concat org-path-home "capture.org") "Inbox")
+           "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+          ("t" "TODO" entry (file+headline (concat org-path-home "capture.org") "Inbox")
+           "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+          ("o" "Action" entry (file+headline (concat org-path-home "capture.org") "Inbox")
+           "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+          ("h" "Habit" entry (file+headline (concat org-path-home "world.org") "Habit")
+           "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
-;;============================================================================
-;; org-mode-reftex-search
-;;============================================================================
-(defun org-mode-reftex-search ()
- ;; jump to the notes for the paper pointed to at from reftex search
- (interactive)
- (org-open-link-from-string (format "[[notes:%s]]" (reftex-citation t))))
+  ;;============================================================================
+  ;; org-mode-reftex-search
+  ;;============================================================================
+  (defun org-mode-reftex-search ()
+   ;; jump to the notes for the paper pointed to at from reftex search
+   (interactive)
+   (org-open-link-from-string (format "[[notes:%s]]" (reftex-citation t))))
 
-(setq org-link-abbrev-alist
- '(("bib" . "~/reference/ref.bib::%s")
-   ("notes" . "~/reference/notes.org::#%s")
-   ("papers" . "~/reference/papers/%s.pdf")))
+  (setq org-link-abbrev-alist
+   '(("bib" . "~/reference/ref.bib::%s")
+     ("notes" . "~/reference/notes.org::#%s")
+     ("papers" . "~/reference/papers/%s.pdf")))
 
-(defun org-mode-reftex-setup ()
-  (load-library "reftex")
-  (and (buffer-file-name) (file-exists-p (buffer-file-name))
-       (progn
-    ;; enable auto-revert-mode to update reftex when bibtex file changes on disk
-    (global-auto-revert-mode t)
-    (reftex-parse-all)
-    ;; add a custom reftex cite format to insert links
-    (reftex-set-cite-format
-      '((?b . "[[bib:%l][%l-bib]]")
-        (?c . "\\cite{%l}")
-        (?n . "[[notes:%l][%l-notes]]")
-        (?p . "[[papers:%l][%l-paper]]")
-        (?t . "%t")
-        (?h . "** %t\n:PROPERTIES:\n:Custom_ID: %l\n:END:\n[[papers:%l][%l-paper]]")))))
-  (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
-  (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search))
-
-
+  (defun org-mode-reftex-setup ()
+    (load-library "reftex")
+    (and (buffer-file-name) (file-exists-p (buffer-file-name))
+         (progn
+      ;; enable auto-revert-mode to update reftex when bibtex file changes on disk
+      (global-auto-revert-mode t)
+      (reftex-parse-all)
+      ;; add a custom reftex cite format to insert links
+      (reftex-set-cite-format
+        '((?b . "[[bib:%l][%l-bib]]")
+          (?c . "\\cite{%l}")
+          (?n . "[[notes:%l][%l-notes]]")
+          (?p . "[[papers:%l][%l-paper]]")
+          (?t . "%t")
+          (?h . "** %t\n:PROPERTIES:\n:Custom_ID: %l\n:END:\n[[papers:%l][%l-paper]]")))))
+    (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
+    (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search))
 
 
-(defadvice org-html-paragraph (before fsh-org-html-paragraph-advice
-                                      (paragraph contents info) activate)
-  "Join consecutive Chinese lines into a single long line without
-unwanted space when exporting org-mode to html."
-  (let ((fixed-contents)
-        (orig-contents (ad-get-arg 1))
-        (reg-han "[[:multibyte:]]"))
-    (setq fixed-contents (replace-regexp-in-string
-                          (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
-                          "\\1\\2" orig-contents))
-    (ad-set-arg 1 fixed-contents)
-    ))
 
-;;============================================================================
-;; function redifinition
-;;============================================================================
-(defun org-babel-result-to-file (result &optional description)
-  "Convert RESULT into an `org-mode' link with optional DESCRIPTION.
-If the `default-directory' is different from the containing
-file's directory then expand relative links."
-  (when (stringp result)
-    (if (string= "svg" (file-name-extension result))
+
+  (defadvice org-html-paragraph (before fsh-org-html-paragraph-advice
+                                        (paragraph contents info) activate)
+    "Join consecutive Chinese lines into a single long line without
+  unwanted space when exporting org-mode to html."
+    (let ((fixed-contents)
+          (orig-contents (ad-get-arg 1))
+          (reg-han "[[:multibyte:]]"))
+      (setq fixed-contents (replace-regexp-in-string
+                            (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
+                            "\\1\\2" orig-contents))
+      (ad-set-arg 1 fixed-contents)
+      ))
+
+  ;;============================================================================
+  ;; function redifinition
+  ;;============================================================================
+  (defun org-babel-result-to-file (result &optional description)
+    "Convert RESULT into an `org-mode' link with optional DESCRIPTION.
+  If the `default-directory' is different from the containing
+  file's directory then expand relative links."
+    (when (stringp result)
+      (if (string= "svg" (file-name-extension result))
+          (progn
+            (with-temp-buffer
+              (if (file-exists-p (concat result ".html"))
+                  (delete-file (concat result ".html")))
+              (rename-file result (concat result ".html"))
+              (insert-file-contents (concat result ".html"))
+              (message (concat result ".html"))
+              (format "#+BEGIN_HTML
+  <div style=\"text-align: center;\">
+  %s
+  </div>
+  ,#+END_HTML"
+                      (buffer-string)
+                      )))
         (progn
-          (with-temp-buffer
-            (if (file-exists-p (concat result ".html"))
-                (delete-file (concat result ".html")))
-            (rename-file result (concat result ".html"))
-            (insert-file-contents (concat result ".html"))
-            (message (concat result ".html"))
-            (format "#+BEGIN_HTML
-<div style=\"text-align: center;\">
-%s
-</div>
-#+END_HTML"
-                    (buffer-string)
-                    )))
-      (progn
-        (format "[[file:%s]%s]"
-                (if (and default-directory
-                         buffer-file-name
-                         (not (string= (expand-file-name default-directory)
-                                       (expand-file-name
-                                        (file-name-directory buffer-file-name)))))
-                    (expand-file-name result default-directory)
-                  result)
-                (if description (concat "[" description "]") ""))))))
+          (format "[[file:%s]%s]"
+                  (if (and default-directory
+                           buffer-file-name
+                           (not (string= (expand-file-name default-directory)
+                                         (expand-file-name
+                                          (file-name-directory buffer-file-name)))))
+                      (expand-file-name result default-directory)
+                    result)
+                  (if description (concat "[" description "]") ""))))))
 
-;; R-mode
-;; Now we set up Emacs to find R
-;; The path to R might need to be changed
-(setq-default inferior-R-program-name
-	      "C:/Program Files/R/R-3.1.1/bin/i386/Rterm.exe")
-;(setenv "PATH" (concat "C:\\Program Files\\R\\R-2.15.3\\bin\\i386" ";"
-;    (getenv "PATH")))
-;;(setq-default inferior-R-program-name "C:/cygwin/lib/R/bin/exec/R.exe")
+  ;; R-mode
+  ;; Now we set up Emacs to find R
+  ;; The path to R might need to be changed
+  (setq-default inferior-R-program-name
+                "C:/Program Files/R/R-3.1.1/bin/i386/Rterm.exe")
+  ;(setenv "PATH" (concat "C:\\Program Files\\R\\R-2.15.3\\bin\\i386" ";"
+  ;    (getenv "PATH")))
+  ;;(setq-default inferior-R-program-name "C:/cygwin/lib/R/bin/exec/R.exe")
 
-;; Configuring org mode to know about R and set some reasonable default behavior
-;; (require 'ess-site)
-(require 'org-install)
+  ;; Configuring org mode to know about R and set some reasonable default behavior
+  ;; (require 'ess-site)
+  (require 'org-install)
 
-(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-(setq org-confirm-babel-evaluate nil)
-(setq org-export-html-validation-link nil)
-(setq org-export-allow-BIND t)
-(setq org-support-shift-select t)
-(setq org-src-fontify-natively t)
-(setq org-startup-indented t)
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-export-html-validation-link nil)
+  (setq org-export-allow-BIND t)
+  (setq org-support-shift-select t)
+  (setq org-src-fontify-natively t)
+  (setq org-startup-indented t)
 
 #+END_SRC
 * gnus
 #+BEGIN_SRC emacs-lisp
 
-;; erc settings
-(require 'erc-join)
-(erc-autojoin-mode 1)
-(erc-autojoin-enable)
-(setq erc-default-server "irc.freenode.net")
-(setq erc-autojoin-channels-alist
-          '(("irc.freenode.net" "#emacs")))
-(setq erc-hide-list '("JOIN" "PART" "QUIT"))
+  ;; erc settings
+  (require 'erc-join)
+  (erc-autojoin-mode 1)
+  (erc-autojoin-enable)
+  (setq erc-default-server "irc.freenode.net")
+  (setq erc-autojoin-channels-alist
+            '(("irc.freenode.net" "#emacs")))
+  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
-;; gnus settings
-(setq message-directory "~/Gnus/Mail/")
-(setq gnus-directory "~/Gnus/News/")
-(setq nnfolder-directory "~/Gnus/Mail/Archive")
+  ;; gnus settings
+  (setq message-directory "~/Gnus/Mail/")
+  (setq gnus-directory "~/Gnus/News/")
+  (setq nnfolder-directory "~/Gnus/Mail/Archive")
 
-(setq gnus-agent t)
-(setq gnus-agent-expire-days 90)
-; prompt for how many articles only for larger than 1000 articles
-(setq gnus-large-newsgroup 1000)
-(setq gnus-use-cache t)
-(setq gnus-fetch-old-headers nil) ; show previous messages in a thread
-(setq gnus-thread-indent-level 1)
-(add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
-(setq gnus-select-method '(nnml ""))
-(setq gnus-secondary-select-methods nil)
-(add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
-(add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
-(add-to-list 'gnus-secondary-select-methods '(nnml ""))
+  (setq gnus-agent t)
+  (setq gnus-agent-expire-days 90)
+  ; prompt for how many articles only for larger than 1000 articles
+  (setq gnus-large-newsgroup 1000)
+  (setq gnus-use-cache t)
+  (setq gnus-fetch-old-headers nil) ; show previous messages in a thread
+  (setq gnus-thread-indent-level 1)
+  (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
+  (setq gnus-select-method '(nnml ""))
+  (setq gnus-secondary-select-methods nil)
+  (add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
+  (add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
+  (add-to-list 'gnus-secondary-select-methods '(nnml ""))
 
 #+END_SRC
 * jekyll
 #+BEGIN_SRC emacs-lisp
-;; ============================================================================
-;; org for blog system
-;; ============================================================================
-;; file in jekyll base will also be uploaded to github
-(setq path-jekyll-base "~/kimi.im/_notes/_posts")
-;; in order to sync draft with cloud sync driver
-(setq path-jekyll-draft (concat sync-path-home "kimim/_draft/"))
+  ;; ============================================================================
+  ;; org for blog system
+  ;; ============================================================================
+  ;; file in jekyll base will also be uploaded to github
+  (setq path-jekyll-base "~/kimi.im/_notes/_posts")
+  ;; in order to sync draft with cloud sync driver
+  (setq path-jekyll-draft (concat sync-path-home "kimim/_draft/"))
 
-(setq org-publish-project-alist
-      '(
-        ("org-blog-content"
-         ;; Path to your org files.
-         :base-directory "~/kimi.im/_notes"
-         :base-extension "org"
-         ;; Path to your jekyll project.
-         :publishing-directory "~/kimi.im/"
-         :recursive t
-         :publishing-function org-html-publish-to-html
-         :headline-levels 4
-         :section-numbers t
-         :html-extension "html"
-         :body-only t ;; Only export section between <body></body>
-         :with-toc nil
-         )
-        ("org-blog-static"
-         :base-directory "~/kimi.im/_notes/"
-         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php\\|svg"
-         :publishing-directory "~/kimi.im/"
-         :recursive t
-         :publishing-function org-publish-attachment)
-        ("blog" :components ("org-blog-content" "org-blog-static"))
-        ))
+  (setq org-publish-project-alist
+        '(
+          ("org-blog-content"
+           ;; Path to your org files.
+           :base-directory "~/kimi.im/_notes"
+           :base-extension "org"
+           ;; Path to your jekyll project.
+           :publishing-directory "~/kimi.im/"
+           :recursive t
+           :publishing-function org-html-publish-to-html
+           :headline-levels 4
+           :section-numbers t
+           :html-extension "html"
+           :body-only t ;; Only export section between <body></body>
+           :with-toc nil
+           )
+          ("org-blog-static"
+           :base-directory "~/kimi.im/_notes/"
+           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php\\|svg"
+           :publishing-directory "~/kimi.im/"
+           :recursive t
+           :publishing-function org-publish-attachment)
+          ("blog" :components ("org-blog-content" "org-blog-static"))
+          ))
 
-(define-key org-mode-map (kbd "C-c p") (lambda ()
-                                         (interactive)
-                                         (org-publish-current-file)
-                                         (with-temp-buffer(dired "~/kimi.im/")
-                                                          (kimim/cyg)
-                                                          (kill-buffer))))
-(defun jekyll-post ()
-  "Post current buffer to kimi.im"
-  (interactive)
-  ;; get categories
-  ;; get buffer file name
-  (let ((category (jekyll-get-category))
-        (filename (file-name-nondirectory buffer-file-name))
-        newfilename)
-        ;; append date to the beginning of the file name
-    (setq newfilename (concat path-jekyll-base "/" category "/" (format-time-string "%Y-%m-%d-") filename))
-    ;; mv the file to the categories folder
-    (rename-file buffer-file-name newfilename)
-    (switch-to-buffer (find-file-noselect newfilename))
-;;    (color-theme-initialize)
-;;    (color-theme-jekyll)
-    ;; execute org-publish-current-file
-    (org-publish-current-file)
-;;    (color-theme-eclipse)
-    ;; go to kimi.im folder and execute cyg command
-    (with-temp-buffer(dired "~/kimi.im/")
-                     (kimim/cyg)
-                     (kill-buffer))
-    ))
+  (define-key org-mode-map (kbd "C-c p") (lambda ()
+                                           (interactive)
+                                           (org-publish-current-file)
+                                           (with-temp-buffer(dired "~/kimi.im/")
+                                                            (kimim/cyg)
+                                                            (kill-buffer))))
+  (defun jekyll-post ()
+    "Post current buffer to kimi.im"
+    (interactive)
+    ;; get categories
+    ;; get buffer file name
+    (let ((category (jekyll-get-category))
+          (filename (file-name-nondirectory buffer-file-name))
+          newfilename)
+          ;; append date to the beginning of the file name
+      (setq newfilename (concat path-jekyll-base "/" category "/" (format-time-string "%Y-%m-%d-") filename))
+      ;; mv the file to the categories folder
+      (rename-file buffer-file-name newfilename)
+      (switch-to-buffer (find-file-noselect newfilename))
+  ;;    (color-theme-initialize)
+  ;;    (color-theme-jekyll)
+      ;; execute org-publish-current-file
+      (org-publish-current-file)
+  ;;    (color-theme-eclipse)
+      ;; go to kimi.im folder and execute cyg command
+      (with-temp-buffer(dired "~/kimi.im/")
+                       (kimim/cyg)
+                       (kill-buffer))
+      ))
 
-(defun jekyll-tag ()
-"add new tags"
-  (interactive)
-  ;find "tags: [" and replace with "tags: [new-tag, "
-  (goto-char (point-min))
-;;  (search-forward "tags: [")
-  (re-search-forward "tags: \\[" nil t)
-  (insert (ido-completing-read "tags: " '(
-                                          "emacs" "org-mode"
-                                          "Deutsch" "Français" "English"
-                                          "Windows" "RTOS" "industry"
-                                          "travel"  "street-shots" "photography"
-                                          "leadership"
-                                          )))
-  (insert ", ")
-  )
+  (defun jekyll-tag ()
+  "add new tags"
+    (interactive)
+    ;find "tags: [" and replace with "tags: [new-tag, "
+    (goto-char (point-min))
+  ;;  (search-forward "tags: [")
+    (re-search-forward "tags: \\[" nil t)
+    (insert (ido-completing-read "tags: " '(
+                                            "emacs" "org-mode"
+                                            "Deutsch" "Français" "English"
+                                            "Windows" "RTOS" "industry"
+                                            "travel"  "street-shots" "photography"
+                                            "leadership"
+                                            )))
+    (insert ", ")
+    )
 
-(defun jekyll-header()
-  "Insert jekyll post headers,
-catergories and tags are generated from exisiting posts"
-  (interactive)
-  (insert "#+BEGIN_HTML\n---\nlayout: post\ntitle: ")
-  (insert (read-string "Title: "))
-  (insert "\ncategories: [")
-  (insert (ido-completing-read "categories: " '(
-                                                "technology"
-                                                "productivity" "leadership"
-                                                "psychology" "language"
-                                                "education" "photography"
-                                                )))
-  (insert "]")
-  (insert "\ntags: [")
-  (insert (ido-completing-read "tags: " '("emacs" "org-mode" "c prog"
-                                          "Deutsch" "Français" "English"
-                                          "management")))
-  (insert "]\n---\n#+END_HTML\n\n")
-  )
+  (defun jekyll-header()
+    "Insert jekyll post headers,
+  catergories and tags are generated from exisiting posts"
+    (interactive)
+    (insert "#+BEGIN_HTML\n---\nlayout: post\ntitle: ")
+    (insert (read-string "Title: "))
+    (insert "\ncategories: [")
+    (insert (ido-completing-read "categories: " '(
+                                                  "technology"
+                                                  "productivity" "leadership"
+                                                  "psychology" "language"
+                                                  "education" "photography"
+                                                  )))
+    (insert "]")
+    (insert "\ntags: [")
+    (insert (ido-completing-read "tags: " '("emacs" "org-mode" "c prog"
+                                            "Deutsch" "Français" "English"
+                                            "management")))
+    (insert "]\n---\n#+END_HTML\n\n")
+    )
 
 
-(defun jekyll ()
-  (interactive)
-  (find-file (concat path-jekyll-draft "/" (read-string "Filename: ") ".org"))
-  (jekyll-header)
-  (save-buffer)
-  )
+  (defun jekyll ()
+    (interactive)
+    (find-file (concat path-jekyll-draft "/" (read-string "Filename: ") ".org"))
+    (jekyll-header)
+    (save-buffer)
+    )
 
-(defun jekyll-get-category ()
-  (interactive)
-  (goto-char (point-min))
-  (re-search-forward "^categories: \\[\\([a-z-]*\\)\\]$" nil t)
-  (match-string 1)
-  )
+  (defun jekyll-get-category ()
+    (interactive)
+    (goto-char (point-min))
+    (re-search-forward "^categories: \\[\\([a-z-]*\\)\\]$" nil t)
+    (match-string 1)
+    )
 
-(defun jekyll-test ()
-  (interactive)
-  (color-theme-initialize)
-  (color-theme-jekyll)
-  (org-open-file (org-html-export-to-html nil)))
+  (defun jekyll-test ()
+    (interactive)
+    (color-theme-initialize)
+    (color-theme-jekyll)
+    (org-open-file (org-html-export-to-html nil)))
 
 
 #+END_SRC
 * Programming
 ** C
 #+BEGIN_SRC emacs-lisp
-;; This is a way to hook tempo into cc-mode
-;;; C-Mode Templates and C++-Mode Templates (uses C-Mode Templates also)
-(require 'tempo)
-(require 'ggtags)
-;;(require 'auto-complete-clang-async)
-;;(require 'syntax-subword)
-(setq tempo-interactive t)
+  ;; This is a way to hook tempo into cc-mode
+  ;;; C-Mode Templates and C++-Mode Templates (uses C-Mode Templates also)
+  (require 'tempo)
+  (require 'ggtags)
+  ;;(require 'auto-complete-clang-async)
+  ;;(require 'syntax-subword)
+  (setq tempo-interactive t)
 
-(defvar c-tempo-tagb nil
-  "Tempo tags for C mode")
-(defvar c++-tempo-tags nil
-  "Tempo tags for C++ mode")
+  (defvar c-tempo-tagb nil
+    "Tempo tags for C mode")
+  (defvar c++-tempo-tags nil
+    "Tempo tags for C++ mode")
+  (defun coding-mode ()
+    ;; start coding mode
+    (interactive)
+    (ecb-activate)
+    (semantic-mode)
+    ;; http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
+    ;; but with ecb-compile-window-height = 10, this is no longer needed
+    (setq split-height-threshold 0)
+    (setq split-width-threshold 60)
+    ;; minibuffer completion not work in ecb, use helm instead
+    (add-to-list 'ecb-compilation-buffer-names
+                 '("*helm-mode-execute-extended-command*" . nil)
+                 '("*helm-mode-bookmark-jump*" . nill)))
 
-(defun coding-mode ()
-  ;; start coding mode
-  (interactive)
-  (ecb-activate)
-  (semantic-mode)
-  ;; http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
-  ;; but with ecb-compile-window-height = 10, this is no longer needed
-  (setq split-height-threshold 0)
-  (setq split-width-threshold 60)
-  ;; minibuffer completion not work in ecb, use helm instead
-  (add-to-list 'ecb-compilation-buffer-names
-               '("*helm-mode-execute-extended-command*" . nil)
-               '("*helm-mode-bookmark-jump*" . nill))
-  (if (eq window-system 'w32)
-      (helm-mode)))
+  (defun working-mode ()
+    (interactive)
+    (setq split-height-threshold 80)
+    (setq split-width-threshold 160)
+    (ecb-deactivate))
 
-(defun working-mode ()
-  (interactive)
-  (setq split-height-threshold 80)
-  (setq split-width-threshold 160)
-  (if (eq window-system 'w32)
-    (helm-mode -1))
-  (ecb-deactivate))
+  (setq ecb-layout-name "left-kimi0")
+  (setq ecb-tip-of-the-day nil)
+  ;; use left click as the primary mouse button
+  (setq ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1))
+  ;; With 'ecb-tree-incremental-search' you can specify if the current
+  ;; search-pattern must be a real prefix of the node (default) or if any
+  ;; substring is matched.
+  (setq ecb-tree-incremental-search 'substring)
+  (setq ecb-compile-window-height 15)
+  (setq ecb-compile-window-width 'edit-window)
 
-(setq ecb-layout-name "left-kimi0")
-(setq ecb-tip-of-the-day nil)
-;; use left click as the primary mouse button
-(setq ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1))
-;; With 'ecb-tree-incremental-search' you can specify if the current
-;; search-pattern must be a real prefix of the node (default) or if any
-;; substring is matched.
-(setq ecb-tree-incremental-search 'substring)
-(setq ecb-compile-window-height 15)
-(setq ecb-compile-window-width 'edit-window)
+  ;; ggtags settings
+  ;; Activate cygwin mount for gtags CDPATH issue on W32
+  (cond ((eq window-system 'w32)
+         (require 'cygwin-mount)
+         (cygwin-mount-activate)))
+  (setq ggtags-global-ignore-case t)
+  (setq ggtags-sort-by-nearness t)
+  (setq ggtags-global-ignore-case nil)
+  ;; let ggtags use split-window with is redefined by ecb mode
+  ;;(setq ggtags-split-window-function 'split-window-below)
+  (add-hook 'dired-mode '(lambda ()
+                           (local-set-key "\C-c\C-f" 'ggtags-find-file)))
 
-;; ggtags settings
-;; Activate cygwin mount for gtags CDPATH issue on W32
-(cond ((eq window-system 'w32)
-       (require 'cygwin-mount)
-       (cygwin-mount-activate)))
-(setq ggtags-global-ignore-case t)
-(setq ggtags-sort-by-nearness t)
-(setq ggtags-global-ignore-case nil)
-;; let ggtags use split-window with is redefined by ecb mode
-;;(setq ggtags-split-window-function 'split-window-below)
-(add-hook 'dired-mode '(lambda ()
-                         (local-set-key "\C-c\C-f" 'ggtags-find-file)))
+  ;; define new c variable symbol for thing-at-point, used in
+  ;; ggtags-find-tag-dwim
 
-;; define new c variable symbol for thing-at-point, used in
-;; ggtags-find-tag-dwim
+  ;; TODO: how to my own ggtags-bounds-of-tag-function in c-mode only?
+  (put 'c-variable 'end-op
+       (lambda ()
+         (re-search-forward "[A-Za-z0-9_]*" nil t)))
 
-;; TODO: how to my own ggtags-bounds-of-tag-function in c-mode only?
-(put 'c-variable 'end-op
-     (lambda ()
-       (re-search-forward "[A-Za-z0-9_]*" nil t)))
+  (put 'c-variable 'beginning-op
+       (lambda ()
+         (if (re-search-backward "[^A-Za-z0-9_]" nil t)
+             (forward-char)
+           (goto-char (point-min)))))
 
-(put 'c-variable 'beginning-op
-     (lambda ()
-       (if (re-search-backward "[^A-Za-z0-9_]" nil t)
-           (forward-char)
-         (goto-char (point-min)))))
+  (defun my-c-mode-font-lock-if0 (limit)
+     (save-restriction
+       (widen)
+       (save-excursion
+         (goto-char (point-min))
+         (let ((depth 0) str start start-depth)
+           (while (re-search-forward "^\\s-*#\\s-*\\(if\\|else\\|endif\\)" limit 'move)
+             (setq str (match-string 1))
+             (if (string= str "if")
+                 (progn
+                   (setq depth (1+ depth))
+                   (when (and (null start) (looking-at "\\s-+0"))
+                     (setq start (match-end 0)
+                           start-depth depth)))
+               (when (and start (= depth start-depth))
+                 (c-put-font-lock-face start (match-beginning 0) 'font-lock-if0-face)
+                 (setq start nil))
+               (when (string= str "endif")
+                 (setq depth (1- depth)))))
+           (when (and start (> depth 0))
+             (c-put-font-lock-face start (point) 'font-lock-if0-face)))))
+     nil)
 
-(defun my-c-mode-font-lock-if0 (limit)
-   (save-restriction
-     (widen)
-     (save-excursion
-       (goto-char (point-min))
-       (let ((depth 0) str start start-depth)
-         (while (re-search-forward "^\\s-*#\\s-*\\(if\\|else\\|endif\\)" limit 'move)
-           (setq str (match-string 1))
-           (if (string= str "if")
-               (progn
-                 (setq depth (1+ depth))
-                 (when (and (null start) (looking-at "\\s-+0"))
-                   (setq start (match-end 0)
-                         start-depth depth)))
-             (when (and start (= depth start-depth))
-               (c-put-font-lock-face start (match-beginning 0) 'font-lock-if0-face)
-               (setq start nil))
-             (when (string= str "endif")
-               (setq depth (1- depth)))))
-         (when (and start (> depth 0))
-           (c-put-font-lock-face start (point) 'font-lock-if0-face)))))
-   nil)
+  (defun my-c-mode-common-hook-if0 ()
+     (font-lock-add-keywords
+      nil
+      '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
 
-(defun my-c-mode-common-hook-if0 ()
-   (font-lock-add-keywords
-    nil
-    '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
-
-(defun my-c-mode-ggtags-hook()
-  (setq ggtags-bounds-of-tag-function
-        (lambda ()
-          (bounds-of-thing-at-point 'c-variable))))
-
-(defun kimim/c-mode-ac-complete()
-  (global-auto-complete-mode t)
-  ;;(setq ac-clang-complete-executable "clang-complete")
-  ;;(add-to-list 'ac-sources 'ac-source-clang-async)
-  ;; settings inside .dir-locals.el will override this setting!
-  ;; then how can I set the default ac-clang-cflags?
-  ;; (if ac-clang-cflags
-  ;;     (setq ac-clang-cflags (cons ac-clang-cflags '("-I../inc" "-I../include")))
-  ;;   (setq ac-clang-cflags '("-I../inc" "-I../include")))
-  ;;(ac-clang-launch-completion-process)
-  ;;(ac-clang-update-cmdlineargs)
-  )
-
-(add-hook 'c-mode-common-hook
+  (defun my-c-mode-ggtags-hook()
+    (setq ggtags-bounds-of-tag-function
           (lambda ()
-            (ggtags-mode 1)
-;;            (fci-mode 1) ;; conflict with autocomplete, menu will disordered.
-;;            (syntax-subword-mode 1)
-            (hs-minor-mode t)
-            (c-set-style "S800")
-            (c-toggle-auto-newline 0)
-            (c-toggle-auto-hungry-state 0)
-            (c-toggle-syntactic-indentation 1)
-            (highlight-indentation-mode 1)
-            (which-function-mode 1)
-            (local-set-key "\C-\\" 'tempo-complete-tag)
-            (local-set-key "\C-co" 'ff-find-other-file)
-            (local-set-key "\C-c\C-f" 'ggtags-find-file)
-            (my-c-mode-common-hook-if0)
-            (setq c-basic-offset 4)
-            (kimim/c-mode-ac-complete)))
+            (bounds-of-thing-at-point 'c-variable))))
 
-(add-hook 'c-mode-hook '(lambda ()
-                          (tempo-use-tag-list 'c-tempo-tags)))
-(add-hook 'c++-mode-hook '(lambda ()
-                            (tempo-use-tag-list 'c-tempo-tags)
-                            (tempo-use-tag-list 'c++-tempo-tags)))
+  (defun kimim/c-mode-ac-complete()
+    (global-auto-complete-mode t)
+    ;;(setq ac-clang-complete-executable "clang-complete")
+    ;;(add-to-list 'ac-sources 'ac-source-clang-async)
+    ;; settings inside .dir-locals.el will override this setting!
+    ;; then how can I set the default ac-clang-cflags?
+    ;; (if ac-clang-cflags
+    ;;     (setq ac-clang-cflags (cons ac-clang-cflags '("-I../inc" "-I../include")))
+    ;;   (setq ac-clang-cflags '("-I../inc" "-I../include")))
+    ;;(ac-clang-launch-completion-process)
+    ;;(ac-clang-update-cmdlineargs)
+    )
 
-;; give clang-complete enough time to parse the code
-;;(setq ac-timer 1)
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (ggtags-mode 1)
+  ;;            (fci-mode 1) ;; conflict with autocomplete, menu will disordered.
+  ;;            (syntax-subword-mode 1)
+              (hs-minor-mode t)
+              (c-set-style "S800")
+              (c-toggle-auto-newline 0)
+              (c-toggle-auto-hungry-state 0)
+              (c-toggle-syntactic-indentation 1)
+              (highlight-indentation-mode 1)
+              (which-function-mode 1)
+              (local-set-key "\C-\\" 'tempo-complete-tag)
+              (local-set-key "\C-co" 'ff-find-other-file)
+              (local-set-key "\C-c\C-f" 'ggtags-find-file)
+              (my-c-mode-common-hook-if0)
+              (setq c-basic-offset 4)
+              (kimim/c-mode-ac-complete)))
 
-(defun ac-cc-mode-setup ()
-;;  (setq ac-sources (append '(ac-source-clang-async ac-source-yasnippet ac-source-gtags) ac-sources)))
-  (setq ac-sources (append '(ac-source-yasnippet ac-source-gtags) ac-sources)))
+  (add-hook 'c-mode-hook '(lambda ()
+                            (tempo-use-tag-list 'c-tempo-tags)))
+  (add-hook 'c++-mode-hook '(lambda ()
+                              (tempo-use-tag-list 'c-tempo-tags)
+                              (tempo-use-tag-list 'c++-tempo-tags)))
 
-(defun kimim/kill-grep-and-ggtags-done()
-  (interactive)
-;;  (org-agenda-quit)
-  (ggtags-navigation-mode-done)
-  (if (bufferp (get-buffer "*grep*"))
-      (progn
-        (switch-to-buffer "*grep*")
-        (kill-buffer-and-window)))
-  (if (bufferp (get-buffer "*Ibuffer*"))
-      (progn
-        (switch-to-buffer "*Ibuffer*")
-        (kill-buffer-and-window))))
+  ;; give clang-complete enough time to parse the code
+  ;;(setq ac-timer 1)
 
-;; close grep window and done ggtags navigation when type C-g
-;; but some times it will close all the ecb windows, so remove this advice.
-;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
-(defun kimim/recenter()
-  (interactive)
-  (recenter))
+  (defun ac-cc-mode-setup ()
+  ;;  (setq ac-sources (append '(ac-source-clang-async ac-source-yasnippet ac-source-gtags) ac-sources)))
+    (setq ac-sources (append '(ac-source-yasnippet ac-source-gtags) ac-sources)))
 
-(advice-add 'pop-tag-mark :after #'kimim/recenter)
-;;(advice-add 'next-error :after #'kimim/recenter)
-;;(advice-add 'previous-error :after #'kimim/recenter)
+  (defun kimim/kill-grep-and-ggtags-done()
+    (interactive)
+  ;;  (org-agenda-quit)
+    (ggtags-navigation-mode-done)
+    (if (bufferp (get-buffer "*grep*"))
+        (progn
+          (switch-to-buffer "*grep*")
+          (kill-buffer-and-window)))
+    (if (bufferp (get-buffer "*Ibuffer*"))
+        (progn
+          (switch-to-buffer "*Ibuffer*")
+          (kill-buffer-and-window))))
+
+  ;; close grep window and done ggtags navigation when type C-g
+  ;; but some times it will close all the ecb windows, so remove this advice.
+  ;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
+  (defun kimim/recenter()
+    (interactive)
+    (recenter))
+
+  (advice-add 'pop-tag-mark :after #'kimim/recenter)
+  ;;(advice-add 'next-error :after #'kimim/recenter)
+  ;;(advice-add 'previous-error :after #'kimim/recenter)
 
 
 #+END_SRC
@@ -1349,9 +1380,9 @@ catergories and tags are generated from exisiting posts"
 Python development configuration is quite easy. =elpy=[fn:1] is used here:
 
 #+BEGIN_SRC emacs-lisp
-(elpy-enable)
-(setq elpy-rpc-backend "jedi")
-;;(setq jedi:complete-on-dot t)
+  (elpy-enable)
+  (setq elpy-rpc-backend "jedi")
+  ;;(setq jedi:complete-on-dot t)
 #+END_SRC
 
 Following =python= package is required according to =elpy= mannual:
@@ -1377,125 +1408,125 @@ pip install virtualenv
 :END:
 
 #+BEGIN_SRC emacs-lisp
-;;==============================================================================
-;; Global Key Settings
-;;==============================================================================
-(require 'hideshow) ;; hs-toggle-hiding
-(global-set-key [f1] 'delete-other-windows)
-(global-set-key (kbd "C-<f1>") 'nuke-other-buffers)
-(global-set-key [f2] 'other-window)
-(global-set-key [f5] (lambda() (interactive)
-                       (switch-to-buffer "*scratch*") (delete-other-windows)))
-(global-set-key [f6] (lambda() (interactive)
-                       (if (not (boundp 'ecb-minor-mode))
-                           (ecb-activate)
-                         (if ecb-minor-mode
-                             (ecb-deactivate)
-                           (ecb-activate)))))
-(global-set-key [f7] 'kimim/toggle-highlight-tap)
-(global-set-key [f8] (lambda() (interactive) (list-charset-chars 'ascii)))
-(global-set-key [f9] 'kimim/cyg)
-(global-set-key (kbd "S-<f9>") 'kimim/cmd)
-(global-set-key [f10] 'kimim/dc)
-(global-set-key (kbd "C-<f11>") 'compile)
-(global-set-key [f12] 'org-toggle-home-or-office)
+  ;;==============================================================================
+  ;; Global Key Settings
+  ;;==============================================================================
+  (require 'hideshow) ;; hs-toggle-hiding
+  (global-set-key [f1] 'delete-other-windows)
+  (global-set-key (kbd "C-<f1>") 'nuke-other-buffers)
+  (global-set-key [f2] 'other-window)
+  (global-set-key [f5] (lambda() (interactive)
+                         (switch-to-buffer "*scratch*") (delete-other-windows)))
+  (global-set-key [f6] (lambda() (interactive)
+                         (if (not (boundp 'ecb-minor-mode))
+                             (ecb-activate)
+                           (if ecb-minor-mode
+                               (ecb-deactivate)
+                             (ecb-activate)))))
+  (global-set-key [f7] 'kimim/toggle-highlight-tap)
+  (global-set-key [f8] (lambda() (interactive) (list-charset-chars 'ascii)))
+  (global-set-key [f9] 'kimim/cyg)
+  (global-set-key (kbd "S-<f9>") 'kimim/cmd)
+  (global-set-key [f10] 'kimim/dc)
+  (global-set-key (kbd "C-<f11>") 'compile)
+  (global-set-key [f12] 'org-toggle-home-or-office)
 
-(global-set-key (kbd "<M-SPC>") (lambda () (interactive)
-                                  (insert ?_)))
-;;(global-set-key (kbd "-") (lambda () (interactive)
-;;                            (insert ?_)))
-;;(global-set-key (kbd "_") (lambda () (interactive)
-;;                            (insert ?-)))
+  (global-set-key (kbd "<M-SPC>") (lambda () (interactive)
+                                    (insert ?_)))
+  ;;(global-set-key (kbd "-") (lambda () (interactive)
+  ;;                            (insert ?_)))
+  ;;(global-set-key (kbd "_") (lambda () (interactive)
+  ;;                            (insert ?-)))
 
-;;(global-set-key "\M-x" 'helm-M-x)
-;;(global-set-key "\C-x\C-f" 'helm-find-files)
-;;(global-set-key "\C-x/" 'helm-global-mark-ring)
-;;(global-set-key "\C-cs" 'helm-swoop)
-(global-set-key "\C-xg" 'grep-find)
-(global-set-key "\C-x\C-b" 'ibuffer-other-window)
-(global-set-key "\C-h" 'delete-backward-char)
-(global-set-key "\M-h" 'backward-kill-word)
-(global-set-key (kbd "C-?") 'help)
-(global-set-key "\M-?" 'mark-paragraph)
-(global-set-key "\C-x\C-j" 'dired-jump)
-(global-set-key "\C-xj" 'bookmark-jump)
-(global-set-key "\C-xk" 'kill-this-buffer)
-(global-set-key "\C-x\C-v" 'view-file-other-window)
-(global-set-key "\C-c\C-o" 'occur)
-;;(global-set-key "\C-c;" 'flyspell-correct-word-before-point) not available in org mode
-(global-set-key "\C-\\" 'tempo-complete-tag)
-(global-set-key "\C-z" 'set-mark-command)
-;;(global-set-key "\M-/" 'hippie-expand)
-;;(global-set-key "\M-/" 'ac-clang-async-autocomplete-autotrigger)
-(global-set-key "\M-\\" 'ac-complete-clang-async)
-(global-set-key "\M-/" 'ac-complete-imenu)
-(global-set-key "\M-o" 'other-window)
-(global-set-key "\M-n" 'next-error)
-(global-set-key "\M-p" 'previous-error)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-(global-set-key "\C-c=" 'get-file-line)
-(global-set-key "\C-cd" 'kimim/lookinsight)
-(global-set-key "\C-cj" 'jekyll)
-(global-set-key "\C-c\C-jp" 'jekyll-post)
+  ;;(global-set-key "\M-x" 'helm-M-x)
+  ;;(global-set-key "\C-x\C-f" 'helm-find-files)
+  ;;(global-set-key "\C-x/" 'helm-global-mark-ring)
+  ;;(global-set-key "\C-cs" 'helm-swoop)
+  (global-set-key "\C-xg" 'grep-find)
+  (global-set-key "\C-x\C-b" 'ibuffer-other-window)
+  (global-set-key "\C-h" 'delete-backward-char)
+  (global-set-key "\M-h" 'backward-kill-word)
+  (global-set-key (kbd "C-?") 'help)
+  (global-set-key "\M-?" 'mark-paragraph)
+  (global-set-key "\C-x\C-j" 'dired-jump)
+  (global-set-key "\C-xj" 'bookmark-jump)
+  (global-set-key "\C-xk" 'kill-this-buffer)
+  (global-set-key "\C-x\C-v" 'view-file-other-window)
+  (global-set-key "\C-c\C-o" 'occur)
+  ;;(global-set-key "\C-c;" 'flyspell-correct-word-before-point) not available in org mode
+  (global-set-key "\C-\\" 'tempo-complete-tag)
+  (global-set-key "\C-z" 'set-mark-command)
+  ;;(global-set-key "\M-/" 'hippie-expand)
+  ;;(global-set-key "\M-/" 'ac-clang-async-autocomplete-autotrigger)
+  (global-set-key "\M-\\" 'ac-complete-clang-async)
+  (global-set-key "\M-/" 'ac-complete-imenu)
+  (global-set-key "\M-o" 'other-window)
+  (global-set-key "\M-n" 'next-error)
+  (global-set-key "\M-p" 'previous-error)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cb" 'org-iswitchb)
+  (global-set-key "\C-c=" 'get-file-line)
+  (global-set-key "\C-cd" 'kimim/lookinsight)
+  (global-set-key "\C-cj" 'jekyll)
+  (global-set-key "\C-c\C-jp" 'jekyll-post)
 
-(define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
-(define-key global-map "\M-." 'ggtags-find-tag-dwim)
-(define-key global-map "\M-*" 'pop-tag-mark)
-(global-set-key "\C-c\C-x\C-l" 'org-clock-in-last)
-(global-set-key "\C-c\C-x\C-i" 'org-clock-in)
-(global-set-key "\C-c\C-x\C-o" 'org-clock-out)
-(global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
-(define-key global-map "\C-cg" 'ggtags-grep)
-;;(define-key global-map "\C-cd" 'kimim/look-from-mydict)
-(define-key global-map (kbd "C-`") 'ace-jump-mode)
-(define-key global-map (kbd "<apps>") 'ace-jump-mode)
-(define-key global-map (kbd "C-\"") 'ace-window)
-(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-(define-key global-map (kbd "RET") 'newline-and-indent)
-(define-key global-map (kbd "<M-S-mouse-1>") 'pop-tag-mark)
-;; key bindings
-(when (eq system-type 'darwin) ;; mac specific settings
-  (setq mac-option-modifier 'alt)
-  (setq mac-command-modifier 'meta)
-  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
-  )
+  (define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
+  (define-key global-map "\M-." 'ggtags-find-tag-dwim)
+  (define-key global-map "\M-*" 'pop-tag-mark)
+  (global-set-key "\C-c\C-x\C-l" 'org-clock-in-last)
+  (global-set-key "\C-c\C-x\C-i" 'org-clock-in)
+  (global-set-key "\C-c\C-x\C-o" 'org-clock-out)
+  (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
+  (define-key global-map "\C-cg" 'ggtags-grep)
+  ;;(define-key global-map "\C-cd" 'kimim/look-from-mydict)
+  (define-key global-map (kbd "C-`") 'ace-jump-mode)
+  (define-key global-map (kbd "<apps>") 'ace-jump-mode)
+  (define-key global-map (kbd "C-\"") 'ace-window)
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  (define-key global-map (kbd "RET") 'newline-and-indent)
+  (define-key global-map (kbd "<M-S-mouse-1>") 'pop-tag-mark)
+  ;; key bindings
+  (when (eq system-type 'darwin) ;; mac specific settings
+    (setq mac-option-modifier 'alt)
+    (setq mac-command-modifier 'meta)
+    (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+    )
 
-(define-prefix-command 'ctl-x-m-map)
-;; 定义了一个新的前缀，并且绑定到 C-x m
-(global-set-key "\C-xm" 'ctl-x-m-map)
-(define-key ctl-x-m-map "c" 'calculator)
-;; Make a new frame
-(define-key ctl-x-m-map "f" 'make-frame)
-;; Make a new frame
-(define-key ctl-x-m-map "p" 'helm-global-mark-ring)
-;; 查看光标处的单词的 man page
-(define-key ctl-x-m-map "m" 'man-follow)
-;; magit-status for git
-(define-key ctl-x-m-map "g" 'magit-status)
-;;查看 kill-ring，都曾经 kill 过哪些文本
-(define-key ctl-x-m-map "l" 'browse-kill-ring)
-;; update ac-clang-complete-async cflags
-(define-key ctl-x-m-map "u" (lambda()
-                              (interactive)
-;;                              (setq ac-sources '(ac-source-clang-async))
-                              (ac-clang-update-cmdlineargs)))
+  (define-prefix-command 'ctl-x-m-map)
+  ;; 定义了一个新的前缀，并且绑定到 C-x m
+  (global-set-key "\C-xm" 'ctl-x-m-map)
+  (define-key ctl-x-m-map "c" 'calculator)
+  ;; Make a new frame
+  (define-key ctl-x-m-map "f" 'make-frame)
+  ;; Make a new frame
+  (define-key ctl-x-m-map "p" 'helm-global-mark-ring)
+  ;; 查看光标处的单词的 man page
+  (define-key ctl-x-m-map "m" 'man-follow)
+  ;; magit-status for git
+  (define-key ctl-x-m-map "g" 'magit-status)
+  ;;查看 kill-ring，都曾经 kill 过哪些文本
+  (define-key ctl-x-m-map "l" 'browse-kill-ring)
+  ;; update ac-clang-complete-async cflags
+  (define-key ctl-x-m-map "u" (lambda()
+                                (interactive)
+  ;;                              (setq ac-sources '(ac-source-clang-async))
+                                (ac-clang-update-cmdlineargs)))
 
-;; C-x r j ?x 打開常用文件
-(set-register ?e '(file . "~/kimim-emacs/init.el"))
-(set-register ?o '(file . "~/kimim-emacs/README.org"))
+  ;; C-x r j ?x 打開常用文件
+  (set-register ?e '(file . "~/kimim-emacs/init.el"))
+  (set-register ?o '(file . "~/kimim-emacs/README.org"))
 
 #+END_SRC
 * Finalization
 #+BEGIN_SRC emacs-lisp
-(load-file "~/.emacs.d/work.el")
-(load-file "~/.emacs.d/home.el")
-;; dont know why, only put disable scroll-bar at the end of .emacs, the new
-;; created frame can inherit this setting
-(scroll-bar-mode -1)
+  (load-file "~/.emacs.d/work.el")
+  (load-file "~/.emacs.d/home.el")
+  ;; dont know why, only put disable scroll-bar at the end of .emacs, the new
+  ;; created frame can inherit this setting
+  (scroll-bar-mode -1)
 #+END_SRC
 
 * Footnotes
