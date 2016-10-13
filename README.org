@@ -46,9 +46,11 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
                   (getenv "PATH"))))
         ((eq window-system 'ns)
          (add-to-list 'exec-path "/usr/local/bin")
+         (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.5/bin")
          (setenv "PATH"
                  (concat
                   "/usr/local/bin:"
+                  "/Library/Frameworks/Python.framework/Versions/3.5/bin:"
                   (getenv "PATH")))))
 
   (add-to-list 'Info-additional-directory-list "~/info")
@@ -1343,11 +1345,32 @@ catergories and tags are generated from exisiting posts"
 
 #+END_SRC
 ** Python
+
+Python development configuration is quite easy. =elpy=[fn:1] is used here:
+
 #+BEGIN_SRC emacs-lisp
 (elpy-enable)
 (setq elpy-rpc-backend "jedi")
 ;;(setq jedi:complete-on-dot t)
 #+END_SRC
+
+Following =python= package is required according to =elpy= mannual:
+
+#+BEGIN_SRC sh
+pip install rope
+pip install jedi
+# flake8 for code checks
+pip install flake8
+# importmagic for automatic imports
+pip install importmagic
+# and autopep8 for automatic PEP8 formatting
+pip install autopep8
+# and yapf for code formatting
+pip install yapf
+# install virtualenv for jedi
+pip install virtualenv
+#+END_SRC
+
 * Key Binding
 :PROPERTIES:
 :header-args: :exports none
@@ -1474,3 +1497,7 @@ catergories and tags are generated from exisiting posts"
 ;; created frame can inherit this setting
 (scroll-bar-mode -1)
 #+END_SRC
+
+* Footnotes
+
+[fn:1] https://github.com/jorgenschaefer/elpy
