@@ -1,7 +1,7 @@
 * Introduction
 
-This emacs configuration file is written with literate programming method. =.el=
-file is loaded by extract source code from this document.
+This emacs configuration file is written with literate programming method.[fn:1]
+=.el= file is loaded by extracting source code from this document.
 
 * Preparation
 ** Windows Executable
@@ -16,17 +16,65 @@ set HOME=C:\Users\kimim\home
 C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
 
+* Package
+
+=package= is the modern =elisp= package management system, which lets you easily
+download and install packages that implement additional features. Each package
+is a separate Emacs Lisp program, sometimes including other components such as
+an Info manual.
+
+All the extensions used in this file are installed and managed by =package=.
+
+#+BEGIN_SRC emacs-lisp
+  ;;==============================================================================
+  (require 'package)
+  (setq package-user-dir "~/.emacs.d/elpa")
+  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                           ("ELPA" . "http://tromey.com/elpa/")
+                           ("elpy" . "http://jorgenschaefer.github.io/packages/")
+                           ;;("marmalade" . "http://marmalade-repo.org/packages/")
+                           ("melpa" . "http://melpa.org/packages/")))
+  (package-initialize)
+#+END_SRC
+
 * Environment
+
+** Synchronization Folders
+
+I'm using this =emacs= configuration for both working usage and personal usage,
+and I want to synchronize some files in synchronization service, so I need to
+seperate the working file and personal file in different synchronization
+services. For example, working files are synchronized in Microsoft OneDrive
+Business or Box Business, while personal files are synchronized in Dropbox or
+SugarSync.
+
+The variable for synchronization location is named as:
+- =path-work-sync= for working usage
+- =path-home-sync= for personal usage
+
+If the sync path is not set, then use HOME path =~= as the default folder, that
+means, no synchronization. So please set these variables in your =.emacs= file.
 
 #+BEGIN_SRC emacs-lisp
   ;; System Environment and Path Settings
   (if (not (boundp 'path-home-sync))
       (setq path-home-sync "~/"))
-  ;; configuration main path
-  (add-to-list 'load-path "~/kimim-emacs/")
-  ;; local settings
-  (add-to-list 'load-path "~/kimim-emacs/site-lisp/")
+#+END_SRC
 
+** PATH, exec-path and Info
+
+Environment variable =PATH= is the the searching path of executables by the
+=shell= running in =emacs=, and =exec-path= is the search path of =emacs=
+itself. So we should set both of them to almost the same paths.
+
+As I have a =Windows= box in the office, and a =macOS= at home, so I need to
+specify these variables in different way.
+
+For =Windows=, I installed =Cygwin=[fn:2] to use =UNIX= tools above =Windows=,
+and for =macOS=, most =UNIX= tools are installed already.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'info)
   (cond ((eq window-system 'w32)
          (setq cygwin-path "C:/cygwin/")
          (add-to-list 'Info-additional-directory-list
@@ -53,27 +101,19 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
                   "/Library/Frameworks/Python.framework/Versions/3.5/bin:"
                   (getenv "PATH")))))
 
+  ;; additional info, collected from internet
   (add-to-list 'Info-additional-directory-list "~/info")
-
-  ;; load customization
-  (setq custom-file "~/kimim-emacs/custom.el")
-  (load custom-file);; System Environment and Path Settings
 #+END_SRC
 
-* Package
+** TODO Customization File
+
+Do I need another customization file? Or shall I collect these settings in this
+file?
 
 #+BEGIN_SRC emacs-lisp
-  ;;==============================================================================
-  ;; Initialize Packages
-  ;;==============================================================================
-  (require 'package)
-  (setq package-user-dir "~/.emacs.d/elpa")
-  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                           ("ELPA" . "http://tromey.com/elpa/")
-                           ("elpy" . "http://jorgenschaefer.github.io/packages/")
-                           ;;("marmalade" . "http://marmalade-repo.org/packages/")
-                           ("melpa" . "http://melpa.org/packages/")))
-  (package-initialize)
+  ;; load customization
+  (setq custom-file "~/kimim-emacs/custom.el")
+  (load custom-file)
 #+END_SRC
 
 * Language
@@ -122,7 +162,6 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
          (menu-bar-mode 1)))
   (tool-bar-mode -1)
   (fset 'yes-or-no-p 'y-or-n-p)
-  (column-number-mode 1)                    ; show column num in mode line
   (show-paren-mode 1)                       ; 高亮显示匹配的括号
   (global-hl-line-mode 1)                   ; 高亮當前行
   (blink-cursor-mode 0)                     ; 光标不闪烁
@@ -131,10 +170,14 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   ;;  (setq fci-always-use-textual-rule t)
   ;;  :diminish fill-column-indicator)        ; show column indicator
   (setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
+  ;; mode line
+  (column-number-mode 1)                    ; show column num in mode line
   (setq display-time-24hr-format t)
   (setq display-time-day-and-date t)
   (setq display-time-interval 10)
   (display-time-mode t)                     ; 在 mode-line 上显示时间
+
+  ;; font
   (setq font-lock-maximum-decoration t)
   (setq font-lock-global-modes '(not shell-mode text-mode))
   (setq font-lock-verbose t)
@@ -146,8 +189,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
          (setq default-frame-alist
                '((top . 80) (left . 250) (width . 128) (height . 45)
                  (font . "Inconsolata-11") ;; if you like anti-alias, use this to have a try
-                 ))
-         )
+                 )))
         ((eq window-system 'ns)
          (set-fontset-font  "fontset-default" 'han (font-spec :family "Microsoft Yahei" :size 16))
          ;; OS X 下，不和前一個漢字緊挨著的標點符號的字體不是雅黑，就會顯得很難看，這裡設定一下
@@ -157,19 +199,16 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
                  ;;               (font . "Bitstream Vera Sans Mono-14")
                  ))))
   (load-file "~/kimim-emacs/site-lisp/color-theme-kimim.el")
-  ;;(require 'color-theme-kimim)
   (color-theme-kimim)
 #+END_SRC
 
 * Editing
 
 #+BEGIN_SRC emacs-lisp
-
   ;;==============================================================================
   ;; Editor setting
   ;;==============================================================================
   (setq fill-column 80)
-  (whitespace-mode 1)
   (drag-stuff-global-mode 1)              ; use Alt-up/down to drag line or region
   (delete-selection-mode 1)               ; 輸入的文字覆蓋選中的文字
   (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
@@ -179,8 +218,6 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (setq tab-stop-list
         (number-sequence 4 120 4))        ; 每次tab空格數
   (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
-  (winner-mode t)                       ; restore windows configuration
-  (abbrev-mode -1)
   ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
   ;; 候，备份文件是复本，而不是原件。
   (setq backup-directory-alist '(("." . "~/Temp")))
@@ -220,6 +257,51 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   ;; 每当设置书签的时候都保存书签文件，否则只在你退出 Emacs 时保存
   (setq bookmark-save-flag 1)
 
+
+  ;;============================================================================
+  ;; Global Mode Settings
+  ;;============================================================================
+  (setq auto-mode-alist
+        (append '(("\\.py\\'" . python-mode)
+                  ("\\.css\\'" . css-mode)
+                  ("\\.A\\w*\\'" . asm-mode)
+                  ("\\.S\\'" . asm-mode)
+                  ("\\.C\\w*\\'" . c-mode)
+                  ("\\.md\\'" . markdown-mode)
+                  ("\\.markdown\\'" . markdown-mode)
+                  ("\\.svg\\'" . html-mode)
+                  ("\\.pas\\'" . delphi-mode)
+                  ("\\.txt\\'" . org-mode)
+                  )
+                auto-mode-alist))
+
+
+  ;;==============================================================================
+  ;; Load other configuration files
+  ;;==============================================================================
+
+  (require 'saveplace)
+  (setq-default save-place t)
+  (setq save-place-file (expand-file-name "saveplace" "~"))
+
+  ;; https://github.com/justbur/emacs-which-key
+  (which-key-mode 1)
+  ;; use minibuffer as the popup type, otherwise conflict in ecb mode
+  (setq which-key-popup-type 'minibuffer)
+
+  ;;  (use-package volatile-highlights
+  ;;    :config
+  ;;    (volatile-highlights-mode t)
+  ;;    :diminish volatile-highlights-mode)
+#+END_SRC
+* Window and Frame
+#+BEGIN_SRC emacs-lisp
+  (winner-mode t)                       ; restore windows configuration
+  (window-numbering-mode 1)
+#+END_SRC
+* Dired and Buffer
+
+#+BEGIN_SRC emacs-lisp
   ;;==============================================================================
   ;; Settings for dired mode
   ;;==============================================================================
@@ -257,42 +339,40 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
     (if (= 3 (line-number-at-pos))
         (goto-char (point-max))))
 
-  ;;============================================================================
-  ;; Global Mode Settings
-  ;;============================================================================
-  (setq auto-mode-alist
-        (append '(("\\.py\\'" . python-mode)
-                  ("\\.css\\'" . css-mode)
-                  ("\\.A\\w*\\'" . asm-mode)
-                  ("\\.S\\'" . asm-mode)
-                  ("\\.C\\w*\\'" . c-mode)
-                  ("\\.md\\'" . markdown-mode)
-                  ("\\.markdown\\'" . markdown-mode)
-                  ("\\.svg\\'" . html-mode)
-                  ("\\.pas\\'" . delphi-mode)
-                  ("\\.txt\\'" . org-mode)
-                  )
-                auto-mode-alist))
+  (require 'ibuffer)
 
+  (defun ibuffer-visit-buffer-other-window (&optional noselect)
+    "Visit the buffer on this line in another window."
+    (interactive)
+    (let ((buf (ibuffer-current-buffer t)))
+      (bury-buffer (current-buffer))
+      (if noselect
+          (let ((curwin (selected-window)))
+            (pop-to-buffer buf)
+            (select-window curwin))
+        (switch-to-buffer-other-window buf)
+        (kill-buffer-and-its-windows "*Ibuffer*")
+        )))
 
-  ;;==============================================================================
-  ;; Load other configuration files
-  ;;==============================================================================
+  ;; Use human readable Size column instead of original one
+  (define-ibuffer-column size-h
+    (:name "Size" :inline t)
+    (cond
+     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+     (t (format "%8d" (buffer-size)))))
 
-  (require 'saveplace)
-  (setq-default save-place t)
-  (setq save-place-file (expand-file-name "saveplace" "~"))
-
-  (window-numbering-mode 1)
-  ;; https://github.com/justbur/emacs-which-key
-  (which-key-mode 1)
-  ;; use minibuffer as the popup type, otherwise conflict in ecb mode
-  (setq which-key-popup-type 'minibuffer)
-
-  ;;  (use-package volatile-highlights
-  ;;    :config
-  ;;    (volatile-highlights-mode t)
-  ;;    :diminish volatile-highlights-mode)
+  ;; Modify the default ibuffer-formats
+  (setq ibuffer-formats
+        '((mark modified read-only " "
+                (name 18 18 :left :elide)
+                " "
+                (size-h 9 -1 :right)
+                " "
+                (mode 16 16 :left :elide)
+                " "
+                filename-and-process)))
 #+END_SRC
 
 * auto-complete
@@ -316,7 +396,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (require 'auto-complete-config)
   (add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
   (ac-config-default)
-
+  (abbrev-mode -1)
   ;; add pair parenthis and quote automatically
   (autopair-global-mode 1)
 
@@ -663,40 +743,6 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (add-hook 'after-change-functions 'kimim/buffer-edit-hook)
   (global-set-key (kbd "M-`") 'kimim/backward-last-edit)
 
-  (require 'ibuffer)
-
-  (defun ibuffer-visit-buffer-other-window (&optional noselect)
-    "Visit the buffer on this line in another window."
-    (interactive)
-    (let ((buf (ibuffer-current-buffer t)))
-      (bury-buffer (current-buffer))
-      (if noselect
-          (let ((curwin (selected-window)))
-            (pop-to-buffer buf)
-            (select-window curwin))
-        (switch-to-buffer-other-window buf)
-        (kill-buffer-and-its-windows "*Ibuffer*")
-        )))
-
-  ;; Use human readable Size column instead of original one
-  (define-ibuffer-column size-h
-    (:name "Size" :inline t)
-    (cond
-     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
-     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
-     (t (format "%8d" (buffer-size)))))
-
-  ;; Modify the default ibuffer-formats
-  (setq ibuffer-formats
-        '((mark modified read-only " "
-                (name 18 18 :left :elide)
-                " "
-                (size-h 9 -1 :right)
-                " "
-                (mode 16 16 :left :elide)
-                " "
-                filename-and-process)))
 #+END_SRC
 
 * orgmode
@@ -1383,7 +1429,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
 ** Python
 
-Python development configuration is quite easy. =elpy=[fn:1] is used here:
+Python development configuration is quite easy. =elpy=[fn:3] is used here:
 
 #+BEGIN_SRC emacs-lisp
   (elpy-enable)
@@ -1540,4 +1586,8 @@ pip install virtualenv
 
 * Footnotes
 
-[fn:1] https://github.com/jorgenschaefer/elpy
+[fn:1] http://www.literateprogramming.com/
+
+[fn:2] http://cygwin.com/
+
+[fn:3] https://github.com/jorgenschaefer/elpy
