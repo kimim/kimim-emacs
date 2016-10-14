@@ -16,7 +16,7 @@ set HOME=C:\Users\kimim\home
 C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
 
-* System Environment
+* Environment
 
 #+BEGIN_SRC emacs-lisp
   ;; System Environment and Path Settings
@@ -156,8 +156,8 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
                '((top . 100) (left . 600) (width . 166) (height . 70)
                  ;;               (font . "Bitstream Vera Sans Mono-14")
                  ))))
-
-  (require 'color-theme-kimim)
+  (load-file "~/kimim-emacs/site-lisp/color-theme-kimim.el")
+  ;;(require 'color-theme-kimim)
   (color-theme-kimim)
 #+END_SRC
 
@@ -327,28 +327,28 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   ;;(ido-mode 1)
 #+END_SRC
 * kimim functions
-#+BEGIN_SRC emacs-lisp
 
+#+BEGIN_SRC emacs-lisp
   ;; self define functions
 
   (defun now () (interactive)
-    (insert (shell-command-to-string "date")))
+         (insert (shell-command-to-string "date")))
 
   (defun day ()
     "Insert string for today's date nicely formatted in American style,
-  e.g. Sunday, September 17, 2000."
+    e.g. Sunday, September 17, 2000."
     (interactive)                 ; permit invocation in minibuffer
     (insert (format-time-string "%A, %B %e, %Y")))
 
   (defun today ()
     "Insert string for today's date nicely formatted in American style,
-  e.g. 2000-10-12."
+    e.g. 2000-10-12."
     (interactive)                 ; permit invocation in minibuffer
     (insert (format-time-string "%Y-%m-%d")))
 
   (defun toyear ()
     "Insert string for today's date nicely formatted in American style,
-  e.g. 2000."
+    e.g. 2000."
     (interactive)                 ; permit invocation in minibuffer
     (insert (format-time-string "%Y")))
 
@@ -367,7 +367,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 
   (defun open-folder-in-explorer ()
     "Call when editing a file in a buffer.
-  Open windows explorer in the current directory and select the current file"
+    Open windows explorer in the current directory and select the current file"
     (interactive)
     (w32-shell-execute
      "open" "explorer"
@@ -381,27 +381,27 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
      "open" "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe" "c:\\kimikit\\Autohotkey\\lookinsight.ahk"))
 
   (defun mac-open-terminal ()
-     (interactive)
-     (let ((dir ""))
-       (cond
-        ((and (local-variable-p 'dired-directory) dired-directory)
-         (setq dir dired-directory))
-        ((stringp (buffer-file-name))
-         (setq dir (file-name-directory (buffer-file-name))))
-        ((stringp default-directory)
-         (setq dir default-directory))
-        )
-       (do-applescript
-        (format "
-   tell application \"Terminal\"
-     activate
-     try
-       do script with command \"cd %s\"
-     on error
-       beep
-     end try
-   end tell" dir))
-       ))
+    (interactive)
+    (let ((dir ""))
+      (cond
+       ((and (local-variable-p 'dired-directory) dired-directory)
+        (setq dir dired-directory))
+       ((stringp (buffer-file-name))
+        (setq dir (file-name-directory (buffer-file-name))))
+       ((stringp default-directory)
+        (setq dir default-directory))
+       )
+      (do-applescript
+       (format "
+     tell application \"Terminal\"
+       activate
+       try
+         do script with command \"cd %s\"
+       on error
+         beep
+       end try
+     end tell" dir))
+      ))
 
   (defun kimim/cmd ()
     "Open cmd.exe from emacs just as you type: Win-R, cmd, return."
@@ -467,9 +467,9 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (setq grep-find-command "find . -type f -not -name \"*.svn-base\" -and -not -name \"*#\" -and -not -name \"*.tmp\" -and -not -name \"*.obj\" -and -not -name \"*.386\" -and -not -name \"*.img\" -and -not -name \"*.LNK\" -and -not -name GTAGS -print0 | xargs -0 grep -n -e ")
 
   (defun kimim/grep-find()
-       (interactive)
-       (grep-find (concat grep-find-command (buffer-substring-no-properties (region-beginning) (region-end))))
-       )
+    (interactive)
+    (grep-find (concat grep-find-command (buffer-substring-no-properties (region-beginning) (region-end))))
+    )
 
   (defun encode-buffer-to-utf8 ()
     "Sets the buffer-file-coding-system to UTF8."
@@ -509,7 +509,7 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 
   (defun indent-whole-buffer ()
     "Indent whole buffer and delete trailing whitespace.
-  This command will also do untabify."
+    This command will also do untabify."
     (interactive)
     (delete-trailing-whitespace)
     (indent-region (point-min) (point-max))
@@ -517,13 +517,13 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 
   (defun fold-long-comment-lines ()
     "This functions allows us to fold long comment lines
-   automatically in programming modes. Quite handy."
-  (interactive "p")
-   (auto-fill-mode 1)
-   (set (make-local-variable 'fill-no-break-predicate)
-       (lambda ()
+     automatically in programming modes. Quite handy."
+    (interactive "p")
+    (auto-fill-mode 1)
+    (set (make-local-variable 'fill-no-break-predicate)
+         (lambda ()
            (not (eq (get-text-property (point) 'face)
-                  'font-lock-comment-face)))))
+                    'font-lock-comment-face)))))
 
   (defun new-note ()
     (interactive)
@@ -532,9 +532,9 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
                        (read-string (concat "Filename: " (format-time-string "%Y%m-"))) ".org")))
 
   (add-hook 'comint-output-filter-functions
-      'shell-strip-ctrl-m nil t)
+            'shell-strip-ctrl-m nil t)
   (add-hook 'comint-output-filter-functions
-      'comint-watch-for-password-prompt nil t)
+            'comint-watch-for-password-prompt nil t)
 
   ;; For subprocesses invoked via the shell
   ;; (e.g., "shell -c command")
@@ -560,9 +560,9 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
         )))
 
   (defun kimim/look-from-mydict()
-       (interactive)
-       (browse-url (concat "http://www.mydict.com/index.php?controller=Dict_German&action=Search&keyword="
-                           (buffer-substring-no-properties (region-beginning) (region-end)))))
+    (interactive)
+    (browse-url (concat "http://www.mydict.com/index.php?controller=Dict_German&action=Search&keyword="
+                        (buffer-substring-no-properties (region-beginning) (region-end)))))
 
 
   (defun my-blink(begin end)
@@ -583,9 +583,9 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
 
   (defun copy-thing (begin-of-thing end-of-thing &optional arg)
     "Copy thing between beg & end into kill ring. Remove leading and
-  trailing whitespace while we're at it. Also, remove whitespace before
-  column, if any. Also, font-lock will be removed, if any. Also, the
-  copied region will be highlighted shortly (it 'blinks')."
+    trailing whitespace while we're at it. Also, remove whitespace before
+    column, if any. Also, font-lock will be removed, if any. Also, the
+    copied region will be highlighted shortly (it 'blinks')."
     (save-excursion
       (let* ((beg (get-point begin-of-thing 1))
              (end (get-point end-of-thing arg)))
@@ -598,8 +598,8 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
               (delete-char 1))
             (delete-trailing-whitespace)
             (delete-whitespace-rectangle (point-min) (point-max)) ;; del column \s, hehe
-             (font-lock-unfontify-buffer) ;; reset font lock
-             (kill-region (point-min) (point-max))
+            (font-lock-unfontify-buffer) ;; reset font lock
+            (kill-region (point-min) (point-max))
             )
           ))))
 
@@ -651,13 +651,13 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   ;; TODO shrink list if more items
   (defun kimim/buffer-edit-hook (beg end len)
     (interactive)
-     (let ((bfn (buffer-file-name)))
-       ;; insert modification in current index
-       ;; remove forward locations
-       ;; if longer than 100, remove old locations
-       (when bfn
-         (progn
-           (add-to-list 'kimim/last-edit-list (cons bfn end))))))
+    (let ((bfn (buffer-file-name)))
+      ;; insert modification in current index
+      ;; remove forward locations
+      ;; if longer than 100, remove old locations
+      (when bfn
+        (progn
+          (add-to-list 'kimim/last-edit-list (cons bfn end))))))
 
 
   (add-hook 'after-change-functions 'kimim/buffer-edit-hook)
@@ -676,28 +676,27 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
         (kill-buffer-and-its-windows "*Ibuffer*")
         )))
 
-;; Use human readable Size column instead of original one
-(define-ibuffer-column size-h
-  (:name "Size" :inline t)
-  (cond
-   ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-   ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
-   ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
-   (t (format "%8d" (buffer-size)))))
+  ;; Use human readable Size column instead of original one
+  ;; (define-ibuffer-column size-h
+  ;;   (:name "Size" :inline t)
+  ;;   (cond
+  ;;    ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+  ;;    ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+  ;;    ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+  ;;    (t (format "%8d" (buffer-size)))))
 
-;; Modify the default ibuffer-formats
+  ;; Modify the default ibuffer-formats
   (setq ibuffer-formats
-	'((mark modified read-only " "
-		(name 18 18 :left :elide)
-		" "
-		(size-h 9 -1 :right)
-		" "
-		(mode 16 16 :left :elide)
-		" "
-		filename-and-process)))
-
-
+        '((mark modified read-only " "
+                (name 18 18 :left :elide)
+                " "
+                (size-h 9 -1 :right)
+                " "
+                (mode 16 16 :left :elide)
+                " "
+                filename-and-process)))
 #+END_SRC
+
 * orgmode
 
 #+BEGIN_SRC emacs-lisp
