@@ -663,6 +663,8 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
   (add-hook 'after-change-functions 'kimim/buffer-edit-hook)
   (global-set-key (kbd "M-`") 'kimim/backward-last-edit)
 
+  (require 'ibuffer)
+
   (defun ibuffer-visit-buffer-other-window (&optional noselect)
     "Visit the buffer on this line in another window."
     (interactive)
@@ -677,13 +679,13 @@ C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
         )))
 
   ;; Use human readable Size column instead of original one
-  ;; (define-ibuffer-column size-h
-  ;;   (:name "Size" :inline t)
-  ;;   (cond
-  ;;    ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-  ;;    ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
-  ;;    ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
-  ;;    (t (format "%8d" (buffer-size)))))
+  (define-ibuffer-column size-h
+    (:name "Size" :inline t)
+    (cond
+     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+     (t (format "%8d" (buffer-size)))))
 
   ;; Modify the default ibuffer-formats
   (setq ibuffer-formats
@@ -1387,6 +1389,11 @@ Python development configuration is quite easy. =elpy=[fn:1] is used here:
   (elpy-enable)
   (setq elpy-rpc-backend "jedi")
   ;;(setq jedi:complete-on-dot t)
+
+  ;; prevent redundant intent in using yasnippets
+  (add-hook 'python-mode-hook
+            '(lambda ()
+               (setq yas-indent-line nil)))
 #+END_SRC
 
 Following =python= package is required according to =elpy= mannual:
