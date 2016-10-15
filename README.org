@@ -149,6 +149,10 @@ file?
           (:eval (if (buffer-file-name)
                      (abbreviate-file-name (buffer-file-name))
                    "%b"))))
+  (require 'path-headerline-mode)
+  ;; display file path in headerline
+  ;; useful when in fullscreen mode
+  (path-headerline-mode +1)
   (setq inhibit-startup-message t)          ; 不顯示開始畫面
   (setq initial-scratch-message nil)        ; scratch 默認為空
   (setq visible-bell t)                     ; 關閉視覺告警
