@@ -31,8 +31,8 @@
      ("Calendar")
      ("\\*helm.*\\*" . t)
      ("\\*helm-mode-.*\\*" . t))))
- '(ecb-compile-window-width (quote edit-window) t)
- '(ecb-layout-name "left-kimi0" t)
+ '(ecb-compile-window-width (quote edit-window))
+ '(ecb-layout-name "left-kimi0")
  '(ecb-layout-window-sizes
    (quote
     (("left-kimi0"
@@ -56,13 +56,13 @@
     ((default ecb-tag-visit-smart-tag-start ecb-tag-visit-highlight-tag-header ecb-tag-visit-recenter-top)
      (java-mode ecb-tag-visit-goto-doc-start)
      (jde-mode ecb-tag-visit-goto-doc-start))))
- '(ecb-tip-of-the-day nil t)
+ '(ecb-tip-of-the-day nil)
  '(fci-rule-color "#373b41")
  '(fill-column 80)
  '(ggtags-find-tag-hook (quote (recenter)))
  '(package-selected-packages
    (quote
-    (autopair paredit swift-mode mocker which-key window-numbering volatile-highlights use-package pallet package-build shut-up epl git commander f dash s cask markdown-mode ggtags org jedi col-highlight ox-ioslide company history drag-stuff whole-line-or-region w32-registry ox-html5slide htmlize graphviz-dot-mode google-c-style gnuplot find-file-in-repository fill-column-indicator everything elpy ecb cygwin-mount color-theme-github browse-kill-ring bbdb auto-complete-clang-async auto-complete-clang ace-window ace-isearch ac-clang)))
+    (path-headerline-mode auto-highlight-symbol autopair paredit swift-mode mocker which-key window-numbering volatile-highlights use-package pallet package-build shut-up epl git commander f s cask markdown-mode ggtags org jedi col-highlight ox-ioslide company history drag-stuff whole-line-or-region w32-registry ox-html5slide htmlize graphviz-dot-mode google-c-style gnuplot find-file-in-repository fill-column-indicator everything elpy ecb cygwin-mount color-theme-github browse-kill-ring bbdb auto-complete-clang-async auto-complete-clang ace-window ace-isearch ac-clang)))
  '(python-shell-interpreter "C:\\Python35\\python")
  '(safe-local-variable-values
    (quote
