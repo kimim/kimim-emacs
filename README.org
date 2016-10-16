@@ -13,7 +13,7 @@ create a =.bat= file =emacs.bat= to set the environment and run emacs:
   :: set home path for emacs
   set HOME=C:\Users\kimim\home
   :: execute emacs with debug enable
-  C:\Users\kimim\kimikit\emacs\bin\runemacs.exe --debug-init
+  C:\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
 
 * Package
@@ -144,15 +144,10 @@ file?
 * Appearance
 
 #+BEGIN_SRC emacs-lisp
-  (setq frame-title-format
-        '("" invocation-name ": "
-          (:eval (if (buffer-file-name)
-                     (abbreviate-file-name (buffer-file-name))
-                   "%b"))))
   (require 'path-headerline-mode)
   ;; display file path in headerline
   ;; useful when in fullscreen mode
-  (path-headerline-mode +1)
+  (path-headerline-mode t)
   (setq inhibit-startup-message t)          ; 不顯示開始畫面
   (setq initial-scratch-message nil)        ; scratch 默認為空
   (setq visible-bell t)                     ; 關閉視覺告警
@@ -201,6 +196,11 @@ file?
                  ))))
   (load-file "~/kimim-emacs/site-lisp/color-theme-kimim.el")
   (color-theme-kimim)
+  (setq frame-title-format
+        '("" invocation-name ": "
+          (:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name))
+                   "%b"))))
 #+END_SRC
 
 * Editing
@@ -354,6 +354,10 @@ file?
     (if (= 3 (line-number-at-pos))
         (goto-char (point-max))))
 
+  (add-hook 'dired-mode
+            '(lambda ()
+               (local-set-key "\C-c\C-f" 'ggtags-find-file)))
+
   (require 'ibuffer)
 
   (defun ibuffer-visit-buffer-other-window (&optional noselect)
@@ -388,6 +392,35 @@ file?
                 (mode 16 16 :left :elide)
                 " "
                 filename-and-process)))
+#+END_SRC
+
+* Search and Finding
+
+#+BEGIN_SRC emacs-lisp
+  ;;============================================================================
+  ;; Default Grep settings
+  ;;============================================================================
+  (defadvice grep-compute-defaults (around grep-compute-defaults-advice-null-device)
+    "Use cygwin's /dev/null as the null-device."
+    (let ((null-device "/dev/null"))
+      ad-do-it))
+  (ad-activate 'grep-compute-defaults)
+  (setq grep-find-command
+        "find . -type f -not -name \"*.svn-base\" -and -not -name \"*#\" -and -not -name \"*.tmp\" -and -not -name \"*.obj\" -and -not -name \"*.386\" -and -not -name \"*.img\" -and -not -name \"*.LNK\" -and -not -name GTAGS -print0 | xargs -0 grep -n -e ")
+
+  (defun kimim/grep-find()
+    (interactive)
+    (grep-find (concat grep-find-command (buffer-substring-no-properties (region-beginning) (region-end)))))
+  (defun kimim/look-from-mydict()
+    (interactive)
+    (browse-url (concat "http://www.mydict.com/index.php?controller=Dict_German&action=Search&keyword="
+                        (buffer-substring-no-properties (region-beginning) (region-end)))))
+
+  (defun kimim/lookinsight ()
+    (interactive)
+    (kill-ring-save (region-beginning) (region-end))
+    (w32-shell-execute
+     "open" "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe" "c:\\kimikit\\Autohotkey\\lookinsight.ahk"))
 #+END_SRC
 
 * auto-complete
@@ -469,11 +502,6 @@ file?
      (concat "/e,/select," (convert-standard-filename buffer-file-name))
      ))
 
-  (defun kimim/lookinsight ()
-    (interactive)
-    (kill-ring-save (region-beginning) (region-end))
-    (w32-shell-execute
-     "open" "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe" "c:\\kimikit\\Autohotkey\\lookinsight.ahk"))
 
   (defun mac-open-terminal ()
     (interactive)
@@ -527,8 +555,6 @@ file?
 
   (setq everything-cmd "~/../Tools/es.exe")
 
-
-
   (defun kill-dired-buffers()
     "Kill all dired buffers."
     (interactive)
@@ -551,20 +577,6 @@ file?
   (setq scroll-down-aggressively     0.01 )
 
 
-  ;;============================================================================
-  ;; Default Grep settings
-  ;;============================================================================
-  (defadvice grep-compute-defaults (around grep-compute-defaults-advice-null-device)
-    "Use cygwin's /dev/null as the null-device."
-    (let ((null-device "/dev/null"))
-      ad-do-it))
-  (ad-activate 'grep-compute-defaults)
-  (setq grep-find-command "find . -type f -not -name \"*.svn-base\" -and -not -name \"*#\" -and -not -name \"*.tmp\" -and -not -name \"*.obj\" -and -not -name \"*.386\" -and -not -name \"*.img\" -and -not -name \"*.LNK\" -and -not -name GTAGS -print0 | xargs -0 grep -n -e ")
-
-  (defun kimim/grep-find()
-    (interactive)
-    (grep-find (concat grep-find-command (buffer-substring-no-properties (region-beginning) (region-end))))
-    )
 
   (defun encode-buffer-to-utf8 ()
     "Sets the buffer-file-coding-system to UTF8."
@@ -653,11 +665,6 @@ file?
         (if (>= color-index color-list-length)
             (setq color-index 0))
         )))
-
-  (defun kimim/look-from-mydict()
-    (interactive)
-    (browse-url (concat "http://www.mydict.com/index.php?controller=Dict_German&action=Search&keyword="
-                        (buffer-substring-no-properties (region-beginning) (region-end)))))
 
 
   (defun my-blink(begin end)
@@ -1264,21 +1271,30 @@ file?
 
 
 #+END_SRC
-* Programming
-** C
-#+BEGIN_SRC emacs-lisp
-  ;; This is a way to hook tempo into cc-mode
-  ;;; C-Mode Templates and C++-Mode Templates (uses C-Mode Templates also)
-  (require 'tempo)
-  (require 'ggtags)
-  ;;(require 'auto-complete-clang-async)
-  ;;(require 'syntax-subword)
-  (setq tempo-interactive t)
+* Programming General
+** Tagging
 
-  (defvar c-tempo-tagb nil
-    "Tempo tags for C mode")
-  (defvar c++-tempo-tags nil
-    "Tempo tags for C++ mode")
+#+BEGIN_SRC
+  (require 'ggtags)
+  (require 'auto-complete-clang-async)
+
+  ;; ggtags settings
+  ;; Activate cygwin mount for gtags CDPATH issue on W32
+  (cond ((eq window-system 'w32)
+         (require 'cygwin-mount)
+         (cygwin-mount-activate)))
+  (setq ggtags-global-ignore-case t)
+  (setq ggtags-sort-by-nearness t)
+  (setq ggtags-global-ignore-case nil)
+  ;; let ggtags use split-window with is redefined by ecb mode
+  ;;(setq ggtags-split-window-function 'split-window-below)
+#+END_SRC
+
+* Programming Language
+** C
+*** ECB
+
+#+BEGIN_SRC
   (defun coding-mode ()
     ;; start coding mode
     (interactive)
@@ -1309,20 +1325,11 @@ file?
   (setq ecb-tree-incremental-search 'substring)
   (setq ecb-compile-window-height 15)
   (setq ecb-compile-window-width 'edit-window)
+#+END_SRC
 
-  ;; ggtags settings
-  ;; Activate cygwin mount for gtags CDPATH issue on W32
-  (cond ((eq window-system 'w32)
-         (require 'cygwin-mount)
-         (cygwin-mount-activate)))
-  (setq ggtags-global-ignore-case t)
-  (setq ggtags-sort-by-nearness t)
-  (setq ggtags-global-ignore-case nil)
-  ;; let ggtags use split-window with is redefined by ecb mode
-  ;;(setq ggtags-split-window-function 'split-window-below)
-  (add-hook 'dired-mode '(lambda ()
-                           (local-set-key "\C-c\C-f" 'ggtags-find-file)))
+*** Other Settings
 
+#+BEGIN_SRC emacs-lisp
   ;; define new c variable symbol for thing-at-point, used in
   ;; ggtags-find-tag-dwim
 
@@ -1395,18 +1402,11 @@ file?
               (c-toggle-syntactic-indentation 1)
               (highlight-indentation-mode 1)
               (which-function-mode 1)
-              (local-set-key "\C-\\" 'tempo-complete-tag)
               (local-set-key "\C-co" 'ff-find-other-file)
               (local-set-key "\C-c\C-f" 'ggtags-find-file)
               (my-c-mode-common-hook-if0)
               (setq c-basic-offset 4)
               (kimim/c-mode-ac-complete)))
-
-  (add-hook 'c-mode-hook '(lambda ()
-                            (tempo-use-tag-list 'c-tempo-tags)))
-  (add-hook 'c++-mode-hook '(lambda ()
-                              (tempo-use-tag-list 'c-tempo-tags)
-                              (tempo-use-tag-list 'c++-tempo-tags)))
 
   ;; give clang-complete enough time to parse the code
   ;;(setq ac-timer 1)
@@ -1438,8 +1438,6 @@ file?
   (advice-add 'pop-tag-mark :after #'kimim/recenter)
   ;;(advice-add 'next-error :after #'kimim/recenter)
   ;;(advice-add 'previous-error :after #'kimim/recenter)
-
-
 #+END_SRC
 ** Python
 
@@ -1522,7 +1520,6 @@ pip install virtualenv
   (global-set-key "\C-x\C-v" 'view-file-other-window)
   (global-set-key "\C-c\C-o" 'occur)
   ;;(global-set-key "\C-c;" 'flyspell-correct-word-before-point) not available in org mode
-  (global-set-key "\C-\\" 'tempo-complete-tag)
   (global-set-key "\C-z" 'set-mark-command)
   ;;(global-set-key "\M-/" 'hippie-expand)
   ;;(global-set-key "\M-/" 'ac-clang-async-autocomplete-autotrigger)
