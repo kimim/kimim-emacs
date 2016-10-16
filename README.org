@@ -424,6 +424,14 @@ file?
 #+END_SRC
 
 * auto-complete
+** company mode
+
+#+BEGIN_SRC emacs-lisp
+  (require 'company)
+  (global-company-mode t)
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-yasnippet))
+#+END_SRC
 ** yasnippet
 
 #+BEGIN_SRC emacs-lisp
@@ -432,6 +440,19 @@ file?
   (yas-load-directory (concat sync-path-home "tools/snippets"))
 #+END_SRC
 
+In order to remove following warning:
+
+#+BEGIN_QUOTE
+Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
+  To hide this warning, add (yasnippet backquote-change) to ‘warning-suppress-types’.
+#+END_QUOTE
+
+add following lines:
+
+#+BEGIN_SRC emacs-lisp
+  (require 'warnings)
+  (setq warning-suppress-types '((yasnippet backquote-change)))
+#+END_SRC
 ** ivy-mode
 
 #+BEGIN_SRC emacs-lisp
@@ -439,20 +460,19 @@ file?
 #+END_SRC
 
 ** auto-complete
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC
   ;; intelligent completion setting
   (require 'auto-complete-config)
   (add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
   (ac-config-default)
-  (abbrev-mode -1)
-  ;; add pair parenthis and quote automatically
-  (autopair-global-mode 1)
-
-  ;; unfortunately, company-mode is lack of docstring hints
-  ;; and conflict with yasnippet
-  ;;(add-hook 'after-init-hook 'global-company-mode)
+  ;;(abbrev-mode -1)
   ;;(icomplete-mode 1)
   ;;(ido-mode 1)
+#+END_SRC
+** auto parenthesis
+#+BEGIN_SRC emacs-lisp
+  ;; add pair parenthis and quote automatically
+  (autopair-global-mode 1)
 #+END_SRC
 * kimim functions
 
@@ -1292,6 +1312,69 @@ file?
 
 * Programming Language
 ** C
+*** Formatting
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (ggtags-mode 1)
+              (fci-mode 1)
+              ;; (syntax-subword-mode 1)
+              (hs-minor-mode t)
+              (c-set-style "gnu")
+              (c-toggle-auto-newline 0)
+              (c-toggle-auto-hungry-state 0)
+              (c-toggle-syntactic-indentation 1)
+              (highlight-indentation-mode 1)
+              (which-function-mode 1)
+              (local-set-key "\C-co" 'ff-find-other-file)
+              (local-set-key "\C-c\C-f" 'ggtags-find-file)
+              ;;(my-c-mode-common-hook-if0)
+              (setq c-basic-offset 4)))
+#+END_SRC
+
+*** Completion
+#+BEGIN_SRC emacs-lisp
+  ;; Define the modes/packages you need
+  (require 'irony)
+  (require 'company-c-headers)
+  ;; Enable company mode globally
+
+  ;;(add-hook 'after-init-hook 'global-company-mode)
+
+  (defun company-c-headers-includes ()
+    (add-to-list 'company-c-headers-path-system "/usr/include"))
+
+  (company-c-headers-includes)
+
+  ;; irony-mode configuration
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+
+  (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+  ;; set up flycheck
+  (eval-after-load 'flycheck
+    '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+  (add-hook 'c-mode-hook 'flycheck-mode)
+  (add-hook 'c++-mode-hook 'flycheck-mode)
+
+  ;; replace the `completion-at-point' and `complete-symbol' bindings in
+  ;; irony-mode's buffers by irony-mode's function
+  (defun my-irony-mode-hook ()
+    (define-key irony-mode-map [remap completion-at-point]
+      'irony-completion-at-point-async)
+    (define-key irony-mode-map [remap complete-symbol]
+      'irony-completion-at-point-async))
+  ( add-hook 'irony-mode-hook 'my-irony-mode-hook)
+
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-irony))
+#+END_SRC
+** C
 *** ECB
 
 #+BEGIN_SRC
@@ -1329,7 +1412,7 @@ file?
 
 *** Other Settings
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC
   ;; define new c variable symbol for thing-at-point, used in
   ;; ggtags-find-tag-dwim
 

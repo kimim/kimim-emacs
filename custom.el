@@ -59,7 +59,7 @@
  '(ggtags-find-tag-hook (quote (recenter)))
  '(package-selected-packages
    (quote
-    (company-irony irony color-theme path-headerline-mode auto-highlight-symbol autopair paredit swift-mode mocker which-key window-numbering volatile-highlights use-package pallet package-build shut-up epl git commander f s cask markdown-mode ggtags org jedi col-highlight ox-ioslide company history drag-stuff whole-line-or-region w32-registry ox-html5slide htmlize graphviz-dot-mode google-c-style gnuplot find-file-in-repository fill-column-indicator everything elpy ecb cygwin-mount color-theme-github browse-kill-ring bbdb auto-complete-clang-async auto-complete-clang ace-window ace-isearch ac-clang)))
+    (company-c-headers company-irony-c-headers flycheck-irony projectile company-irony irony color-theme path-headerline-mode auto-highlight-symbol autopair paredit swift-mode mocker which-key window-numbering volatile-highlights use-package pallet package-build shut-up epl git commander f s cask markdown-mode ggtags org jedi col-highlight ox-ioslide company history drag-stuff whole-line-or-region w32-registry ox-html5slide htmlize graphviz-dot-mode google-c-style gnuplot find-file-in-repository fill-column-indicator everything elpy ecb cygwin-mount color-theme-github browse-kill-ring bbdb auto-complete-clang-async auto-complete-clang ace-window ace-isearch ac-clang)))
  '(python-shell-interpreter "C:\\Python35\\python")
  '(safe-local-variable-values
    (quote
