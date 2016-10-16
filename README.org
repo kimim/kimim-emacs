@@ -70,7 +70,7 @@ itself. So we should set both of them to almost the same paths.
 As I have a =Windows= box in the office, and a =macOS= at home, so I need to
 specify these variables in different way.
 
-For =Windows=, I installed =Cygwin=[fn:2] to use =UNIX= tools above =Windows=,
+For =Windows=, I installed =Cygwin= [fn:2] to use =UNIX= tools above =Windows=,
 and for =macOS=, most =UNIX= tools are installed already.
 
 #+BEGIN_SRC emacs-lisp
@@ -119,9 +119,9 @@ file?
 * Language
 
 #+BEGIN_SRC emacs-lisp
-  ;;============================================================================
+  ;;==============================================
   ;; Language and Encoding Settings
-  ;;============================================================================
+  ;;==============================================
   (setenv "LC_ALL" "en_US.UTF-8")
   (setenv "LANG" "en_US.UTF-8")
   ;; remove svn log LC_TYPE not defined warning.
@@ -206,9 +206,9 @@ file?
 * Editing
 
 #+BEGIN_SRC emacs-lisp
-  ;;==============================================================================
+  ;;==============================================
   ;; Editor setting
-  ;;==============================================================================
+  ;;==============================================
   (setq fill-column 80)
   (drag-stuff-global-mode 1)              ; use Alt-up/down to drag line or region
   (delete-selection-mode 1)               ; 輸入的文字覆蓋選中的文字
@@ -259,9 +259,9 @@ file?
   (setq bookmark-save-flag 1)
 
 
-  ;;============================================================================
+  ;;==============================================
   ;; Global Mode Settings
-  ;;============================================================================
+  ;;==============================================
   (setq auto-mode-alist
         (append '(("\\.py\\'" . python-mode)
                   ("\\.css\\'" . css-mode)
@@ -277,9 +277,9 @@ file?
                 auto-mode-alist))
 
 
-  ;;==============================================================================
+  ;;==============================================
   ;; Load other configuration files
-  ;;==============================================================================
+  ;;==============================================
 
   (require 'saveplace)
   (setq-default save-place t)
