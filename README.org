@@ -1149,7 +1149,6 @@ add following lines:
 
 #+BEGIN_SRC emacs-lisp
   (require 'ggtags)
-  (require 'auto-complete-clang-async)
 
   ;; ggtags settings
   ;; Activate cygwin mount for gtags CDPATH issue on W32
