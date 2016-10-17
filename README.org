@@ -395,11 +395,8 @@ file?
 #+END_SRC
 
 * Search and Finding
-
+** Grep
 #+BEGIN_SRC emacs-lisp
-  ;;============================================================================
-  ;; Default Grep settings
-  ;;============================================================================
   (defadvice grep-compute-defaults (around grep-compute-defaults-advice-null-device)
     "Use cygwin's /dev/null as the null-device."
     (let ((null-device "/dev/null"))
@@ -411,6 +408,21 @@ file?
   (defun kimim/grep-find()
     (interactive)
     (grep-find (concat grep-find-command (buffer-substring-no-properties (region-beginning) (region-end)))))
+#+END_SRC
+
+** the silver searcher
+
+=ag= [fn:3] is really a very fast grep tool, and =ag.el= [fn:4] provide the
+Emacs interface to =ag=:
+
+#+BEGIN_SRC emacs-lisp
+  ;; (require 'ag)
+  ;; (global-set-key "\C-xg" 'ag-project)
+  (setq ag-highlight-search t)
+#+END_SRC
+
+** Other search utils
+#+BEGIN_SRC emacs-lisp
   (defun kimim/look-from-mydict()
     (interactive)
     (browse-url (concat "http://www.mydict.com/index.php?controller=Dict_German&action=Search&keyword="
@@ -422,7 +434,6 @@ file?
     (w32-shell-execute
      "open" "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe" "c:\\kimikit\\Autohotkey\\lookinsight.ahk"))
 #+END_SRC
-
 * auto-complete
 ** company mode
 
@@ -474,7 +485,7 @@ add following lines:
   ;; add pair parenthis and quote automatically
   (autopair-global-mode 1)
 #+END_SRC
-* kimim functions
+* helper functions
 
 #+BEGIN_SRC emacs-lisp
   ;; self define functions
@@ -1133,168 +1144,10 @@ add following lines:
   (setq org-startup-indented t)
 
 #+END_SRC
-* erc and gnus
-
-#+BEGIN_SRC emacs-lisp
-  ;; erc settings
-  (require 'erc-join)
-  (erc-autojoin-mode 1)
-  (erc-autojoin-enable)
-  (setq erc-default-server "irc.freenode.net")
-  (setq erc-autojoin-channels-alist
-            '(("irc.freenode.net" "#emacs")))
-  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-
-  ;; gnus settings
-  (setq message-directory "~/Gnus/Mail/")
-  (setq gnus-directory "~/Gnus/News/")
-  (setq nnfolder-directory "~/Gnus/Mail/Archive")
-
-  (setq gnus-agent t)
-  (setq gnus-agent-expire-days 90)
-  ; prompt for how many articles only for larger than 1000 articles
-  (setq gnus-large-newsgroup 1000)
-  (setq gnus-use-cache t)
-  (setq gnus-fetch-old-headers nil) ; show previous messages in a thread
-  (setq gnus-thread-indent-level 1)
-  (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
-  (setq gnus-select-method '(nnml ""))
-  (setq gnus-secondary-select-methods nil)
-  (add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
-  (add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
-  (add-to-list 'gnus-secondary-select-methods '(nnml ""))
-
-#+END_SRC
-* jekyll
-#+BEGIN_SRC emacs-lisp
-  ;; ============================================================================
-  ;; org for blog system
-  ;; ============================================================================
-  ;; file in jekyll base will also be uploaded to github
-  (setq path-jekyll-base "~/kimi.im/_notes/_posts")
-  ;; in order to sync draft with cloud sync driver
-  (setq path-jekyll-draft (concat sync-path-home "kimim/_draft/"))
-
-  (setq org-publish-project-alist
-        '(
-          ("org-blog-content"
-           ;; Path to your org files.
-           :base-directory "~/kimi.im/_notes"
-           :base-extension "org"
-           ;; Path to your jekyll project.
-           :publishing-directory "~/kimi.im/"
-           :recursive t
-           :publishing-function org-html-publish-to-html
-           :headline-levels 4
-           :section-numbers t
-           :html-extension "html"
-           :body-only t ;; Only export section between <body></body>
-           :with-toc nil
-           )
-          ("org-blog-static"
-           :base-directory "~/kimi.im/_notes/"
-           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php\\|svg"
-           :publishing-directory "~/kimi.im/"
-           :recursive t
-           :publishing-function org-publish-attachment)
-          ("blog" :components ("org-blog-content" "org-blog-static"))
-          ))
-
-  (define-key org-mode-map (kbd "C-c p") (lambda ()
-                                           (interactive)
-                                           (org-publish-current-file)
-                                           (with-temp-buffer(dired "~/kimi.im/")
-                                                            (kimim/cyg)
-                                                            (kill-buffer))))
-  (defun jekyll-post ()
-    "Post current buffer to kimi.im"
-    (interactive)
-    ;; get categories
-    ;; get buffer file name
-    (let ((category (jekyll-get-category))
-          (filename (file-name-nondirectory buffer-file-name))
-          newfilename)
-          ;; append date to the beginning of the file name
-      (setq newfilename (concat path-jekyll-base "/" category "/" (format-time-string "%Y-%m-%d-") filename))
-      ;; mv the file to the categories folder
-      (rename-file buffer-file-name newfilename)
-      (switch-to-buffer (find-file-noselect newfilename))
-  ;;    (color-theme-initialize)
-  ;;    (color-theme-jekyll)
-      ;; execute org-publish-current-file
-      (org-publish-current-file)
-  ;;    (color-theme-eclipse)
-      ;; go to kimi.im folder and execute cyg command
-      (with-temp-buffer(dired "~/kimi.im/")
-                       (kimim/cyg)
-                       (kill-buffer))
-      ))
-
-  (defun jekyll-tag ()
-  "add new tags"
-    (interactive)
-    ;find "tags: [" and replace with "tags: [new-tag, "
-    (goto-char (point-min))
-  ;;  (search-forward "tags: [")
-    (re-search-forward "tags: \\[" nil t)
-    (insert (ido-completing-read "tags: " '(
-                                            "emacs" "org-mode"
-                                            "Deutsch" "Français" "English"
-                                            "Windows" "RTOS" "industry"
-                                            "travel"  "street-shots" "photography"
-                                            "leadership"
-                                            )))
-    (insert ", ")
-    )
-
-  (defun jekyll-header()
-    "Insert jekyll post headers,
-  catergories and tags are generated from exisiting posts"
-    (interactive)
-    (insert "#+BEGIN_HTML\n---\nlayout: post\ntitle: ")
-    (insert (read-string "Title: "))
-    (insert "\ncategories: [")
-    (insert (ido-completing-read "categories: " '(
-                                                  "technology"
-                                                  "productivity" "leadership"
-                                                  "psychology" "language"
-                                                  "education" "photography"
-                                                  )))
-    (insert "]")
-    (insert "\ntags: [")
-    (insert (ido-completing-read "tags: " '("emacs" "org-mode" "c prog"
-                                            "Deutsch" "Français" "English"
-                                            "management")))
-    (insert "]\n---\n#+END_HTML\n\n")
-    )
-
-
-  (defun jekyll ()
-    (interactive)
-    (find-file (concat path-jekyll-draft "/" (read-string "Filename: ") ".org"))
-    (jekyll-header)
-    (save-buffer)
-    )
-
-  (defun jekyll-get-category ()
-    (interactive)
-    (goto-char (point-min))
-    (re-search-forward "^categories: \\[\\([a-z-]*\\)\\]$" nil t)
-    (match-string 1)
-    )
-
-  (defun jekyll-test ()
-    (interactive)
-    (color-theme-initialize)
-    (color-theme-jekyll)
-    (org-open-file (org-html-export-to-html nil)))
-
-
-#+END_SRC
 * Programming General
 ** Tagging
 
-#+BEGIN_SRC
+#+BEGIN_SRC emacs-lisp
   (require 'ggtags)
   (require 'auto-complete-clang-async)
 
@@ -1308,8 +1161,18 @@ add following lines:
   (setq ggtags-global-ignore-case nil)
   ;; let ggtags use split-window with is redefined by ecb mode
   ;;(setq ggtags-split-window-function 'split-window-below)
-#+END_SRC
 
+  ;; close grep window and done ggtags navigation when type C-g
+  ;; but some times it will close all the ecb windows, so remove this advice.
+  ;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
+  (defun kimim/recenter()
+    (interactive)
+    (recenter))
+
+  (advice-add 'pop-tag-mark :after #'kimim/recenter)
+  ;;(advice-add 'next-error :after #'kimim/recenter)
+  ;;(advice-add 'previous-error :after #'kimim/recenter)
+#+END_SRC
 * Programming Language
 ** C
 *** Formatting
@@ -1511,20 +1374,10 @@ add following lines:
           (switch-to-buffer "*Ibuffer*")
           (kill-buffer-and-window))))
 
-  ;; close grep window and done ggtags navigation when type C-g
-  ;; but some times it will close all the ecb windows, so remove this advice.
-  ;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
-  (defun kimim/recenter()
-    (interactive)
-    (recenter))
-
-  (advice-add 'pop-tag-mark :after #'kimim/recenter)
-  ;;(advice-add 'next-error :after #'kimim/recenter)
-  ;;(advice-add 'previous-error :after #'kimim/recenter)
 #+END_SRC
 ** Python
 
-Python development configuration is quite easy. =elpy=[fn:3] is used here:
+Python development configuration is quite easy. =elpy=[fn:5] is used here:
 
 #+BEGIN_SRC emacs-lisp
   (elpy-enable)
@@ -1552,6 +1405,164 @@ pip install autopep8
 pip install yapf
 # install virtualenv for jedi
 pip install virtualenv
+#+END_SRC
+* jekyll
+#+BEGIN_SRC emacs-lisp
+  ;; ============================================================================
+  ;; org for blog system
+  ;; ============================================================================
+  ;; file in jekyll base will also be uploaded to github
+  (setq path-jekyll-base "~/kimi.im/_notes/_posts")
+  ;; in order to sync draft with cloud sync driver
+  (setq path-jekyll-draft (concat sync-path-home "kimim/_draft/"))
+
+  (setq org-publish-project-alist
+        '(
+          ("org-blog-content"
+           ;; Path to your org files.
+           :base-directory "~/kimi.im/_notes"
+           :base-extension "org"
+           ;; Path to your jekyll project.
+           :publishing-directory "~/kimi.im/"
+           :recursive t
+           :publishing-function org-html-publish-to-html
+           :headline-levels 4
+           :section-numbers t
+           :html-extension "html"
+           :body-only t ;; Only export section between <body></body>
+           :with-toc nil
+           )
+          ("org-blog-static"
+           :base-directory "~/kimi.im/_notes/"
+           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php\\|svg"
+           :publishing-directory "~/kimi.im/"
+           :recursive t
+           :publishing-function org-publish-attachment)
+          ("blog" :components ("org-blog-content" "org-blog-static"))
+          ))
+
+  (define-key org-mode-map (kbd "C-c p") (lambda ()
+                                           (interactive)
+                                           (org-publish-current-file)
+                                           (with-temp-buffer(dired "~/kimi.im/")
+                                                            (kimim/cyg)
+                                                            (kill-buffer))))
+  (defun jekyll-post ()
+    "Post current buffer to kimi.im"
+    (interactive)
+    ;; get categories
+    ;; get buffer file name
+    (let ((category (jekyll-get-category))
+          (filename (file-name-nondirectory buffer-file-name))
+          newfilename)
+          ;; append date to the beginning of the file name
+      (setq newfilename (concat path-jekyll-base "/" category "/" (format-time-string "%Y-%m-%d-") filename))
+      ;; mv the file to the categories folder
+      (rename-file buffer-file-name newfilename)
+      (switch-to-buffer (find-file-noselect newfilename))
+  ;;    (color-theme-initialize)
+  ;;    (color-theme-jekyll)
+      ;; execute org-publish-current-file
+      (org-publish-current-file)
+  ;;    (color-theme-eclipse)
+      ;; go to kimi.im folder and execute cyg command
+      (with-temp-buffer(dired "~/kimi.im/")
+                       (kimim/cyg)
+                       (kill-buffer))
+      ))
+
+  (defun jekyll-tag ()
+  "add new tags"
+    (interactive)
+    ;find "tags: [" and replace with "tags: [new-tag, "
+    (goto-char (point-min))
+  ;;  (search-forward "tags: [")
+    (re-search-forward "tags: \\[" nil t)
+    (insert (ido-completing-read "tags: " '(
+                                            "emacs" "org-mode"
+                                            "Deutsch" "Français" "English"
+                                            "Windows" "RTOS" "industry"
+                                            "travel"  "street-shots" "photography"
+                                            "leadership"
+                                            )))
+    (insert ", ")
+    )
+
+  (defun jekyll-header()
+    "Insert jekyll post headers,
+  catergories and tags are generated from exisiting posts"
+    (interactive)
+    (insert "#+BEGIN_HTML\n---\nlayout: post\ntitle: ")
+    (insert (read-string "Title: "))
+    (insert "\ncategories: [")
+    (insert (ido-completing-read "categories: " '(
+                                                  "technology"
+                                                  "productivity" "leadership"
+                                                  "psychology" "language"
+                                                  "education" "photography"
+                                                  )))
+    (insert "]")
+    (insert "\ntags: [")
+    (insert (ido-completing-read "tags: " '("emacs" "org-mode" "c prog"
+                                            "Deutsch" "Français" "English"
+                                            "management")))
+    (insert "]\n---\n#+END_HTML\n\n")
+    )
+
+
+  (defun jekyll ()
+    (interactive)
+    (find-file (concat path-jekyll-draft "/" (read-string "Filename: ") ".org"))
+    (jekyll-header)
+    (save-buffer)
+    )
+
+  (defun jekyll-get-category ()
+    (interactive)
+    (goto-char (point-min))
+    (re-search-forward "^categories: \\[\\([a-z-]*\\)\\]$" nil t)
+    (match-string 1)
+    )
+
+  (defun jekyll-test ()
+    (interactive)
+    (color-theme-initialize)
+    (color-theme-jekyll)
+    (org-open-file (org-html-export-to-html nil)))
+
+
+#+END_SRC
+* erc and gnus
+
+#+BEGIN_SRC emacs-lisp
+  ;; erc settings
+  (require 'erc-join)
+  (erc-autojoin-mode 1)
+  (erc-autojoin-enable)
+  (setq erc-default-server "irc.freenode.net")
+  (setq erc-autojoin-channels-alist
+            '(("irc.freenode.net" "#emacs")))
+  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+
+  ;; gnus settings
+  (setq message-directory "~/Gnus/Mail/")
+  (setq gnus-directory "~/Gnus/News/")
+  (setq nnfolder-directory "~/Gnus/Mail/Archive")
+
+  (setq gnus-agent t)
+  (setq gnus-agent-expire-days 90)
+  ; prompt for how many articles only for larger than 1000 articles
+  (setq gnus-large-newsgroup 1000)
+  (setq gnus-use-cache t)
+  (setq gnus-fetch-old-headers nil) ; show previous messages in a thread
+  (setq gnus-thread-indent-level 1)
+  (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
+  (setq gnus-select-method '(nnml ""))
+  (setq gnus-secondary-select-methods nil)
+  (add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
+  (add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
+  (add-to-list 'gnus-secondary-select-methods '(nnml ""))
+
 #+END_SRC
 
 * Key Binding
@@ -1586,12 +1597,13 @@ pip install virtualenv
   ;;                            (insert ?_)))
   ;;(global-set-key (kbd "_") (lambda () (interactive)
   ;;                            (insert ?-)))
-
   ;;(global-set-key "\M-x" 'helm-M-x)
   ;;(global-set-key "\C-x\C-f" 'helm-find-files)
   ;;(global-set-key "\C-x/" 'helm-global-mark-ring)
   ;;(global-set-key "\C-cs" 'helm-swoop)
-  (global-set-key "\C-xg" 'grep-find)
+  ;;(global-set-key "\C-xg" 'grep-find)
+  (global-set-key "\C-cg" 'ggtags-grep)
+  (global-set-key "\C-xg" 'ag-project)
   (global-set-key "\C-x\C-b" 'ibuffer-other-window)
   (global-set-key "\C-h" 'delete-backward-char)
   (global-set-key "\M-h" 'backward-kill-word)
@@ -1628,7 +1640,6 @@ pip install virtualenv
   (global-set-key "\C-c\C-x\C-i" 'org-clock-in)
   (global-set-key "\C-c\C-x\C-o" 'org-clock-out)
   (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
-  (define-key global-map "\C-cg" 'ggtags-grep)
   ;;(define-key global-map "\C-cd" 'kimim/look-from-mydict)
   (define-key global-map (kbd "C-`") 'ace-jump-mode)
   (define-key global-map (kbd "<apps>") 'ace-jump-mode)
@@ -1687,4 +1698,8 @@ pip install virtualenv
 
 [fn:2] http://cygwin.com/
 
-[fn:3] https://github.com/jorgenschaefer/elpy
+[fn:3] https://github.com/ggreer/the_silver_searcher#installation
+
+[fn:4] https://github.com/Wilfred/ag.el
+
+[fn:5] https://github.com/jorgenschaefer/elpy
