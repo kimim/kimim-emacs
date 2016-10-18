@@ -1215,7 +1215,7 @@ add following lines:
   (add-hook 'c-mode-hook 'irony-mode)
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'objc-mode-hook 'irony-mode)
-
+  (setq w32-pipe-read-delay 0)
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
