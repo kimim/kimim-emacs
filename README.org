@@ -4,10 +4,11 @@ This emacs configuration file is written with literate programming method.[fn:1]
 =.el= file is loaded by extracting source code from this document.
 
 * Preparation
-** Windows Executable
+** Windows
+*** Starter Script
 
 Because I want to let emacs be executed in a specific =home= directory, so I
-create a =.bat= file =emacs.bat= to set the environment and run emacs:
+create a =.bat= file =emacs.bat= to set the environment and run Emacs:
 
 #+BEGIN_SRC bat
   :: set home path for emacs
@@ -15,13 +16,47 @@ create a =.bat= file =emacs.bat= to set the environment and run emacs:
   :: execute emacs with debug enable
   C:\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
+*** Cygwin
+
+Another tool sets required for this configuration in Windows is the Cygwin
+project[fn:2], which is a large collection of GNU and Open Source tools provide
+functionality similar to a Linux distribution on Windows.
+
+Another useful tool is MSYS2 [fn:3], which is better than Cygwin in one point
+that the packages can be installed in command line with =pacman -S=.
+
+The explanation from Cygwin is that because Windows do not allow overwriting of
+in-use executable, so installing a new version of Cygwin DLL while a packager is
+using the DLL is problematic.[fn:4] But I guess MSYS2 should have the same
+issue.
+
+However Cygwin standalone package management tool =setup-x86.exe= or
+=setup-x86_64.exe= accept command-line arguments [fn:5], so I will try to use
+the command line option to install packages as many as possible.
+
+** Mac OS
+
+For Apple macOS, For Windows, most UNIX tools are installed
+already. Homebrew [fn:6] is used to install additional applications if missing
+in macOS.
+
+Homebrew installation:
+
+#+BEGIN_SRC shell
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+#+END_SRC
+
+** Linux
+
+Most of the external tools I used in this Emacs configuration should be easily
+installed or already available in main Linux distributions.
 
 * Package
 
-=package= is the modern =elisp= package management system, which lets you easily
-download and install packages that implement additional features. Each package
-is a separate Emacs Lisp program, sometimes including other components such as
-an Info manual.
+=package= [fn:7]is the modern =elisp= package management system, which lets you
+easily download and install packages that implement additional features. Each
+package is a separate Emacs Lisp program, sometimes including other components
+such as an Info manual.
 
 All the extensions used in this file are installed and managed by =package=.
 
@@ -38,7 +73,6 @@ All the extensions used in this file are installed and managed by =package=.
 #+END_SRC
 
 * Environment
-
 ** Synchronization Folders
 
 I'm using this =emacs= configuration for both working usage and personal usage,
@@ -56,53 +90,82 @@ If the sync path is not set, then use HOME path =~= as the default folder, that
 means, no synchronization. So please set these variables in your =.emacs= file.
 
 #+BEGIN_SRC emacs-lisp
-  ;; System Environment and Path Settings
+  ;; Synchronization Folders
   (if (not (boundp 'path-home-sync))
+      (setq path-home-sync "~/"))
+  (if (not (boundp 'path-work-sync))
       (setq path-home-sync "~/"))
 #+END_SRC
 
 ** PATH, exec-path and Info
 
 Environment variable =PATH= is the the searching path of executables by the
-=shell= running in =emacs=, and =exec-path= is the search path of =emacs=
-itself. So we should set both of them to almost the same paths.
+shell running in Emacs while =exec-path= is the search path of Emacs itself. So
+we should set both of them to almost the same paths.
 
-As I have a =Windows= box in the office, and a =macOS= at home, so I need to
+As I have a Windows box in the office, and a Apple macOS at home, so I need to
 specify these variables in different way.
-
-For =Windows=, I installed =Cygwin= [fn:2] to use =UNIX= tools above =Windows=,
-and for =macOS=, most =UNIX= tools are installed already.
 
 #+BEGIN_SRC emacs-lisp
   (require 'info)
   (cond ((eq window-system 'w32)
-         (setq cygwin-path "C:/cygwin/")
-         (add-to-list 'Info-additional-directory-list
-                      (concat cygwin-path "usr/share/info"))
-         (add-to-list 'Info-additional-directory-list
-                      (concat cygwin-path "usr/local/share/info"))
-         (add-to-list 'exec-path (concat cygwin-path "usr/local/bin"))
-         (add-to-list 'exec-path (concat cygwin-path "usr/bin"))
-         (add-to-list 'exec-path (concat cygwin-path "bin"))
-         (add-to-list 'exec-path "C:/kimikit/emacs/bin/")
+         (setq path-root "C:/cygwin/")
+         (add-to-list 'exec-path
+                      "C:/kimikit/emacs/bin/")
          (setenv "PATH"
-                 (concat
-                  (concat cygwin-path "usr/local/bin" ";")
-                  (concat cygwin-path "usr/bin" ";")
-                  (concat cygwin-path "bin" ";")
-                  "C:/kimikit/emacs/bin;"
-                  (getenv "PATH"))))
+                 (concat "C:/kimikit/emacs/bin" path-separator
+                 (getenv "PATH"))))
         ((eq window-system 'ns)
-         (add-to-list 'exec-path "/usr/local/bin")
+         (setq path-root "/")
          (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.5/bin")
          (setenv "PATH"
                  (concat
-                  "/usr/local/bin:"
-                  "/Library/Frameworks/Python.framework/Versions/3.5/bin:"
+                  "/Library/Frameworks/Python.framework/Versions/3.5/bin" path-separator
                   (getenv "PATH")))))
 
+  (add-to-list 'exec-path (concat path-root "bin"))
+  (add-to-list 'exec-path (concat path-root "usr/bin"))
+  (add-to-list 'exec-path (concat path-root "usr/local/bin"))
+
+  (setenv "PATH"
+          (concat
+           path-root "bin" path-separator
+           path-root "usr/bin" path-separator
+           path-root "usr/local/bin" path-separator
+           (getenv "PATH")))
+
+  (add-to-list 'Info-additional-directory-list
+               (concat path-root "usr/share/info"))
+  (add-to-list 'Info-additional-directory-list
+               (concat path-root "usr/local/share/info"))
   ;; additional info, collected from internet
-  (add-to-list 'Info-additional-directory-list "~/info")
+  (add-to-list 'Info-additional-directory-list
+               (concat path-home-sync "/info"))
+#+END_SRC
+
+** Language
+#+BEGIN_SRC emacs-lisp
+  ;;========================================
+  ;; Language and Encoding Settings
+  ;;========================================
+  (setenv "LANG" "en_US.UTF-8")
+  (setenv "LC_ALL" "en_US.UTF-8")
+  ;; remove svn log LC_TYPE not defined warning.
+  (setenv "LC_CTYPE" "en_US")
+  (set-locale-environment "English")
+  (set-language-environment 'English)
+  (prefer-coding-system 'utf-8)
+  (set-buffer-file-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (set-clipboard-coding-system 'utf-16le)
+  (cond ((eq window-system 'w32)
+         ;; Windows file name is encoded in gbk
+         (set-file-name-coding-system 'gbk)
+         (set-terminal-coding-system 'gbk))
+        ((eq window-system 'ns)
+         (set-file-name-coding-system 'utf-8)
+         (set-terminal-coding-system 'utf-8)))
 #+END_SRC
 
 ** TODO Customization File
@@ -115,64 +178,40 @@ file?
   (setq custom-file "~/kimim-emacs/custom.el")
   (load custom-file)
 #+END_SRC
-
-* Language
-
-#+BEGIN_SRC emacs-lisp
-  ;;========================================
-  ;; Language and Encoding Settings
-  ;;========================================
-  (setenv "LC_ALL" "en_US.UTF-8")
-  (setenv "LANG" "en_US.UTF-8")
-  ;; remove svn log LC_TYPE not defined warning.
-  (setenv "LC_CTYPE" "en_US")
-  (set-locale-environment "English")
-  (set-language-environment 'English)
-  (prefer-coding-system 'utf-8)
-  (set-buffer-file-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-  (set-selection-coding-system 'utf-8)
-  (set-clipboard-coding-system 'utf-16le)
-  (cond ((eq window-system 'w32)
-         (set-file-name-coding-system 'gbk)
-         (set-terminal-coding-system 'gbk))
-        ((eq window-system 'ns)
-         (set-file-name-coding-system 'utf-8)
-         (set-terminal-coding-system 'utf-8)))
-#+END_SRC
-
 * Appearance
+** Title and Header Line
 
 #+BEGIN_SRC emacs-lisp
+  (setq frame-title-format
+        '("" invocation-name ": "
+          (:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name))
+                   "%b"))))
   (require 'path-headerline-mode)
   ;; display file path in headerline
   ;; useful when in fullscreen mode
   (path-headerline-mode t)
-  (setq inhibit-startup-message t)          ; 不顯示開始畫面
-  (setq initial-scratch-message nil)        ; scratch 默認為空
-  (setq visible-bell t)                     ; 關閉視覺告警
-  (setq ring-bell-function #'ignore)
+#+END_SRC
+** Menu Bar and Tool Bar
+#+BEGIN_SRC emacs-lisp
   (cond ((eq window-system 'w32)
          (setq select-enable-clipboard t)   ; Enable copy and paste in Win32
          (menu-bar-mode 0))
         ((eq window-system 'ns)
          (menu-bar-mode 1)))
   (tool-bar-mode -1)
-  (fset 'yes-or-no-p 'y-or-n-p)
-  (show-paren-mode 1)                       ; 高亮显示匹配的括号
-  (blink-cursor-mode 0)                     ; 光标不闪烁
-  ;;(use-package fill-column-indicator
-  ;;  :config
-  ;;  (setq fci-always-use-textual-rule t)
-  ;;  :diminish fill-column-indicator)        ; show column indicator
-  (setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
+#+END_SRC
+** Mode Line
+#+BEGIN_SRC emacs-lisp
   ;; mode line
   (column-number-mode 1)                    ; show column num in mode line
   (setq display-time-24hr-format t)
   (setq display-time-day-and-date t)
   (setq display-time-interval 10)
   (display-time-mode t)                     ; 在 mode-line 上显示时间
-
+#+END_SRC
+** Font and Color
+#+BEGIN_SRC emacs-lisp
   ;; font
   (setq font-lock-maximum-decoration t)
   (setq font-lock-global-modes '(not shell-mode text-mode))
@@ -196,11 +235,28 @@ file?
                  ))))
   (load-file "~/kimim-emacs/site-lisp/color-theme-kimim.el")
   (color-theme-kimim)
-  (setq frame-title-format
-        '("" invocation-name ": "
-          (:eval (if (buffer-file-name)
-                     (abbreviate-file-name (buffer-file-name))
-                   "%b"))))
+#+END_SRC
+** Highlight
+
+#+BEGIN_SRC emacs-lisp
+  ;; highlight current line
+  (global-hl-line-mode 1)
+  (require 'auto-highlight-symbol)
+  ;; highlight current symbol
+  (global-auto-highlight-symbol-mode t)
+  ;; edit highlighted symbol
+  ;; -> defined in key binding section
+  ;; (define-key ctl-x-m-map "e" 'ahs-edit-mode)
+#+END_SRC
+** Other Visual Element
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-startup-message t)          ; 不顯示開始畫面
+  (setq initial-scratch-message nil)        ; scratch 默認為空
+  (setq visible-bell t)                     ; 關閉視覺告警
+  (setq ring-bell-function #'ignore)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (show-paren-mode 1)                       ; 高亮显示匹配的括号
+  (blink-cursor-mode 0)                     ; 光标不闪烁
 #+END_SRC
 
 * Editing
@@ -209,6 +265,7 @@ file?
   ;;========================================
   ;; Editor setting
   ;;========================================
+  (setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
   (setq fill-column 80)
   (drag-stuff-global-mode 1)              ; use Alt-up/down to drag line or region
   (delete-selection-mode 1)               ; 輸入的文字覆蓋選中的文字
@@ -285,34 +342,25 @@ file?
   (setq-default save-place t)
   (setq save-place-file (expand-file-name "saveplace" "~"))
 
-  ;; https://github.com/justbur/emacs-which-key
-  (which-key-mode 1)
-  ;; use minibuffer as the popup type, otherwise conflict in ecb mode
-  (setq which-key-popup-type 'minibuffer)
-
   ;;  (use-package volatile-highlights
   ;;    :config
   ;;    (volatile-highlights-mode t)
   ;;    :diminish volatile-highlights-mode)
 #+END_SRC
 
-** Highlight
-
-#+BEGIN_SRC emacs-lisp
-  ;; highlight current line
-  (global-hl-line-mode 1)
-  (require 'auto-highlight-symbol)
-  ;; highlight current symbol
-  (global-auto-highlight-symbol-mode t)
-  ;; edit highlighted symbol
-  ;; -> defined in key binding section
-  ;; (define-key ctl-x-m-map "e" 'ahs-edit-mode)
-#+END_SRC
-
-* Window and Frame
+* Controlling
+** Window and Frame
 #+BEGIN_SRC emacs-lisp
   (winner-mode t)                       ; restore windows configuration
   (window-numbering-mode 1)
+#+END_SRC
+** Command
+
+#+BEGIN_SRC emacs-lisp
+  ;; https://github.com/justbur/emacs-which-key
+  (which-key-mode 1)
+  ;; use minibuffer as the popup type, otherwise conflict in ecb mode
+  (setq which-key-popup-type 'minibuffer)
 #+END_SRC
 * Dired and Buffer
 
@@ -412,7 +460,7 @@ file?
 
 ** the silver searcher
 
-=ag= [fn:3] is really a very fast grep tool, and =ag.el= [fn:4] provide the
+=ag= [fn:8] is really a very fast grep tool, and =ag.el= [fn:9] provide the
 Emacs interface to =ag=:
 
 #+BEGIN_SRC emacs-lisp
@@ -1378,7 +1426,7 @@ add following lines:
 #+END_SRC
 ** Python
 
-Python development configuration is quite easy. =elpy=[fn:5] is used here:
+=Python= development configuration is quite easy. =elpy= [fn:10] is used here:
 
 #+BEGIN_SRC emacs-lisp
   (elpy-enable)
@@ -1699,8 +1747,18 @@ pip install virtualenv
 
 [fn:2] http://cygwin.com/
 
-[fn:3] https://github.com/ggreer/the_silver_searcher#installation
+[fn:3] http://msys2.github.io/
 
-[fn:4] https://github.com/Wilfred/ag.el
+[fn:4] https://cygwin.com/install.html
 
-[fn:5] https://github.com/jorgenschaefer/elpy
+[fn:5] https://cygwin.com/faq/faq.html#faq.setup.cli
+
+[fn:6] http://brew.sh/
+
+[fn:7] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
+
+[fn:8] https://github.com/ggreer/the_silver_searcher#installation
+
+[fn:9] https://github.com/Wilfred/ag.el
+
+[fn:10] https://github.com/jorgenschaefer/elpy
