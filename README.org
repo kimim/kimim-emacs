@@ -1182,14 +1182,15 @@ add following lines:
   (add-hook 'c-mode-common-hook
             (lambda ()
               (ggtags-mode 1)
-              (fci-mode 1)
-              ;; (syntax-subword-mode 1)
-              (hs-minor-mode t)
+              ;; show column width indicator
+              ;;(fci-mode 0)
+              ;;(syntax-subword-mode 1)
+              ;;(hs-minor-mode 0)
               (c-set-style "gnu")
               (c-toggle-auto-newline 0)
               (c-toggle-auto-hungry-state 0)
               (c-toggle-syntactic-indentation 1)
-              (highlight-indentation-mode 1)
+              ;;(highlight-indentation-mode 1)
               (which-function-mode 1)
               (local-set-key "\C-co" 'ff-find-other-file)
               (local-set-key "\C-c\C-f" 'ggtags-find-file)
@@ -1216,6 +1217,7 @@ add following lines:
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'objc-mode-hook 'irony-mode)
   (setq w32-pipe-read-delay 0)
+
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
@@ -1389,6 +1391,7 @@ Python development configuration is quite easy. =elpy=[fn:5] is used here:
   (add-hook 'python-mode-hook
             '(lambda ()
                (setq yas-indent-line nil)))
+  (define-key elpy-mode-map (kbd "C-c C-f") 'ggtags-find-file)
 #+END_SRC
 
 Following =python= package is required according to =elpy= mannual:
@@ -1632,7 +1635,6 @@ pip install virtualenv
   (global-set-key "\C-c=" 'get-file-line)
   (global-set-key "\C-cd" 'kimim/lookinsight)
   (global-set-key "\C-cj" 'jekyll)
-  (global-set-key "\C-c\C-jp" 'jekyll-post)
 
   (define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
   (define-key global-map "\M-." 'ggtags-find-tag-dwim)
