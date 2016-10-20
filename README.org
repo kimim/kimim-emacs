@@ -16,6 +16,7 @@ create a =.bat= file =emacs.bat= to set the environment and run Emacs:
   :: execute emacs with debug enable
   C:\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
+
 *** Cygwin
 
 Another tool sets required for this configuration in Windows is the Cygwin
@@ -75,7 +76,7 @@ All the extensions used in this file are installed and managed by =package=.
 * Environment
 ** Synchronization Folders
 
-I'm using this =emacs= configuration for both working usage and personal usage,
+I'm using this Emacs configuration for both working usage and personal usage,
 and I want to synchronize some files in synchronization service, so I need to
 seperate the working file and personal file in different synchronization
 services. For example, working files are synchronized in Microsoft OneDrive
@@ -83,18 +84,18 @@ Business or Box Business, while personal files are synchronized in Dropbox or
 SugarSync.
 
 The variable for synchronization location is named as:
-- =path-work-sync= for working usage
-- =path-home-sync= for personal usage
+- =path-sync-work= for working usage
+- =path-sync-home= for personal usage
 
 If the sync path is not set, then use HOME path =~= as the default folder, that
 means, no synchronization. So please set these variables in your =.emacs= file.
 
 #+BEGIN_SRC emacs-lisp
   ;; Synchronization Folders
-  (if (not (boundp 'path-home-sync))
-      (setq path-home-sync "~/"))
-  (if (not (boundp 'path-work-sync))
-      (setq path-home-sync "~/"))
+  (if (not (boundp 'path-sync-work))
+      (setq path-sync-work "~/"))
+  (if (not (boundp 'path-sync-home))
+      (setq path-sync-home "~/"))
 #+END_SRC
 
 ** PATH, exec-path and Info
@@ -140,7 +141,7 @@ specify these variables in different way.
                (concat path-root "usr/local/share/info"))
   ;; additional info, collected from internet
   (add-to-list 'Info-additional-directory-list
-               (concat path-home-sync "/info"))
+               (concat path-sync-home "/info"))
 #+END_SRC
 
 ** Language
@@ -179,37 +180,6 @@ file?
   (load custom-file)
 #+END_SRC
 * Appearance
-** Title and Header Line
-
-#+BEGIN_SRC emacs-lisp
-  (setq frame-title-format
-        '("" invocation-name ": "
-          (:eval (if (buffer-file-name)
-                     (abbreviate-file-name (buffer-file-name))
-                   "%b"))))
-  (require 'path-headerline-mode)
-  ;; display file path in headerline
-  ;; useful when in fullscreen mode
-  (path-headerline-mode t)
-#+END_SRC
-** Menu Bar and Tool Bar
-#+BEGIN_SRC emacs-lisp
-  (cond ((eq window-system 'w32)
-         (setq select-enable-clipboard t)   ; Enable copy and paste in Win32
-         (menu-bar-mode 0))
-        ((eq window-system 'ns)
-         (menu-bar-mode 1)))
-  (tool-bar-mode -1)
-#+END_SRC
-** Mode Line
-#+BEGIN_SRC emacs-lisp
-  ;; mode line
-  (column-number-mode 1)                    ; show column num in mode line
-  (setq display-time-24hr-format t)
-  (setq display-time-day-and-date t)
-  (setq display-time-interval 10)
-  (display-time-mode t)                     ; 在 mode-line 上显示时间
-#+END_SRC
 ** Font and Color
 #+BEGIN_SRC emacs-lisp
   ;; font
@@ -235,6 +205,38 @@ file?
                  ))))
   (load-file "~/kimim-emacs/site-lisp/color-theme-kimim.el")
   (color-theme-kimim)
+#+END_SRC
+** Title and Header Line
+
+#+BEGIN_SRC emacs-lisp
+  (setq frame-title-format
+        '("" invocation-name ": "
+          (:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name))
+                   "%b"))))
+  (require 'path-headerline-mode)
+  ;; display file path in headerline
+  ;; useful when in fullscreen mode
+  (path-headerline-mode t)
+#+END_SRC
+** Menu Bar and Tool Bar
+#+BEGIN_SRC emacs-lisp
+  (cond ((eq window-system 'w32)
+         (setq select-enable-clipboard t)   ; Enable copy and paste in Win32
+         (menu-bar-mode 0))
+        ((eq window-system 'ns)
+         (menu-bar-mode 1)))
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+END_SRC
+** Mode Line
+#+BEGIN_SRC emacs-lisp
+  ;; mode line
+  (column-number-mode 1)                    ; show column num in mode line
+  (setq display-time-24hr-format t)
+  (setq display-time-day-and-date t)
+  (setq display-time-interval 10)
+  (display-time-mode t)                     ; 在 mode-line 上显示时间
 #+END_SRC
 ** Highlight
 
@@ -309,7 +311,7 @@ file?
   (setq uniquify-buffer-name-style 'forward)
 
   ;; bookmark setting
-  (setq bookmark-default-file (concat path-home-sync "emacs.bmk"))
+  (setq bookmark-default-file (concat path-sync-home "emacs.bmk"))
   ;; 当使用 M-x COMMAND 后，显示该 COMMAND 绑定的键 5 秒鐘時間
   (setq suggest-key-bindings 5)
   ;; 每当设置书签的时候都保存书签文件，否则只在你退出 Emacs 时保存
@@ -501,7 +503,7 @@ Emacs interface to =ag=:
 #+BEGIN_SRC emacs-lisp
   (require 'yasnippet)
   (yas-global-mode 1)
-  (yas-load-directory (concat sync-path-home "tools/snippets"))
+  (yas-load-directory (concat path-sync-home "tools/snippets"))
 #+END_SRC
 
 In order to remove following warning:
@@ -851,13 +853,13 @@ add following lines:
 
 #+BEGIN_SRC emacs-lisp
   ;; path and system environment setting for orgmode
-  (setq org-path-home (concat sync-path-home "org/"))
-  (setq org-path-work (concat sync-path-work "org/"))
+  (setq path-org-home (concat path-sync-home "org/"))
+  (setq path-org-work (concat path-sync-work "org/"))
 
   ;; file in jekyll base will also be uploaded to github
   (setq path-jekyll-base "~/kimi.im/_notes/_posts")
   ;; in order to sync draft with cloud sync driver
-  (setq path-jekyll-draft (concat sync-path-home "kimim/_draft/"))
+  (setq path-jekyll-draft (concat path-sync-home "kimim/_draft/"))
 
   ;(require 'ox-reveal)
   ;; load htmlize.el , which org-babel export syntax highlight source code need it
@@ -1037,27 +1039,27 @@ add following lines:
   (defun org-toggle-office ()
     (interactive)
     (setq org-location-home-or-office "office")
-    (setq org-agenda-files (list (concat org-path-home "capture.org")
-                                 (concat org-path-work "gtd-work/")
-                                 (concat org-path-work "gtd-work/projects/")
-                                 (concat org-path-home "world.org")))
-    (setq org-refile-files (append (list (concat org-path-home "capture.org")
-                                         (concat org-path-home "world.org")
-                                         (concat org-path-home "new-words.org")
-                                         (concat org-path-home "gtd-home/kimi.org"))
-                                   (file-expand-wildcards (concat org-path-work "gtd-work/*.org"))
-                                   (file-expand-wildcards (concat org-path-work "gtd-work/*/*.org"))))
+    (setq org-agenda-files (list (concat path-org-home "capture.org")
+                                 (concat path-org-work "gtd-work/")
+                                 (concat path-org-work "gtd-work/projects/")
+                                 (concat path-org-home "world.org")))
+    (setq org-refile-files (append (list (concat path-org-home "capture.org")
+                                         (concat path-org-home "world.org")
+                                         (concat path-org-home "new-words.org")
+                                         (concat path-org-home "gtd-home/kimi.org"))
+                                   (file-expand-wildcards (concat path-org-work "gtd-work/*.org"))
+                                   (file-expand-wildcards (concat path-org-work "gtd-work/*/*.org"))))
     (message "Agenda is from office..."))
 
   (defun org-toggle-home ()
     (interactive)
             (setq org-location-home-or-office "home")
-        (setq org-agenda-files (list (concat org-path-home "capture.org")
-                                     (concat org-path-home "world.org")
-                                     (concat org-path-home "gtd-home/")))
-        (setq org-refile-files (append (list (concat org-path-home "capture.org")
-                                             (concat org-path-home "world.org"))
-                                       (file-expand-wildcards (concat org-path-home "gtd-home/*.org"))))
+        (setq org-agenda-files (list (concat path-org-home "capture.org")
+                                     (concat path-org-home "world.org")
+                                     (concat path-org-home "gtd-home/")))
+        (setq org-refile-files (append (list (concat path-org-home "capture.org")
+                                             (concat path-org-home "world.org"))
+                                       (file-expand-wildcards (concat path-org-home "gtd-home/*.org"))))
         (message "Agenda is from home..."))
 
   (defun org-toggle-home-or-office()
@@ -1082,13 +1084,13 @@ add following lines:
            ((org-agenda-sorting-strategy '(priority-down))))))
 
   (setq org-capture-templates
-        '(("c" "Capture" entry (file+headline (concat org-path-home "capture.org") "Inbox")
+        '(("c" "Capture" entry (file+headline (concat path-org-home "capture.org") "Inbox")
            "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-          ("t" "TODO" entry (file+headline (concat org-path-home "capture.org") "Inbox")
+          ("t" "TODO" entry (file+headline (concat path-org-home "capture.org") "Inbox")
            "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-          ("o" "Action" entry (file+headline (concat org-path-home "capture.org") "Inbox")
+          ("o" "Action" entry (file+headline (concat path-org-home "capture.org") "Inbox")
            "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-          ("h" "Habit" entry (file+headline (concat org-path-home "world.org") "Habit")
+          ("h" "Habit" entry (file+headline (concat path-org-home "world.org") "Habit")
            "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
   ;;============================================================================
@@ -1234,7 +1236,7 @@ add following lines:
               ;;(fci-mode 0)
               ;;(syntax-subword-mode 1)
               ;;(hs-minor-mode 0)
-              (c-set-style "gnu")
+              ;;(c-set-style "gnu")
               (c-toggle-auto-newline 0)
               (c-toggle-auto-hungry-state 0)
               (c-toggle-syntactic-indentation 1)
@@ -1440,6 +1442,8 @@ add following lines:
             '(lambda ()
                (setq yas-indent-line nil)))
   (define-key elpy-mode-map (kbd "C-c C-f") 'ggtags-find-file)
+  ;; remove warning when start python interpreter
+  (add-to-list 'python-shell-completion-native-disabled-interpreters "python")
 #+END_SRC
 
 Following =python= package is required according to =elpy= mannual:
@@ -1466,7 +1470,7 @@ pip install virtualenv
   ;; file in jekyll base will also be uploaded to github
   (setq path-jekyll-base "~/kimi.im/_notes/_posts")
   ;; in order to sync draft with cloud sync driver
-  (setq path-jekyll-draft (concat sync-path-home "kimim/_draft/"))
+  (setq path-jekyll-draft (concat path-sync-home "kimim/_draft/"))
 
   (setq org-publish-project-alist
         '(
@@ -1620,6 +1624,25 @@ pip install virtualenv
 * Key Binding
 
 #+BEGIN_SRC emacs-lisp
+  (setq ivy-use-virtual-buffers t)
+  (global-set-key "\C-s" 'swiper)
+  (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  ;; (global-set-key (kbd "<f6>") 'ivy-resume)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  ;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  ;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  ;; (global-set-key (kbd "<f1> l") 'counsel-load-library)
+  ;; (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  ;; (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  (global-set-key (kbd "C-c g") 'counsel-git)
+  (global-set-key (kbd "C-c j") 'counsel-git-grep)
+  (global-set-key (kbd "C-c k") 'counsel-ag)
+  (global-set-key (kbd "C-x l") 'counsel-locate)
+  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
   ;;==============================================================================
   ;; Global Key Settings
   ;;==============================================================================
@@ -1682,7 +1705,8 @@ pip install virtualenv
   (global-set-key "\C-cb" 'org-iswitchb)
   (global-set-key "\C-c=" 'get-file-line)
   (global-set-key "\C-cd" 'kimim/lookinsight)
-  (global-set-key "\C-cj" 'jekyll)
+  (global-set-key "\C-cj" 'imenu)
+  (global-set-key "\C-cf" 'ggtags-find-file)
 
   (define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
   (define-key global-map "\M-." 'ggtags-find-tag-dwim)
@@ -1740,7 +1764,6 @@ pip install virtualenv
   (load-file "~/.emacs.d/home.el")
   ;; dont know why, only put disable scroll-bar at the end of .emacs, the new
   ;; created frame can inherit this setting
-  (scroll-bar-mode -1)
 #+END_SRC
 
 * Footnotes
