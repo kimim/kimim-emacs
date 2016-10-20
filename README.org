@@ -1,6 +1,6 @@
 * Introduction
 
-This emacs configuration file is written with literate programming method.[fn:1]
+This Emacs configuration file is written with literate programming method.[fn:1]
 =.el= file is loaded by extracting source code from this document.
 
 * Preparation
@@ -98,6 +98,22 @@ means, no synchronization. So please set these variables in your =.emacs= file.
       (setq path-sync-home "~/"))
 #+END_SRC
 
+** kimim-emacs path
+
+Another important folder is the folder for this configuration files, which is
+cloned from my github repository.
+
+Anyway, you can change the path as you want, and set =path-kimim-emacs=
+accordingly.
+
+#+BEGIN_SRC sh
+git clone https://github.com/kimim/kimim-emacs.git
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (setq path-kimim-emacs "~/kimim-emacs/")
+#+END_SRC
+
 ** PATH, exec-path and Info
 
 Environment variable =PATH= is the the searching path of executables by the
@@ -176,13 +192,12 @@ file?
 
 #+BEGIN_SRC emacs-lisp
   ;; load customization
-  (setq custom-file "~/kimim-emacs/custom.el")
+  (setq custom-file (concat path-kimim-emacs "custom.el"))
   (load custom-file)
 #+END_SRC
 * Appearance
 ** Font and Color
 #+BEGIN_SRC emacs-lisp
-  ;; font
   (setq font-lock-maximum-decoration t)
   (setq font-lock-global-modes '(not shell-mode text-mode))
   (setq font-lock-verbose t)
@@ -190,20 +205,29 @@ file?
 
   (cond ((eq window-system 'w32)
          ;; cleaner font setting
-         (set-fontset-font "fontset-default" 'han (font-spec :family "NSimSun" :size 16))
+         (set-fontset-font
+          "fontset-default"
+          'han (font-spec :family "NSimSun" :size 16))
          (setq default-frame-alist
-               '((top . 80) (left . 250) (width . 128) (height . 45)
-                 (font . "Inconsolata-11") ;; if you like anti-alias, use this to have a try
+               '((top . 80) (left . 250)
+                 (width . 128) (height . 45)
+                 ;; if you like anti-alias, use this to have a try
+                 (font . "Inconsolata-11")
                  )))
         ((eq window-system 'ns)
-         (set-fontset-font  "fontset-default" 'han (font-spec :family "Microsoft Yahei" :size 16))
-         ;; OS X 下，不和前一個漢字緊挨著的標點符號的字體不是雅黑，就會顯得很難看，這裡設定一下
-         (set-fontset-font  "fontset-default" 'cjk-misc (font-spec :family "Microsoft Yahei" :size 16))
+         (set-fontset-font
+          "fontset-default"
+          'han (font-spec :family "Microsoft Yahei" :size 16))
+         ;; OS X 下，只有雅黑字體的標點符號顯示的不是那麼難看
+         (set-fontset-font
+          "fontset-default"
+          'cjk-misc (font-spec :family "Microsoft Yahei" :size 16))
          (setq default-frame-alist
-               '((top . 100) (left . 600) (width . 166) (height . 70)
-                 ;;               (font . "Bitstream Vera Sans Mono-14")
+               '((top . 100) (left . 600)
+                 (width . 166) (height . 70)
+                 ;; (font . "Bitstream Vera Sans Mono-14")
                  ))))
-  (load-file "~/kimim-emacs/site-lisp/color-theme-kimim.el")
+  (load-file (concat path-kimim-emacs "site-lisp/color-theme-kimim.el"))
   (color-theme-kimim)
 #+END_SRC
 ** Title and Header Line
@@ -222,7 +246,8 @@ file?
 ** Menu Bar and Tool Bar
 #+BEGIN_SRC emacs-lisp
   (cond ((eq window-system 'w32)
-         (setq select-enable-clipboard t)   ; Enable copy and paste in Win32
+         ;; Enable copy and paste in Win32
+         (setq select-enable-clipboard t)
          (menu-bar-mode 0))
         ((eq window-system 'ns)
          (menu-bar-mode 1)))
@@ -231,15 +256,13 @@ file?
 #+END_SRC
 ** Mode Line
 #+BEGIN_SRC emacs-lisp
-  ;; mode line
-  (column-number-mode 1)                    ; show column num in mode line
+  (column-number-mode 1)
   (setq display-time-24hr-format t)
   (setq display-time-day-and-date t)
   (setq display-time-interval 10)
-  (display-time-mode t)                     ; 在 mode-line 上显示时间
+  (display-time-mode t)
 #+END_SRC
 ** Highlight
-
 #+BEGIN_SRC emacs-lisp
   ;; highlight current line
   (global-hl-line-mode 1)
@@ -267,7 +290,7 @@ file?
   ;;========================================
   ;; Editor setting
   ;;========================================
-  (setq inhibit-eol-conversion nil)         ; 不要轉換 end-of-line style
+  (setq inhibit-eol-conversion nil)       ; 不要轉換 end-of-line style
   (setq fill-column 80)
   (drag-stuff-global-mode 1)              ; use Alt-up/down to drag line or region
   (delete-selection-mode 1)               ; 輸入的文字覆蓋選中的文字
@@ -356,8 +379,8 @@ file?
   (winner-mode t)                       ; restore windows configuration
   (window-numbering-mode 1)
 #+END_SRC
-** Command
 
+** Command
 #+BEGIN_SRC emacs-lisp
   ;; https://github.com/justbur/emacs-which-key
   (which-key-mode 1)
@@ -1628,7 +1651,7 @@ pip install virtualenv
   (global-set-key "\C-s" 'swiper)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
   ;; (global-set-key (kbd "<f6>") 'ivy-resume)
-  (global-set-key (kbd "M-x") 'counsel-M-x)
+  ;(global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   ;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
   ;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
