@@ -531,7 +531,7 @@ Emacs interface to =ag=:
 #+BEGIN_SRC emacs-lisp
   (require 'yasnippet)
   (yas-global-mode 1)
-  (yas-load-directory (concat path-sync-home "tools/snippets"))
+  (setq yas-snippet-dirs (concat path-sync-home "tools/snippets"))
 #+END_SRC
 
 In order to remove following warning:
