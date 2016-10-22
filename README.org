@@ -1528,8 +1528,14 @@ pip install virtualenv
   (setq deft-file-naming-rules '((noslash . "_")))
   (setq deft-text-mode 'org-mode)
   (setq deft-use-filter-string-for-filename t)
-  ;;(setq deft-org-mode-title-prefix t)
-  ;;(setq deft-use-filename-as-title t)
+  (setq deft-org-mode-title-prefix t)
+  (setq deft-use-filename-as-title nil)
+  (setq deft-strip-summary-regexp
+        (concat "\\("
+                "[\n\t]" ;; blank
+                "\\|^#\\+[[:upper:]_]+:.*$" ;; org-mode metadata
+                "\\|^#\\+[[:alnum:]_]+:.*$" ;; org-mode metadata
+                "\\)"))
 
   ;; generate timestamp such as 2016_1031KJ__ for file name
   (defun kimim/genfile-timestamp()
