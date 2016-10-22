@@ -51,28 +51,6 @@ Homebrew installation:
 
 Most of the external tools I used in this Emacs configuration should be easily
 installed or already available in main Linux distributions.
-
-* Package
-
-=package= [fn:7]is the modern =elisp= package management system, which lets you
-easily download and install packages that implement additional features. Each
-package is a separate Emacs Lisp program, sometimes including other components
-such as an Info manual.
-
-All the extensions used in this file are installed and managed by =package=.
-
-#+BEGIN_SRC emacs-lisp
-  (require 'package)
-  (setq package-user-dir "~/.emacs.d/elpa")
-  (setq package-archives
-        '(("gnu" . "http://elpa.gnu.org/packages/")
-          ("ELPA" . "http://tromey.com/elpa/")
-          ("elpy" . "http://jorgenschaefer.github.io/packages/")
-          ;;("marmalade" . "http://marmalade-repo.org/packages/")
-          ("melpa" . "http://melpa.org/packages/")))
-  (package-initialize)
-#+END_SRC
-
 * Environment
 ** Synchronization Folders
 
@@ -194,6 +172,40 @@ file?
   ;; load customization
   (setq custom-file (concat path-kimim-emacs "custom.el"))
   (load custom-file)
+#+END_SRC
+* Package
+
+=package= [fn:7]is the modern =elisp= package management system, which lets you
+easily download and install packages that implement additional features. Each
+package is a separate Emacs Lisp program, sometimes including other components
+such as an Info manual.
+
+All the extensions used in this file are installed and managed by =package=.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  (setq package-user-dir "~/.emacs.d/elpa")
+  (setq package-archives
+        '(("gnu" . "http://elpa.gnu.org/packages/")
+          ("ELPA" . "http://tromey.com/elpa/")
+          ("elpy" . "http://jorgenschaefer.github.io/packages/")
+          ;;("marmalade" . "http://marmalade-repo.org/packages/")
+          ("melpa" . "http://melpa.org/packages/")))
+  (package-initialize)
+
+  (defun ensure-package-installed (&rest packages)
+    "Assure every package is installed, ask for installation if
+  it’s not.  a list of installed packages or nil for every skipped
+  package."
+    (mapcar
+     (lambda (package)
+       ;; (package-installed-p 'evil)
+       (if (package-installed-p package)
+           nil
+         (if (y-or-n-p (format "Package %s is missing. Install it? " package))
+             (package-install package)
+           package)))
+     packages))
 #+END_SRC
 * Appearance
 ** Font and Color
@@ -320,6 +332,7 @@ file?
   (setq time-stamp-warn-inactive t)
   (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S kimi")
   (add-hook 'write-file-hooks 'time-stamp); 自动更新 time-stamp
+
   (defun kimim/delete-trailing-whitespace (&optional start end)
     (interactive)
     (if (or (not (boundp 'deft-auto-save-buffers))
@@ -1506,16 +1519,68 @@ pip install virtualenv
   (setq org-startup-indented t)
 #+END_SRC
 
-** deft for note management
+* deft for note management
 
 #+BEGIN_SRC emacs-lisp
   (setq deft-extensions '("txt" "tex" "org" "md"))
   (setq deft-directory (concat path-sync-home "notes/"))
   (setq deft-recursive t)
-  (add-hook 'deft-mode-hook
-            (lambda ()
-              (remove-hook 'before-save-hook 'delete-trailing-whitespace)))
+  (setq deft-file-naming-rules '((noslash . "_")))
+  (setq deft-text-mode 'org-mode)
+  (setq deft-use-filter-string-for-filename t)
+  ;;(setq deft-org-mode-title-prefix t)
   ;;(setq deft-use-filename-as-title t)
+
+  ;; generate timestamp such as 2016_1031KJ__ for file name
+  (defun kimim/genfile-timestamp()
+    (concat (format-time-string "%Y_%m%d")
+            (char-to-string (+ 65 (random 26)))
+            (char-to-string (+ 65 (random 26)))
+            "__"))
+
+  ;;advise deft-open-file to replace spaces in file names with _
+  (defun kimim/deft-open-file-advice (orig-fun &rest args)
+    (setq name (pop args))
+    (if (file-exists-p name)
+        (progn
+          (push name args)
+          (apply orig-fun args))
+      (progn
+        (setq title (file-name-sans-extension
+                     (file-name-nondirectory name)))
+        (setq name (concat
+                    (file-name-directory name)
+                    (kimim/genfile-timestamp)
+                    (downcase
+                     (replace-regexp-in-string
+                      " " "_" (file-name-nondirectory name)))
+                    (if (not (file-name-extension name))
+                        ".txt")))
+        (push name args)
+        (apply orig-fun args)
+        (insert (concat "#+TITLE: " title "\n\n")))))
+
+  (advice-add 'deft-open-file :around #'kimim/deft-open-file-advice)
+
+  (defun kimim/deft-new-file-named-advice (orig-fun &rest args)
+    (setq name (pop args))
+    (setq title name)
+    (setq name (concat
+                (kimim/genfile-timestamp)
+                (downcase
+                 (replace-regexp-in-string
+                  " " "_" name))))
+    (push name args)
+    (apply orig-fun args)
+    (insert (concat "#+TITLE: " title "\n\n")))
+
+  (advice-add 'deft-new-file-named :around #'kimim/deft-new-file-named-advice)
+
+  (defun kimim/save-buffer-advice (orig-fun &rest arg)
+    (delete-trailing-whitespace)
+    (apply orig-fun arg))
+
+  (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
 #+END_SRC
 * jekyll
 #+BEGIN_SRC emacs-lisp
