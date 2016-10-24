@@ -294,6 +294,7 @@ All the extensions used in this file are installed and managed by =package=.
   (fset 'yes-or-no-p 'y-or-n-p)
   (show-paren-mode 1)                       ; 高亮显示匹配的括号
   (blink-cursor-mode 0)                     ; 光标不闪烁
+  (tooltip-mode nil)
 #+END_SRC
 
 * Editing
