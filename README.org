@@ -7,7 +7,7 @@ This Emacs configuration file is written with literate programming method.[fn:1]
 ** Windows
 *** Starter Script
 
-Because I want to let emacs be executed in a specific =home= directory, so I
+Because I want to let Emacs be executed in a specific =home= directory, so I
 create a =.bat= file =emacs.bat= to set the environment and run Emacs:
 
 #+BEGIN_SRC bat
@@ -37,11 +37,10 @@ the command line option to install packages as many as possible.
 
 ** Mac OS
 
-For Apple macOS, For Windows, most UNIX tools are installed
-already. Homebrew [fn:6] is used to install additional applications if missing
-in macOS.
+For Apple macOS, most UNIX tools are installed already. Homebrew [fn:6] is used
+to install additional application if it is missing in macOS.
 
-Homebrew installation:
+Install Homebrew:
 
 #+BEGIN_SRC shell
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -51,6 +50,7 @@ Homebrew installation:
 
 Most of the external tools I used in this Emacs configuration should be easily
 installed or already available in main Linux distributions.
+
 * Environment
 ** Synchronization Folders
 
@@ -1167,7 +1167,7 @@ pip install yapf
 # install virtualenv for jedi
 pip install virtualenv
 #+END_SRC
-* calendar, orgmode & notes
+* calendar amd orgmode
 ** calendar
 
 #+BEGIN_SRC emacs-lisp
