@@ -724,28 +724,22 @@ add following lines:
     (set-buffer-modified-p t)
     (save-buffer))
 
-  ;; (defun nuke-all-buffers ()
-  ;;   "Kill all buffers, leaving *scratch* only."
-  ;;   (interactive)
-  ;;   (mapcar (lambda (x) (if (not (member (buffer-name x)
-  ;;                                        '(" *ECB Sources*" " *ECB History*" " *ECB Methods*" " *Minibuf-1*" " *Minibuf-0*" " *ECB Analyse*" " *ECB Directories*")))
-  ;;                           (kill-buffer x)
-  ;;                           ))
-  ;;           (buffer-list))
-  ;;   (delete-other-windows))
-
   (defun nuke-other-buffers ()
     "Kill all buffers, leaving current-buffer only."
     (interactive)
-    (mapcar (lambda (x)
-              (if (not (or (eq x (current-buffer))
-                           (member (buffer-name x)
-                                   ;; all ecb related buffers
-                                   '(" *ECB Sources*" " *ECB History*" " *ECB Methods*"
-                                     " *Minibuf-1*" " *Minibuf-0*" " *ECB Analyse*"
-                                     " *ECB Directories*"))))
-                  (kill-buffer x)))
-            (buffer-list))
+    (mapcar
+     (lambda (x)
+       (if (not
+            (or (eq x (current-buffer))
+                (member
+                 (buffer-name x)
+                 ;; all ecb related buffers
+                 '(" *ECB Sources*" " *ECB History*"
+                   " *ECB Methods*" " *Minibuf-1*"
+                   " *Minibuf-0*" " *ECB Analyse*"
+                   " *ECB Directories*"))))
+           (kill-buffer x)))
+     (buffer-list))
     (delete-other-windows)
     (message "All other buffers clear"))
 
