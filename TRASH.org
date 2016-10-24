@@ -1,0 +1,29 @@
+* Simple Mode Line
+#+BEGIN_SRC emacs-lisp
+  (defvar mode-line-cleaner-alist
+    '((auto-complete-mode . "α")
+      ;; Major modes
+      (org-mode . "Ω")
+      (org-indent-mode . "ï")
+      (flyspell-mode . "f")
+      (ivy-mode . "i")
+      (irony-mode . "I")
+      (which-key-mode . "W")
+      (autopair-mode . "p")
+      (auto-fill-mode . "F")
+      (visual-line-mode . "w")
+      (lisp-interaction-mode . "λ")))
+
+  (defun clean-mode-line ()
+    (interactive)
+    (loop for cleaner in mode-line-cleaner-alist
+          do (let* ((mode (car cleaner))
+                    (mode-str (cdr cleaner))
+                    (old-mode-str (cdr (assq mode minor-mode-alist))))
+               (when old-mode-str (setcar old-mode-str mode-str))
+               ;; major mode
+               (when (eq mode major-mode)
+                 (setq mode-name mode-str)))))
+
+  (add-hook 'after-change-major-mode-hook 'clean-mode-line)
+#+END_SRC
