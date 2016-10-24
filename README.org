@@ -251,6 +251,12 @@ All the extensions used in this file are installed and managed by =package=.
                      (abbreviate-file-name (buffer-file-name))
                    "%b"))))
   (require 'path-headerline-mode)
+  ;; only display headerline for real files
+  (defun kimim/ph--display-header (orig-fun &rest args)
+    (if (buffer-file-name)
+        (apply orig-fun args)
+      (setq header-line-format nil)))
+  (advice-add 'ph--display-header :around #'kimim/ph--display-header)
   ;; display file path in headerline
   ;; useful when in fullscreen mode
   (path-headerline-mode t)
