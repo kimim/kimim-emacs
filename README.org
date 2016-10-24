@@ -11,7 +11,7 @@ Because I want to let Emacs be executed in a specific =home= directory, so I
 create a =.bat= file =emacs.bat= to set the environment and run Emacs:
 
 #+BEGIN_SRC bat
-  :: set home path for emacs
+  :: set home path for Emacs
   set HOME=C:\Users\kimim\home
   :: execute emacs with debug enable
   C:\kimikit\emacs\bin\runemacs.exe --debug-init
