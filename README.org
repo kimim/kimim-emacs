@@ -602,6 +602,7 @@ add following lines:
 #+BEGIN_SRC emacs-lisp
   (require 'company)
   (global-company-mode t)
+  (add-hook 'after-init-hook 'global-company-mode)
   (eval-after-load 'company
     '(add-to-list 'company-backends 'company-yasnippet))
 #+END_SRC
@@ -918,6 +919,22 @@ add following lines:
   (add-hook 'after-change-functions 'kimim/buffer-edit-hook)
   (global-set-key (kbd "M-`") 'kimim/backward-last-edit)
 
+  ;; copy from http://stackoverflow.com/questions/384284/how-do-i-rename-an-open-file-in-emacs
+  ;; http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
+  ;; many thanks to Bozhidar Batsov (https://github.com/bbatsov)
+  (defun kimim/rename-file-and-buffer ()
+    "Rename the current buffer and file it is visiting. Binded to
+  key C-c r"
+    (interactive)
+    (let ((filename (buffer-file-name)))
+      (if (not (and filename (file-exists-p filename)))
+          (message "Buffer is not visiting a file!")
+        (let ((new-name (read-file-name "New name: " filename)))
+          (cond
+           ((vc-backend filename) (vc-rename-file filename new-name))
+           (t
+            (rename-file filename new-name t)
+            (set-visited-file-name new-name t t)))))))
 #+END_SRC
 * Programming General
 ** Tagging
@@ -1013,10 +1030,10 @@ add following lines:
   (eval-after-load 'company
     '(add-to-list 'company-backends 'company-irony))
 #+END_SRC
-** C
+** COMMENT C Old
 *** ECB
 
-#+BEGIN_SRC
+#+BEGIN_SRC emacs-lisp
   (defun coding-mode ()
     ;; start coding mode
     (interactive)
@@ -1051,7 +1068,7 @@ add following lines:
 
 *** Other Settings
 
-#+BEGIN_SRC
+#+BEGIN_SRC emacs-lisp
   ;; define new c variable symbol for thing-at-point, used in
   ;; ggtags-find-tag-dwim
 
@@ -1167,6 +1184,8 @@ add following lines:
   (define-key elpy-mode-map (kbd "C-c C-f") 'ggtags-find-file)
   ;; remove warning when start python interpreter
   (add-to-list 'python-shell-completion-native-disabled-interpreters "python")
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-jedi))
 #+END_SRC
 
 Following =python= package is required according to =elpy= mannual:
@@ -1185,6 +1204,13 @@ pip install yapf
 # install virtualenv for jedi
 pip install virtualenv
 #+END_SRC
+** Emacs lisp
+
+#+BEGIN_SRC emacs-lisp
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-elisp))
+#+END_SRC
+
 * calendar amd orgmode
 ** calendar
 
@@ -1783,6 +1809,7 @@ pip install virtualenv
   (setq ivy-use-virtual-buffers t)
   (global-set-key "\C-s" 'swiper)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  (global-set-key (kbd "C-c r") 'kimim/rename-file-and-buffer)
   ;; (global-set-key (kbd "<f6>") 'ivy-resume)
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
