@@ -135,7 +135,7 @@ specify these variables in different way.
                (concat path-root "usr/local/share/info"))
   ;; additional info, collected from internet
   (add-to-list 'Info-additional-directory-list
-               (concat path-sync-home "/info"))
+               (concat "~/info"))
 #+END_SRC
 
 ** Language
@@ -707,7 +707,7 @@ add following lines:
     (w32-shell-execute
      "open" "doublecmd" (concat "-L " (replace-regexp-in-string "/" "\\\\" (pwd)))))
 
-  (setq everything-cmd "~/../Tools/es.exe")
+  (setq everything-cmd "c:\\kimikit\\bin\\es.exe")
 
   (defun kill-dired-buffers()
     "Kill all dired buffers."
