@@ -1866,7 +1866,8 @@ pip install virtualenv
   (when (eq system-type 'darwin) ;; mac specific settings
     (setq mac-option-modifier 'alt)
     (setq mac-command-modifier 'meta)
-    (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+    ;; sets fn-delete to be right-delete
+    (global-set-key [kp-delete] 'delete-char)
     )
 
   (define-prefix-command 'ctl-x-m-map)
@@ -1902,8 +1903,6 @@ pip install virtualenv
 #+BEGIN_SRC emacs-lisp
   (load-file "~/.emacs.d/work.el")
   (load-file "~/.emacs.d/home.el")
-  ;; dont know why, only put disable scroll-bar at the end of .emacs, the new
-  ;; created frame can inherit this setting
 #+END_SRC
 
 * Footnotes
