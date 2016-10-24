@@ -189,7 +189,7 @@ All the extensions used in this file are installed and managed by =package=.
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("ELPA" . "http://tromey.com/elpa/")
           ("elpy" . "http://jorgenschaefer.github.io/packages/")
-          ;;("marmalade" . "http://marmalade-repo.org/packages/")
+          ("marmalade" . "https://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
   (package-initialize)
 
