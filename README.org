@@ -1,7 +1,7 @@
 * Introduction
 
 This Emacs configuration file is written with literate programming method.[fn:1]
-=.el= file is loaded by extracting source code from this document.
+=.el= file is loaded by extracting source code from this file.
 
 * Preparation
 ** Windows
