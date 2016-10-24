@@ -334,7 +334,7 @@ file?
   (setq uniquify-buffer-name-style 'forward)
 
   ;; bookmark setting
-  (setq bookmark-default-file (concat path-sync-home "emacs.bmk"))
+  (setq bookmark-default-file "~/.emacs.d/emacs.bmk")
   ;; 当使用 M-x COMMAND 后，显示该 COMMAND 绑定的键 5 秒鐘時間
   (setq suggest-key-bindings 5)
   ;; 每当设置书签的时候都保存书签文件，否则只在你退出 Emacs 时保存
@@ -559,6 +559,16 @@ add following lines:
   (global-company-mode t)
   (eval-after-load 'company
     '(add-to-list 'company-backends 'company-yasnippet))
+#+END_SRC
+** company dict
+#+BEGIN_SRC emacs-lisp
+  (require 'company-dict)
+
+  ;; Where to look for dictionary files. Default is ~/.emacs.d/dict
+  (setq company-dict-dir "~/.emacs.d/dict/")
+
+  ;; Optional: if you want it available everywhere
+  (add-to-list 'company-backends 'company-dict)
 #+END_SRC
 * helper functions
 
@@ -1651,7 +1661,7 @@ pip install virtualenv
   (global-set-key "\C-s" 'swiper)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
   ;; (global-set-key (kbd "<f6>") 'ivy-resume)
-  ;(global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   ;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
   ;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
