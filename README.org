@@ -532,6 +532,19 @@ Emacs interface to =ag=:
     (w32-shell-execute
      "open" "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe" "c:\\kimikit\\Autohotkey\\lookinsight.ahk"))
 #+END_SRC
+** imenu
+
+=imenu= is used to navigate the function definitions in current buffer.
+
+#+BEGIN_SRC emacs-lisp
+  (defun kimim/imenu-default-goto-function-advice (orig-fun &rest args)
+    (apply orig-fun args)
+    (recenter))
+
+  (advice-add 'imenu-default-goto-function
+              :around
+              #' kimim/imenu-default-goto-function-advice)
+#+END_SRC
 * auto-complete
 ** ivy-mode
 
