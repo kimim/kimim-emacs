@@ -397,7 +397,13 @@ All the extensions used in this file are installed and managed by =package=.
   ;;    (volatile-highlights-mode t)
   ;;    :diminish volatile-highlights-mode)
 #+END_SRC
+** undo-tree
 
+#+BEGIN_SRC emacs-lisp
+  (use-package undo-tree
+    :config
+    (global-undo-tree-mode))
+#+END_SRC
 * Controlling
 ** Window and Frame
 #+BEGIN_SRC emacs-lisp
