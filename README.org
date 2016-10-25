@@ -432,9 +432,14 @@ All the extensions used in this file are installed and managed by =package=.
               (dired-omit-mode 1)
               (setq dired-omit-localp t)
               (setq dired-omit-files
-                    "|NTUSER\\|ntuser\\|Cookies\\|AppData\\\
-    |Contacts\\|Links\\|Intel\\|NetHood\\|PrintHood\\|Recent\\|Start\\|SendTo\\\
-    |^\\.DS_Store")))
+                    (concat "|NTUSER\\|ntuser\\"
+                            "|Cookies\\|AppData\\"
+                            "|Contacts\\|Links\\"
+                            "|Intel\\|NetHood\\"
+                            "|PrintHood\\|Recent\\"
+                            "|Start\\|SendTo\\"
+                            "|^\\.DS_Store\\"
+                            "|qms-bmh"))))
   ;; Dired buffer 中列出文件时传递给 ls 的参数。加个 "l" 可以使大写的文
   ;; 件名在顶部，临时的改变可以用 C-u s。
   (setq dired-listing-switches "-avhl")
@@ -528,6 +533,13 @@ Emacs interface to =ag=:
 
 ** Everything
 
+Everything[fn:10] is a wonderful fast file and folder search engine, it provide
+a command line tool to get search result from Everything to command line output:
+=es.exe= [fn:11].
+
+Reminded that Everything should be running in background to do the real search
+task for =es.exe=.
+
 #+BEGIN_SRC emacs-lisp
   (require 'everything)
   (setq everything-cmd "c:\\kimikit\\bin\\es.exe")
@@ -546,7 +558,7 @@ Emacs interface to =ag=:
     (w32-shell-execute
      "open" "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe" "c:\\kimikit\\Autohotkey\\lookinsight.ahk"))
 #+END_SRC
-** imenu
+** imenu & imenu-anywhere
 
 =imenu= is used to navigate the function definitions in current buffer.
 
@@ -558,6 +570,9 @@ Emacs interface to =ag=:
   (advice-add 'imenu-default-goto-function
               :around
               #' kimim/imenu-default-goto-function-advice)
+
+  ;;(global-set-key "\C-cj" 'imenu)
+  ;;(global-set-key "\C-ci" 'imenu-anywhere)
 #+END_SRC
 * auto-complete
 ** ivy-mode
@@ -595,8 +610,8 @@ add following lines:
   (setq warning-suppress-types '((yasnippet backquote-change)))
 #+END_SRC
 
-** auto-complete
-#+BEGIN_SRC
+** COMMENT auto-complete
+#+BEGIN_SRC emacs-lisp
   ;; intelligent completion setting
   (require 'auto-complete-config)
   (add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
@@ -1176,7 +1191,7 @@ add following lines:
 #+END_SRC
 ** Python
 
-=Python= development configuration is quite easy. =elpy= [fn:10] is used here:
+Python development configuration is quite easy. =elpy= [fn:12] is used here:
 
 #+BEGIN_SRC emacs-lisp
   (elpy-enable)
@@ -1977,4 +1992,8 @@ pip install virtualenv
 
 [fn:9] https://github.com/Wilfred/ag.el
 
-[fn:10] https://github.com/jorgenschaefer/elpy
+[fn:10] http://www.voidtools.com
+
+[fn:11] http://www.voidtools.com/es.zip
+
+[fn:12] https://github.com/jorgenschaefer/elpy
