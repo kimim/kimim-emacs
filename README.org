@@ -102,7 +102,6 @@ As I have a Windows box in the office, and a Apple macOS at home, so I need to
 specify these variables in different way.
 
 #+BEGIN_SRC emacs-lisp
-  (require 'info)
   (cond ((eq window-system 'w32)
          (setq path-root "C:/cygwin/")
          (add-to-list 'exec-path
@@ -192,20 +191,6 @@ All the extensions used in this file are installed and managed by =package=.
           ("marmalade" . "https://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
   (package-initialize)
-
-  (defun ensure-package-installed (&rest packages)
-    "Assure every package is installed, ask for installation if
-  it’s not.  a list of installed packages or nil for every skipped
-  package."
-    (mapcar
-     (lambda (package)
-       ;; (package-installed-p 'evil)
-       (if (package-installed-p package)
-           nil
-         (if (y-or-n-p (format "Package %s is missing. Install it? " package))
-             (package-install package)
-           package)))
-     packages))
 #+END_SRC
 * Appearance
 ** Font and Color
@@ -407,22 +392,38 @@ All the extensions used in this file are installed and managed by =package=.
 * Controlling
 ** Window and Frame
 #+BEGIN_SRC emacs-lisp
-  (winner-mode t)                       ; restore windows configuration
-  (window-numbering-mode 1)
+  (use-package winner
+    ;; restore windows configuration, built-in package
+    :commands winner-mode
+    :config
+    (winner-mode t))
+
+  (use-package window-numbering
+    :ensure t
+    :commands window-numbering-mode
+    :config
+    (window-numbering-mode 1))
 #+END_SRC
 
 ** Command
+
+Here I use =use-package= to defer the package loading and even installation,
+When you use the =:commands= keyword, it creates autoloads for those commands
+and defers loading of the module until they are used.
+
 #+BEGIN_SRC emacs-lisp
   ;; https://github.com/justbur/emacs-which-key
-  (use-package which-key-mode
+  (use-package which-key
+    :ensure t
     :config
-    (which-key-mode 1)
     ;; use minibuffer as the popup type, otherwise conflict in ecb mode
-    (setq which-key-popup-type 'minibuffer))
+    (setq which-key-popup-type 'minibuffer)
+    (which-key-mode 1))
 
   ;; smex will list the recent function on top of the cmd list
   (use-package smex
-    :config
+    :ensure t
+     :config
     (smex-initialize))
 #+END_SRC
 * Dired and Buffer
@@ -531,15 +532,18 @@ All the extensions used in this file are installed and managed by =package=.
     (grep-find (concat grep-find-command (buffer-substring-no-properties (region-beginning) (region-end)))))
 #+END_SRC
 
-** the silver searcher
+** ag: the silver searcher
 
 =ag= [fn:8] is really a very fast grep tool, and =ag.el= [fn:9] provide the
 Emacs interface to =ag=:
 
 #+BEGIN_SRC emacs-lisp
-  ;; (require 'ag)
-  ;; (global-set-key "\C-xg" 'ag-project)
-  (setq ag-highlight-search t)
+  (use-package ag
+    :ensure t
+    :bind
+    ("C-x g" . ag-project)
+    :config
+    (setq ag-highlight-search t))
 #+END_SRC
 
 ** Everything
@@ -552,8 +556,10 @@ Reminded that Everything should be running in background to do the real search
 task for =es.exe=.
 
 #+BEGIN_SRC emacs-lisp
-  (require 'everything)
-  (setq everything-cmd "c:\\kimikit\\bin\\es.exe")
+  (use-package everything
+    :ensure t
+    :init
+    (setq everything-cmd "c:\\kimikit\\bin\\es.exe"))
 #+END_SRC
 
 ** Other search utils
@@ -1609,71 +1615,76 @@ pip install virtualenv
 * deft for note management
 
 #+BEGIN_SRC emacs-lisp
-  (setq deft-extensions '("txt" "tex" "org" "md"))
-  (setq deft-directory (concat path-sync-home "notes/"))
-  (setq deft-recursive t)
-  (setq deft-file-naming-rules '((noslash . "_")))
-  (setq deft-text-mode 'org-mode)
-  (setq deft-use-filter-string-for-filename t)
-  (setq deft-org-mode-title-prefix t)
-  (setq deft-use-filename-as-title nil)
-  (setq deft-strip-summary-regexp
-        (concat "\\("
-                "[\n\t]" ;; blank
-                "\\|^#\\+[[:upper:]_]+:.*$" ;; org-mode metadata
-                "\\|^#\\+[[:alnum:]_]+:.*$" ;; org-mode metadata
-                "\\)"))
+  (use-package deft
+    :ensure t
+    :bind (("C-x d" . deft-find-file)
+           ("C-x C-d" . deft))
+    :config
+    (setq deft-extensions '("txt" "tex" "org" "md"))
+    (setq deft-directory (concat path-sync-home "notes/"))
+    (setq deft-recursive t)
+    (setq deft-file-naming-rules '((noslash . "_")))
+    (setq deft-text-mode 'org-mode)
+    (setq deft-use-filter-string-for-filename t)
+    (setq deft-org-mode-title-prefix t)
+    (setq deft-use-filename-as-title nil)
+    (setq deft-strip-summary-regexp
+          (concat "\\("
+                  "[\n\t]" ;; blank
+                  "\\|^#\\+[[:upper:]_]+:.*$" ;; org-mode metadata
+                  "\\|^#\\+[[:alnum:]_]+:.*$" ;; org-mode metadata
+                  "\\)"))
 
-  ;; generate timestamp such as 2016_1031KJ__ for file name
-  (defun kimim/genfile-timestamp()
-    (concat (format-time-string "%Y_%m%d")
-            (char-to-string (+ 65 (random 26)))
-            (char-to-string (+ 65 (random 26)))
-            "__"))
+    ;; generate timestamp such as 2016_1031KJ__ for file name
+    (defun kimim/genfile-timestamp()
+      (concat (format-time-string "%Y_%m%d")
+              (char-to-string (+ 65 (random 26)))
+              (char-to-string (+ 65 (random 26)))
+              "__"))
 
-  ;;advise deft-open-file to replace spaces in file names with _
-  (defun kimim/deft-open-file-advice (orig-fun &rest args)
-    (setq name (pop args))
-    (if (file-exists-p name)
+    ;;advise deft-open-file to replace spaces in file names with _
+    (defun kimim/deft-open-file-advice (orig-fun &rest args)
+      (setq name (pop args))
+      (if (file-exists-p name)
+          (progn
+            (push name args)
+            (apply orig-fun args))
         (progn
+          (setq title (file-name-sans-extension
+                       (file-name-nondirectory name)))
+          (setq name (concat
+                      (file-name-directory name)
+                      (kimim/genfile-timestamp)
+                      (downcase
+                       (replace-regexp-in-string
+                        " " "_" (file-name-nondirectory name)))
+                      (if (not (file-name-extension name))
+                          ".txt")))
           (push name args)
-          (apply orig-fun args))
-      (progn
-        (setq title (file-name-sans-extension
-                     (file-name-nondirectory name)))
-        (setq name (concat
-                    (file-name-directory name)
-                    (kimim/genfile-timestamp)
-                    (downcase
-                     (replace-regexp-in-string
-                      " " "_" (file-name-nondirectory name)))
-                    (if (not (file-name-extension name))
-                        ".txt")))
-        (push name args)
-        (apply orig-fun args)
-        (insert (concat "#+TITLE: " title "\n\n")))))
+          (apply orig-fun args)
+          (insert (concat "#+TITLE: " title "\n\n")))))
 
-  (advice-add 'deft-open-file :around #'kimim/deft-open-file-advice)
+    (advice-add 'deft-open-file :around #'kimim/deft-open-file-advice)
 
-  (defun kimim/deft-new-file-named-advice (orig-fun &rest args)
-    (setq name (pop args))
-    (setq title name)
-    (setq name (concat
-                (kimim/genfile-timestamp)
-                (downcase
-                 (replace-regexp-in-string
-                  " " "_" name))))
-    (push name args)
-    (apply orig-fun args)
-    (insert (concat "#+TITLE: " title "\n\n")))
+    (defun kimim/deft-new-file-named-advice (orig-fun &rest args)
+      (setq name (pop args))
+      (setq title name)
+      (setq name (concat
+                  (kimim/genfile-timestamp)
+                  (downcase
+                   (replace-regexp-in-string
+                    " " "_" name))))
+      (push name args)
+      (apply orig-fun args)
+      (insert (concat "#+TITLE: " title "\n\n")))
 
-  (advice-add 'deft-new-file-named :around #'kimim/deft-new-file-named-advice)
+    (advice-add 'deft-new-file-named :around #'kimim/deft-new-file-named-advice)
 
-  (defun kimim/save-buffer-advice (orig-fun &rest arg)
-    (delete-trailing-whitespace)
-    (apply orig-fun arg))
+    (defun kimim/save-buffer-advice (orig-fun &rest arg)
+      (delete-trailing-whitespace)
+      (apply orig-fun arg))
 
-  (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
+    (advice-add 'save-buffer :around #'kimim/save-buffer-advice))
 #+END_SRC
 * jekyll
 #+BEGIN_SRC emacs-lisp
@@ -1845,8 +1856,6 @@ pip install virtualenv
   ;; (global-set-key (kbd "<f6>") 'ivy-resume)
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  (global-set-key (kbd "C-x d") 'deft-find-file)
-  (global-set-key (kbd "C-x C-d") 'deft)
   ;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
   ;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
   ;; (global-set-key (kbd "<f1> l") 'counsel-load-library)
@@ -1887,7 +1896,6 @@ pip install virtualenv
                                     (insert ?_)))
   ;;(global-set-key "\C-cs" 'helm-swoop)
   (global-set-key "\C-cg" 'ggtags-grep)
-  (global-set-key "\C-xg" 'ag-project)
   (global-set-key "\C-x\C-b" 'ibuffer-other-window)
   (global-set-key "\C-h" 'delete-backward-char)
   (global-set-key "\M-h" 'backward-kill-word)
