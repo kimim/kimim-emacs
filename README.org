@@ -71,9 +71,9 @@ means, no synchronization. So please set these variables in your =.emacs= file.
 #+BEGIN_SRC emacs-lisp
   ;; Synchronization Folders
   (if (not (boundp 'path-sync-work))
-      (setq path-sync-work "~/"))
+      (defvar path-sync-work "~/"))
   (if (not (boundp 'path-sync-home))
-      (setq path-sync-home "~/"))
+      (defvar path-sync-home "~/"))
 #+END_SRC
 
 ** kimim-emacs path
@@ -89,7 +89,7 @@ git clone https://github.com/kimim/kimim-emacs.git
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-  (setq path-kimim-emacs "~/kimim-emacs/")
+  (defvar path-kimim-emacs "~/kimim-emacs/")
 #+END_SRC
 
 ** PATH, exec-path and Info
@@ -102,6 +102,7 @@ As I have a Windows box in the office, and a Apple macOS at home, so I need to
 specify these variables in different way.
 
 #+BEGIN_SRC emacs-lisp
+  (defvar path-root "/")
   (cond ((eq window-system 'w32)
          (setq path-root "C:/cygwin/")
          (add-to-list 'exec-path
@@ -513,8 +514,10 @@ and defers loading of the module until they are used.
 
 * Navigation
 #+BEGIN_SRC emacs-lisp
-  ;; (define-key ctl-x-m-map "t" 'bm-toggle)
-  ;; (define-key ctl-x-m-map "s" 'bm-show-all)
+  (use-package bm
+    :ensure t
+    :bind (("C-x m t" . bm-toggle)
+           ("C-x m s" . bm-show-all)))
 #+END_SRC
 * Search and Finding
 ** Grep
@@ -1283,8 +1286,8 @@ pip install virtualenv
 
 #+BEGIN_SRC emacs-lisp
   ;; path and system environment setting for orgmode
-  (setq path-org-home (concat path-sync-home "org/"))
-  (setq path-org-work (concat path-sync-work "org/"))
+  (defvar path-org-home (concat path-sync-home "org/"))
+  (defvar path-org-work (concat path-sync-work "org/"))
 #+END_SRC
 
 ** orgmode as GTD system
@@ -1953,8 +1956,6 @@ pip install virtualenv
   (define-key ctl-x-m-map "f" 'make-frame)
   ;; Make a new frame
   (define-key ctl-x-m-map "p" 'helm-global-mark-ring)
-  (define-key ctl-x-m-map "t" 'bm-toggle)
-  (define-key ctl-x-m-map "s" 'bm-show-all)
   ;; 查看光标处的单词的 man page
   (define-key ctl-x-m-map "m" 'man-follow)
   ;; magit-status for git
