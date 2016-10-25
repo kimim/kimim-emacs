@@ -408,9 +408,16 @@ All the extensions used in this file are installed and managed by =package=.
 ** Command
 #+BEGIN_SRC emacs-lisp
   ;; https://github.com/justbur/emacs-which-key
-  (which-key-mode 1)
-  ;; use minibuffer as the popup type, otherwise conflict in ecb mode
-  (setq which-key-popup-type 'minibuffer)
+  (use-package which-key-mode
+    :config
+    (which-key-mode 1)
+    ;; use minibuffer as the popup type, otherwise conflict in ecb mode
+    (setq which-key-popup-type 'minibuffer))
+
+  ;; smex will list the recent function on top of the cmd list
+  (use-package smex
+    :config
+    (smex-initialize))
 #+END_SRC
 * Dired and Buffer
 
@@ -914,7 +921,6 @@ add following lines:
       (when bfn
         (progn
           (add-to-list 'kimim/last-edit-list (cons bfn end))))))
-
 
   (add-hook 'after-change-functions 'kimim/buffer-edit-hook)
   (global-set-key (kbd "M-`") 'kimim/backward-last-edit)
@@ -1891,6 +1897,7 @@ pip install virtualenv
   (global-set-key "\C-c=" 'get-file-line)
   (global-set-key "\C-cd" 'kimim/lookinsight)
   (global-set-key "\C-cj" 'imenu)
+  (global-set-key "\C-ci" 'imenu-anywhere)
   (global-set-key "\C-cf" 'ggtags-find-file)
 
   (define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)

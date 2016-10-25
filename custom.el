@@ -7,6 +7,7 @@
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
    (vector "#c5c8c6" "#cc6666" "#b5bd68" "#f0c674" "#81a2be" "#b294bb" "#8abeb7" "#373b41"))
+ '(bmkp-last-as-first-bookmark-file "~/.emacs.d/emacs.bmk")
  '(custom-enabled-themes (quote (sanityinc-tomorrow-blue)))
  '(ecb-compilation-buffer-names
    (quote
@@ -59,9 +60,8 @@
  '(ggtags-find-tag-hook (quote (recenter)))
  '(package-selected-packages
    (quote
-    (company-jedi www-synonyms synonyms deft dumb-jump goto-last-change multiple-cursors company-dict wgrep-ag "swiper" counsel swiper swoop ag company-c-headers company-irony-c-headers flycheck-irony projectile company-irony irony color-theme path-headerline-mode auto-highlight-symbol autopair paredit swift-mode mocker which-key window-numbering volatile-highlights use-package pallet package-build shut-up epl git commander f s cask markdown-mode ggtags org jedi col-highlight ox-ioslide company history drag-stuff whole-line-or-region w32-registry ox-html5slide htmlize graphviz-dot-mode google-c-style gnuplot find-file-in-repository fill-column-indicator everything elpy ecb cygwin-mount color-theme-github browse-kill-ring bbdb ace-window ace-isearch)))
- '(python-shell-interpreter
-   "python")
+    (smex imenu-anywhere imenu+ bookmark+ bm company-jedi www-synonyms synonyms deft dumb-jump goto-last-change multiple-cursors company-dict wgrep-ag "swiper" counsel swiper swoop ag company-c-headers company-irony-c-headers flycheck-irony projectile company-irony irony color-theme path-headerline-mode auto-highlight-symbol autopair paredit swift-mode mocker which-key window-numbering volatile-highlights use-package pallet package-build shut-up epl git commander f s cask markdown-mode ggtags org jedi col-highlight ox-ioslide company history drag-stuff whole-line-or-region w32-registry ox-html5slide htmlize graphviz-dot-mode google-c-style gnuplot find-file-in-repository fill-column-indicator everything elpy ecb cygwin-mount color-theme-github browse-kill-ring bbdb ace-window ace-isearch)))
+ '(python-shell-interpreter "python")
  '(safe-local-variable-values
    (quote
     ((eval ispell-change-dictionary "en_US")
