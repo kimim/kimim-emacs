@@ -504,6 +504,11 @@ All the extensions used in this file are installed and managed by =package=.
                 filename-and-process)))
 #+END_SRC
 
+* Navigation
+#+BEGIN_SRC emacs-lisp
+  ;; (define-key ctl-x-m-map "t" 'bm-toggle)
+  ;; (define-key ctl-x-m-map "s" 'bm-show-all)
+#+END_SRC
 * Search and Finding
 ** Grep
 #+BEGIN_SRC emacs-lisp
@@ -1874,15 +1879,7 @@ pip install virtualenv
 
   (global-set-key (kbd "<M-SPC>") (lambda () (interactive)
                                     (insert ?_)))
-  ;;(global-set-key (kbd "-") (lambda () (interactive)
-  ;;                            (insert ?_)))
-  ;;(global-set-key (kbd "_") (lambda () (interactive)
-  ;;                            (insert ?-)))
-  ;;(global-set-key "\M-x" 'helm-M-x)
-  ;;(global-set-key "\C-x\C-f" 'helm-find-files)
-  ;;(global-set-key "\C-x/" 'helm-global-mark-ring)
   ;;(global-set-key "\C-cs" 'helm-swoop)
-  ;;(global-set-key "\C-xg" 'grep-find)
   (global-set-key "\C-cg" 'ggtags-grep)
   (global-set-key "\C-xg" 'ag-project)
   (global-set-key "\C-x\C-b" 'ibuffer-other-window)
@@ -1895,12 +1892,7 @@ pip install virtualenv
   (global-set-key "\C-xk" 'kill-this-buffer)
   (global-set-key "\C-x\C-v" 'view-file-other-window)
   (global-set-key "\C-c\C-o" 'occur)
-  ;;(global-set-key "\C-c;" 'flyspell-correct-word-before-point) not available in org mode
   (global-set-key "\C-z" 'set-mark-command)
-  ;;(global-set-key "\M-/" 'hippie-expand)
-  ;;(global-set-key "\M-/" 'ac-clang-async-autocomplete-autotrigger)
-  (global-set-key "\M-\\" 'ac-complete-clang-async)
-  (global-set-key "\M-/" 'ac-complete-imenu)
   (global-set-key "\M-o" 'other-window)
   (global-set-key "\M-n" 'next-error)
   (global-set-key "\M-p" 'previous-error)
@@ -1934,8 +1926,7 @@ pip install virtualenv
     (setq mac-option-modifier 'alt)
     (setq mac-command-modifier 'meta)
     ;; sets fn-delete to be right-delete
-    (global-set-key [kp-delete] 'delete-char)
-    )
+    (global-set-key [kp-delete] 'delete-char))
 
   (define-prefix-command 'ctl-x-m-map)
   ;; 定义了一个新的前缀，并且绑定到 C-x m
@@ -1948,17 +1939,14 @@ pip install virtualenv
   (define-key ctl-x-m-map "f" 'make-frame)
   ;; Make a new frame
   (define-key ctl-x-m-map "p" 'helm-global-mark-ring)
+  (define-key ctl-x-m-map "t" 'bm-toggle)
+  (define-key ctl-x-m-map "s" 'bm-show-all)
   ;; 查看光标处的单词的 man page
   (define-key ctl-x-m-map "m" 'man-follow)
   ;; magit-status for git
   (define-key ctl-x-m-map "g" 'magit-status)
   ;;查看 kill-ring，都曾经 kill 过哪些文本
   (define-key ctl-x-m-map "l" 'browse-kill-ring)
-  ;; update ac-clang-complete-async cflags
-  (define-key ctl-x-m-map "u" (lambda()
-                                (interactive)
-  ;;                              (setq ac-sources '(ac-source-clang-async))
-                                (ac-clang-update-cmdlineargs)))
 
   ;; C-x r j ?x 打開常用文件
   (set-register ?e '(file . "~/kimim-emacs/init.el"))
