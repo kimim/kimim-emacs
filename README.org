@@ -3,6 +3,9 @@
 This Emacs configuration file is written with literate programming method.[fn:1]
 =.el= file is loaded by extracting source code from this file.
 
+The source code block marked with =:tangle yes= is extracted and loaded, while
+others are not loaded.
+
 * Preparation
 ** Windows
 *** Starter Script
@@ -167,15 +170,6 @@ specify these variables in different way.
            path-root "usr/bin" path-separator
            path-root "usr/local/bin" path-separator
            (getenv "PATH")))
-
-  (require 'info)
-  (add-to-list 'Info-additional-directory-list
-               (concat path-root "usr/share/info"))
-  (add-to-list 'Info-additional-directory-list
-               (concat path-root "usr/local/share/info"))
-  ;; additional info, collected from internet
-  (add-to-list 'Info-additional-directory-list
-               (concat "~/info"))
 #+END_SRC
 
 ** Language
@@ -280,8 +274,12 @@ All the extensions used in this file are installed and managed by =package=.
   (setq font-lock-global-modes '(not shell-mode text-mode))
   (setq font-lock-verbose t)
   (global-font-lock-mode 1)                 ; 开启语法高亮
-  (load-file (concat path-kimim-emacs "site-lisp/color-theme-kimim.el"))
-  (color-theme-kimim)
+  (use-package color-theme-kimim
+    :ensure nil
+    :load-path "~/kimim-emacs/site-lisp/"
+    :config
+    (color-theme-kimim)
+    )
 #+END_SRC
 * Highlight
 #+BEGIN_SRC emacs-lisp
@@ -306,6 +304,18 @@ All the extensions used in this file are installed and managed by =package=.
   (tooltip-mode nil)
 #+END_SRC
 
+* Info
+#+BEGIN_SRC emacs-lisp
+  (use-package info
+    :config
+    (add-to-list 'Info-additional-directory-list
+                 (concat path-root "usr/share/info"))
+    (add-to-list 'Info-additional-directory-list
+                 (concat path-root "usr/local/share/info"))
+    ;; additional info, collected from internet
+    (add-to-list 'Info-additional-directory-list
+                 (concat "~/info")))
+#+END_SRC
 * Editing
 
 #+BEGIN_SRC emacs-lisp
@@ -343,16 +353,8 @@ All the extensions used in this file are installed and managed by =package=.
   (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S kimi")
   (add-hook 'write-file-hooks 'time-stamp); 自动更新 time-stamp
 
-  (defun kimim/delete-trailing-whitespace (&optional start end)
-    (interactive)
-    (if (or (not (boundp 'deft-auto-save-buffers))
-            (not (member (current-buffer) deft-auto-save-buffers)))
-        (delete-trailing-whitespace)))
   (add-hook 'before-save-hook 'kimim/delete-trailing-whitespace)
 
-  (defun kimim/save-buffer-advice (orig-fun &rest arg)
-    (delete-trailing-whitespace)
-    (apply orig-fun arg))
 
   (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
 
@@ -458,79 +460,82 @@ and defers loading of the module until they are used.
   ;;==============================================================================
   ;; Settings for dired mode
   ;;==============================================================================
-  (require 'dired-x)
-  (add-hook 'dired-mode-hook
-            (lambda ()
-              ;; Set dired-x buffer-local variables here.  For example:
-              (dired-omit-mode 1)
-              (setq dired-omit-localp t)
-              (setq dired-omit-files
-                    (concat "|NTUSER\\|ntuser\\"
-                            "|Cookies\\|AppData\\"
-                            "|Contacts\\|Links\\"
-                            "|Intel\\|NetHood\\"
-                            "|PrintHood\\|Recent\\"
-                            "|Start\\|SendTo\\"
-                            "|^\\.DS_Store\\"
-                            "|qms-bmh"))))
-  ;; Dired buffer 中列出文件时传递给 ls 的参数。加个 "l" 可以使大写的文
-  ;; 件名在顶部，临时的改变可以用 C-u s。
-  (setq dired-listing-switches "-avhl")
-  ;; 复制(删除)目录的时，第归的复制(删除)其中的子目录。
-  (setq dired-recursive-copies t)
-  (setq dired-recursive-deletes t)
-  (define-key dired-mode-map (kbd "<left>") 'dired-up-directory)
-  (define-key dired-mode-map (kbd "<right>") 'dired-find-file)
+  (use-package dired
+    :ensure nil
+    :config
+    (require 'dired-x)
+    (add-hook 'dired-mode-hook
+              (lambda ()
+                ;; Set dired-x buffer-local variables here.  For example:
+                (dired-omit-mode 1)
+                (setq dired-omit-localp t)
+                (setq dired-omit-files
+                      (concat "|NTUSER\\|ntuser\\"
+                              "|Cookies\\|AppData\\"
+                              "|Contacts\\|Links\\"
+                              "|Intel\\|NetHood\\"
+                              "|PrintHood\\|Recent\\"
+                              "|Start\\|SendTo\\"
+                              "|^\\.DS_Store\\"
+                              "|qms-bmh"))))
+    ;; Dired buffer 中列出文件时传递给 ls 的参数。加个 "l" 可以使大写的文
+    ;; 件名在顶部，临时的改变可以用 C-u s。
+    (setq dired-listing-switches "-avhl")
+    ;; 复制(删除)目录的时，第归的复制(删除)其中的子目录。
+    (setq dired-recursive-copies t)
+    (setq dired-recursive-deletes t)
+    (define-key dired-mode-map (kbd "<left>") 'dired-up-directory)
+    (define-key dired-mode-map (kbd "<right>") 'dired-find-file)
 
-  (defadvice dired-next-line (after dired-next-line-advice (arg) activate)
-    "Move down lines then position at filename, advice"
-    (interactive "p")
-    (if (eobp)
-        (progn
-          (goto-char (point-min))
-          (forward-line 2)
-          (dired-move-to-filename))))
+    (defadvice dired-next-line (after dired-next-line-advice (arg) activate)
+      "Move down lines then position at filename, advice"
+      (interactive "p")
+      (if (eobp)
+          (progn
+            (goto-char (point-min))
+            (forward-line 2)
+            (dired-move-to-filename))))
 
-  (defadvice dired-previous-line (before dired-previous-line-advice (arg) activate)
-    "Move up lines then position at filename, advice"
-    (interactive "p")
-    (if (= 3 (line-number-at-pos))
-        (goto-char (point-max))))
+    (defadvice dired-previous-line (before dired-previous-line-advice (arg) activate)
+      "Move up lines then position at filename, advice"
+      (interactive "p")
+      (if (= 3 (line-number-at-pos))
+          (goto-char (point-max)))))
 
-  (require 'ibuffer)
+  (use-package ibuffer
+    :config
+    (defun ibuffer-visit-buffer-other-window (&optional noselect)
+      "Visit the buffer on this line in another window."
+      (interactive)
+      (let ((buf (ibuffer-current-buffer t)))
+        (bury-buffer (current-buffer))
+        (if noselect
+            (let ((curwin (selected-window)))
+              (pop-to-buffer buf)
+              (select-window curwin))
+          (switch-to-buffer-other-window buf)
+          (kill-buffer-and-its-windows "*Ibuffer*")
+          )))
 
-  (defun ibuffer-visit-buffer-other-window (&optional noselect)
-    "Visit the buffer on this line in another window."
-    (interactive)
-    (let ((buf (ibuffer-current-buffer t)))
-      (bury-buffer (current-buffer))
-      (if noselect
-          (let ((curwin (selected-window)))
-            (pop-to-buffer buf)
-            (select-window curwin))
-        (switch-to-buffer-other-window buf)
-        (kill-buffer-and-its-windows "*Ibuffer*")
-        )))
+    ;; Use human readable Size column instead of original one
+    (define-ibuffer-column size-h
+      (:name "Size" :inline t)
+      (cond
+       ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+       ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+       ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+       (t (format "%8d" (buffer-size)))))
 
-  ;; Use human readable Size column instead of original one
-  (define-ibuffer-column size-h
-    (:name "Size" :inline t)
-    (cond
-     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
-     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
-     (t (format "%8d" (buffer-size)))))
-
-  ;; Modify the default ibuffer-formats
-  (setq ibuffer-formats
-        '((mark modified read-only " "
-                (name 18 18 :left :elide)
-                " "
-                (size-h 9 -1 :right)
-                " "
-                (mode 16 16 :left :elide)
-                " "
-                filename-and-process)))
+    ;; Modify the default ibuffer-formats
+    (setq ibuffer-formats
+          '((mark modified read-only " "
+                  (name 18 18 :left :elide)
+                  " "
+                  (size-h 9 -1 :right)
+                  " "
+                  (mode 16 16 :left :elide)
+                  " "
+                  filename-and-process))))
 #+END_SRC
 
 * Navigation
@@ -540,21 +545,6 @@ and defers loading of the module until they are used.
            ("C-x m s" . bm-show-all)))
 #+END_SRC
 * Search and Finding
-** Grep
-#+BEGIN_SRC emacs-lisp
-  (defadvice grep-compute-defaults (around grep-compute-defaults-advice-null-device)
-    "Use cygwin's /dev/null as the null-device."
-    (let ((null-device "/dev/null"))
-      ad-do-it))
-  (ad-activate 'grep-compute-defaults)
-  (setq grep-find-command
-        "find . -type f -not -name \"*.svn-base\" -and -not -name \"*#\" -and -not -name \"*.tmp\" -and -not -name \"*.obj\" -and -not -name \"*.386\" -and -not -name \"*.img\" -and -not -name \"*.LNK\" -and -not -name GTAGS -print0 | xargs -0 grep -n -e ")
-
-  (defun kimim/grep-find()
-    (interactive)
-    (grep-find (concat grep-find-command (buffer-substring-no-properties (region-beginning) (region-end)))))
-#+END_SRC
-
 ** ag: the silver searcher
 
 =ag= [fn:8] is really a very fast grep tool, and =ag.el= [fn:9] provide the
@@ -599,19 +589,6 @@ task for =es.exe=.
   (use-package imenu-anywhere)
 #+END_SRC
 
-** Other search utils
-#+BEGIN_SRC emacs-lisp
-  (defun kimim/look-from-mydict()
-    (interactive)
-    (browse-url (concat "http://www.mydict.com/index.php?controller=Dict_German&action=Search&keyword="
-                        (buffer-substring-no-properties (region-beginning) (region-end)))))
-
-  (defun kimim/lookinsight ()
-    (interactive)
-    (kill-ring-save (region-beginning) (region-end))
-    (w32-shell-execute
-     "open" "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe" "c:\\kimikit\\Autohotkey\\lookinsight.ahk"))
-#+END_SRC
 * auto-complete
 ** ivy-mode
 
@@ -679,335 +656,6 @@ add following lines:
     (setq company-dict-dir "~/.emacs.d/dict/")
     ;; Optional: if you want it available everywhere
     (add-to-list 'company-backends 'company-dict))
-#+END_SRC
-* helper functions
-
-#+BEGIN_SRC emacs-lisp
-  ;; generate timestamp such as 2016_1031KJ__ for file name
-  (defun kimim/genfile-timestamp()
-    (concat (format-time-string "%Y_%m%d")
-            (char-to-string (+ 65 (random 26)))
-            (char-to-string (+ 65 (random 26)))
-            "__"))
-
-  ;; self define functions
-  (defun kimim/imenu-default-goto-function-advice (orig-fun &rest args)
-    (apply orig-fun args)
-    (recenter))
-
-  (defun now () (interactive)
-         (insert (shell-command-to-string "date")))
-
-  (defun day ()
-    "Insert string for today's date nicely formatted in American style,
-    e.g. Sunday, September 17, 2000."
-    (interactive)                 ; permit invocation in minibuffer
-    (insert (format-time-string "%A, %B %e, %Y")))
-
-  (defun today ()
-    "Insert string for today's date nicely formatted in American style,
-    e.g. 2000-10-12."
-    (interactive)                 ; permit invocation in minibuffer
-    (insert (format-time-string "%Y-%m-%d")))
-
-  (defun toyear ()
-    "Insert string for today's date nicely formatted in American style,
-    e.g. 2000."
-    (interactive)                 ; permit invocation in minibuffer
-    (insert (format-time-string "%Y")))
-
-
-  (defun get-file-line ()
-    "Show (and set kill-ring) current file and line"
-    (interactive)
-    (unless (buffer-file-name)
-      (error "No file for buffer %s" (buffer-name)))
-    (let ((msg (format "%s::%d"
-                       (file-truename (buffer-file-name))
-                       (line-number-at-pos))))
-      (kill-new msg)
-      (message msg)))
-
-
-  (defun open-folder-in-explorer ()
-    "Call when editing a file in a buffer.
-    Open windows explorer in the current directory and select the current file"
-    (interactive)
-    (w32-shell-execute
-     "open" "explorer"
-     (concat "/e,/select," (convert-standard-filename buffer-file-name))
-     ))
-
-
-  (defun mac-open-terminal ()
-    (interactive)
-    (let ((dir ""))
-      (cond
-       ((and (local-variable-p 'dired-directory) dired-directory)
-        (setq dir dired-directory))
-       ((stringp (buffer-file-name))
-        (setq dir (file-name-directory (buffer-file-name))))
-       ((stringp default-directory)
-        (setq dir default-directory))
-       )
-      (do-applescript
-       (format "
-     tell application \"Terminal\"
-       activate
-       try
-         do script with command \"cd %s\"
-       on error
-         beep
-       end try
-     end tell" dir))
-      ))
-
-  (defun kimim/cmd ()
-    "Open cmd.exe from emacs just as you type: Win-R, cmd, return."
-    (interactive)
-    (w32-shell-execute
-     "open" "c:\\kimikit\\PyCmd\\PyCmd.exe"))
-
-  (defun kimim/cyg ()
-    "Open cygwin mintty from emacs."
-    (interactive)
-    (cond ((eq window-system 'w32)
-           (w32-shell-execute
-            "open" "mintty" " -e bash"))
-          ((eq window-system 'ns)
-           (mac-open-terminal))))
-
-  (defun kimim/4nt ()
-    "Open 4NT terminal"
-    (interactive)
-    (w32-shell-execute
-     "open" "4nt"))
-
-  (defun kimim/dc ()
-    "Open file location in double commander"
-    (interactive)
-    (w32-shell-execute
-     "open" "doublecmd" (concat "-L " (replace-regexp-in-string "/" "\\\\" (pwd)))))
-
-  (defun kill-dired-buffers()
-    "Kill all dired buffers."
-    (interactive)
-    (save-excursion
-      (let((count 0))
-        (dolist(buffer (buffer-list))
-          (set-buffer buffer)
-          (when (equal major-mode 'dired-mode)
-            (setq count (1+ count))
-            (kill-buffer buffer)))
-        (message "Killed %i dired buffer(s)." count ))))
-
-  ;;设置 sentence-end 可以识别中文标点。不用在 fill 时在句号后插入两个空格。
-  (setq sentence-end "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*")
-
-  (setq scroll-margin                   0 )
-  (setq scroll-conservatively      100000 )
-                                          ;(setq scroll-preserve-screen-position 1 )
-  (setq scroll-up-aggressively       0.01 )
-  (setq scroll-down-aggressively     0.01 )
-
-
-
-  (defun encode-buffer-to-utf8 ()
-    "Sets the buffer-file-coding-system to UTF8."
-    (interactive)
-    (set-buffer-file-coding-system 'utf-8 nil))
-
-  (defun save-buffer-always ()
-    "Save the buffer even if it is not modified."
-    (interactive)
-    (set-buffer-modified-p t)
-    (save-buffer))
-
-  (defun nuke-other-buffers ()
-    "Kill all buffers, leaving current-buffer only."
-    (interactive)
-    (mapcar
-     (lambda (x)
-       (if (not
-            (or (eq x (current-buffer))
-                (member
-                 (buffer-name x)
-                 ;; all ecb related buffers
-                 '(" *ECB Sources*" " *ECB History*"
-                   " *ECB Methods*" " *Minibuf-1*"
-                   " *Minibuf-0*" " *ECB Analyse*"
-                   " *ECB Directories*"))))
-           (kill-buffer x)))
-     (buffer-list))
-    (delete-other-windows)
-    (message "All other buffers clear"))
-
-  (defun indent-whole-buffer ()
-    "Indent whole buffer and delete trailing whitespace.
-    This command will also do untabify."
-    (interactive)
-    (delete-trailing-whitespace)
-    (indent-region (point-min) (point-max))
-    (untabify (point-min) (point-max)))
-
-  (defun fold-long-comment-lines ()
-    "This functions allows us to fold long comment lines
-     automatically in programming modes. Quite handy."
-    (interactive "p")
-    (auto-fill-mode 1)
-    (set (make-local-variable 'fill-no-break-predicate)
-         (lambda ()
-           (not (eq (get-text-property (point) 'face)
-                    'font-lock-comment-face)))))
-
-  (defun new-note ()
-    (interactive)
-    (find-file (concat default-doc-path "/Notes/"
-                       (format-time-string "%Y%m-")
-                       (read-string (concat "Filename: " (format-time-string "%Y%m-"))) ".org")))
-
-  (add-hook 'comint-output-filter-functions
-            'shell-strip-ctrl-m nil t)
-  (add-hook 'comint-output-filter-functions
-            'comint-watch-for-password-prompt nil t)
-
-  ;; For subprocesses invoked via the shell
-  ;; (e.g., "shell -c command")
-  (cond ((eq window-system 'w32)
-         (setq explicit-shell-file-name "bash.exe")
-         (setq shell-file-name explicit-shell-file-name)))
-
-  (setq color-list '(hi-yellow hi-green hi-blue hi-pink));; hi-red-b hi-green-b hi-blue-b))
-  (setq color-index 0)
-  (setq color-list-length (length color-list))
-
-  (defun kimim/toggle-highlight-tap ()
-    "Highlight pattern at the point"
-    (interactive)
-    (if (and (listp (get-text-property (point) 'face))
-             (memq (car (get-text-property (point) 'face)) color-list))
-        (unhighlight-regexp (thing-at-point 'symbol))
-      (progn
-        (highlight-regexp (thing-at-point 'symbol) (nth color-index color-list))
-        (setq color-index (+ color-index 1))
-        (if (>= color-index color-list-length)
-            (setq color-index 0))
-        )))
-
-
-  (defun my-blink(begin end)
-    "blink a region. used for copy and delete"
-    (interactive)
-    (let* ((rh (make-overlay begin end)))
-      (progn
-        (overlay-put rh 'face '(:background "DodgerBlue" :foreground "White"))
-        (sit-for 0.2 t)
-        (delete-overlay rh)
-        )))
-
-  (defun get-point (symbol &optional arg)
-    "get the point"
-    (funcall symbol arg)
-    (point)
-    )
-
-  (defun copy-thing (begin-of-thing end-of-thing &optional arg)
-    "Copy thing between beg & end into kill ring. Remove leading and
-    trailing whitespace while we're at it. Also, remove whitespace before
-    column, if any. Also, font-lock will be removed, if any. Also, the
-    copied region will be highlighted shortly (it 'blinks')."
-    (save-excursion
-      (let* ((beg (get-point begin-of-thing 1))
-             (end (get-point end-of-thing arg)))
-        (progn
-          (copy-region-as-kill beg end)
-          (with-temp-buffer
-            (yank)
-            (goto-char 1)
-            (while (looking-at "[ \t\n\r]")
-              (delete-char 1))
-            (delete-trailing-whitespace)
-            (delete-whitespace-rectangle (point-min) (point-max)) ;; del column \s, hehe
-            (font-lock-unfontify-buffer) ;; reset font lock
-            (kill-region (point-min) (point-max))
-            )
-          ))))
-
-  (defun copy-word (&optional arg)
-    "Copy word at point into kill-ring"
-    (interactive "P")
-    (my-blink (get-point 'backward-word 1) (get-point 'forward-word 1))
-    (copy-thing 'backward-word 'forward-word arg)
-    (message "word at point copied"))
-
-  (defun copy-line (&optional arg)
-    "Copy line at point into kill-ring, truncated"
-    (interactive "P")
-    (my-blink (get-point 'beginning-of-line 1) (get-point 'end-of-line 1))
-    (copy-thing 'beginning-of-line 'end-of-line arg)
-    (message "line at point copied"))
-
-  (defun copy-paragraph (&optional arg)
-    "Copy paragraph at point into kill-ring, truncated"
-    (interactive "P")
-    (my-blink (get-point 'backward-paragraph 1) (get-point 'forward-paragraph 1))
-    (copy-thing 'backward-paragraph 'forward-paragraph arg)
-    (message "paragraph at point copied"))
-
-  (defun copy-buffer(&optional arg)
-    "Copy the whole buffer into kill-ring, as-is"
-    (interactive "P")
-    (progn
-      (my-blink (point-min) (point-max))
-      (copy-region-as-kill (point-min) (point-max))
-      (message "buffer copied")))
-
-
-  (defvar kimim/last-edit-list nil)
-  ;; ((file location) (file location))
-  ;;   1              2
-
-  (defun kimim/backward-last-edit ()
-    (interactive)
-    (let ((position (car kimim/last-edit-list)))
-      (when position
-        ;;(print position)
-        ;;(print kimim/last-edit-list)
-        (find-file (car position))
-        (goto-char (cdr position))
-        (setq kimim/last-edit-list (cdr kimim/last-edit-list)))))
-
-
-  ;; TODO shrink list if more items
-  (defun kimim/buffer-edit-hook (beg end len)
-    (interactive)
-    (let ((bfn (buffer-file-name)))
-      ;; insert modification in current index
-      ;; remove forward locations
-      ;; if longer than 100, remove old locations
-      (when bfn
-        (progn
-          (add-to-list 'kimim/last-edit-list (cons bfn end))))))
-
-  (add-hook 'after-change-functions 'kimim/buffer-edit-hook)
-  (global-set-key (kbd "M-`") 'kimim/backward-last-edit)
-
-  ;; copy from http://stackoverflow.com/questions/384284/how-do-i-rename-an-open-file-in-emacs
-  ;; http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
-  ;; many thanks to Bozhidar Batsov (https://github.com/bbatsov)
-  (defun kimim/rename-file-and-buffer ()
-    "Rename the current buffer and file it is visiting. Binded to
-  key C-c r"
-    (interactive)
-    (let ((filename (buffer-file-name)))
-      (if (not (and filename (file-exists-p filename)))
-          (message "Buffer is not visiting a file!")
-        (let ((new-name (read-file-name "New name: " filename)))
-          (cond
-           ((vc-backend filename) (vc-rename-file filename new-name))
-           (t
-            (rename-file filename new-name t)
-            (set-visited-file-name new-name t t)))))))
 #+END_SRC
 * Programming General
 ** Compiling
@@ -1190,339 +838,429 @@ pip install virtualenv
   (setq chinese-calendar-terrestrial-branch
         ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
 #+END_SRC
-** orgmode path setting
+* Orgmode
+** orgmode general setting
 
 #+BEGIN_SRC emacs-lisp
   ;; path and system environment setting for orgmode
-  (defvar path-org-home (concat path-sync-home "org/"))
-  (defvar path-org-work (concat path-sync-work "org/"))
-#+END_SRC
+  (setq path-org-home (concat path-sync-home "org/"))
+  (setq path-org-work (concat path-sync-work "org/"))
+  (use-package org
+    :config
+    (setq org-export-allow-BIND t)
+    (setq org-support-shift-select t)
+    ;; no empty line after collapsed
+    (setq org-cycle-separator-lines 0)
+    (setq org-src-fontify-natively t)
+    (setq org-startup-indented t))
 
-** orgmode as GTD system
-
-#+BEGIN_SRC emacs-lisp
-  ;;==============================================
-  ;; org as GTD system
-  ;;==============================================
-  (setq org-todo-keywords
-        '(
-          ;; for tasks
-          (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
-          ;; for risks, actions, problems
-          (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
-          ;; special states
-          (type "REPEAT(r)" "SOMEDAY(m)" "|" "ABORT(a@/!)")))
-
-  (setq org-tag-alist '((:startgroup . nil)
-                        ("@office" . ?o) ("@home" . ?h)
-                        (:endgroup . nil)
-                        ("@team" . ?t) ("@leader" . ?l)
-                        ("risk" . ?k)
-                        ("sync" . ?s)
-                        ("reading" . ?r)
-                        ("writing" . ?w)
-                        ("project" . ?p) ("category" . ?c)
-                        ("habit" . ?H)
-                        ("next" . ?n)))
-  ;; Level=2 or 3, state is not DONE/ABORT/CLOSED/SOMEDAY
-  ;; contains no TODO keywords or SOMEDAY
-  ;; contains no project tag
-  ;; subtree contains TODO
-
-  ;; 子節點不需要繼承父節點的 tag
-  ;; project 表示這個節點下的是項目任務，任務不需要繼承project tag
-  ;; category 表示該節點是分類節點
-  (setq org-tags-exclude-from-inheritance '("project" "category"))
-
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (auto-fill-mode)
-              (org-display-inline-images)
-              (drag-stuff-mode -1)
-              (if (boundp 'org-agenda-mode-map)
-                  (org-defkey org-agenda-mode-map "x"
-                              'org-agenda-list-stuck-projects))))
-
-  (setq org-stuck-projects
-        '("+LEVEL>=2-category-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
-          ("TODO" "SCEHD" "OPEN" "WAIT") nil nil))
-
-  (setq org-refile-targets
-        '(;; refile to maxlevel 2 of current file
-          (nil . (:maxlevel . 1))
-          ;; refile to maxlevel 1 of org-refile-files
-          (org-refile-files :maxlevel . 1)
-          ;; refile to item with 'project' tag in org-refile-files
-          (org-refile-files :tag . "project")
-          (org-refile-files :tag . "category")))
-
-  (defadvice org-schedule (after add-todo activate)
-    (if (or (string= "OPEN" (org-get-todo-state))
-            (string= "WAIT" (org-get-todo-state))
-            (string= "CLOSE" (org-get-todo-state)))
-        (org-todo "WAIT")
-      (org-todo "SCHED")))
-
-  (defadvice org-deadline (after add-todo activate)
-    (if (or (string= "OPEN" (org-get-todo-state))
-            (string= "WAIT" (org-get-todo-state))
-            (string= "CLOSE" (org-get-todo-state)))
-        (org-todo "WAIT")
-      (org-todo "SCHED")))
-
-  (setq org-log-done t)
-  (setq org-todo-repeat-to-state "REPEAT")
-
-  ;; settings for org-agenda-view
-  (setq org-agenda-span 'day)
-  (setq org-agenda-skip-scheduled-if-done t)
-  (setq org-agenda-skip-deadline-if-done t)
-  (setq org-deadline-warning-days 2)
-
-  (defcustom org-location-home-or-office "office" "office")
-  (defun org-toggle-office ()
-    (interactive)
-    (setq org-location-home-or-office "office")
-    (setq org-agenda-files
-          (list (concat path-org-home "capture.org")
-                (concat path-org-home "world.org")
-                (concat path-org-work "work/")))
-    (setq org-refile-files
-          (append
-           (list (concat path-org-home "capture.org")
-                 (concat path-org-home "world.org")
-                 (concat path-org-home "words.org")
-                 (concat path-org-home "home/kimi.org"))
-           (file-expand-wildcards (concat path-org-work "work/*.org"))))
-    (message "Agenda is from office..."))
-
-  (defun org-toggle-home ()
-    (interactive)
-    (setq org-location-home-or-office "home")
-    (setq org-agenda-files
-          (list (concat path-org-home "capture.org")
-                (concat path-org-home "world.org")
-                (concat path-org-home "home/")))
-    (setq org-refile-files
-          (append
-           (list (concat path-org-home "capture.org")
-                 (concat path-org-home "world.org"))
-           (file-expand-wildcards (concat path-org-home "home/*.org"))))
-    (message "Agenda is from home..."))
-
-  (defun org-toggle-home-or-office()
-    (interactive)
-    (if (string= org-location-home-or-office "home")
-        (org-toggle-office)
-      (org-toggle-home)))
-
-  (org-toggle-office)
-
-  (setq org-agenda-custom-commands
-        '(("t" todo "TODO|OPEN"
-           ((org-agenda-sorting-strategy '(priority-down))))
-          ;; all task should be done or doing
-          ("d" todo "TODO|SCHED|OPEN|WAIT"
-           ((org-agenda-sorting-strategy '(priority-down))))
-          ("o" todo "OPEN"
-           ((org-agenda-sorting-strategy '(priority-down))))
-          ("w" todo "WAIT"
-           ((org-agenda-sorting-strategy '(priority-down))))
-          ("h" tags "habit/-ABORT-CLOSE"
-           ((org-agenda-sorting-strategy '(todo-state-down))))
-          ("c" tags "clock"
-           ((org-agenda-sorting-strategy '(priority-down))))))
-
-  (setq org-capture-templates
-        '(("c" "Capture" entry (file+headline (concat path-org-home "capture.org") "Inbox")
-           "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-          ("t" "TODO" entry (file+headline (concat path-org-home "capture.org") "Inbox")
-           "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-          ("o" "Action" entry (file+headline (concat path-org-home "capture.org") "Inbox")
-           "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-          ("h" "Habit" entry (file+headline (concat path-org-home "world.org") "Habit")
-           "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 #+END_SRC
 ** orgmode for writing
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :config
+    (setq org-hide-leading-stars t)
+    (setq org-footnote-auto-adjust t)
+    (setq org-export-with-sub-superscripts '{})
+    (define-key org-mode-map (kbd "C-c C-x h") (lambda()
+                                                 (interactive)
+                                                 (insert "^{()}")
+                                                 (backward-char 2)))
+    (define-key org-mode-map (kbd "C-c C-x l") (lambda()
+                                                 (interactive)
+                                                 (insert "_{}")
+                                                 (backward-char 1)))
+    )
+#+END_SRC
+** orgmode with source code
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :config
+    ;; src block setting
+    (setq org-src-window-setup 'other-frame)
+    (setq org-src-fontify-natively t)
+    (setq org-confirm-babel-evaluate nil)
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((C . t)
+       (python . t)
+       (emacs-lisp . t)
+       (sh . t)
+       (dot . t)
+       (ditaa . t)
+       (js . t)
+       (latex . t)
+       (plantuml . t)
+       (clojure . t)
+       (org . t)
+       (R . t)
+       ))
+    )
+#+END_SRC
+** orgmode exporting
 
 #+BEGIN_SRC emacs-lisp
+  (use-package org
+    :config
+    (setq org-export-allow-BIND t)
+    (setq org-export-creator-string "")
+    (setq org-export-html-validation-link nil))
+    (setq org-html-validation-link nil)
 
-  ;(require 'ox-reveal)
-  ;; load htmlize.el , which org-babel export syntax highlight source code need it
-  (require 'htmlize)
-  (require 'ox-md)
+  (use-package ox-reveal
+    :config
+    (setq org-reveal-root "reveal.js")
+    ;;(setq org-reveal-root "~/../Tools/reveal.js")
+    ;;(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
+    (setq org-reveal-theme "simple")
+    (setq org-reveal-width 1200)
+    (setq org-reveal-height 750)
+    (setq org-reveal-transition "fade")
+    (setq org-reveal-hlevel 2)
+    )
 
-  ;; plant uml setting
-  (require 'ob-plantuml)
-  (setenv "GRAPHVIZ_DOT" "C:\\cygwin\\bin\\dot.exe")
-  (setq org-plantuml-jar-path "C:\\kimikit\\plantuml\\plantuml.jar")
-
-  (setq org-hide-leading-stars t)
-  (setq org-footnote-auto-adjust t)
-  (setq org-html-validation-link nil)
-  (setq org-export-creator-string "")
-  ;; no empty line after collapsed
-  (setq org-cycle-separator-lines 0)
-  ;; src block setting
-  (setq org-src-window-setup 'current-window)
-  (setq org-src-fontify-natively t)
-  (setq org-export-with-sub-superscripts '{})
-  (define-key org-mode-map (kbd "C-c C-x h") (lambda()
-                                               (interactive)
-                                               (insert "^{()}")
-                                               (backward-char 2)))
-  (define-key org-mode-map (kbd "C-c C-x l") (lambda()
-                                               (interactive)
-                                               (insert "_{}")
-                                               (backward-char 1)))
-  ;; insert time stamp even in chinese input method
-  (define-key org-mode-map (kbd "C-c 。") 'org-time-stamp)
-  ;; (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f"
-  ;;                                                        "xelatex -interaction nonstopmode %f"))
-  ;;(setq org-latex-pdf-process '("pdflatex -interaction nonstopmode %f"))
-  ;; active Babel languages
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((C . t)
-     (python .t)
-     (emacs-lisp . t)
-     (sh . t)
-     (dot . t)
-     (ditaa . t)
-     (js . t)
-     (latex . t)
-     (plantuml . t)
-     (clojure .t)
-     (org . t)
-     (R . t)
-     ))
-
-  ;;============================================================================
-  ;; org-reveal settings for html5 ppt
-  ;;============================================================================
-  (setq org-reveal-root "reveal.js")
-  ;;(setq org-reveal-root "~/../Tools/reveal.js")
-  ;;(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
-  (setq org-reveal-theme "simple")
-  (setq org-reveal-width 1200)
-  (setq org-reveal-height 750)
-  (setq org-reveal-transition "fade")
-  (setq org-reveal-hlevel 2)
-
-  ;;============================================================================
-  ;; new link to use everything/? to locate a file with unique ID
-  ;;============================================================================
-  (org-add-link-type "match" 'org-match-open)
-
-  (defun org-match-open (path)
-    "Visit the match search on PATH.
-       PATH should be a topic that can be thrown at everything/?."
-    (w32-shell-execute
-     "open" "Everything" (concat "-search " path)))
-
-  ;;============================================================================
-  ;; org-mode-reftex-search
-  ;;============================================================================
-  (defun org-mode-reftex-search ()
-   ;; jump to the notes for the paper pointed to at from reftex search
-   (interactive)
-   (org-open-link-from-string (format "[[notes:%s]]" (reftex-citation t))))
-
-  (setq org-link-abbrev-alist
-   '(("bib" . "~/reference/ref.bib::%s")
-     ("notes" . "~/reference/notes.org::#%s")
-     ("papers" . "~/reference/papers/%s.pdf")))
-
-  (defun org-mode-reftex-setup ()
-    (load-library "reftex")
-    (and (buffer-file-name) (file-exists-p (buffer-file-name))
-         (progn
-      ;; enable auto-revert-mode to update reftex when bibtex file changes on disk
-      (global-auto-revert-mode t)
-      (reftex-parse-all)
-      ;; add a custom reftex cite format to insert links
-      (reftex-set-cite-format
-        '((?b . "[[bib:%l][%l-bib]]")
-          (?c . "\\cite{%l}")
-          (?n . "[[notes:%l][%l-notes]]")
-          (?p . "[[papers:%l][%l-paper]]")
-          (?t . "%t")
-          (?h . "** %t\n:PROPERTIES:\n:Custom_ID: %l\n:END:\n[[papers:%l][%l-paper]]")))))
-    (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
-    (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search))
-
-
-
-
-  (defadvice org-html-paragraph (before fsh-org-html-paragraph-advice
-                                        (paragraph contents info) activate)
-    "Join consecutive Chinese lines into a single long line without
+  (use-package ox-html
+    :ensure nil
+    :config
+    (defadvice org-html-paragraph (before fsh-org-html-paragraph-advice
+                                          (paragraph contents info) activate)
+      "Join consecutive Chinese lines into a single long line without
   unwanted space when exporting org-mode to html."
-    (let ((fixed-contents)
-          (orig-contents (ad-get-arg 1))
-          (reg-han "[[:multibyte:]]"))
-      (setq fixed-contents (replace-regexp-in-string
-                            (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
-                            "\\1\\2" orig-contents))
-      (ad-set-arg 1 fixed-contents)
-      ))
+      (let ((fixed-contents)
+            (orig-contents (ad-get-arg 1))
+            (reg-han "[[:multibyte:]]"))
+        (setq fixed-contents (replace-regexp-in-string
+                              (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
+                              "\\1\\2" orig-contents))
+        (ad-set-arg 1 fixed-contents)
+        ))
 
-  ;;============================================================================
-  ;; function redifinition
-  ;;============================================================================
-  (defun org-babel-result-to-file (result &optional description)
-    "Convert RESULT into an `org-mode' link with optional DESCRIPTION.
+    (defun org-babel-result-to-file (result &optional description)
+      "Convert RESULT into an `org-mode' link with optional DESCRIPTION.
   If the `default-directory' is different from the containing
   file's directory then expand relative links."
-    (when (stringp result)
-      (if (string= "svg" (file-name-extension result))
-          (progn
-            (with-temp-buffer
-              (if (file-exists-p (concat result ".html"))
-                  (delete-file (concat result ".html")))
-              (rename-file result (concat result ".html"))
-              (insert-file-contents (concat result ".html"))
-              (message (concat result ".html"))
-              (format "#+BEGIN_HTML
+      (when (stringp result)
+        (if (string= "svg" (file-name-extension result))
+            (progn
+              (with-temp-buffer
+                (if (file-exists-p (concat result ".html"))
+                    (delete-file (concat result ".html")))
+                (rename-file result (concat result ".html"))
+                (insert-file-contents (concat result ".html"))
+                (message (concat result ".html"))
+                (format "#+BEGIN_HTML
   <div style=\"text-align: center;\">
   %s
   </div>
   ,#+END_HTML"
-                      (buffer-string)
-                      )))
-        (progn
-          (format "[[file:%s]%s]"
-                  (if (and default-directory
-                           buffer-file-name
-                           (not (string= (expand-file-name default-directory)
-                                         (expand-file-name
-                                          (file-name-directory buffer-file-name)))))
-                      (expand-file-name result default-directory)
-                    result)
-                  (if description (concat "[" description "]") ""))))))
-
-  ;; R-mode
-  ;; Now we set up Emacs to find R
-  ;; The path to R might need to be changed
-  (setq-default inferior-R-program-name
-                "C:/Program Files/R/R-3.1.1/bin/i386/Rterm.exe")
-  ;(setenv "PATH" (concat "C:\\Program Files\\R\\R-2.15.3\\bin\\i386" ";"
-  ;    (getenv "PATH")))
-  ;;(setq-default inferior-R-program-name "C:/cygwin/lib/R/bin/exec/R.exe")
-
-  ;; Configuring org mode to know about R and set some reasonable default behavior
-  ;; (require 'ess-site)
-  (require 'org-install)
-
-  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-export-html-validation-link nil)
-  (setq org-export-allow-BIND t)
-  (setq org-support-shift-select t)
-  (setq org-src-fontify-natively t)
-  (setq org-startup-indented t)
+                        (buffer-string)
+                        )))
+          (progn
+            (format "[[file:%s]%s]"
+                    (if (and default-directory
+                             buffer-file-name
+                             (not (string= (expand-file-name default-directory)
+                                           (expand-file-name
+                                            (file-name-directory buffer-file-name)))))
+                        (expand-file-name result default-directory)
+                      result)
+                    (if description (concat "[" description "]") "")))))))
 #+END_SRC
 
+** orgmode with diagram
+#+BEGIN_SRC emacs-lisp
+  ;; plant uml setting
+  (use-package org
+    :config
+    (require 'ob-plantuml)
+    (setenv "GRAPHVIZ_DOT" "C:\\cygwin\\bin\\dot.exe")
+    (setq org-plantuml-jar-path "C:\\kimikit\\plantuml\\plantuml.jar"))
+#+END_SRC
+** orgmode as GTD system
+
+#+BEGIN_SRC emacs-lisp
+  (setq path-org-home (concat path-sync-home "org/"))
+  (setq path-org-work (concat path-sync-work "org/"))
+  (use-package org
+    :bind (:map org-mode-map
+           ("C-c 。" . org-time-stamp))
+    :config
+    (setq org-todo-keywords
+          '(
+            ;; for tasks
+            (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
+            ;; for risks, actions, problems
+            (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
+            ;; special states
+            (type "REPEAT(r)" "SOMEDAY(m)" "|" "ABORT(a@/!)")))
+
+    (setq org-tag-alist
+          '((:startgroup . nil)
+            ("@office" . ?o) ("@home" . ?h)
+            (:endgroup . nil)
+            ("@team" . ?t) ("@leader" . ?l)
+            ("risk" . ?k)
+            ("sync" . ?s)
+            ("reading" . ?r) ("writing" . ?w)
+            ("project" . ?p) ("category" . ?c)
+            ("habit" . ?H)
+            ("next" . ?n)))
+
+    ;; Level=2 or 3, state is not DONE/ABORT/CLOSED/SOMEDAY
+    ;; contains no TODO keywords or SOMEDAY
+    ;; contains no project tag
+    ;; subtree contains TODO
+
+    ;; 子節點不需要繼承父節點的 tag
+    ;; project 表示這個節點下的是項目任務，任務不需要繼承project tag
+    ;; category 表示該節點是分類節點
+    (setq org-tags-exclude-from-inheritance '("project" "category"))
+
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (auto-fill-mode)
+                (org-display-inline-images)
+                (drag-stuff-mode -1)
+                (if (boundp 'org-agenda-mode-map)
+                    (org-defkey org-agenda-mode-map "x"
+                                'org-agenda-list-stuck-projects))))
+
+    (setq org-stuck-projects
+          '("+LEVEL>=2-category-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
+            ("TODO" "SCEHD" "OPEN" "WAIT") nil nil))
+
+    (setq org-refile-targets
+          '(;; refile to maxlevel 2 of current file
+            (nil . (:maxlevel . 1))
+            ;; refile to maxlevel 1 of org-refile-files
+            (org-refile-files :maxlevel . 1)
+            ;; refile to item with 'project' tag in org-refile-files
+            (org-refile-files :tag . "project")
+            (org-refile-files :tag . "category")))
+
+    (defadvice org-schedule (after add-todo activate)
+      (if (or (string= "OPEN" (org-get-todo-state))
+              (string= "WAIT" (org-get-todo-state))
+              (string= "CLOSE" (org-get-todo-state)))
+          (org-todo "WAIT")
+        (org-todo "SCHED")))
+
+    (defadvice org-deadline (after add-todo activate)
+      (if (or (string= "OPEN" (org-get-todo-state))
+              (string= "WAIT" (org-get-todo-state))
+              (string= "CLOSE" (org-get-todo-state)))
+          (org-todo "WAIT")
+        (org-todo "SCHED")))
+
+    (setq org-log-done t)
+    (setq org-todo-repeat-to-state "REPEAT")
+
+    ;; settings for org-agenda-view
+    (setq org-agenda-span 'day)
+    (setq org-agenda-skip-scheduled-if-done t)
+    (setq org-agenda-skip-deadline-if-done t)
+    (setq org-deadline-warning-days 2)
+
+    (setq org-agenda-custom-commands
+          '(("t" todo "TODO|OPEN"
+             ((org-agenda-sorting-strategy '(priority-down))))
+            ;; all task should be done or doing
+            ("d" todo "TODO|SCHED|OPEN|WAIT"
+             ((org-agenda-sorting-strategy '(priority-down))))
+            ("o" todo "OPEN"
+             ((org-agenda-sorting-strategy '(priority-down))))
+            ("w" todo "WAIT"
+             ((org-agenda-sorting-strategy '(priority-down))))
+            ("h" tags "habit/-ABORT-CLOSE"
+             ((org-agenda-sorting-strategy '(todo-state-down))))
+            ("c" tags "clock"
+             ((org-agenda-sorting-strategy '(priority-down))))))
+
+    (setq org-capture-templates
+          '(("c" "Capture" entry (file+headline (concat path-org-home "capture.org") "Inbox")
+             "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+            ("t" "TODO" entry (file+headline (concat path-org-home "capture.org") "Inbox")
+             "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+            ("o" "Action" entry (file+headline (concat path-org-home "capture.org") "Inbox")
+             "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+            ("h" "Habit" entry (file+headline (concat path-org-home "world.org") "Habit")
+             "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
+    (defcustom org-location-home-or-office "office" "office")
+    (defun org-toggle-office ()
+      (interactive)
+      (setq org-location-home-or-office "office")
+      (setq org-agenda-files
+            (list (concat path-org-home "capture.org")
+                  (concat path-org-home "world.org")
+                  (concat path-org-work "work/")))
+      (setq org-refile-files
+            (append
+             (list (concat path-org-home "capture.org")
+                   (concat path-org-home "world.org")
+                   (concat path-org-home "words.org")
+                   (concat path-org-home "home/kimi.org"))
+             (file-expand-wildcards (concat path-org-work "work/*.org"))))
+      (message "Agenda is from office..."))
+
+    (defun org-toggle-home ()
+      (interactive)
+      (setq org-location-home-or-office "home")
+      (setq org-agenda-files
+            (list (concat path-org-home "capture.org")
+                  (concat path-org-home "world.org")
+                  (concat path-org-home "home/")))
+      (setq org-refile-files
+            (append
+             (list (concat path-org-home "capture.org")
+                   (concat path-org-home "world.org"))
+             (file-expand-wildcards (concat path-org-home "home/*.org"))))
+      (message "Agenda is from home..."))
+
+    (defun org-toggle-home-or-office()
+      (interactive)
+      (if (string= org-location-home-or-office "home")
+          (org-toggle-office)
+        (org-toggle-home))))
+#+END_SRC
+
+** orgmode link: match
+
+New link to use everything to locate a file with unique ID:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :config
+    (org-add-link-type "match" 'org-match-open)
+
+    (defun org-match-open (path)
+      "Visit the match search on PATH.
+       PATH should be a topic that can be thrown at everything/?."
+      (w32-shell-execute
+       "open" "Everything" (concat "-search " path))))
+
+#+END_SRC
+** orgmode publish to jekyll
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :config
+    ;; file in jekyll base will also be uploaded to github
+    (setq path-jekyll-base "~/kimi.im/_notes/_posts")
+    ;; in order to sync draft with cloud sync driver
+    (setq path-jekyll-draft (concat path-sync-home "kimim/_draft/"))
+    ;; file in jekyll base will also be uploaded to github
+
+    (setq org-publish-project-alist
+          '(
+            ("org-blog-content"
+             ;; Path to your org files.
+             :base-directory "~/kimi.im/_notes"
+             :base-extension "org"
+             ;; Path to your jekyll project.
+             :publishing-directory "~/kimi.im/"
+             :recursive t
+             :publishing-function org-html-publish-to-html
+             :headline-levels 4
+             :section-numbers t
+             :html-extension "html"
+             :body-only t ;; Only export section between <body></body>
+             :with-toc nil
+             )
+            ("org-blog-static"
+             :base-directory "~/kimi.im/_notes/"
+             :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php\\|svg"
+             :publishing-directory "~/kimi.im/"
+             :recursive t
+             :publishing-function org-publish-attachment)
+            ("blog" :components ("org-blog-content" "org-blog-static"))
+            ))
+
+    (defun jekyll-post ()
+      "Post current buffer to kimi.im"
+      (interactive)
+      ;; get categories
+      ;; get buffer file name
+      (let ((category (jekyll-get-category))
+            (filename (file-name-nondirectory buffer-file-name))
+            newfilename)
+        ;; append date to the beginning of the file name
+        (setq newfilename (concat path-jekyll-base "/" category "/" (format-time-string "%Y-%m-%d-") filename))
+        ;; mv the file to the categories folder
+        (rename-file buffer-file-name newfilename)
+        (switch-to-buffer (find-file-noselect newfilename))
+        ;;    (color-theme-initialize)
+        ;;    (color-theme-jekyll)
+        ;; execute org-publish-current-file
+        (org-publish-current-file)
+        ;;    (color-theme-eclipse)
+        ;; go to kimi.im folder and execute cyg command
+        (with-temp-buffer(dired "~/kimi.im/")
+                         (kimim/cyg)
+                         (kill-buffer))
+        ))
+
+    (defun jekyll-tag ()
+      "add new tags"
+      (interactive)
+                                          ;find "tags: [" and replace with "tags: [new-tag, "
+      (goto-char (point-min))
+      ;;  (search-forward "tags: [")
+      (re-search-forward "tags: \\[" nil t)
+      (insert (ido-completing-read "tags: " '(
+                                              "emacs" "org-mode"
+                                              "Deutsch" "Français" "English"
+                                              "Windows" "RTOS" "industry"
+                                              "travel"  "street-shots" "photography"
+                                              "leadership"
+                                              )))
+      (insert ", ")
+      )
+
+    (defun jekyll-header()
+      "Insert jekyll post headers,
+  catergories and tags are generated from exisiting posts"
+      (interactive)
+      (insert "#+BEGIN_HTML\n---\nlayout: post\ntitle: ")
+      (insert (read-string "Title: "))
+      (insert "\ncategories: [")
+      (insert (ido-completing-read "categories: " '(
+                                                    "technology"
+                                                    "productivity" "leadership"
+                                                    "psychology" "language"
+                                                    "education" "photography"
+                                                    )))
+      (insert "]")
+      (insert "\ntags: [")
+      (insert (ido-completing-read "tags: " '("emacs" "org-mode" "c prog"
+                                              "Deutsch" "Français" "English"
+                                              "management")))
+      (insert "]\n---\n#+END_HTML\n\n")
+      )
+
+
+    (defun jekyll ()
+      (interactive)
+      (find-file (concat path-jekyll-draft "/" (read-string "Filename: ") ".org"))
+      (jekyll-header)
+      (save-buffer)
+      )
+
+    (defun jekyll-get-category ()
+      (interactive)
+      (goto-char (point-min))
+      (re-search-forward "^categories: \\[\\([a-z-]*\\)\\]$" nil t)
+      (match-string 1)
+      )
+
+    (defun jekyll-test ()
+      (interactive)
+      (color-theme-initialize)
+      (color-theme-jekyll)
+      (org-open-file (org-html-export-to-html nil))))
+
+#+END_SRC
 * deft for note management
 
 #+BEGIN_SRC emacs-lisp
@@ -1586,133 +1324,6 @@ pip install virtualenv
     (advice-add 'deft-new-file-named
                 :around #'kimim/deft-new-file-named-advice))
 #+END_SRC
-* jekyll
-#+BEGIN_SRC emacs-lisp
-  ;; ============================================================================
-  ;; org for blog system
-  ;; ============================================================================
-  ;; file in jekyll base will also be uploaded to github
-  (setq path-jekyll-base "~/kimi.im/_notes/_posts")
-  ;; in order to sync draft with cloud sync driver
-  (setq path-jekyll-draft (concat path-sync-home "kimim/_draft/"))
-  ;; file in jekyll base will also be uploaded to github
-
-  (setq org-publish-project-alist
-        '(
-          ("org-blog-content"
-           ;; Path to your org files.
-           :base-directory "~/kimi.im/_notes"
-           :base-extension "org"
-           ;; Path to your jekyll project.
-           :publishing-directory "~/kimi.im/"
-           :recursive t
-           :publishing-function org-html-publish-to-html
-           :headline-levels 4
-           :section-numbers t
-           :html-extension "html"
-           :body-only t ;; Only export section between <body></body>
-           :with-toc nil
-           )
-          ("org-blog-static"
-           :base-directory "~/kimi.im/_notes/"
-           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php\\|svg"
-           :publishing-directory "~/kimi.im/"
-           :recursive t
-           :publishing-function org-publish-attachment)
-          ("blog" :components ("org-blog-content" "org-blog-static"))
-          ))
-
-  (define-key org-mode-map (kbd "C-c p") (lambda ()
-                                           (interactive)
-                                           (org-publish-current-file)
-                                           (with-temp-buffer(dired "~/kimi.im/")
-                                                            (kimim/cyg)
-                                                            (kill-buffer))))
-  (defun jekyll-post ()
-    "Post current buffer to kimi.im"
-    (interactive)
-    ;; get categories
-    ;; get buffer file name
-    (let ((category (jekyll-get-category))
-          (filename (file-name-nondirectory buffer-file-name))
-          newfilename)
-          ;; append date to the beginning of the file name
-      (setq newfilename (concat path-jekyll-base "/" category "/" (format-time-string "%Y-%m-%d-") filename))
-      ;; mv the file to the categories folder
-      (rename-file buffer-file-name newfilename)
-      (switch-to-buffer (find-file-noselect newfilename))
-  ;;    (color-theme-initialize)
-  ;;    (color-theme-jekyll)
-      ;; execute org-publish-current-file
-      (org-publish-current-file)
-  ;;    (color-theme-eclipse)
-      ;; go to kimi.im folder and execute cyg command
-      (with-temp-buffer(dired "~/kimi.im/")
-                       (kimim/cyg)
-                       (kill-buffer))
-      ))
-
-  (defun jekyll-tag ()
-  "add new tags"
-    (interactive)
-    ;find "tags: [" and replace with "tags: [new-tag, "
-    (goto-char (point-min))
-  ;;  (search-forward "tags: [")
-    (re-search-forward "tags: \\[" nil t)
-    (insert (ido-completing-read "tags: " '(
-                                            "emacs" "org-mode"
-                                            "Deutsch" "Français" "English"
-                                            "Windows" "RTOS" "industry"
-                                            "travel"  "street-shots" "photography"
-                                            "leadership"
-                                            )))
-    (insert ", ")
-    )
-
-  (defun jekyll-header()
-    "Insert jekyll post headers,
-  catergories and tags are generated from exisiting posts"
-    (interactive)
-    (insert "#+BEGIN_HTML\n---\nlayout: post\ntitle: ")
-    (insert (read-string "Title: "))
-    (insert "\ncategories: [")
-    (insert (ido-completing-read "categories: " '(
-                                                  "technology"
-                                                  "productivity" "leadership"
-                                                  "psychology" "language"
-                                                  "education" "photography"
-                                                  )))
-    (insert "]")
-    (insert "\ntags: [")
-    (insert (ido-completing-read "tags: " '("emacs" "org-mode" "c prog"
-                                            "Deutsch" "Français" "English"
-                                            "management")))
-    (insert "]\n---\n#+END_HTML\n\n")
-    )
-
-
-  (defun jekyll ()
-    (interactive)
-    (find-file (concat path-jekyll-draft "/" (read-string "Filename: ") ".org"))
-    (jekyll-header)
-    (save-buffer)
-    )
-
-  (defun jekyll-get-category ()
-    (interactive)
-    (goto-char (point-min))
-    (re-search-forward "^categories: \\[\\([a-z-]*\\)\\]$" nil t)
-    (match-string 1)
-    )
-
-  (defun jekyll-test ()
-    (interactive)
-    (color-theme-initialize)
-    (color-theme-jekyll)
-    (org-open-file (org-html-export-to-html nil)))
-
-
-#+END_SRC
 * erc and gnus
 
 #+BEGIN_SRC emacs-lisp
@@ -1749,6 +1360,13 @@ pip install virtualenv
     (add-to-list 'gnus-secondary-select-methods '(nnml "")))
 #+END_SRC
 
+* kimim utils
+#+BEGIN_SRC emacs-lisp
+  (use-package kimim
+    :ensure nil
+    :load-path "~/kimim-emacs/site-lisp/"
+    )
+#+END_SRC
 * Key Binding
 
 #+BEGIN_SRC emacs-lisp
@@ -1767,12 +1385,7 @@ pip install virtualenv
   (global-set-key (kbd "C-c k") 'counsel-ag)
   (global-set-key (kbd "C-x l") 'counsel-locate)
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-#+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-  ;;==============================================================================
-  ;; Global Key Settings
-  ;;==============================================================================
   (require 'hideshow) ;; hs-toggle-hiding
   (global-set-key [f1] 'delete-other-windows)
   (global-set-key (kbd "C-<f1>") 'nuke-other-buffers)
@@ -1837,18 +1450,6 @@ pip install virtualenv
     ;; sets fn-delete to be right-delete
     (global-set-key [kp-delete] 'delete-char))
 
-  (global-set-key "\C-xmc" 'calculator)
-  ;; ;; edit highlighted symbol
-  (global-set-key "\C-xme" 'ahs-edit-mode)
-  ;; ;; Make a new frame
-  (global-set-key "\C-xmf" 'make-frame)
-  ;; ;; Make a new frame
-  (global-set-key "\C-xmh" 'help)
-  (global-set-key "\C-xmp" 'helm-global-mark-ring)
-  ;; ;; 查看光标处的单词的 man page
-  (global-set-key "\C-xmm" 'man-follow)
-  ;; ;;查看 kill-ring，都曾经 kill 过哪些文本
-  (global-set-key "\C-xml" 'browse-kill-ring)
 
   ;; C-x r j ?x 打開常用文件
   (set-register ?e '(file . "~/kimim-emacs/init.el"))
