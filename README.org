@@ -808,8 +808,7 @@ pip install virtualenv
     '(add-to-list 'company-backends 'company-elisp))
 #+END_SRC
 
-* calendar amd orgmode
-** calendar
+* calendar
 
 #+BEGIN_SRC emacs-lisp
   ;;============================================================================
