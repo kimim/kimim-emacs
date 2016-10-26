@@ -173,6 +173,11 @@ file?
   (setq custom-file (concat path-kimim-emacs "custom.el"))
   (load custom-file)
 #+END_SRC
+** global key map
+#+BEGIN_SRC emacs-lisp
+  (define-prefix-command 'ctl-x-m-map)
+  (global-set-key "\C-xm" 'ctl-x-m-map)
+#+END_SRC
 * Package
 
 =package= [fn:7]is the modern =elisp= package management system, which lets you
@@ -192,6 +197,12 @@ All the extensions used in this file are installed and managed by =package=.
           ("marmalade" . "https://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
   (package-initialize)
+  (eval-when-compile
+    (require 'use-package))
+  (require 'diminish)                ;; if you use :diminish
+  (require 'bind-key)                ;; if you use any :bind variant
+  ;; install package is missing
+  (setq use-package-always-ensure t)
 #+END_SRC
 * Appearance
 ** Font and Color
@@ -333,7 +344,14 @@ All the extensions used in this file are installed and managed by =package=.
         (delete-trailing-whitespace)))
   (add-hook 'before-save-hook 'kimim/delete-trailing-whitespace)
 
+  (defun kimim/save-buffer-advice (orig-fun &rest arg)
+    (delete-trailing-whitespace)
+    (apply orig-fun arg))
+
+  (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
+
   (setq ispell-program-name "aspell")
+
   (add-hook 'text-mode-hook
             (lambda ()
               (when (derived-mode-p 'org-mode 'markdown-mode 'text-mode)
@@ -515,7 +533,6 @@ and defers loading of the module until they are used.
 * Navigation
 #+BEGIN_SRC emacs-lisp
   (use-package bm
-    :ensure t
     :bind (("C-x m t" . bm-toggle)
            ("C-x m s" . bm-show-all)))
 #+END_SRC
@@ -564,6 +581,20 @@ task for =es.exe=.
     :init
     (setq everything-cmd "c:\\kimikit\\bin\\es.exe"))
 #+END_SRC
+** imenu & imenu-anywhere
+
+=imenu= is used to navigate the function definitions in current buffer.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package imenu
+    :bind (("C-c i" . imenu))
+    :config
+    (advice-add 'imenu-default-goto-function
+                :around
+                #'kimim/imenu-default-goto-function-advice))
+
+  (use-package imenu-anywhere)
+#+END_SRC
 
 ** Other search utils
 #+BEGIN_SRC emacs-lisp
@@ -578,27 +609,12 @@ task for =es.exe=.
     (w32-shell-execute
      "open" "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe" "c:\\kimikit\\Autohotkey\\lookinsight.ahk"))
 #+END_SRC
-** imenu & imenu-anywhere
-
-=imenu= is used to navigate the function definitions in current buffer.
-
-#+BEGIN_SRC emacs-lisp
-  (defun kimim/imenu-default-goto-function-advice (orig-fun &rest args)
-    (apply orig-fun args)
-    (recenter))
-
-  (advice-add 'imenu-default-goto-function
-              :around
-              #' kimim/imenu-default-goto-function-advice)
-
-  ;;(global-set-key "\C-cj" 'imenu)
-  ;;(global-set-key "\C-ci" 'imenu-anywhere)
-#+END_SRC
 * auto-complete
 ** ivy-mode
 
 #+BEGIN_SRC emacs-lisp
-  (ivy-mode 1)
+  (use-package ivy
+    :config (ivy-mode 1))
 #+END_SRC
 
 ** auto parenthesis
@@ -661,7 +677,17 @@ add following lines:
 * helper functions
 
 #+BEGIN_SRC emacs-lisp
+  ;; generate timestamp such as 2016_1031KJ__ for file name
+  (defun kimim/genfile-timestamp()
+    (concat (format-time-string "%Y_%m%d")
+            (char-to-string (+ 65 (random 26)))
+            (char-to-string (+ 65 (random 26)))
+            "__"))
+
   ;; self define functions
+  (defun kimim/imenu-default-goto-function-advice (orig-fun &rest args)
+    (apply orig-fun args)
+    (recenter))
 
   (defun now () (interactive)
          (insert (shell-command-to-string "date")))
@@ -1638,13 +1664,6 @@ pip install virtualenv
                   "\\|^#\\+[[:alnum:]_]+:.*$" ;; org-mode metadata
                   "\\)"))
 
-    ;; generate timestamp such as 2016_1031KJ__ for file name
-    (defun kimim/genfile-timestamp()
-      (concat (format-time-string "%Y_%m%d")
-              (char-to-string (+ 65 (random 26)))
-              (char-to-string (+ 65 (random 26)))
-              "__"))
-
     ;;advise deft-open-file to replace spaces in file names with _
     (defun kimim/deft-open-file-advice (orig-fun &rest args)
       (setq name (pop args))
@@ -1667,7 +1686,8 @@ pip install virtualenv
           (apply orig-fun args)
           (insert (concat "#+TITLE: " title "\n\n")))))
 
-    (advice-add 'deft-open-file :around #'kimim/deft-open-file-advice)
+    (advice-add 'deft-open-file
+                :around #'kimim/deft-open-file-advice)
 
     (defun kimim/deft-new-file-named-advice (orig-fun &rest args)
       (setq name (pop args))
@@ -1681,13 +1701,8 @@ pip install virtualenv
       (apply orig-fun args)
       (insert (concat "#+TITLE: " title "\n\n")))
 
-    (advice-add 'deft-new-file-named :around #'kimim/deft-new-file-named-advice)
-
-    (defun kimim/save-buffer-advice (orig-fun &rest arg)
-      (delete-trailing-whitespace)
-      (apply orig-fun arg))
-
-    (advice-add 'save-buffer :around #'kimim/save-buffer-advice))
+    (advice-add 'deft-new-file-named
+                :around #'kimim/deft-new-file-named-advice))
 #+END_SRC
 * jekyll
 #+BEGIN_SRC emacs-lisp
@@ -1854,7 +1869,6 @@ pip install virtualenv
 #+BEGIN_SRC emacs-lisp
   (setq ivy-use-virtual-buffers t)
   (global-set-key "\C-s" 'swiper)
-  (global-set-key (kbd "C-c C-r") 'ivy-resume)
   (global-set-key (kbd "C-c r") 'kimim/rename-file-and-buffer)
   ;; (global-set-key (kbd "<f6>") 'ivy-resume)
   (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -1920,8 +1934,6 @@ pip install virtualenv
   (global-set-key "\C-cb" 'org-iswitchb)
   (global-set-key "\C-c=" 'get-file-line)
   (global-set-key "\C-cd" 'kimim/lookinsight)
-  (global-set-key "\C-cj" 'imenu)
-  (global-set-key "\C-ci" 'imenu-anywhere)
   (global-set-key "\C-cf" 'ggtags-find-file)
 
   (define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
