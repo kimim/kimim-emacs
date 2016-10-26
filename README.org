@@ -1031,6 +1031,12 @@ add following lines:
   ;;(advice-add 'next-error :after #'kimim/recenter)
   ;;(advice-add 'previous-error :after #'kimim/recenter)
 #+END_SRC
+** Version Control
+#+BEGIN_SRC emacs-lisp
+  ;; ;; magit-status for git
+  (use-package magit
+    :bind ("C-x m g" . magit-status))
+#+END_SRC
 * Programming Language
 ** C
 *** Formatting
@@ -1957,23 +1963,17 @@ pip install virtualenv
     ;; sets fn-delete to be right-delete
     (global-set-key [kp-delete] 'delete-char))
 
-  (define-prefix-command 'ctl-x-m-map)
-  ;; 定义了一个新的前缀，并且绑定到 C-x m
-  (global-set-key "\C-xm" 'ctl-x-m-map)
-
-  (define-key ctl-x-m-map "c" 'calculator)
-  ;; edit highlighted symbol
-  (define-key ctl-x-m-map "e" 'ahs-edit-mode)
-  ;; Make a new frame
-  (define-key ctl-x-m-map "f" 'make-frame)
-  ;; Make a new frame
-  (define-key ctl-x-m-map "p" 'helm-global-mark-ring)
-  ;; 查看光标处的单词的 man page
-  (define-key ctl-x-m-map "m" 'man-follow)
-  ;; magit-status for git
-  (define-key ctl-x-m-map "g" 'magit-status)
-  ;;查看 kill-ring，都曾经 kill 过哪些文本
-  (define-key ctl-x-m-map "l" 'browse-kill-ring)
+  (global-set-key "\C-xmc" 'calculator)
+  ;; ;; edit highlighted symbol
+  (global-set-key "\C-xme" 'ahs-edit-mode)
+  ;; ;; Make a new frame
+  (global-set-key "\C-xmf" 'make-frame)
+  ;; ;; Make a new frame
+  (global-set-key "\C-xmp" 'helm-global-mark-ring)
+  ;; ;; 查看光标处的单词的 man page
+  (global-set-key "\C-xmm" 'man-follow)
+  ;; ;;查看 kill-ring，都曾经 kill 过哪些文本
+  (global-set-key "\C-xml" 'browse-kill-ring)
 
   ;; C-x r j ?x 打開常用文件
   (set-register ?e '(file . "~/kimim-emacs/init.el"))
