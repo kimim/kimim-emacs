@@ -50,6 +50,45 @@ Install Homebrew:
 
 Most of the external tools I used in this Emacs configuration should be easily
 installed or already available in main Linux distributions.
+* Emacs Frame
+** Menu Bar and Tool Bar
+#+BEGIN_SRC emacs-lisp
+  (cond ((eq window-system 'w32)
+         ;; Enable copy and paste in Win32
+         (setq select-enable-clipboard t)
+         (menu-bar-mode 0))
+        ((eq window-system 'ns)
+         (menu-bar-mode 1)))
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+END_SRC
+** Font and Frame Size
+#+BEGIN_SRC emacs-lisp
+  (cond ((eq window-system 'w32)
+         ;; cleaner font setting
+         (set-fontset-font
+          "fontset-default"
+          'han (font-spec :family "NSimSun" :size 16))
+         (setq default-frame-alist
+               '((top . 80) (left . 250)
+                 (width . 128) (height . 45)
+                 ;; if you like anti-alias, use this to have a try
+                 (font . "Inconsolata-11")
+                 )))
+        ((eq window-system 'ns)
+         (set-fontset-font
+          "fontset-default"
+          'han (font-spec :family "Microsoft Yahei" :size 14))
+         ;; OS X 下，只有雅黑字體的標點符號顯示的不是那麼難看
+         (set-fontset-font
+          "fontset-default"
+          'cjk-misc (font-spec :family "Microsoft Yahei" :size 14))
+         (setq default-frame-alist
+               '((top . 100) (left . 600)
+                 (width . 166) (height . 70)
+                 ;; (font . "Bitstream Vera Sans Mono-14")
+                 ))))
+#+END_SRC
 
 * Environment
 ** Synchronization Folders
@@ -129,6 +168,7 @@ specify these variables in different way.
            path-root "usr/local/bin" path-separator
            (getenv "PATH")))
 
+  (require 'info)
   (add-to-list 'Info-additional-directory-list
                (concat path-root "usr/share/info"))
   (add-to-list 'Info-additional-directory-list
@@ -204,42 +244,8 @@ All the extensions used in this file are installed and managed by =package=.
   ;; install package is missing
   (setq use-package-always-ensure t)
 #+END_SRC
-* Appearance
-** Font and Color
-#+BEGIN_SRC emacs-lisp
-  (setq font-lock-maximum-decoration t)
-  (setq font-lock-global-modes '(not shell-mode text-mode))
-  (setq font-lock-verbose t)
-  (global-font-lock-mode 1)                 ; 开启语法高亮
 
-  (cond ((eq window-system 'w32)
-         ;; cleaner font setting
-         (set-fontset-font
-          "fontset-default"
-          'han (font-spec :family "NSimSun" :size 16))
-         (setq default-frame-alist
-               '((top . 80) (left . 250)
-                 (width . 128) (height . 45)
-                 ;; if you like anti-alias, use this to have a try
-                 (font . "Inconsolata-11")
-                 )))
-        ((eq window-system 'ns)
-         (set-fontset-font
-          "fontset-default"
-          'han (font-spec :family "Microsoft Yahei" :size 14))
-         ;; OS X 下，只有雅黑字體的標點符號顯示的不是那麼難看
-         (set-fontset-font
-          "fontset-default"
-          'cjk-misc (font-spec :family "Microsoft Yahei" :size 14))
-         (setq default-frame-alist
-               '((top . 100) (left . 600)
-                 (width . 166) (height . 70)
-                 ;; (font . "Bitstream Vera Sans Mono-14")
-                 ))))
-  (load-file (concat path-kimim-emacs "site-lisp/color-theme-kimim.el"))
-  (color-theme-kimim)
-#+END_SRC
-** Title and Header Line
+* Title and Header
 
 #+BEGIN_SRC emacs-lisp
   (setq frame-title-format
@@ -247,29 +253,20 @@ All the extensions used in this file are installed and managed by =package=.
           (:eval (if (buffer-file-name)
                      (abbreviate-file-name (buffer-file-name))
                    "%b"))))
-  (require 'path-headerline-mode)
-  ;; only display headerline for real files
-  (defun kimim/ph--display-header (orig-fun &rest args)
-    (if (buffer-file-name)
-        (apply orig-fun args)
-      (setq header-line-format nil)))
-  (advice-add 'ph--display-header :around #'kimim/ph--display-header)
-  ;; display file path in headerline
-  ;; useful when in fullscreen mode
-  (path-headerline-mode t)
+
+  (use-package path-headerline-mode
+    :config
+    ;; only display headerline for real files
+    (defun kimim/ph--display-header (orig-fun &rest args)
+      (if (buffer-file-name)
+          (apply orig-fun args)
+        (setq header-line-format nil)))
+    (advice-add 'ph--display-header :around #'kimim/ph--display-header)
+    ;; display file path in headerline
+    ;; useful when in fullscreen mode
+    (path-headerline-mode t))
 #+END_SRC
-** Menu Bar and Tool Bar
-#+BEGIN_SRC emacs-lisp
-  (cond ((eq window-system 'w32)
-         ;; Enable copy and paste in Win32
-         (setq select-enable-clipboard t)
-         (menu-bar-mode 0))
-        ((eq window-system 'ns)
-         (menu-bar-mode 1)))
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-#+END_SRC
-** Mode Line
+* Mode Line
 #+BEGIN_SRC emacs-lisp
   (column-number-mode 1)
   (setq display-time-24hr-format t)
@@ -277,7 +274,16 @@ All the extensions used in this file are installed and managed by =package=.
   (setq display-time-interval 10)
   (display-time-mode t)
 #+END_SRC
-** Highlight
+* Color Theme
+#+BEGIN_SRC emacs-lisp
+  (setq font-lock-maximum-decoration t)
+  (setq font-lock-global-modes '(not shell-mode text-mode))
+  (setq font-lock-verbose t)
+  (global-font-lock-mode 1)                 ; 开启语法高亮
+  (load-file (concat path-kimim-emacs "site-lisp/color-theme-kimim.el"))
+  (color-theme-kimim)
+#+END_SRC
+* Highlight
 #+BEGIN_SRC emacs-lisp
   ;; highlight current line
   (global-hl-line-mode 1)
@@ -405,6 +411,7 @@ All the extensions used in this file are installed and managed by =package=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package undo-tree
+    :diminish undo-tree-mode
     :config
     (global-undo-tree-mode))
 #+END_SRC
@@ -648,9 +655,9 @@ add following lines:
 ** COMMENT auto-complete
 #+BEGIN_SRC emacs-lisp
   ;; intelligent completion setting
-  (require 'auto-complete-config)
-  (add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
-  (ac-config-default)
+  ;;(require 'auto-complete-config)
+  ;;(add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
+  ;;(ac-config-default)
   ;;(abbrev-mode -1)
   ;;(icomplete-mode 1)
 #+END_SRC
@@ -1003,6 +1010,10 @@ add following lines:
             (set-visited-file-name new-name t t)))))))
 #+END_SRC
 * Programming General
+** Compiling
+#+BEGIN_SRC emacs-lisp
+  (setq next-error-recenter 20)
+#+END_SRC
 ** Tagging
 
 #+BEGIN_SRC emacs-lisp
@@ -1024,12 +1035,8 @@ add following lines:
     ;; close grep window and done ggtags navigation when type C-g
     ;; but some times it will close all the ecb windows, so remove this advice.
     ;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
-    (defun kimim/recenter()
-      (interactive)
-      (recenter))
 
     (advice-add 'pop-tag-mark :after #'kimim/recenter)
-    ;;(advice-add 'next-error :after #'kimim/recenter)
     ;;(advice-add 'previous-error :after #'kimim/recenter)
     (add-hook 'c-mode-common-hook
               (lambda ()
@@ -1068,7 +1075,8 @@ add following lines:
   ;; Define the modes/packages you need
   (use-package irony
     :config
-    ;; irony-mode configuration
+    ;; use short mode lighter Irony -> Ir
+    (setq irony-lighter " Ir")
     (add-hook 'c-mode-hook 'irony-mode)
     (add-hook 'c++-mode-hook 'irony-mode)
     (add-hook 'objc-mode-hook 'irony-mode)
@@ -1112,17 +1120,21 @@ Python development configuration is quite easy. =elpy= [fn:12] is used here:
 
 #+BEGIN_SRC emacs-lisp
   (elpy-enable)
-  (setq elpy-rpc-backend "jedi")
   ;;(setq jedi:complete-on-dot t)
 
   ;; prevent redundant intent in using yasnippets
   (add-hook 'python-mode-hook
             (lambda ()
               (setq yas-indent-line nil)))
+
   ;; remove warning when start python interpreter
   (add-to-list 'python-shell-completion-native-disabled-interpreters "python")
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-jedi))
+
+  (use-package company-jedi
+    :config
+    (setq elpy-rpc-backend "jedi")
+    (eval-after-load 'company
+      '(add-to-list 'company-backends 'company-jedi)))
 #+END_SRC
 
 Following =python= package is required according to =elpy= mannual:
@@ -1751,7 +1763,6 @@ pip install virtualenv
   ;; (global-set-key (kbd "<f1> l") 'counsel-load-library)
   ;; (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
   ;; (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-  (global-set-key (kbd "C-c g") 'counsel-git)
   (global-set-key (kbd "C-c j") 'counsel-git-grep)
   (global-set-key (kbd "C-c k") 'counsel-ag)
   (global-set-key (kbd "C-x l") 'counsel-locate)
