@@ -617,15 +617,18 @@ task for =es.exe=.
 
 #+BEGIN_SRC emacs-lisp
   ;; add pair parenthis and quote automatically
-  (autopair-global-mode 1)
+  (use-package autopair
+    :config
+    (autopair-global-mode 1))
 #+END_SRC
 
 ** yasnippet
 
 #+BEGIN_SRC emacs-lisp
-  (require 'yasnippet)
-  (yas-global-mode 1)
-  (setq yas-snippet-dirs (concat path-sync-home "tools/snippets"))
+  (use-package yasnippet
+    :config
+    (yas-global-mode 1)
+    (setq yas-snippet-dirs (concat path-sync-home "tools/snippets")))
 #+END_SRC
 
 In order to remove following warning:
@@ -654,21 +657,21 @@ add following lines:
 ** company mode
 
 #+BEGIN_SRC emacs-lisp
-  (require 'company)
-  (global-company-mode t)
-  (add-hook 'after-init-hook 'global-company-mode)
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-yasnippet))
+  (use-package company
+    :config
+    (global-company-mode t)
+    (add-hook 'after-init-hook 'global-company-mode)
+    (eval-after-load 'company
+      '(add-to-list 'company-backends 'company-yasnippet)))
 #+END_SRC
 ** company dict
 #+BEGIN_SRC emacs-lisp
-  (require 'company-dict)
-
-  ;; Where to look for dictionary files. Default is ~/.emacs.d/dict
-  (setq company-dict-dir "~/.emacs.d/dict/")
-
-  ;; Optional: if you want it available everywhere
-  (add-to-list 'company-backends 'company-dict)
+  (use-package company-dict
+    :config
+    ;; Where to look for dictionary files. Default is ~/.emacs.d/dict
+    (setq company-dict-dir "~/.emacs.d/dict/")
+    ;; Optional: if you want it available everywhere
+    (add-to-list 'company-backends 'company-dict))
 #+END_SRC
 * helper functions
 
@@ -1063,44 +1066,45 @@ add following lines:
 *** Completion
 #+BEGIN_SRC emacs-lisp
   ;; Define the modes/packages you need
-  (require 'irony)
-  (require 'company-c-headers)
-  ;; Enable company mode globally
+  (use-package irony
+    :config
+    ;; irony-mode configuration
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'objc-mode-hook 'irony-mode)
+    (setq w32-pipe-read-delay 0)
 
-  ;;(add-hook 'after-init-hook 'global-company-mode)
+    (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
-  (defun company-c-headers-includes ()
-    (add-to-list 'company-c-headers-path-system "/usr/include"))
+    ;; replace the `completion-at-point' and `complete-symbol' bindings in
+    ;; irony-mode's buffers by irony-mode's function
+    (defun my-irony-mode-hook ()
+      (define-key irony-mode-map [remap completion-at-point]
+        'irony-completion-at-point-async)
+      (define-key irony-mode-map [remap complete-symbol]
+        'irony-completion-at-point-async))
+    ( add-hook 'irony-mode-hook 'my-irony-mode-hook)
 
-  (company-c-headers-includes)
+    (eval-after-load 'company
+      '(add-to-list 'company-backends 'company-irony)))
 
-  ;; irony-mode configuration
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'objc-mode-hook 'irony-mode)
-  (setq w32-pipe-read-delay 0)
 
-  (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (use-package company-c-headers
+    :config
+    (defun company-c-headers-includes ()
+      (add-to-list 'company-c-headers-path-system "/usr/include"))
+    (company-c-headers-includes))
 
-  ;; set up flycheck
-  (eval-after-load 'flycheck
-    '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
-  (add-hook 'c-mode-hook 'flycheck-mode)
-  (add-hook 'c++-mode-hook 'flycheck-mode)
+  (use-package flycheck
+    :config
+    ;; set up flycheck
+    (eval-after-load 'flycheck
+      '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+    (add-hook 'c-mode-hook 'flycheck-mode)
+    (add-hook 'c++-mode-hook 'flycheck-mode))
 
-  ;; replace the `completion-at-point' and `complete-symbol' bindings in
-  ;; irony-mode's buffers by irony-mode's function
-  (defun my-irony-mode-hook ()
-    (define-key irony-mode-map [remap completion-at-point]
-      'irony-completion-at-point-async)
-    (define-key irony-mode-map [remap complete-symbol]
-      'irony-completion-at-point-async))
-  ( add-hook 'irony-mode-hook 'my-irony-mode-hook)
-
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-irony))
 #+END_SRC
 ** Python
 
@@ -1701,33 +1705,36 @@ pip install virtualenv
 
 #+BEGIN_SRC emacs-lisp
   ;; erc settings
-  (require 'erc-join)
-  (erc-autojoin-mode 1)
-  (erc-autojoin-enable)
-  (setq erc-default-server "irc.freenode.net")
-  (setq erc-autojoin-channels-alist
-            '(("irc.freenode.net" "#emacs")))
-  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+  (use-package erc
+    :config
+    (require 'erc-join)
+    (erc-autojoin-mode 1)
+    (erc-autojoin-enable)
+    (setq erc-default-server "irc.freenode.net")
+    (setq erc-autojoin-channels-alist
+          '(("irc.freenode.net" "#emacs")))
+    (setq erc-hide-list '("JOIN" "PART" "QUIT")))
 
   ;; gnus settings
-  (setq message-directory "~/Gnus/Mail/")
-  (setq gnus-directory "~/Gnus/News/")
-  (setq nnfolder-directory "~/Gnus/Mail/Archive")
+  (use-package gnus
+    :config
+    (setq message-directory "~/Gnus/Mail/")
+    (setq gnus-directory "~/Gnus/News/")
+    (setq nnfolder-directory "~/Gnus/Mail/Archive")
 
-  (setq gnus-agent t)
-  (setq gnus-agent-expire-days 90)
-  ; prompt for how many articles only for larger than 1000 articles
-  (setq gnus-large-newsgroup 1000)
-  (setq gnus-use-cache t)
-  (setq gnus-fetch-old-headers nil) ; show previous messages in a thread
-  (setq gnus-thread-indent-level 1)
-  (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
-  (setq gnus-select-method '(nnml ""))
-  (setq gnus-secondary-select-methods nil)
-  (add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
-  (add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
-  (add-to-list 'gnus-secondary-select-methods '(nnml ""))
-
+    (setq gnus-agent t)
+    (setq gnus-agent-expire-days 90)
+                                          ; prompt for how many articles only for larger than 1000 articles
+    (setq gnus-large-newsgroup 1000)
+    (setq gnus-use-cache t)
+    (setq gnus-fetch-old-headers nil) ; show previous messages in a thread
+    (setq gnus-thread-indent-level 1)
+    (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
+    (setq gnus-select-method '(nnml ""))
+    (setq gnus-secondary-select-methods nil)
+    (add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
+    (add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
+    (add-to-list 'gnus-secondary-select-methods '(nnml "")))
 #+END_SRC
 
 * Key Binding
@@ -1781,7 +1788,6 @@ pip install virtualenv
   (global-set-key "\C-x\C-b" 'ibuffer-other-window)
   (global-set-key "\C-h" 'delete-backward-char)
   (global-set-key "\M-h" 'backward-kill-word)
-  (global-set-key (kbd "C-?") 'help)
   (global-set-key "\M-?" 'mark-paragraph)
   (global-set-key "\C-x\C-j" 'dired-jump)
   (global-set-key "\C-xj" 'bookmark-jump)
@@ -1826,6 +1832,7 @@ pip install virtualenv
   ;; ;; Make a new frame
   (global-set-key "\C-xmf" 'make-frame)
   ;; ;; Make a new frame
+  (global-set-key "\C-xmh" 'help)
   (global-set-key "\C-xmp" 'helm-global-mark-ring)
   ;; ;; 查看光标处的单词的 man page
   (global-set-key "\C-xmm" 'man-follow)
