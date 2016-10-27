@@ -667,7 +667,9 @@ add following lines:
 ** Compiling
 #+BEGIN_SRC emacs-lisp
   (setq next-error-recenter 20)
-  (compile-bookmarks-mode)
+  (use-package compile-bookmarks
+    :config
+    (compile-bookmarks-mode))
 #+END_SRC
 ** Tagging
 
