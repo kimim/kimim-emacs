@@ -404,13 +404,12 @@ All the extensions used in this file are installed and managed by =package=.
 #+BEGIN_SRC emacs-lisp
   (use-package pangu-spacing
     :ensure t
+    :diminish (pangu-spacing-mode . " p")
     :config
     (global-pangu-spacing-mode 1)
     (add-hook 'org-mode-hook
               '(lambda ()
-                 (set (make-local-variable 'pangu-spacing-real-insert-separtor) t)))
-    (diminish 'pangu-spacing-mode " p")
-    )
+                 (set (make-local-variable 'pangu-spacing-real-insert-separtor) t))))
 #+END_SRC
 ** undo-tree
 
@@ -447,6 +446,7 @@ and defers loading of the module until they are used.
   ;; https://github.com/justbur/emacs-which-key
   (use-package which-key
     :ensure t
+    :diminish which-key-mode
     :config
     ;; use minibuffer as the popup type, otherwise conflict in ecb mode
     (setq which-key-popup-type 'minibuffer)
@@ -831,6 +831,7 @@ pip install virtualenv
 ** Emacs lisp
 
 #+BEGIN_SRC emacs-lisp
+  (define-derived-mode lisp-interaction-mode emacs-lisp-mode "λ")
   (eval-after-load 'company
     '(add-to-list 'company-backends 'company-elisp))
 #+END_SRC
