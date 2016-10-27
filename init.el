@@ -1,3 +1,5 @@
+(shell-command "cd ~/kimim-emacs/ && git pull")
+
 (setq readme-org "~/kimim-emacs/README.org")
 (setq readme-el "~/kimim-emacs/README.el")
 
