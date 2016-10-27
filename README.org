@@ -136,9 +136,6 @@ specify these variables in different way.
 #+END_SRC
 ** Language
 #+BEGIN_SRC emacs-lisp
-  ;;========================================
-  ;; Language and Encoding Settings
-  ;;========================================
   (setenv "LANG" "en_US.UTF-8")
   (setenv "LC_ALL" "en_US.UTF-8")
   ;; remove svn log LC_TYPE not defined warning.
