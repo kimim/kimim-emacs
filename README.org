@@ -154,16 +154,6 @@ specify these variables in different way.
          (set-terminal-coding-system 'utf-8)))
 #+END_SRC
 
-** TODO Customization File
-
-Do I need another customization file? Or shall I collect these settings in this
-file?
-
-#+BEGIN_SRC emacs-lisp
-  ;; load customization
-  (setq custom-file (concat path-kimim-emacs "custom.el"))
-  (load custom-file)
-#+END_SRC
 ** global key map
 #+BEGIN_SRC emacs-lisp
   (define-prefix-command 'ctl-x-m-map)
