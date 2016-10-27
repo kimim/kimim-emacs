@@ -690,9 +690,6 @@ add following lines:
     ;; close grep window and done ggtags navigation when type C-g
     ;; but some times it will close all the ecb windows, so remove this advice.
     ;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
-
-    (advice-add 'pop-tag-mark :after #'kimim/recenter)
-    ;;(advice-add 'previous-error :after #'kimim/recenter)
     (add-hook 'c-mode-common-hook
               (lambda ()
                 (ggtags-mode 1))))
