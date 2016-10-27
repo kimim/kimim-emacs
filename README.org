@@ -17,6 +17,10 @@ create a =.bat= file =emacs.bat= to set the environment and run Emacs:
   C:\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
 
+Another important path in Windows is =kimikit=, which is used to put some
+portable applications. I plan to write some installation script to update and
+install these applications automatically.
+
 *** Cygwin
 
 Another tool sets required for this configuration in Windows is the Cygwin
@@ -61,18 +65,15 @@ Business or Box Business, while personal files are synchronized in Dropbox or
 SugarSync.
 
 The variable for synchronization location is named as:
-- =path-sync-work= for working usage
-- =path-sync-home= for personal usage
+=kimim/path-sync=
 
 If the sync path is not set, then use HOME path =~= as the default folder, that
 means, no synchronization. So please set these variables in your =.emacs= file.
 
 #+BEGIN_SRC emacs-lisp
   ;; Synchronization Folders
-  (if (not (boundp 'path-sync-work))
-      (defvar path-sync-work "~/"))
-  (if (not (boundp 'path-sync-home))
-      (defvar path-sync-home "~/"))
+  (if (not (boundp 'kimim/path-sync))
+      (defvar kimim/path-sync "~/"))
 #+END_SRC
 
 ** kimim-emacs path
@@ -80,7 +81,7 @@ means, no synchronization. So please set these variables in your =.emacs= file.
 Another important folder is the folder for this configuration files, which is
 cloned from my github repository.
 
-Anyway, you can change the path as you want, and set =path-kimim-emacs=
+Anyway, you can change the path as you want, and set =kimim/path-kimim-emacs=
 accordingly.
 
 #+BEGIN_SRC sh
@@ -88,7 +89,7 @@ git clone https://github.com/kimim/kimim-emacs.git
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-  (defvar path-kimim-emacs "~/kimim-emacs/")
+  (defvar kimim/path-kimim-emacs "~/kimim-emacs/")
 #+END_SRC
 
 ** PATH, exec-path and Info
@@ -101,31 +102,31 @@ As I have a Windows box in the office, and a Apple macOS at home, so I need to
 specify these variables in different way.
 
 #+BEGIN_SRC emacs-lisp
-  (defvar path-root "/")
+  (defvar kimim/path-root "/")
   (cond ((eq window-system 'w32)
-         (setq path-root "C:/cygwin/")
+         (setq kimim/path-root "C:/cygwin/")
          (add-to-list 'exec-path
                       "C:/kimikit/emacs/bin/")
          (setenv "PATH"
                  (concat "C:/kimikit/emacs/bin" path-separator
                  (getenv "PATH"))))
         ((eq window-system 'ns)
-         (setq path-root "/")
+         (setq kimim/path-root "/")
          (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.5/bin")
          (setenv "PATH"
                  (concat
                   "/Library/Frameworks/Python.framework/Versions/3.5/bin" path-separator
                   (getenv "PATH")))))
 
-  (add-to-list 'exec-path (concat path-root "bin"))
-  (add-to-list 'exec-path (concat path-root "usr/bin"))
-  (add-to-list 'exec-path (concat path-root "usr/local/bin"))
+  (add-to-list 'exec-path (concat kimim/path-root "bin"))
+  (add-to-list 'exec-path (concat kimim/path-root "usr/bin"))
+  (add-to-list 'exec-path (concat kimim/path-root "usr/local/bin"))
 
   (setenv "PATH"
           (concat
-           path-root "bin" path-separator
-           path-root "usr/bin" path-separator
-           path-root "usr/local/bin" path-separator
+           kimim/path-root "bin" path-separator
+           kimim/path-root "usr/bin" path-separator
+           kimim/path-root "usr/local/bin" path-separator
            (getenv "PATH")))
 #+END_SRC
 
@@ -296,12 +297,12 @@ All the extensions used in this file are installed and managed by =package=.
   (use-package info
     :config
     (add-to-list 'Info-additional-directory-list
-                 (concat path-root "usr/share/info"))
+                 (concat kimim/path-root "usr/share/info"))
     (add-to-list 'Info-additional-directory-list
-                 (concat path-root "usr/local/share/info"))
+                 (concat kimim/path-root "usr/local/share/info"))
     ;; additional info, collected from internet
     (add-to-list 'Info-additional-directory-list
-                 (concat "~/info")))
+                 "~/info"))
 #+END_SRC
 * Editing
 ** General
@@ -454,14 +455,31 @@ and defers loading of the module until they are used.
   ;; smex will list the recent function on top of the cmd list
   (use-package smex
     :ensure t
-     :config
+    :config
     (smex-initialize))
+
+  (use-package counsel
+    :bind
+    (("M-x" . counsel-M-x)
+     ("C-x C-f" . counsel-find-file)
+     ("C-x m f" . counsel-describe-function)
+     ("C-x m v" . counsel-describe-variable)
+     ("C-x m l" . counsel-load-library)
+     ("C-x m i" . counsel-info-lookup-symbol)
+     ("C-x m u" . counsel-unicode-char)
+     ("C-c j" . counsel-git-grep)
+     ("C-c k" . counsel-ag)
+     ("C-x l" . counsel-locate)
+     :map read-expression-map
+     ("C-r" . counsel-expression-history)))
 #+END_SRC
 * Dired and Buffer
 
 #+BEGIN_SRC emacs-lisp
   (use-package dired
     :ensure nil
+    :bind
+    ("C-x C-j" . dired-jump)
     :config
     (require 'dired-x)
     (add-hook 'dired-mode-hook
@@ -543,6 +561,15 @@ and defers loading of the module until they are used.
   (use-package bm
     :bind (("C-x m t" . bm-toggle)
            ("C-x m s" . bm-show-all)))
+
+  (use-package ace-jump-mode
+    :bind
+    ("C-`" . ace-jump-mode)
+    ("<apps>" . ace-jump-mode))
+
+  (use-package ace-window
+    :bind
+    ("C-\"" . ace-window))
 #+END_SRC
 * Search and Finding
 ** swiper
@@ -620,7 +647,7 @@ task for =es.exe=.
   (use-package yasnippet
     :config
     (add-to-list
-     'yas-snippet-dirs (concat path-sync-home "tools/snippets"))
+     'yas-snippet-dirs (concat kimim/path-sync "tools/snippets"))
     (yas-global-mode 1))
 #+END_SRC
 
@@ -842,8 +869,7 @@ pip install virtualenv
 
 #+BEGIN_SRC emacs-lisp
   ;; path and system environment setting for orgmode
-  (setq path-org-home (concat path-sync-home "org/"))
-  (setq path-org-work (concat path-sync-work "org/"))
+  (setq kimim/path-org (concat kimim/path-sync "org/"))
   (use-package org
     :bind
     ("C-c c" . org-capture)
@@ -989,8 +1015,6 @@ pip install virtualenv
 ** org as GTD system
 
 #+BEGIN_SRC emacs-lisp
-  (setq path-org-home (concat path-sync-home "org/"))
-  (setq path-org-work (concat path-sync-work "org/"))
   (use-package org
     :bind (:map org-mode-map
            ("C-c  。" . org-time-stamp))
@@ -1087,13 +1111,13 @@ pip install virtualenv
              ((org-agenda-sorting-strategy '(priority-down))))))
 
     (setq org-capture-templates
-          '(("c" "Capture" entry (file+headline (concat path-org-home "capture.org") "Inbox")
+          '(("c" "Capture" entry (file+headline (concat kimim/path-org "capture.org") "Inbox")
              "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("t" "TODO" entry (file+headline (concat path-org-home "capture.org") "Inbox")
+            ("t" "TODO" entry (file+headline (concat kimim/path-org "capture.org") "Inbox")
              "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("o" "Action" entry (file+headline (concat path-org-home "capture.org") "Inbox")
+            ("o" "Action" entry (file+headline (concat kimim/path-org "capture.org") "Inbox")
              "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("h" "Habit" entry (file+headline (concat path-org-home "world.org") "Habit")
+            ("h" "Habit" entry (file+headline (concat kimim/path-org "world.org") "Habit")
              "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
     (defcustom org-location-home-or-office "office" "office")
@@ -1101,26 +1125,26 @@ pip install virtualenv
       (interactive)
       (setq org-location-home-or-office "office")
       (setq org-agenda-files
-            (list path-org-home
-                  (concat path-org-work "work/")))
+            (list kimim/path-org
+                  (concat kimim/path-org "work/")))
       (setq org-refile-files
             (append
              (list
-              (concat path-org-home "home/kimi.org"))
-             (file-expand-wildcards (concat path-org-home "*.org"))
-             (file-expand-wildcards (concat path-org-home "work/*.org"))))
+              (concat kimim/path-org "home/kimi.org"))
+             (file-expand-wildcards (concat kimim/path-org "*.org"))
+             (file-expand-wildcards (concat kimim/path-org "work/*.org"))))
       (message "Agenda is from office..."))
 
     (defun org-toggle-home ()
       (interactive)
       (setq org-location-home-or-office "home")
       (setq org-agenda-files
-            (list path-org-home
-                  (concat path-org-home "home/")))
+            (list kimim/path-org
+                  (concat kimim/path-org "home/")))
       (setq org-refile-files
             (append
-             (file-expand-wildcards (concat path-org-home "*.org"))
-             (file-expand-wildcards (concat path-org-home "home/*.org"))))
+             (file-expand-wildcards (concat kimim/path-org "*.org"))
+             (file-expand-wildcards (concat kimim/path-org "home/*.org"))))
       (message "Agenda is from home..."))
 
     (defun org-toggle-home-or-office()
@@ -1157,7 +1181,7 @@ New link to use everything to locate a file with unique ID:
     ;; file in jekyll base will also be uploaded to github
     (setq path-jekyll-base "~/kimi.im/_notes/_posts")
     ;; in order to sync draft with cloud sync driver
-    (setq path-jekyll-draft (concat path-sync-home "kimim/_draft/"))
+    (setq path-jekyll-draft (concat kimim/path-sync "kimim/_draft/"))
     ;; file in jekyll base will also be uploaded to github
 
     (setq org-publish-project-alist
@@ -1274,11 +1298,12 @@ New link to use everything to locate a file with unique ID:
 #+BEGIN_SRC emacs-lisp
   (use-package deft
     :ensure t
-    :bind (("C-x d" . deft-find-file)
-           ("C-x C-d" . deft))
+    :bind
+    (("C-x d" . deft-find-file)
+     ("C-x C-d" . deft))
     :config
     (setq deft-extensions '("txt" "tex" "org" "md"))
-    (setq deft-directory (concat path-sync-home "notes/"))
+    (setq deft-directory (concat kimim/path-sync "notes/"))
     (setq deft-recursive t)
     (setq deft-file-naming-rules '((noslash . "_")))
     (setq deft-text-mode 'org-mode)
@@ -1379,17 +1404,6 @@ New link to use everything to locate a file with unique ID:
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c r") 'kimim/rename-file-and-buffer)
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  ;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-  ;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-  ;; (global-set-key (kbd "<f1> l") 'counsel-load-library)
-  ;; (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-  ;; (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-  (global-set-key (kbd "C-c j") 'counsel-git-grep)
-  (global-set-key (kbd "C-c k") 'counsel-ag)
-  (global-set-key (kbd "C-x l") 'counsel-locate)
-  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
 
   (require 'hideshow) ;; hs-toggle-hiding
   (bind-key "<f1>" 'delete-other-windows)
@@ -1412,7 +1426,6 @@ New link to use everything to locate a file with unique ID:
   (global-set-key "\C-h" 'delete-backward-char)
   (global-set-key "\M-h" 'backward-kill-word)
   (global-set-key "\M-?" 'mark-paragraph)
-  (global-set-key "\C-x\C-j" 'dired-jump)
   (global-set-key "\C-xj" 'bookmark-jump)
   (global-set-key "\C-xk" 'kill-this-buffer)
   (global-set-key "\C-x\C-v" 'view-file-other-window)
@@ -1428,10 +1441,6 @@ New link to use everything to locate a file with unique ID:
   (global-set-key "\C-cd" 'kimim/lookinsight)
 
   (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
-  ;;(define-key global-map "\C-cd" 'kimim/look-from-mydict)
-  (define-key global-map (kbd "C-`") 'ace-jump-mode)
-  (define-key global-map (kbd "<apps>") 'ace-jump-mode)
-  (define-key global-map (kbd "C-\"") 'ace-window)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   (define-key global-map (kbd "RET") 'newline-and-indent)
   (define-key global-map (kbd "<M-S-mouse-1>") 'pop-tag-mark)
