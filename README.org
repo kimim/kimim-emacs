@@ -1102,34 +1102,31 @@ pip install virtualenv
              "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
             ("h" "Habit" entry (file+headline (concat path-org-home "world.org") "Habit")
              "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
+
     (defcustom org-location-home-or-office "office" "office")
     (defun org-toggle-office ()
       (interactive)
       (setq org-location-home-or-office "office")
       (setq org-agenda-files
-            (list (concat path-org-home "capture.org")
-                  (concat path-org-home "world.org")
+            (list path-org-home
                   (concat path-org-work "work/")))
       (setq org-refile-files
             (append
-             (list (concat path-org-home "capture.org")
-                   (concat path-org-home "world.org")
-                   (concat path-org-home "words.org")
-                   (concat path-org-home "home/kimi.org"))
-             (file-expand-wildcards (concat path-org-work "work/*.org"))))
+             (list
+              (concat path-org-home "home/kimi.org"))
+             (file-expand-wildcards (concat path-org-home "*.org"))
+             (file-expand-wildcards (concat path-org-home "work/*.org"))))
       (message "Agenda is from office..."))
 
     (defun org-toggle-home ()
       (interactive)
       (setq org-location-home-or-office "home")
       (setq org-agenda-files
-            (list (concat path-org-home "capture.org")
-                  (concat path-org-home "world.org")
+            (list path-org-home
                   (concat path-org-home "home/")))
       (setq org-refile-files
             (append
-             (list (concat path-org-home "capture.org")
-                   (concat path-org-home "world.org"))
+             (file-expand-wildcards (concat path-org-home "*.org"))
              (file-expand-wildcards (concat path-org-home "home/*.org"))))
       (message "Agenda is from home..."))
 
