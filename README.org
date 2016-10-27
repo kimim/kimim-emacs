@@ -3,9 +3,6 @@
 This Emacs configuration file is written with literate programming method.[fn:1]
 =.el= file is loaded by extracting source code from this file.
 
-The source code block marked with =:tangle yes= is extracted and loaded, while
-others are not loaded.
-
 * Preparation
 ** Windows
 *** Starter Script
@@ -53,46 +50,6 @@ Install Homebrew:
 
 Most of the external tools I used in this Emacs configuration should be easily
 installed or already available in main Linux distributions.
-* Emacs Frame
-** Menu Bar and Tool Bar
-#+BEGIN_SRC emacs-lisp
-  (cond ((eq window-system 'w32)
-         ;; Enable copy and paste in Win32
-         (setq select-enable-clipboard t)
-         (menu-bar-mode 0))
-        ((eq window-system 'ns)
-         (menu-bar-mode 1)))
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-#+END_SRC
-** Font and Frame Size
-#+BEGIN_SRC emacs-lisp
-  (cond ((eq window-system 'w32)
-         ;; cleaner font setting
-         (set-fontset-font
-          "fontset-default"
-          'han (font-spec :family "NSimSun" :size 16))
-         (setq default-frame-alist
-               '((top . 80) (left . 250)
-                 (width . 128) (height . 45)
-                 ;; if you like anti-alias, use this to have a try
-                 (font . "Inconsolata-11")
-                 )))
-        ((eq window-system 'ns)
-         (set-fontset-font
-          "fontset-default"
-          'han (font-spec :family "Microsoft Yahei" :size 14))
-         ;; OS X 下，只有雅黑字體的標點符號顯示的不是那麼難看
-         (set-fontset-font
-          "fontset-default"
-          'cjk-misc (font-spec :family "Microsoft Yahei" :size 14))
-         (setq default-frame-alist
-               '((top . 100) (left . 600)
-                 (width . 166) (height . 70)
-                 ;; (font . "Bitstream Vera Sans Mono-14")
-                 ))))
-#+END_SRC
-
 * Environment
 ** Synchronization Folders
 
@@ -231,12 +188,50 @@ All the extensions used in this file are installed and managed by =package=.
           ("marmalade" . "https://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
   (package-initialize)
-  (eval-when-compile
-    (require 'use-package))
+  (require 'use-package)
   (require 'diminish)                ;; if you use :diminish
   (require 'bind-key)                ;; if you use any :bind variant
   ;; install package is missing
   (setq use-package-always-ensure t)
+#+END_SRC
+* Emacs Frame
+** Menu Bar and Tool Bar
+#+BEGIN_SRC emacs-lisp
+  (cond ((eq window-system 'w32)
+         ;; Enable copy and paste in Win32
+         (setq select-enable-clipboard t)
+         (menu-bar-mode 0))
+        ((eq window-system 'ns)
+         (menu-bar-mode 1)))
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+END_SRC
+** Font and Frame Size
+#+BEGIN_SRC emacs-lisp
+  (cond ((eq window-system 'w32)
+         ;; cleaner font setting
+         (set-fontset-font
+          "fontset-default"
+          'han (font-spec :family "NSimSun" :size 16))
+         (setq default-frame-alist
+               '((top . 80) (left . 250)
+                 (width . 128) (height . 45)
+                 ;; if you like anti-alias, use this to have a try
+                 (font . "Inconsolata-11")
+                 )))
+        ((eq window-system 'ns)
+         (set-fontset-font
+          "fontset-default"
+          'han (font-spec :family "Microsoft Yahei" :size 14))
+         ;; OS X 下，只有雅黑字體的標點符號顯示的不是那麼難看
+         (set-fontset-font
+          "fontset-default"
+          'cjk-misc (font-spec :family "Microsoft Yahei" :size 14))
+         (setq default-frame-alist
+               '((top . 100) (left . 600)
+                 (width . 166) (height . 70)
+                 ;; (font . "Bitstream Vera Sans Mono-14")
+                 ))))
 #+END_SRC
 
 * Title and Header
@@ -354,6 +349,9 @@ All the extensions used in this file are installed and managed by =package=.
   (add-hook 'write-file-hooks 'time-stamp); 自动更新 time-stamp
 
   (add-hook 'before-save-hook 'kimim/delete-trailing-whitespace)
+        (defun kimim/save-buffer-advice (orig-fun &rest arg)
+  (delete-trailing-whitespace)
+  (apply orig-fun arg))
 
 
   (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
@@ -838,7 +836,7 @@ pip install virtualenv
         ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
 #+END_SRC
 * Orgmode
-** orgmode general setting
+** org general setting
 
 #+BEGIN_SRC emacs-lisp
   ;; path and system environment setting for orgmode
@@ -854,7 +852,7 @@ pip install virtualenv
     (setq org-startup-indented t))
 
 #+END_SRC
-** orgmode for writing
+** org for writing
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :config
@@ -871,12 +869,12 @@ pip install virtualenv
                                                  (backward-char 1)))
     )
 #+END_SRC
-** orgmode with source code
+** org with source code
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :config
     ;; src block setting
-    (setq org-src-window-setup 'other-frame)
+    (setq org-src-window-setup 'current-window)
     (setq org-src-fontify-natively t)
     (setq org-confirm-babel-evaluate nil)
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
@@ -894,11 +892,10 @@ pip install virtualenv
        (plantuml . t)
        (clojure . t)
        (org . t)
-       (R . t)
        ))
     )
 #+END_SRC
-** orgmode exporting
+** org exporting
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
@@ -968,7 +965,7 @@ pip install virtualenv
                     (if description (concat "[" description "]") "")))))))
 #+END_SRC
 
-** orgmode with diagram
+** org with diagram
 #+BEGIN_SRC emacs-lisp
   ;; plant uml setting
   (use-package org
@@ -977,7 +974,7 @@ pip install virtualenv
     (setenv "GRAPHVIZ_DOT" "C:\\cygwin\\bin\\dot.exe")
     (setq org-plantuml-jar-path "C:\\kimikit\\plantuml\\plantuml.jar"))
 #+END_SRC
-** orgmode as GTD system
+** org as GTD system
 
 #+BEGIN_SRC emacs-lisp
   (setq path-org-home (concat path-sync-home "org/"))
@@ -1124,7 +1121,7 @@ pip install virtualenv
         (org-toggle-home))))
 #+END_SRC
 
-** orgmode link: match
+** org link: match
 
 New link to use everything to locate a file with unique ID:
 
@@ -1140,7 +1137,7 @@ New link to use everything to locate a file with unique ID:
        "open" "Everything" (concat "-search " path))))
 
 #+END_SRC
-** orgmode publish to jekyll
+** org publish to jekyll
 
 #+BEGIN_SRC emacs-lisp
   (use-package org

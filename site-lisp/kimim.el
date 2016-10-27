@@ -343,8 +343,5 @@
   (if (or (not (boundp 'deft-auto-save-buffers))
           (not (member (current-buffer) deft-auto-save-buffers)))
       (delete-trailing-whitespace)))
-(defun kimim/save-buffer-advice (orig-fun &rest arg)
-  (delete-trailing-whitespace)
-  (apply orig-fun arg))
 
 (provide 'kimim)
