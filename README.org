@@ -129,6 +129,11 @@ specify these variables in different way.
            (getenv "PATH")))
 #+END_SRC
 
+** Custom File
+#+BEGIN_SRC emacs-lisp
+(setq custom-file "~/.emacs.d/custom.el")
+(load-file custom-file)
+#+END_SRC
 ** Language
 #+BEGIN_SRC emacs-lisp
   ;;========================================
@@ -302,7 +307,7 @@ All the extensions used in this file are installed and managed by =package=.
                  (concat "~/info")))
 #+END_SRC
 * Editing
-
+** General
 #+BEGIN_SRC emacs-lisp
   ;;========================================
   ;; Editor setting
@@ -314,9 +319,9 @@ All the extensions used in this file are installed and managed by =package=.
   (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
   (setq kill-whole-line t)                ; 在行首 C-k 时，同时删除该行。
   (setq require-final-newline t)          ; 存盘的时候，要求最后一个字符时换行符
-  (setq tab-width 4)                      ; 用space替换tab，tab长度为4
+  (setq tab-width 4)                      ; 用 space 替换 tab，tab 长度为 4
   (setq tab-stop-list
-        (number-sequence 4 120 4))        ; 每次tab空格數
+        (number-sequence 4 120 4))        ; 每次 tab 空格數
   (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
   ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
   ;; 候，备份文件是复本，而不是原件。
@@ -397,13 +402,26 @@ All the extensions used in this file are installed and managed by =package=.
   ;;    (volatile-highlights-mode t)
   ;;    :diminish volatile-highlights-mode)
 #+END_SRC
+** pangu-spacing
+#+BEGIN_SRC emacs-lisp
+  (use-package pangu-spacing
+    :ensure t
+    :config
+    (global-pangu-spacing-mode 1)
+    (add-hook 'org-mode-hook
+              '(lambda ()
+                 (set (make-local-variable 'pangu-spacing-real-insert-separtor) t)))
+    (diminish 'pangu-spacing-mode " p")
+    )
+#+END_SRC
 ** undo-tree
 
 #+BEGIN_SRC emacs-lisp
   (use-package undo-tree
     :diminish undo-tree-mode
     :config
-    (global-undo-tree-mode))
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-timestamps t))
 #+END_SRC
 * Controlling
 ** Window and Frame
@@ -533,6 +551,12 @@ and defers loading of the module until they are used.
            ("C-x m s" . bm-show-all)))
 #+END_SRC
 * Search and Finding
+** swiper
+#+BEGIN_SRC emacs-lisp
+  (use-package swiper
+    :bind
+    ("C-s" . swiper))
+#+END_SRC
 ** ag: the silver searcher
 
 =ag= [fn:8] is really a very fast grep tool, and =ag.el= [fn:9] provide the
@@ -582,7 +606,10 @@ task for =es.exe=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
-    :config (ivy-mode 1))
+    :bind ("<f6>" . ivy-resume)
+    :config
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t))
 #+END_SRC
 
 ** auto parenthesis
@@ -593,14 +620,14 @@ task for =es.exe=.
     :config
     (autopair-global-mode 1))
 #+END_SRC
-
-** yasnippet
+* yasnippet
 
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
     :config
-    (yas-global-mode 1)
-    (setq yas-snippet-dirs (concat path-sync-home "tools/snippets")))
+    (add-to-list
+     'yas-snippet-dirs (concat path-sync-home "tools/snippets"))
+    (yas-global-mode 1))
 #+END_SRC
 
 In order to remove following warning:
@@ -617,15 +644,6 @@ add following lines:
   (setq warning-suppress-types '((yasnippet backquote-change)))
 #+END_SRC
 
-** COMMENT auto-complete
-#+BEGIN_SRC emacs-lisp
-  ;; intelligent completion setting
-  ;;(require 'auto-complete-config)
-  ;;(add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
-  ;;(ac-config-default)
-  ;;(abbrev-mode -1)
-  ;;(icomplete-mode 1)
-#+END_SRC
 ** company mode
 
 #+BEGIN_SRC emacs-lisp
@@ -649,6 +667,7 @@ add following lines:
 ** Compiling
 #+BEGIN_SRC emacs-lisp
   (setq next-error-recenter 20)
+  (compile-bookmarks-mode)
 #+END_SRC
 ** Tagging
 
@@ -833,6 +852,16 @@ pip install virtualenv
   (setq path-org-home (concat path-sync-home "org/"))
   (setq path-org-work (concat path-sync-work "org/"))
   (use-package org
+    :bind
+    ("C-c c" . org-capture)
+    ("C-c l" . org-store-link)
+    ("C-c c" . org-capture)
+    ("C-c a" . org-agenda)
+    ("C-c b" . org-iswitchb)
+     ;; ("C-c C-x C-l" . org-clock-in-last)
+     ;; ("C-c C-x C-i" . org-clock-in)
+     ;; ("C-c C-x C-o" . org-clock-out))
+
     :config
     (setq org-export-allow-BIND t)
     (setq org-support-shift-select t)
@@ -971,7 +1000,7 @@ pip install virtualenv
   (setq path-org-work (concat path-sync-work "org/"))
   (use-package org
     :bind (:map org-mode-map
-           ("C-c 。" . org-time-stamp))
+           ("C-c  。" . org-time-stamp))
     :config
     (setq org-todo-keywords
           '(
@@ -1000,7 +1029,7 @@ pip install virtualenv
     ;; subtree contains TODO
 
     ;; 子節點不需要繼承父節點的 tag
-    ;; project 表示這個節點下的是項目任務，任務不需要繼承project tag
+    ;; project 表示這個節點下的是項目任務，任務不需要繼承 project tag
     ;; category 表示該節點是分類節點
     (setq org-tags-exclude-from-inheritance '("project" "category"))
 
@@ -1109,6 +1138,9 @@ pip install virtualenv
       (if (string= org-location-home-or-office "home")
           (org-toggle-office)
         (org-toggle-home))))
+
+  (eval-after-load 'org
+    (org-toggle-office))
 #+END_SRC
 
 ** org link: match
@@ -1356,10 +1388,7 @@ New link to use everything to locate a file with unique ID:
 * Key Binding
 
 #+BEGIN_SRC emacs-lisp
-  (setq ivy-use-virtual-buffers t)
-  (global-set-key "\C-s" 'swiper)
   (global-set-key (kbd "C-c r") 'kimim/rename-file-and-buffer)
-  ;; (global-set-key (kbd "<f6>") 'ivy-resume)
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   ;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
@@ -1373,17 +1402,11 @@ New link to use everything to locate a file with unique ID:
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
 
   (require 'hideshow) ;; hs-toggle-hiding
-  (global-set-key [f1] 'delete-other-windows)
-  (global-set-key (kbd "C-<f1>") 'nuke-other-buffers)
+  (bind-key "<f1>" 'delete-other-windows)
+  (bind-key "C-<f1>" 'nuke-other-buffers)
   (global-set-key [f2] 'other-window)
   (global-set-key [f5] (lambda() (interactive)
                          (switch-to-buffer "*scratch*") (delete-other-windows)))
-  (global-set-key [f6] (lambda() (interactive)
-                         (if (not (boundp 'ecb-minor-mode))
-                             (ecb-activate)
-                           (if ecb-minor-mode
-                               (ecb-deactivate)
-                             (ecb-activate)))))
   (global-set-key [f7] 'kimim/toggle-highlight-tap)
   (global-set-key [f8] (lambda() (interactive) (list-charset-chars 'ascii)))
   (global-set-key [f9] 'kimim/cyg)
@@ -1408,19 +1431,12 @@ New link to use everything to locate a file with unique ID:
   (global-set-key "\M-o" 'other-window)
   (global-set-key "\M-n" 'next-error)
   (global-set-key "\M-p" 'previous-error)
-  (global-set-key "\C-cc" 'org-capture)
-  (global-set-key "\C-cl" 'org-store-link)
-  (global-set-key "\C-cc" 'org-capture)
-  (global-set-key "\C-ca" 'org-agenda)
-  (global-set-key "\C-cb" 'org-iswitchb)
-  (global-set-key "\C-c=" 'get-file-line)
-  (global-set-key "\C-cd" 'kimim/lookinsight)
 
   (define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
   (define-key global-map "\M-*" 'pop-tag-mark)
-  (global-set-key "\C-c\C-x\C-l" 'org-clock-in-last)
-  (global-set-key "\C-c\C-x\C-i" 'org-clock-in)
-  (global-set-key "\C-c\C-x\C-o" 'org-clock-out)
+  (global-set-key "\C-c=" 'get-file-line)
+  (global-set-key "\C-cd" 'kimim/lookinsight)
+
   (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
   ;;(define-key global-map "\C-cd" 'kimim/look-from-mydict)
   (define-key global-map (kbd "C-`") 'ace-jump-mode)
@@ -1436,7 +1452,7 @@ New link to use everything to locate a file with unique ID:
     ;; sets fn-delete to be right-delete
     (global-set-key [kp-delete] 'delete-char))
 
-
+  (bind-key "C-x m h" 'help)
   ;; C-x r j ?x 打開常用文件
   (set-register ?e '(file . "~/kimim-emacs/init.el"))
   (set-register ?o '(file . "~/kimim-emacs/README.org"))

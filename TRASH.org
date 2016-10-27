@@ -560,3 +560,21 @@
     (interactive)
     (grep-find (concat grep-find-command (buffer-substring-no-properties (region-beginning) (region-end)))))
 #+END_SRC
+* auto-complete
+#+BEGIN_SRC emacs-lisp
+  ;; intelligent completion setting
+  ;;(require 'auto-complete-config)
+  ;;(add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
+  ;;(ac-config-default)
+  ;;(abbrev-mode -1)
+  ;;(icomplete-mode 1)
+#+END_SRC
+* Key
+#+BEGIN_SRC emacs-lis
+  (global-set-key [f6] (lambda() (interactive)
+                         (if (not (boundp 'ecb-minor-mode))
+                             (ecb-activate)
+                           (if ecb-minor-mode
+                               (ecb-deactivate)
+                             (ecb-activate)))))
+#+END_SRC
