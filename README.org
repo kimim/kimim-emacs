@@ -180,7 +180,7 @@ All the extensions used in this file are installed and managed by =package=.
           ("elpy" . "http://jorgenschaefer.github.io/packages/")
           ("marmalade" . "https://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
-  (package-initialize)
+
   (require 'use-package)
   (require 'diminish)                ;; if you use :diminish
   (require 'bind-key)                ;; if you use any :bind variant
@@ -718,11 +718,30 @@ add following lines:
                 (ggtags-mode 1))))
 #+END_SRC
 ** Version Control
+
 #+BEGIN_SRC emacs-lisp
   ;; ;; magit-status for git
   (use-package magit
     :bind ("C-x m g" . magit-status))
 #+END_SRC
+
+Following error will reported when using magit to commit changes:
+
+#+BEGIN_QUOTE
+server-ensure-safe-dir: The directory ‘~/.emacs.d/server’ is unsafe
+#+END_QUOTE
+
+The solution is to change the owner of =~/.emacs.d/server= [fn:12]
+
+#+BEGIN_QUOTE
+Click R-mouse on ~/.emacs.d/server and select “Properties” (last item in
+menu). From Properties select the Tab “Security” and then select the button
+“Advanced”. Then select the Tab “Owner” and change the owner from
+“Administrators (\Administrators)” into “ (\”. Now the server code will accept
+this directory as secure because you are the owner.
+#+END_QUOTE
+
+
 * Programming Language
 ** C
 *** Formatting
@@ -791,7 +810,7 @@ add following lines:
 #+END_SRC
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:12] is used here:
+Python development configuration is quite easy. =elpy= [fn:13] is used here:
 
 #+BEGIN_SRC emacs-lisp
   (elpy-enable)
@@ -1489,4 +1508,6 @@ New link to use everything to locate a file with unique ID:
 
 [fn:11] http://www.voidtools.com/es.zip
 
-[fn:12] https://github.com/jorgenschaefer/elpy
+[fn:12] https://github.com/syl20bnr/spacemacs/issues/381
+
+[fn:13] https://github.com/jorgenschaefer/elpy

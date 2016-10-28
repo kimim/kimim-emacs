@@ -1,3 +1,6 @@
+;; set shell-file-name for WIN, otherwise, cmdproxy is chosen
+(if (eq window-system 'w32)
+    (setq shell-file-name "bash.exe"))
 (shell-command "cd ~/kimim-emacs/ && git pull")
 
 (setq readme-org "~/kimim-emacs/README.org")
