@@ -273,12 +273,13 @@ All the extensions used in this file are installed and managed by =package=.
 #+BEGIN_SRC emacs-lisp
   ;; highlight current line
   (global-hl-line-mode 1)
-  (require 'auto-highlight-symbol)
+
   ;; highlight current symbol
-  (global-auto-highlight-symbol-mode t)
-  ;; edit highlighted symbol
-  ;; -> defined in key binding section
-  ;; (define-key ctl-x-m-map "e" 'ahs-edit-mode)
+  (use-package auto-highlight-symbol
+    :diminish auto-highlight-symbol-mode
+    :bind ("C-x m e" . ahs-edit-mode)
+    :config
+    (global-auto-highlight-symbol-mode t))
 #+END_SRC
 ** Other Visual Element
 #+BEGIN_SRC emacs-lisp
@@ -321,6 +322,7 @@ All the extensions used in this file are installed and managed by =package=.
   (setq tab-stop-list
         (number-sequence 4 120 4))        ; 每次 tab 空格數
   (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
+  (diminish 'drag-stuff-mode)
   ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
   ;; 候，备份文件是复本，而不是原件。
   (setq backup-directory-alist '(("." . "~/Temp")))
@@ -350,7 +352,7 @@ All the extensions used in this file are installed and managed by =package=.
   (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
 
   (setq ispell-program-name "aspell")
-
+  (diminish 'visual-line-mode)
   (add-hook 'text-mode-hook
             (lambda ()
               (when (derived-mode-p 'org-mode 'markdown-mode 'text-mode)
@@ -404,7 +406,7 @@ All the extensions used in this file are installed and managed by =package=.
 #+BEGIN_SRC emacs-lisp
   (use-package pangu-spacing
     :ensure t
-    :diminish (pangu-spacing-mode . " p")
+    :diminish pangu-spacing-mode
     :config
     (global-pangu-spacing-mode 1)
     (add-hook 'org-mode-hook
@@ -575,7 +577,7 @@ and defers loading of the module until they are used.
     ("C-\"" . ace-window))
 #+END_SRC
 * Search and Finding
-** swiper
+** swiper replaces isearch
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
     :bind
@@ -626,10 +628,15 @@ task for =es.exe=.
 #+END_SRC
 
 * auto-complete
+** abbrev
+#+BEGIN_SRC emacs-lisp
+(diminish 'abbrev-mode)
+#+END_SRC
 ** ivy-mode
 
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
+    :diminish ivy-mode
     :bind ("<f6>" . ivy-resume)
     :config
     (ivy-mode 1)
@@ -641,10 +648,11 @@ task for =es.exe=.
 #+BEGIN_SRC emacs-lisp
   ;; add pair parenthis and quote automatically
   (use-package autopair
+    :diminish autopair-mode
     :config
     (autopair-global-mode 1))
 #+END_SRC
-* yasnippet
+** yasnippet
 
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
@@ -771,9 +779,8 @@ this directory as secure because you are the owner.
 #+BEGIN_SRC emacs-lisp
   ;; Define the modes/packages you need
   (use-package irony
+    :diminish irony-mode
     :config
-    ;; use short mode lighter Irony -> Ir
-    (setq irony-lighter " Ir")
     (add-hook 'c-mode-hook 'irony-mode)
     (add-hook 'c++-mode-hook 'irony-mode)
     (add-hook 'objc-mode-hook 'irony-mode)
@@ -818,7 +825,6 @@ Python development configuration is quite easy. =elpy= [fn:13] is used here:
 #+BEGIN_SRC emacs-lisp
   (elpy-enable)
   ;;(setq jedi:complete-on-dot t)
-
   ;; prevent redundant intent in using yasnippets
   (add-hook 'python-mode-hook
             (lambda ()
@@ -911,7 +917,6 @@ pip install virtualenv
     (setq org-cycle-separator-lines 0)
     (setq org-src-fontify-natively t)
     (setq org-startup-indented t))
-
 #+END_SRC
 ** org for writing
 #+BEGIN_SRC emacs-lisp
@@ -1072,7 +1077,7 @@ pip install virtualenv
     ;; project 表示這個節點下的是項目任務，任務不需要繼承 project tag
     ;; category 表示該節點是分類節點
     (setq org-tags-exclude-from-inheritance '("project" "category"))
-
+    (diminish 'auto-fill-function)
     (add-hook 'org-mode-hook
               (lambda ()
                 (auto-fill-mode)
