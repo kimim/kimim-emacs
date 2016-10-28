@@ -434,6 +434,9 @@ All the extensions used in this file are installed and managed by =package=.
     :commands window-numbering-mode
     :config
     (window-numbering-mode 1))
+
+  (bind-key "C-x m w" 'new-frame)
+  (scroll-bar-mode -1)
 #+END_SRC
 
 ** Command
