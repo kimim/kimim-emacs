@@ -437,7 +437,7 @@ All the extensions used in this file are installed and managed by =package=.
     :config
     (window-numbering-mode 1))
 
-  (bind-key "C-x m w" 'new-frame)
+  (bind-key "C-x m w" 'make-frame)
   (scroll-bar-mode -1)
 #+END_SRC
 
@@ -618,7 +618,7 @@ task for =es.exe=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package imenu
-    :bind (("C-c i" . imenu))
+    :bind ("C-c i" . imenu-anywhere)
     :config
     (advice-add 'imenu-default-goto-function
                 :around
