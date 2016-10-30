@@ -690,8 +690,8 @@ add following lines:
     :config
     (global-company-mode t)
     (add-hook 'after-init-hook 'global-company-mode)
-    (eval-after-load 'company
-      '(add-to-list 'company-backends 'company-yasnippet)))
+    (add-to-list 'company-backends 'company-irony)
+    (add-to-list 'company-backends 'company-yasnippet))
 #+END_SRC
 ** company dict
 #+BEGIN_SRC emacs-lisp
@@ -779,10 +779,7 @@ this directory as secure because you are the owner.
         'irony-completion-at-point-async)
       (define-key irony-mode-map [remap complete-symbol]
         'irony-completion-at-point-async))
-    ( add-hook 'irony-mode-hook 'my-irony-mode-hook)
-
-    (eval-after-load 'company
-      '(add-to-list 'company-backends 'company-irony)))
+    (add-hook 'irony-mode-hook 'my-irony-mode-hook))
 
 
   (use-package company-c-headers
@@ -795,8 +792,7 @@ this directory as secure because you are the owner.
   (use-package flycheck
     :config
     ;; set up flycheck
-    (eval-after-load 'flycheck
-      '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+    (add-hook 'flycheck-mode-hook #'flycheck-irony-setup)
     (add-hook 'c-mode-hook 'flycheck-mode)
     (add-hook 'c++-mode-hook 'flycheck-mode))
 
