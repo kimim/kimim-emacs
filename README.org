@@ -27,8 +27,8 @@ Another tool sets required for this configuration in Windows is the Cygwin
 project[fn:2], which is a large collection of GNU and Open Source tools provide
 functionality similar to a Linux distribution on Windows.
 
-Another useful tool is MSYS2 [fn:3], which is better than Cygwin in one point
-that the packages can be installed in command line with =pacman -S=.
+MSYS2 [fn:3] is better than Cygwin in one point that the packages can be
+installed in command line with =pacman -S=.
 
 The explanation from Cygwin is that because Windows do not allow overwriting of
 in-use executable, so installing a new version of Cygwin DLL while a packager is
@@ -133,11 +133,14 @@ specify these variables in different way.
 #+END_SRC
 
 ** Custom File
+
 #+BEGIN_SRC emacs-lisp
 (setq custom-file "~/.emacs.d/custom.el")
 (load-file custom-file)
 #+END_SRC
+
 ** Language
+
 #+BEGIN_SRC emacs-lisp
   (setenv "LANG" "en_US.UTF-8")
   (setenv "LC_ALL" "en_US.UTF-8")
@@ -160,10 +163,14 @@ specify these variables in different way.
 #+END_SRC
 
 ** global key map
+
+Define new command prefix for keys such as "C-x m f", "C-x m v".
+
 #+BEGIN_SRC emacs-lisp
   (define-prefix-command 'ctl-x-m-map)
   (global-set-key "\C-xm" 'ctl-x-m-map)
 #+END_SRC
+
 * Package
 
 =package= [fn:7]is the modern =elisp= package management system, which lets you
@@ -184,13 +191,15 @@ All the extensions used in this file are installed and managed by =package=.
           ("melpa" . "http://melpa.org/packages/")))
 
   (require 'use-package)
-  (require 'diminish)                ;; if you use :diminish
-  (require 'bind-key)                ;; if you use any :bind variant
-  ;; install package is missing
+  (require 'diminish)
+  (require 'bind-key)
+  ;; install package if missing
   (setq use-package-always-ensure t)
 #+END_SRC
+
 * Emacs Frame
 ** Menu Bar and Tool Bar
+
 #+BEGIN_SRC emacs-lisp
   (cond ((eq window-system 'w32)
          ;; Enable copy and paste in Win32
@@ -201,6 +210,7 @@ All the extensions used in this file are installed and managed by =package=.
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
 #+END_SRC
+
 ** Font and Frame Size
 #+BEGIN_SRC emacs-lisp
   (cond
@@ -264,13 +274,12 @@ All the extensions used in this file are installed and managed by =package=.
   (setq font-lock-maximum-decoration t)
   (setq font-lock-global-modes '(not shell-mode text-mode))
   (setq font-lock-verbose t)
-  (global-font-lock-mode 1)                 ; 开启语法高亮
+  (global-font-lock-mode 1)
   (use-package color-theme-kimim
     :ensure nil
     :load-path "~/kimim-emacs/site-lisp/"
     :config
-    (color-theme-kimim)
-    )
+    (color-theme-kimim))
 #+END_SRC
 * Highlight
 #+BEGIN_SRC emacs-lisp
@@ -284,11 +293,11 @@ All the extensions used in this file are installed and managed by =package=.
     :config
     (global-auto-highlight-symbol-mode t))
 #+END_SRC
-** Other Visual Element
+* Other Visual Element
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-startup-message t)          ; 不顯示開始畫面
   (setq initial-scratch-message nil)        ; scratch 默認為空
-  (setq visible-bell t)                     ; 關閉視覺告警
+  (setq visible-bell t)
   (setq ring-bell-function #'ignore)
   (fset 'yes-or-no-p 'y-or-n-p)
   (show-paren-mode 1)                       ; 高亮显示匹配的括号
