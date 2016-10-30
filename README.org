@@ -689,8 +689,6 @@ add following lines:
   (use-package company
     :config
     (global-company-mode t)
-    (add-hook 'after-init-hook 'global-company-mode)
-    (add-to-list 'company-backends 'company-irony)
     (add-to-list 'company-backends 'company-yasnippet))
 #+END_SRC
 ** company dict
@@ -779,15 +777,13 @@ this directory as secure because you are the owner.
         'irony-completion-at-point-async)
       (define-key irony-mode-map [remap complete-symbol]
         'irony-completion-at-point-async))
-    (add-hook 'irony-mode-hook 'my-irony-mode-hook))
+    (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+    (add-to-list 'company-backends 'company-irony))
 
 
   (use-package company-c-headers
     :config
-    (defun company-c-headers-includes ()
-      (add-to-list 'company-c-headers-path-system "/usr/include"))
-    (company-c-headers-includes))
-
+    (add-to-list 'company-c-headers-path-system "/usr/include"))
 
   (use-package flycheck
     :config
@@ -837,8 +833,7 @@ Python development configuration is quite easy. =elpy= [fn:13] is used here:
   (use-package company-jedi
     :config
     (setq elpy-rpc-backend "jedi")
-    (eval-after-load 'company
-      '(add-to-list 'company-backends 'company-jedi)))
+    (add-to-list 'company-backends 'company-jedi))
 #+END_SRC
 
 Following =python= package is required according to =elpy= mannual:
