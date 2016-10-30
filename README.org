@@ -315,13 +315,14 @@ All the extensions used in this file are installed and managed by =package=.
   ;; Editor setting
   ;;========================================
   (setq inhibit-eol-conversion nil)       ; 不要轉換 end-of-line style
-  (setq fill-column 80)
+  ;; fill-column is a buffer-local variable, use setq-default to change it globally
+  (setq-default fill-column 80)
   (drag-stuff-global-mode 1)              ; use Alt-up/down to drag line or region
   (delete-selection-mode 1)               ; 輸入的文字覆蓋選中的文字
   (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
   (setq kill-whole-line t)                ; 在行首 C-k 时，同时删除该行。
   (setq require-final-newline t)          ; 存盘的时候，要求最后一个字符时换行符
-  (setq tab-width 4)                      ; 用 space 替换 tab，tab 长度为 4
+  (setq-default tab-width 4)              ; 用 space 替换 tab，tab 长度为 4
   (setq tab-stop-list
         (number-sequence 4 120 4))        ; 每次 tab 空格數
   (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
@@ -479,7 +480,9 @@ and defers loading of the module until they are used.
      ("C-c k" . counsel-ag)
      ("C-x l" . counsel-locate)
      :map read-expression-map
-     ("C-r" . counsel-expression-history)))
+     ("C-r" . counsel-expression-history))
+    :config
+    (require 'ivy))
 #+END_SRC
 * Dired and Buffer
 
@@ -621,13 +624,13 @@ task for =es.exe=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package imenu
-    :bind ("C-c i" . imenu-anywhere)
     :config
     (advice-add 'imenu-default-goto-function
                 :around
                 #'kimim/imenu-default-goto-function-advice))
 
-  (use-package imenu-anywhere)
+  (use-package imenu-anywhere
+    :bind ("C-c i" . imenu-anywhere))
 #+END_SRC
 
 * auto-complete
@@ -758,35 +761,11 @@ this directory as secure because you are the owner.
 
 * Programming Language
 ** C
-*** Formatting
-
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'c-mode-common-hook
-            (lambda ()
-              ;; show column width indicator
-              ;;(fci-mode 0)
-              ;;(syntax-subword-mode 1)
-              ;;(hs-minor-mode 0)
-              ;;(c-set-style "gnu")
-              (c-toggle-auto-newline 0)
-              (c-toggle-auto-hungry-state 0)
-              (c-toggle-syntactic-indentation 1)
-              ;;(highlight-indentation-mode 1)
-              (which-function-mode 1)
-              (local-set-key "\C-co" 'ff-find-other-file)
-              ;;(my-c-mode-common-hook-if0)
-              (setq c-basic-offset 4)))
-#+END_SRC
-
-*** Completion
 #+BEGIN_SRC emacs-lisp
   ;; Define the modes/packages you need
   (use-package irony
     :diminish irony-mode
     :config
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'objc-mode-hook 'irony-mode)
     (setq w32-pipe-read-delay 0)
 
     (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
@@ -820,6 +799,28 @@ this directory as secure because you are the owner.
     (add-hook 'c-mode-hook 'flycheck-mode)
     (add-hook 'c++-mode-hook 'flycheck-mode))
 
+
+  (use-package cc-mode
+    :ensure nil
+    :config
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'objc-mode-hook 'irony-mode)
+    (add-hook 'c-mode-common-hook
+              (lambda ()
+                ;; show column width indicator
+                ;;(fci-mode 0)
+                ;;(syntax-subword-mode 1)
+                ;;(hs-minor-mode 0)
+                ;;(c-set-style "gnu")
+                (c-toggle-auto-newline 0)
+                (c-toggle-auto-hungry-state 0)
+                (c-toggle-syntactic-indentation 1)
+                ;;(highlight-indentation-mode 1)
+                (which-function-mode 1)
+                (local-set-key "\C-co" 'ff-find-other-file)
+                ;;(my-c-mode-common-hook-if0)
+                (setq c-basic-offset 4))))
 #+END_SRC
 ** Python
 
@@ -901,15 +902,10 @@ pip install virtualenv
   (setq kimim/path-org (concat kimim/path-sync "org/"))
   (use-package org
     :bind
-    ("C-c c" . org-capture)
-    ("C-c l" . org-store-link)
-    ("C-c c" . org-capture)
     ("C-c a" . org-agenda)
     ("C-c b" . org-iswitchb)
-     ;; ("C-c C-x C-l" . org-clock-in-last)
-     ;; ("C-c C-x C-i" . org-clock-in)
-     ;; ("C-c C-x C-o" . org-clock-out))
-
+    ("C-c c" . org-capture)
+    ("C-c l" . org-store-link)
     :config
     (setq org-export-allow-BIND t)
     (setq org-support-shift-select t)
