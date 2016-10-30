@@ -180,6 +180,10 @@ such as an Info manual.
 
 All the extensions used in this file are installed and managed by =package=.
 
+Here I use =use-package= to defer the package loading and even installation,
+When you use the =:commands= keyword, it creates autoloads for those commands
+and defers loading of the module until they are used.
+
 #+BEGIN_SRC emacs-lisp
   (require 'package)
   (setq package-user-dir "~/.emacs.d/elpa")
@@ -457,10 +461,6 @@ All the extensions used in this file are installed and managed by =package=.
 
 ** Command
 
-Here I use =use-package= to defer the package loading and even installation,
-When you use the =:commands= keyword, it creates autoloads for those commands
-and defers loading of the module until they are used.
-
 #+BEGIN_SRC emacs-lisp
   ;; https://github.com/justbur/emacs-which-key
   (use-package which-key
@@ -492,7 +492,8 @@ and defers loading of the module until they are used.
      :map read-expression-map
      ("C-r" . counsel-expression-history))
     :config
-    (require 'ivy))
+    (require 'ivy)
+    (ivy-mode 1))
 #+END_SRC
 * Dired and Buffer
 
@@ -655,7 +656,6 @@ task for =es.exe=.
     :diminish ivy-mode
     :bind ("<f6>" . ivy-resume)
     :config
-    (ivy-mode 1)
     (setq ivy-use-virtual-buffers t))
 #+END_SRC
 
@@ -731,16 +731,14 @@ add following lines:
            (require 'cygwin-mount)
            (cygwin-mount-activate)))
     (setq ggtags-global-ignore-case t)
-    (setq ggtags-sort-by-nearness t)
+    (setq ggtags-sort-by-nearness t))
     ;; let ggtags use split-window with is redefined by ecb mode
     ;;(setq ggtags-split-window-function 'split-window-below)
 
     ;; close grep window and done ggtags navigation when type C-g
     ;; but some times it will close all the ecb windows, so remove this advice.
     ;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
-    (add-hook 'c-mode-common-hook
-              (lambda ()
-                (ggtags-mode 1))))
+
 #+END_SRC
 ** Version Control
 
@@ -769,6 +767,18 @@ this directory as secure because you are the owner.
 
 * Programming Language
 ** C
+
+irony-server is provided by irony-mode to take use of clang, it is quite easy to
+install irony-server under macOS, just invoke the command
+"irony-install-server", and Emacs will compile and install it to
+.emacs.d/irony/bin/irony-server, by invoking the make commands:
+
+#+BEGIN_SRC sh
+  cmake -DCMAKE_INSTALL_PREFIX\=/Users/kimim/.emacs.d/irony/
+  /Users/kimim/.emacs.d/elpa/irony-20160925.1030/server && cmake --build
+  . --use-stderr --config Release --target install
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
   ;; Define the modes/packages you need
   (use-package irony
@@ -786,28 +796,27 @@ this directory as secure because you are the owner.
         'irony-completion-at-point-async)
       (define-key irony-mode-map [remap complete-symbol]
         'irony-completion-at-point-async))
-    (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-    (add-to-list 'company-backends 'company-irony))
+    (add-hook 'irony-mode-hook 'my-irony-mode-hook))
 
-
-  (use-package company-c-headers
-    :config
-    (add-to-list 'company-c-headers-path-system "/usr/include"))
+  (use-package company-c-headers)
 
   (use-package flycheck
     :config
     ;; set up flycheck
-    (add-hook 'flycheck-mode-hook #'flycheck-irony-setup)
-    (add-hook 'c-mode-hook 'flycheck-mode)
-    (add-hook 'c++-mode-hook 'flycheck-mode))
-
+    (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
   (use-package cc-mode
     :ensure nil
     :config
+    (add-to-list 'company-backends 'company-irony)
+    (add-to-list 'company-c-headers-path-system "/usr/include")
+
     (add-hook 'c-mode-hook 'irony-mode)
     (add-hook 'c++-mode-hook 'irony-mode)
     (add-hook 'objc-mode-hook 'irony-mode)
+
+    (add-hook 'c-mode-hook 'flycheck-mode)
+    (add-hook 'c++-mode-hook 'flycheck-mode)
     (add-hook 'c-mode-common-hook
               (lambda ()
                 ;; show column width indicator
@@ -815,6 +824,7 @@ this directory as secure because you are the owner.
                 ;;(syntax-subword-mode 1)
                 ;;(hs-minor-mode 0)
                 ;;(c-set-style "gnu")
+                (ggtags-mode 1)
                 (c-toggle-auto-newline 0)
                 (c-toggle-auto-hungry-state 0)
                 (c-toggle-syntactic-indentation 1)
