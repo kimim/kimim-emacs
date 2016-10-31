@@ -444,12 +444,8 @@ and defers loading of the module until they are used.
   ;; 当有两个文件名相同的缓冲时，使用前缀的目录名做 buffer 名字
   (setq uniquify-buffer-name-style 'forward)
 
-  ;; bookmark setting
-  (setq bookmark-default-file "~/.emacs.d/emacs.bmk")
   ;; 当使用 M-x COMMAND 后，显示该 COMMAND 绑定的键 5 秒鐘時間
   (setq suggest-key-bindings 5)
-  ;; 每当设置书签的时候都保存书签文件，否则只在你退出 Emacs 时保存
-  (setq bookmark-save-flag 1)
 
 
   ;;========================================
@@ -588,6 +584,11 @@ and defers loading of the module until they are used.
 
 * Navigation
 #+BEGIN_SRC emacs-lisp
+  ;; bookmark setting
+  (setq bookmark-default-file "~/.emacs.d/emacs.bmk")
+  ;; 每当设置书签的时候都保存书签文件，否则只在你退出 Emacs 时保存
+  (setq bookmark-save-flag 1)
+
   (use-package bm
     :bind (("C-x m t" . bm-toggle)
            ("C-x m s" . bm-show-all)))
