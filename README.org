@@ -321,6 +321,70 @@ and defers loading of the module until they are used.
     (add-to-list 'Info-additional-directory-list
                  "~/info"))
 #+END_SRC
+* Controlling
+** Window and Frame
+#+BEGIN_SRC emacs-lisp
+  (use-package winner
+    ;; restore windows configuration, built-in package
+    :commands winner-mode
+    :config
+    (winner-mode t))
+
+  (use-package window-numbering
+    :ensure t
+    :commands window-numbering-mode
+    :config
+    (window-numbering-mode 1))
+
+  (bind-key "C-x m w" 'make-frame)
+  ;; donno why, w/o following, new frame still has scroll-bar
+  (scroll-bar-mode -1)
+#+END_SRC
+
+** Command
+
+#+BEGIN_SRC emacs-lisp
+  ;; https://github.com/justbur/emacs-which-key
+  (use-package which-key
+    :ensure t
+    :diminish which-key-mode
+    :config
+    ;; use minibuffer as the popup type, otherwise conflict in ecb mode
+    (setq which-key-popup-type 'minibuffer)
+    (which-key-mode 1))
+
+  ;; smex will list the recent function on top of the cmd list
+  (use-package smex
+    :ensure t
+    :config
+    (smex-initialize))
+
+  (use-package counsel
+    :bind
+    (("M-x" . counsel-M-x)
+     ("C-x C-f" . counsel-find-file)
+     ("C-x m f" . counsel-describe-function)
+     ("C-x m v" . counsel-describe-variable)
+     ("C-x m l" . counsel-load-library)
+     ("C-x m i" . counsel-info-lookup-symbol)
+     ("C-x m u" . counsel-unicode-char)
+     ("C-c j" . counsel-git-grep)
+     ("C-c g" . counsel-grep)
+     ("C-c k" . counsel-ag)
+     ("C-x l" . counsel-locate)
+     :map read-expression-map
+     ("C-r" . counsel-expression-history))
+    :config
+    (require 'ivy)
+    (ivy-mode 1))
+#+END_SRC
+** Key Frequency
+#+BEGIN_SRC emacs-lisp
+  (use-package keyfreq
+    :config
+    (keyfreq-mode)
+    (keyfreq-autosave-mode))
+#+END_SRC
 * Editing
 ** General
 #+BEGIN_SRC emacs-lisp
@@ -438,70 +502,6 @@ and defers loading of the module until they are used.
     :config
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t))
-#+END_SRC
-* Controlling
-** Window and Frame
-#+BEGIN_SRC emacs-lisp
-  (use-package winner
-    ;; restore windows configuration, built-in package
-    :commands winner-mode
-    :config
-    (winner-mode t))
-
-  (use-package window-numbering
-    :ensure t
-    :commands window-numbering-mode
-    :config
-    (window-numbering-mode 1))
-
-  (bind-key "C-x m w" 'make-frame)
-  ;; donno why, w/o following, new frame still has scroll-bar
-  (scroll-bar-mode -1)
-#+END_SRC
-
-** Command
-
-#+BEGIN_SRC emacs-lisp
-  ;; https://github.com/justbur/emacs-which-key
-  (use-package which-key
-    :ensure t
-    :diminish which-key-mode
-    :config
-    ;; use minibuffer as the popup type, otherwise conflict in ecb mode
-    (setq which-key-popup-type 'minibuffer)
-    (which-key-mode 1))
-
-  ;; smex will list the recent function on top of the cmd list
-  (use-package smex
-    :ensure t
-    :config
-    (smex-initialize))
-
-  (use-package counsel
-    :bind
-    (("M-x" . counsel-M-x)
-     ("C-x C-f" . counsel-find-file)
-     ("C-x m f" . counsel-describe-function)
-     ("C-x m v" . counsel-describe-variable)
-     ("C-x m l" . counsel-load-library)
-     ("C-x m i" . counsel-info-lookup-symbol)
-     ("C-x m u" . counsel-unicode-char)
-     ("C-c j" . counsel-git-grep)
-     ("C-c g" . counsel-grep)
-     ("C-c k" . counsel-ag)
-     ("C-x l" . counsel-locate)
-     :map read-expression-map
-     ("C-r" . counsel-expression-history))
-    :config
-    (require 'ivy)
-    (ivy-mode 1))
-#+END_SRC
-** Key Frequency
-#+BEGIN_SRC emacs-lisp
-  (use-package keyfreq
-    :config
-    (keyfreq-mode)
-    (keyfreq-autosave-mode))
 #+END_SRC
 * Dired and Buffer
 
@@ -779,41 +779,6 @@ this directory as secure because you are the owner.
 * Programming Language
 ** C
 
-irony-server is provided by irony-mode to take use of clang, it is quite easy to
-install irony-server under macOS, just invoke the command
-"irony-install-server", and Emacs will compile and install it to
-.emacs.d/irony/bin/irony-server, by invoking the make commands:
-
-#+BEGIN_SRC sh
-  cmake -DCMAKE_INSTALL_PREFIX\=/Users/kimim/.emacs.d/irony/
-  /Users/kimim/.emacs.d/elpa/irony-20160925.1030/server && cmake --build
-  . --use-stderr --config Release --target install
-#+END_SRC
-
-For cygwin,
-
-Install both libclang3.8 3.8.1-1 and libclang-devel 3.8.1-1 with =setup.exe=
-
-#+BEGIN_SRC sh
-~/.emacs.d/elpa/irony-20160925.1030/server/build
-$ cmake -DCMAKE_INSTALL_PREFIX=~/.emacs.d/irony/ -G "Unix Makefiles" ..
-~/.emacs.d/elpa/irony-20160925.1030/server/build
-$ make install
-Scanning dependencies of target irony-server
-[ 14%] Building CXX object src/CMakeFiles/irony-server.dir/support/CommandLineParser.cpp.o
-[ 28%] Building CXX object src/CMakeFiles/irony-server.dir/support/TemporaryFile.cpp.o
-[ 42%] Building CXX object src/CMakeFiles/irony-server.dir/Command.cpp.o
-[ 57%] Building CXX object src/CMakeFiles/irony-server.dir/Irony.cpp.o
-[ 71%] Building CXX object src/CMakeFiles/irony-server.dir/TUManager.cpp.o
-[ 85%] Building CXX object src/CMakeFiles/irony-server.dir/main.cpp.o
-[100%] Linking CXX executable ../bin/irony-server.exe
-[100%] Built target irony-server
-Install the project...
--- Install configuration: "Release"
--- Up-to-date: /home/kimim/.emacs.d/irony/bin/irony-server.exe
-#+END_SRC
-
-
 #+BEGIN_SRC emacs-lisp
   ;; Define the modes/packages you need
   (use-package irony
@@ -872,9 +837,53 @@ Install the project...
                 ;;(my-c-mode-common-hook-if0)
                 (setq c-basic-offset 4))))
 #+END_SRC
+
+*** irony installation
+=irony-mode= is developed by Sarcasm [fn:13]. It is an Emacs minor-mode that
+aims at improving the editing experience for the C, C++ and Objective-C
+languages. It works by using a combination of an Emacs package and a C++ program
+(=irony-server=) that uses libclang. When correctly configured, it can provide
+wonderful auto completion for functions and variables. The function prototypes
+with parameters can be triggered as a yasnippet automatically.
+
+It is quite easy to install =irony-server= under macOS, just invoke the command
+"M-x irony-install-server", and Emacs will compile and install it to
+=~/.emacs.d/irony/bin/irony-server=, by invoking the make commands:
+
+#+BEGIN_SRC sh
+  cmake -DCMAKE_INSTALL_PREFIX\=/Users/kimim/.emacs.d/irony/
+  /Users/kimim/.emacs.d/elpa/irony-20160925.1030/server && cmake --build
+  . --use-stderr --config Release --target install
+#+END_SRC
+
+For Cygwin/Windows, first we should install =libclang= 3.8.1-1 and
+=libclang-devel= 3.8.1-1 and =cmake= with =setup.exe=.
+
+Then compile =irony-server= with =cmake= and =make=:
+
+#+BEGIN_SRC sh
+~/.emacs.d/elpa/irony-20160925.1030/server/build
+$ cmake -DCMAKE_INSTALL_PREFIX=~/.emacs.d/irony/ -G "Unix Makefiles" ..
+
+~/.emacs.d/elpa/irony-20160925.1030/server/build
+$ make install
+Scanning dependencies of target irony-server
+[ 14%] Building CXX object src/CMakeFiles/irony-server.dir/support/CommandLineParser.cpp.o
+[ 28%] Building CXX object src/CMakeFiles/irony-server.dir/support/TemporaryFile.cpp.o
+[ 42%] Building CXX object src/CMakeFiles/irony-server.dir/Command.cpp.o
+[ 57%] Building CXX object src/CMakeFiles/irony-server.dir/Irony.cpp.o
+[ 71%] Building CXX object src/CMakeFiles/irony-server.dir/TUManager.cpp.o
+[ 85%] Building CXX object src/CMakeFiles/irony-server.dir/main.cpp.o
+[100%] Linking CXX executable ../bin/irony-server.exe
+[100%] Built target irony-server
+Install the project...
+-- Install configuration: "Release"
+-- Up-to-date: /home/kimim/.emacs.d/irony/bin/irony-server.exe
+#+END_SRC
+
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:13] is used here:
+Python development configuration is quite easy. =elpy= [fn:14] is used here:
 
 #+BEGIN_SRC emacs-lisp
   (elpy-enable)
@@ -1560,4 +1569,6 @@ New link to use everything to locate a file with unique ID:
 
 [fn:12] https://github.com/syl20bnr/spacemacs/issues/381
 
-[fn:13] https://github.com/jorgenschaefer/elpy
+[fn:13] https://github.com/Sarcasm/irony-mode
+
+[fn:14] https://github.com/jorgenschaefer/elpy
