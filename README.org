@@ -496,6 +496,12 @@ and defers loading of the module until they are used.
     (require 'ivy)
     (ivy-mode 1))
 #+END_SRC
+** Key Frequency
+#+BEGIN_SRC emacs-lisp
+  (use-package keyfreq
+    :config
+    (keyfreq-mode))
+#+END_SRC
 * Dired and Buffer
 
 #+BEGIN_SRC emacs-lisp
@@ -838,14 +844,14 @@ Install the project...
     :config
     (add-to-list 'company-backends 'company-irony)
     (add-to-list 'company-c-headers-path-system "/usr/include")
-
+    (require 'irony)
     (add-hook 'c-mode-hook 'irony-mode)
     (add-hook 'c++-mode-hook 'irony-mode)
     (add-hook 'objc-mode-hook 'irony-mode)
-
+    (require 'flycheck)
     (add-hook 'c-mode-hook 'flycheck-mode)
     (add-hook 'c++-mode-hook 'flycheck-mode)
-
+    (require 'ggtags)
     (add-hook 'c-mode-hook 'ggtags-mode)
     (add-hook 'c++-mode-hook 'ggtags-mode)
 
@@ -1195,10 +1201,9 @@ pip install virtualenv
                   (concat kimim/path-org "work/")))
       (setq org-refile-files
             (append
-             (list
-              (concat kimim/path-org "home/kimi.org"))
              (file-expand-wildcards (concat kimim/path-org "*.org"))
-             (file-expand-wildcards (concat kimim/path-org "work/*.org"))))
+             (file-expand-wildcards (concat kimim/path-org "work/*.org"))
+             (file-expand-wildcards (concat kimim/path-org "home/*.org"))))
       (message "Agenda is from office..."))
 
     (defun org-toggle-home ()
@@ -1210,7 +1215,8 @@ pip install virtualenv
       (setq org-refile-files
             (append
              (file-expand-wildcards (concat kimim/path-org "*.org"))
-             (file-expand-wildcards (concat kimim/path-org "home/*.org"))))
+             (file-expand-wildcards (concat kimim/path-org "home/*.org"))
+             (file-expand-wildcards (concat kimim/path-org "work/*.org"))))
       (message "Agenda is from home..."))
 
     (defun org-toggle-home-or-office()
