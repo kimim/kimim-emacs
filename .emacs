@@ -26,4 +26,4 @@
 
 ;; other settings more
 (eval-after-load 'org
-  (org-toggle-home))
+  '(org-toggle-home))
