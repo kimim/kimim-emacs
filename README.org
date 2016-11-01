@@ -185,7 +185,6 @@ When you use the =:commands= keyword, it creates autoloads for those commands
 and defers loading of the module until they are used.
 
 #+BEGIN_SRC emacs-lisp
-  (require 'package)
   (setq package-user-dir "~/.emacs.d/elpa")
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -199,6 +198,7 @@ and defers loading of the module until they are used.
   (require 'bind-key)
   ;; install package if missing
   (setq use-package-always-ensure t)
+  (setq use-package-verbose t)
 #+END_SRC
 
 * Emacs Frame
@@ -254,6 +254,7 @@ and defers loading of the module until they are used.
                    "%b"))))
 
   (use-package path-headerline-mode
+    :defer t
     :config
     ;; only display headerline for real files
     (defun kimim/ph--display-header (orig-fun &rest args)
@@ -280,6 +281,8 @@ and defers loading of the module until they are used.
   (setq font-lock-verbose t)
   (global-font-lock-mode 1)
   (use-package color-theme-kimim
+    :defer t
+    :commands (color-theme-kimim color-theme-jekyll)
     :ensure nil
     :load-path "~/kimim-emacs/site-lisp/"
     :config
@@ -305,13 +308,14 @@ and defers loading of the module until they are used.
   (setq ring-bell-function #'ignore)
   (fset 'yes-or-no-p 'y-or-n-p)
   (show-paren-mode 1)                       ; 高亮显示匹配的括号
-  (blink-cursor-mode 0)                     ; 光标不闪烁
+  (blink-cursor-mode 1)                     ; 光标不闪烁
   ;;(tooltip-mode 1)
 #+END_SRC
 
 * Info
 #+BEGIN_SRC emacs-lisp
   (use-package info
+    :defer t
     :config
     (add-to-list 'Info-additional-directory-list
                  (concat kimim/path-root "usr/share/info"))
@@ -346,6 +350,7 @@ and defers loading of the module until they are used.
 #+BEGIN_SRC emacs-lisp
   ;; https://github.com/justbur/emacs-which-key
   (use-package which-key
+    :defer t
     :ensure t
     :diminish which-key-mode
     :config
@@ -355,11 +360,13 @@ and defers loading of the module until they are used.
 
   ;; smex will list the recent function on top of the cmd list
   (use-package smex
+    :defer t
     :ensure t
     :config
     (smex-initialize))
 
   (use-package counsel
+    :defer t
     :bind
     (("M-x" . counsel-M-x)
      ("C-x C-f" . counsel-find-file)
@@ -382,6 +389,7 @@ and defers loading of the module until they are used.
 ** Key Frequency
 #+BEGIN_SRC emacs-lisp
   (use-package keyfreq
+    :defer t
     :config
     (keyfreq-mode)
     (keyfreq-autosave-mode))
@@ -483,6 +491,7 @@ and defers loading of the module until they are used.
 ** pangu-spacing
 #+BEGIN_SRC emacs-lisp
   (use-package pangu-spacing
+    :defer t
     :ensure t
     :diminish pangu-spacing-mode
     :config
@@ -495,6 +504,7 @@ and defers loading of the module until they are used.
 
 #+BEGIN_SRC emacs-lisp
   (use-package undo-tree
+    :defer t
     :diminish undo-tree-mode
     :config
     (global-undo-tree-mode)
@@ -504,6 +514,7 @@ and defers loading of the module until they are used.
 
 #+BEGIN_SRC emacs-lisp
   (use-package dired
+    :defer t
     :ensure nil
     :bind
     ("C-x C-j" . dired-jump)
@@ -548,6 +559,8 @@ and defers loading of the module until they are used.
           (goto-char (point-max)))))
 
   (use-package ibuffer
+    :defer t
+    :bind ("C-x C-b" . ibuffer-other-window)
     :config
     (defun ibuffer-visit-buffer-other-window (&optional noselect)
       "Visit the buffer on this line in another window."
@@ -645,6 +658,7 @@ task for =es.exe=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package everything
+    :defer t
     :ensure t
     :init
     (setq everything-cmd "c:\\kimikit\\bin\\es.exe"))
@@ -655,12 +669,14 @@ task for =es.exe=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package imenu
+    :defer t
     :config
     (advice-add 'imenu-default-goto-function
                 :around
                 #'kimim/imenu-default-goto-function-advice))
 
   (use-package imenu-anywhere
+    :defer t
     :bind ("C-c i" . imenu-anywhere))
 #+END_SRC
 
@@ -685,6 +701,7 @@ task for =es.exe=.
 #+BEGIN_SRC emacs-lisp
   ;; add pair parenthis and quote automatically
   (use-package autopair
+    :defer t
     :diminish autopair-mode
     :config
     (autopair-global-mode 1))
@@ -693,10 +710,13 @@ task for =es.exe=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
+    :defer t
     :config
     (add-to-list
      'yas-snippet-dirs (concat kimim/path-sync "tools/snippets"))
-    (yas-global-mode 1))
+    (yas-global-mode 1)
+    (require 'warnings)
+    (setq warning-suppress-types '((yasnippet backquote-change))))
 #+END_SRC
 
 In order to remove following warning:
@@ -706,17 +726,11 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
   To hide this warning, add (yasnippet backquote-change) to ‘warning-suppress-types’.
 #+END_QUOTE
 
-add following lines:
-
-#+BEGIN_SRC emacs-lisp
-  (require 'warnings)
-  (setq warning-suppress-types '((yasnippet backquote-change)))
-#+END_SRC
-
 ** company mode
 
 #+BEGIN_SRC emacs-lisp
   (use-package company
+    :defer t
     :config
     (global-company-mode t)
     (add-to-list 'company-backends 'company-yasnippet))
@@ -724,6 +738,7 @@ add following lines:
 ** company dict
 #+BEGIN_SRC emacs-lisp
   (use-package company-dict
+    :defer t
     :config
     ;; Where to look for dictionary files. Default is ~/.emacs.d/dict
     (setq company-dict-dir "~/.emacs.d/dict/")
@@ -736,6 +751,7 @@ add following lines:
   (setq next-error-recenter 20)
   (bind-key "C-<f11>" 'compile)
   (use-package compile-bookmarks
+    :defer t
     :config
     (compile-bookmarks-mode))
 #+END_SRC
@@ -743,6 +759,7 @@ add following lines:
 
 #+BEGIN_SRC emacs-lisp
   (use-package ggtags
+    :defer t
     :bind (("C-c f" . ggtags-find-file)
            ("M-." . ggtags-find-tag-dwim))
     :config
@@ -766,6 +783,7 @@ add following lines:
 #+BEGIN_SRC emacs-lisp
   ;; ;; magit-status for git
   (use-package magit
+    :defer t
     :bind ("C-x m g" . magit-status))
 #+END_SRC
 
@@ -792,6 +810,7 @@ this directory as secure because you are the owner.
 #+BEGIN_SRC emacs-lisp
   ;; Define the modes/packages you need
   (use-package irony
+    :defer t
     :diminish irony-mode
     :config
     (setq w32-pipe-read-delay 0)
@@ -808,17 +827,23 @@ this directory as secure because you are the owner.
         'irony-completion-at-point-async))
     (add-hook 'irony-mode-hook 'my-irony-mode-hook))
 
-  (use-package company-c-headers)
+  (use-package company-c-headers
+    :defer t
+    )
 
   (use-package flycheck
+    :defer t
     :config
     ;; set up flycheck
     (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
   (use-package cc-mode
+    :defer t
     :ensure nil
     :config
+    (use-package company)
     (add-to-list 'company-backends 'company-irony)
+    (use-package company-c-headers)
     (add-to-list 'company-c-headers-path-system "/usr/include")
     (require 'irony)
     (add-hook 'c-mode-hook 'irony-mode)
@@ -896,17 +921,21 @@ Install the project...
 Python development configuration is quite easy. =elpy= [fn:14] is used here:
 
 #+BEGIN_SRC emacs-lisp
-  (elpy-enable)
-  ;;(setq jedi:complete-on-dot t)
-  ;; prevent redundant intent in using yasnippets
-  (add-hook 'python-mode-hook
-            (lambda ()
-              (setq yas-indent-line nil)))
+  (use-package elpy
+    :defer t
+    :config
+    (elpy-enable)
+    ;;(setq jedi:complete-on-dot t)
+    ;; prevent redundant intent in using yasnippets
+    (add-hook 'python-mode-hook
+              (lambda ()
+                (setq yas-indent-line nil)))
 
-  ;; remove warning when start python interpreter
-  (add-to-list 'python-shell-completion-native-disabled-interpreters "python")
+    ;; remove warning when start python interpreter
+    (add-to-list 'python-shell-completion-native-disabled-interpreters "python"))
 
   (use-package company-jedi
+    :defer t
     :config
     (setq elpy-rpc-backend "jedi")
     (add-to-list 'company-backends 'company-jedi))
@@ -969,6 +998,7 @@ pip install virtualenv
   ;; path and system environment setting for orgmode
   (setq kimim/path-org (concat kimim/path-sync "org/"))
   (use-package org
+    :defer t
     :bind
     ("C-c a" . org-agenda)
     ("C-c b" . org-iswitchb)
@@ -985,6 +1015,7 @@ pip install virtualenv
 ** org for writing
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :defer t
     :config
     (setq org-hide-leading-stars t)
     (setq org-footnote-auto-adjust t)
@@ -1002,6 +1033,7 @@ pip install virtualenv
 ** org with source code
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :defer t
     :config
     ;; src block setting
     (setq org-src-window-setup 'current-window)
@@ -1029,6 +1061,7 @@ pip install virtualenv
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :defer t
     :config
     (setq org-export-allow-BIND t)
     (setq org-export-creator-string "")
@@ -1036,6 +1069,7 @@ pip install virtualenv
     (setq org-html-validation-link nil)
 
   (use-package ox-reveal
+    :defer t
     :config
     (setq org-reveal-root "reveal.js")
     ;;(setq org-reveal-root "~/../Tools/reveal.js")
@@ -1048,6 +1082,7 @@ pip install virtualenv
     )
 
   (use-package ox-html
+    :defer t
     :ensure nil
     :config
     (defadvice org-html-paragraph (before fsh-org-html-paragraph-advice
@@ -1099,6 +1134,7 @@ pip install virtualenv
 #+BEGIN_SRC emacs-lisp
   ;; plant uml setting
   (use-package org
+    :defer t
     :config
     (require 'ob-plantuml)
     (setenv "GRAPHVIZ_DOT" "C:\\cygwin\\bin\\dot.exe")
@@ -1108,6 +1144,8 @@ pip install virtualenv
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :defer t
+    :commands (org-toggle-office)
     :bind (:map org-mode-map
            ("C-c  。" . org-time-stamp))
     :config
@@ -1245,8 +1283,8 @@ pip install virtualenv
           (org-toggle-office)
         (org-toggle-home))))
 
-  (eval-after-load 'org
-    (org-toggle-office))
+;;  (eval-after-load 'org
+;;    (org-toggle-office))
 #+END_SRC
 
 ** org link: match
@@ -1255,6 +1293,7 @@ New link to use everything to locate a file with unique ID:
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :defer t
     :config
     (org-add-link-type "match" 'org-match-open)
 
@@ -1269,6 +1308,7 @@ New link to use everything to locate a file with unique ID:
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :defer t
     :config
     ;; file in jekyll base will also be uploaded to github
     (setq path-jekyll-base "~/kimi.im/_notes/_posts")
@@ -1389,6 +1429,7 @@ New link to use everything to locate a file with unique ID:
 
 #+BEGIN_SRC emacs-lisp
   (use-package deft
+    :defer t
     :ensure t
     :bind
     (("C-x d" . deft-find-file)
@@ -1454,6 +1495,7 @@ New link to use everything to locate a file with unique ID:
 #+BEGIN_SRC emacs-lisp
   ;; erc settings
   (use-package erc
+    :defer t
     :config
     (require 'erc-join)
     (erc-autojoin-mode 1)
@@ -1465,6 +1507,7 @@ New link to use everything to locate a file with unique ID:
 
   ;; gnus settings
   (use-package gnus
+    :defer t
     :config
     (setq message-directory "~/Gnus/Mail/")
     (setq gnus-directory "~/Gnus/News/")
@@ -1488,6 +1531,7 @@ New link to use everything to locate a file with unique ID:
 * kimim utils
 #+BEGIN_SRC emacs-lisp
   (use-package kimim
+    :defer t
     :ensure nil
     :load-path "~/kimim-emacs/site-lisp/"
     )
@@ -1512,7 +1556,6 @@ New link to use everything to locate a file with unique ID:
 
   ;; (bind-key "M-<SPC>" (lambda () (interactive)
   ;;                       (insert ?_)))
-  (bind-key "C-x C-b" 'ibuffer-other-window)
   (bind-key "C-h" 'delete-backward-char)
   (bind-key "M-h" 'backward-kill-word)
   (bind-key "M-?" 'mark-paragraph)
@@ -1546,13 +1589,6 @@ New link to use everything to locate a file with unique ID:
   (set-register ?o '(file . "~/kimim-emacs/README.org"))
 
 #+END_SRC
-* Finalization
-
-#+BEGIN_SRC emacs-lisp
-  (load-file "~/.emacs.d/work.el")
-  (load-file "~/.emacs.d/home.el")
-#+END_SRC
-
 * Footnotes
 
 [fn:1] http://www.literateprogramming.com/
