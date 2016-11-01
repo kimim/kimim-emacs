@@ -1145,7 +1145,7 @@ pip install virtualenv
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :defer t
-    :commands (org-toggle-office)
+    :commands (org-toggle-office org-toggle-home)
     :bind (:map org-mode-map
            ("C-c  。" . org-time-stamp))
     :config
@@ -1282,9 +1282,6 @@ pip install virtualenv
       (if (string= org-location-home-or-office "home")
           (org-toggle-office)
         (org-toggle-home))))
-
-;;  (eval-after-load 'org
-;;    (org-toggle-office))
 #+END_SRC
 
 ** org link: match
