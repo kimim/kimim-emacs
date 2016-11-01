@@ -25,4 +25,5 @@
 (load-file "~/kimim-emacs/init.el")
 
 ;; other settings more
-(org-toggle-home)
+(eval-after-load 'org
+  (org-toggle-home))
