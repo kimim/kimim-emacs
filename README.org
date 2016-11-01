@@ -1530,13 +1530,19 @@ New link to use everything to locate a file with unique ID:
   (use-package kimim
     :defer t
     :ensure nil
+    :bind
+    ("<f9>" . kimim/cyg)
+    ("S-<f9>" . kimim/cmd)
+    ("<f10>" . kimim/dc)
+    ("C-c r" . kimim/rename-file-and-buffer)
+    ("C-x m o" . kimim/open-in-external-app)
+    ("C-c d" . kimim/lookinsight)
     :load-path "~/kimim-emacs/site-lisp/"
     )
 #+END_SRC
 * Key Binding
 
 #+BEGIN_SRC emacs-lisp
-  (bind-key "C-c r" 'kimim/rename-file-and-buffer)
   (bind-key "<f1>" 'delete-other-windows)
   (bind-key "C-<f1>" 'nuke-other-buffers)
   (bind-key "<f2>" 'other-window)
@@ -1546,9 +1552,6 @@ New link to use everything to locate a file with unique ID:
   (bind-key "<f7>" 'kimim/toggle-highlight-tap)
   (bind-key "<f8>" (lambda()
                      (interactive) (list-charset-chars 'ascii)))
-  (bind-key "<f9>" 'kimim/cyg)
-  (bind-key "S-<f9>" 'kimim/cmd)
-  (bind-key "<f10>" 'kimim/dc)
   (bind-key "<f12>" 'org-toggle-home-or-office)
 
   ;; (bind-key "M-<SPC>" (lambda () (interactive)
@@ -1564,11 +1567,9 @@ New link to use everything to locate a file with unique ID:
   (bind-key "M-o" 'other-window)
   (bind-key "M-n" 'next-error)
   (bind-key "M-p" 'previous-error)
-  (bind-key "C-x m o" 'kimim/open-in-external-app)
   ;;(define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
   (bind-key "M-*" 'pop-tag-mark)
   (bind-key "C-c =" 'get-file-line)
-  (bind-key "C-c d" 'kimim/lookinsight)
 
   (bind-key "C-c C-/" 'comment-or-uncomment-region)
   (bind-key "RET" 'newline-and-indent)
