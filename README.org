@@ -106,9 +106,9 @@ specify these variables in different way.
   (cond ((eq window-system 'w32)
          (setq kimim/path-root "C:/cygwin/")
          (add-to-list 'exec-path
-                      "C:/kimikit/emacs/bin/")
+                      (concat kimim/path-kimikit "emacs/bin/"))
          (setenv "PATH"
-                 (concat "C:/kimikit/emacs/bin" path-separator
+                 (concat kimim/path-kimikit "emacs/bin" path-separator
                  (getenv "PATH"))))
         ((eq window-system 'ns)
          (setq kimim/path-root "/")
@@ -667,7 +667,7 @@ task for =es.exe=.
     :defer t
     :ensure t
     :init
-    (setq everything-cmd "c:\\kimikit\\bin\\es.exe"))
+    (setq everything-cmd (concat kimim/path-kimikit "bin/es.exe"))
 #+END_SRC
 ** imenu & imenu-anywhere
 
@@ -1158,8 +1158,8 @@ pip install virtualenv
     :defer t
     :config
     (require 'ob-plantuml)
-    (setenv "GRAPHVIZ_DOT" "C:\\cygwin\\bin\\dot.exe")
-    (setq org-plantuml-jar-path "C:\\kimikit\\plantuml\\plantuml.jar"))
+    (setenv "GRAPHVIZ_DOT" (concat kimim/path-root "bin/dot"))
+    (setq org-plantuml-jar-path (concat kimim/path-kimikit "plantuml/plantuml.jar"))
 #+END_SRC
 ** org as GTD system
 
