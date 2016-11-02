@@ -294,6 +294,7 @@ and defers loading of the module until they are used.
 #+BEGIN_SRC emacs-lisp
   ;; highlight current line
   (use-package hl-line
+    :defer 5
     :config
     (global-hl-line-mode 1))
 
