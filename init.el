@@ -6,7 +6,7 @@
 (shell-command
  (concat "cd " kimim/path-kimim-emacs " && git pull"))
 
-(setq readme-org (concat kimim/path-kimim-emacs "README.org")
+(setq readme-org (concat kimim/path-kimim-emacs "README.org"))
 (setq readme-el (concat kimim/path-kimim-emacs "README.el"))
 
 (if (or
