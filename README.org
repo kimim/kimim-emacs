@@ -291,7 +291,9 @@ and defers loading of the module until they are used.
 * Highlight
 #+BEGIN_SRC emacs-lisp
   ;; highlight current line
-  (global-hl-line-mode 1)
+  (use-package hl-line
+    :config
+    (global-hl-line-mode 1))
 
   ;; highlight current symbol
   (use-package auto-highlight-symbol
@@ -713,7 +715,9 @@ task for =es.exe=.
     (add-to-list
      'yas-snippet-dirs (concat kimim/path-sync "tools/snippets"))
     (yas-global-mode 1)
-    (require 'warnings)
+    (use-package company)
+    (add-to-list 'company-backends 'company-yasnippet)
+    (use-package warnings)
     (setq warning-suppress-types '((yasnippet backquote-change))))
 #+END_SRC
 
@@ -728,10 +732,10 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
 
 #+BEGIN_SRC emacs-lisp
   (use-package company
+    :diminish company-mode
     :defer t
     :config
-    (global-company-mode t)
-    (add-to-list 'company-backends 'company-yasnippet))
+    (global-company-mode t))
 #+END_SRC
 ** company dict
 #+BEGIN_SRC emacs-lisp
@@ -972,9 +976,7 @@ pip install virtualenv
 #+BEGIN_SRC emacs-lisp
   (use-package ahk-mode
     :defer t
-    :mode ("\\.ahk\\'" . ahk-mode)
-    :config
-    (ahk-mode))
+    :mode ("\\.ahk\\'" . ahk-mode))
 #+END_SRC
 * Calendar
 
