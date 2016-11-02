@@ -667,7 +667,7 @@ task for =es.exe=.
     :defer t
     :ensure t
     :init
-    (setq everything-cmd (concat kimim/path-kimikit "bin/es.exe"))
+    (setq everything-cmd (concat kimim/path-kimikit "bin/es.exe")))
 #+END_SRC
 ** imenu & imenu-anywhere
 
@@ -810,7 +810,6 @@ menu). From Properties select the Tab “Security” and then select the button
 “Administrators (\Administrators)” into “ (\”. Now the server code will accept
 this directory as secure because you are the owner.
 #+END_QUOTE
-
 
 * Programming Language
 ** C
@@ -1159,7 +1158,7 @@ pip install virtualenv
     :config
     (require 'ob-plantuml)
     (setenv "GRAPHVIZ_DOT" (concat kimim/path-root "bin/dot"))
-    (setq org-plantuml-jar-path (concat kimim/path-kimikit "plantuml/plantuml.jar"))
+    (setq org-plantuml-jar-path (concat kimim/path-kimikit "plantuml/plantuml.jar")))
 #+END_SRC
 ** org as GTD system
 
