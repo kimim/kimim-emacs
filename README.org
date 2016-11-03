@@ -256,7 +256,7 @@ and defers loading of the module until they are used.
                    "%b"))))
 
   (use-package path-headerline-mode
-    :defer t
+    :defer 5
     :config
     ;; only display headerline for real files
     (defun kimim/ph--display-header (orig-fun &rest args)
@@ -271,10 +271,14 @@ and defers loading of the module until they are used.
 * Mode Line
 #+BEGIN_SRC emacs-lisp
   (column-number-mode 1)
-  (setq display-time-24hr-format t)
-  (setq display-time-day-and-date t)
-  (setq display-time-interval 10)
-  (display-time-mode t)
+  (use-package time
+    :defer 1
+    :init
+    (setq display-time-24hr-format t)
+    (setq display-time-day-and-date t)
+    (setq display-time-interval 10)
+    :config
+    (display-time-mode t))
 #+END_SRC
 * Color Theme
 #+BEGIN_SRC emacs-lisp
@@ -699,6 +703,7 @@ task for =es.exe=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
+    :defer 1
     :diminish ivy-mode
     :bind ("<f6>" . ivy-resume)
     :config
@@ -1456,6 +1461,7 @@ New link to use everything to locate a file with unique ID:
     (("C-x d" . deft-find-file)
      ("C-x C-d" . deft))
     :config
+    (use-package ivy)
     (setq deft-extensions '("txt" "tex" "org" "md"))
     (if (not (boundp 'kimim/path-notes))
         (defvar kimim/path-notes (concat kimim/path-sync "notes/")))
@@ -1554,7 +1560,7 @@ New link to use everything to locate a file with unique ID:
 * kimim utils
 #+BEGIN_SRC emacs-lisp
   (use-package kimim
-    :defer t
+    :defer 5
     :ensure nil
     :bind
     ("<f9>" . kimim/cyg)
