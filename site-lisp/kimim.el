@@ -369,4 +369,14 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
        ((string-equal system-type "gnu/linux")
         (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList))))))
 
+(defun kimim/update-kimim-emacs()
+  (interactive)
+  ;; set shell-file-name for WIN, otherwise, cmdproxy is chosen
+  (if (eq window-system 'w32)
+      (setq shell-file-name "bash.exe"))
+  ;; pull updates from http://github.com/kimim/kimim-emacs
+  (shell-command
+   (concat "cd " kimim/path-kimim-emacs " && git pull")))
+
+
 (provide 'kimim)

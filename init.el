@@ -1,11 +1,3 @@
-;; set shell-file-name for WIN, otherwise, cmdproxy is chosen
-(if (eq window-system 'w32)
-    (setq shell-file-name "bash.exe"))
-
-;; pull updates from http://github.com/kimim/kimim-emacs
-(shell-command
- (concat "cd " kimim/path-kimim-emacs " && git pull"))
-
 (setq readme-org (concat kimim/path-kimim-emacs "README.org"))
 (setq readme-el (concat kimim/path-kimim-emacs "README.el"))
 
