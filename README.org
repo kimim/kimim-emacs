@@ -1608,10 +1608,6 @@ New link to use everything to locate a file with unique ID:
     (global-set-key [kp-delete] 'delete-char))
 
   (bind-key "C-x m h" 'help)
-  ;; C-x r j ?x 打開常用文件
-  (set-register ?e '(file . "~/kimim-emacs/init.el"))
-  (set-register ?o '(file . "~/kimim-emacs/README.org"))
-
 #+END_SRC
 
 * Footnotes
