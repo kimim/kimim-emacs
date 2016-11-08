@@ -1271,17 +1271,17 @@ pip install virtualenv
              ((org-agenda-sorting-strategy '(todo-state-down))))
             ("c" tags "clock"
              ((org-agenda-sorting-strategy '(priority-down))))))
-    (setq kimim/capture-file (concat kimim/path-org "capture.org"))
-    (setq kimim/capture-file-world (concat kimim/path-org "world.org"))
-    (setq org-default-notes-file nil)
+
+    (setq org-directory kimim/path-org)
+
     (setq org-capture-templates
-          '(("c" "Capture" entry (file+headline kimim/capture-file "Inbox")
+          '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
              "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("t" "TODO" entry (file+headline kimim/capture-file "Inbox")
+            ("t" "TODO"    entry (file+headline "capture.org" "Inbox")
              "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("o" "Action" entry (file+headline kimim/capture-file "Inbox")
+            ("o" "Action"  entry (file+headline "capture.org" "Inbox")
              "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("h" "Habit" entry (file+headline kimim/capture-file-world "Habit")
+            ("h" "Habit"   entry (file+headline "world.org"   "Habit")
              "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
     (defcustom org-location-home-or-office "office" "office")
@@ -1290,9 +1290,11 @@ pip install virtualenv
       (setq org-location-home-or-office "office")
       (setq org-agenda-files
             (list kimim/path-org
-                  (concat kimim/path-org "work/")))
+                  (concat kimim/path-org "work/")
+                  (concat kimim/path-org "mobile.txt")))
       (setq org-refile-files
             (append
+             (file-expand-wildcards (concat kimim/path-org "*.txt"))
              (file-expand-wildcards (concat kimim/path-org "*.org"))
              (file-expand-wildcards (concat kimim/path-org "work/*.org"))
              (file-expand-wildcards (concat kimim/path-org "home/*.org"))))
@@ -1303,14 +1305,16 @@ pip install virtualenv
       (setq org-location-home-or-office "home")
       (setq org-agenda-files
             (list kimim/path-org
-                  (concat kimim/path-org "home/")))
+                  (concat kimim/path-org "home/")
+                  (concat kimim/path-org "mobile.txt")))
       (setq org-refile-files
             (append
+             (file-expand-wildcards (concat kimim/path-org "*.txt"))
              (file-expand-wildcards (concat kimim/path-org "*.org"))
              (file-expand-wildcards (concat kimim/path-org "home/*.org"))
              (file-expand-wildcards (concat kimim/path-org "work/*.org"))))
       (message "Agenda is from home..."))
-    (require 'ivy) ; use ivy to complete refile files
+    (use-package ivy) ; use ivy to complete refile files
     (defun org-toggle-home-or-office()
       (interactive)
       (if (string= org-location-home-or-office "home")
