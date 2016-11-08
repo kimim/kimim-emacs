@@ -318,7 +318,7 @@ and defers loading of the module until they are used.
   (fset 'yes-or-no-p 'y-or-n-p)
   (show-paren-mode 1)                       ; 高亮显示匹配的括号
   (blink-cursor-mode 1)                     ; 光标不闪烁
-  ;;(tooltip-mode 1)
+  (tooltip-mode nil)
 #+END_SRC
 
 * Info
@@ -750,7 +750,8 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
     :diminish company-mode
     :defer t
     :config
-    (global-company-mode t))
+    (global-company-mode t)
+    (add-to-list 'company-backends 'company-ispell))
 #+END_SRC
 ** company dict
 #+BEGIN_SRC emacs-lisp
@@ -987,11 +988,13 @@ pip install virtualenv
 ** AutoHotKey
 
 =ahk-mode= developed by Rich Alesi[fn:15]
+
 #+BEGIN_SRC emacs-lisp
   (use-package ahk-mode
     :defer t
     :mode ("\\.ahk\\'" . ahk-mode))
 #+END_SRC
+
 * Calendar
 
 #+BEGIN_SRC emacs-lisp
@@ -1268,15 +1271,17 @@ pip install virtualenv
              ((org-agenda-sorting-strategy '(todo-state-down))))
             ("c" tags "clock"
              ((org-agenda-sorting-strategy '(priority-down))))))
-
+    (setq kimim/capture-file (concat kimim/path-org "capture.org"))
+    (setq kimim/capture-file-world (concat kimim/path-org "world.org"))
+    (setq org-default-notes-file nil)
     (setq org-capture-templates
-          '(("c" "Capture" entry (file+headline (concat kimim/path-org "capture.org") "Inbox")
+          '(("c" "Capture" entry (file+headline kimim/capture-file "Inbox")
              "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("t" "TODO" entry (file+headline (concat kimim/path-org "capture.org") "Inbox")
+            ("t" "TODO" entry (file+headline kimim/capture-file "Inbox")
              "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("o" "Action" entry (file+headline (concat kimim/path-org "capture.org") "Inbox")
+            ("o" "Action" entry (file+headline kimim/capture-file "Inbox")
              "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("h" "Habit" entry (file+headline (concat kimim/path-org "world.org") "Habit")
+            ("h" "Habit" entry (file+headline kimim/capture-file-world "Habit")
              "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
     (defcustom org-location-home-or-office "office" "office")
