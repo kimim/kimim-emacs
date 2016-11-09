@@ -18,8 +18,9 @@ create a =.bat= file =emacs.bat= to set the environment and run Emacs:
 #+END_SRC
 
 Another important path in Windows is =kimikit=, which is used to put some
-portable applications. I plan to write some installation script to update and
-install these applications automatically.
+portable applications. I plan to write some installation scripts to update and
+install these applications automatically. These scripts are now hosted in
+github: https://github.com/kimim/kimikit, welcome to fork and have a try.
 
 *** Cygwin
 
@@ -27,7 +28,7 @@ Another tool sets required for this configuration in Windows is the Cygwin
 project[fn:2], which is a large collection of GNU and Open Source tools provide
 functionality similar to a Linux distribution on Windows.
 
-MSYS2 [fn:3] is better than Cygwin in one point that the packages can be
+MSYS2 [fn:3] is better than Cygwin in one aspect that the packages can be
 installed in command line with =pacman -S=.
 
 The explanation from Cygwin is that because Windows do not allow overwriting of
@@ -54,6 +55,7 @@ Install Homebrew:
 
 Most of the external tools I used in this Emacs configuration should be easily
 installed or already available in main Linux distributions.
+
 * Environment
 ** Synchronization Folders
 
@@ -64,8 +66,7 @@ services. For example, working files are synchronized in Microsoft OneDrive
 Business or Box Business, while personal files are synchronized in Dropbox or
 SugarSync.
 
-The variable for synchronization location is named as:
-=kimim/path-sync=
+The variable for synchronization location is named as: =kimim/path-sync=
 
 If the sync path is not set, then use HOME path =~= as the default folder, that
 means, no synchronization. So please set these variables in your =.emacs= file.
@@ -175,7 +176,7 @@ Define new command prefix for keys such as "C-x m f", "C-x m v".
 
 * Package
 
-=package= [fn:7]is the modern =elisp= package management system, which lets you
+=package= [fn:7] is the modern =elisp= package management system, which let you
 easily download and install packages that implement additional features. Each
 package is a separate Emacs Lisp program, sometimes including other components
 such as an Info manual.
@@ -218,6 +219,9 @@ and defers loading of the module until they are used.
 #+END_SRC
 
 ** Font and Frame Size
+
+Set default font and frame size for both Windows and macOS.
+
 #+BEGIN_SRC emacs-lisp
   (cond
    ((eq window-system 'w32)
@@ -268,9 +272,12 @@ and defers loading of the module until they are used.
     ;; useful when in fullscreen mode
     (path-headerline-mode t))
 #+END_SRC
+
 * Mode Line
+
+Display time and (line, column) numbers in mode line.
+
 #+BEGIN_SRC emacs-lisp
-  (column-number-mode 1)
   (use-package time
     :defer 1
     :init
@@ -279,13 +286,21 @@ and defers loading of the module until they are used.
     (setq display-time-interval 10)
     :config
     (display-time-mode t))
+
+  (line-number-mode 1)
+  (column-number-mode 1)
 #+END_SRC
+
 * Color Theme
+
+Use self defined color theme 2 seconds after init.
+
 #+BEGIN_SRC emacs-lisp
   (setq font-lock-maximum-decoration t)
   (setq font-lock-global-modes '(not shell-mode text-mode))
   (setq font-lock-verbose t)
   (global-font-lock-mode 1)
+
   (use-package color-theme-kimim
     :defer 2
     :commands (color-theme-kimim color-theme-jekyll)
@@ -294,7 +309,9 @@ and defers loading of the module until they are used.
     :config
     (color-theme-kimim))
 #+END_SRC
+
 * Highlight
+
 #+BEGIN_SRC emacs-lisp
   ;; highlight current line
   (use-package hl-line
@@ -309,7 +326,9 @@ and defers loading of the module until they are used.
     :config
     (global-auto-highlight-symbol-mode t))
 #+END_SRC
+
 * Other Visual Element
+
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-startup-message t)          ; 不顯示開始畫面
   (setq initial-scratch-message nil)        ; scratch 默認為空
@@ -322,6 +341,7 @@ and defers loading of the module until they are used.
 #+END_SRC
 
 * Info
+
 #+BEGIN_SRC emacs-lisp
   (use-package info
     :defer t
@@ -334,8 +354,10 @@ and defers loading of the module until they are used.
     (add-to-list 'Info-additional-directory-list
                  "~/info"))
 #+END_SRC
+
 * Controlling
 ** Window and Frame
+
 #+BEGIN_SRC emacs-lisp
   (use-package winner
     ;; restore windows configuration, built-in package
@@ -398,7 +420,9 @@ and defers loading of the module until they are used.
     (use-package smex)
     (ivy-mode 1))
 #+END_SRC
+
 ** Key Frequency
+
 #+BEGIN_SRC emacs-lisp
   (use-package keyfreq
     :defer 5
@@ -406,8 +430,10 @@ and defers loading of the module until they are used.
     (keyfreq-mode)
     (keyfreq-autosave-mode))
 #+END_SRC
+
 * Editing
 ** General
+
 #+BEGIN_SRC emacs-lisp
   ;;========================================
   ;; Editor setting
@@ -502,10 +528,12 @@ and defers loading of the module until they are used.
   ;;    (volatile-highlights-mode t)
   ;;    :diminish volatile-highlights-mode)
 #+END_SRC
+
 ** pangu-spacing
+
 #+BEGIN_SRC emacs-lisp
   (use-package pangu-spacing
-    :defer t
+    :defer 6
     :ensure t
     :diminish pangu-spacing-mode
     :config
@@ -514,16 +542,18 @@ and defers loading of the module until they are used.
               '(lambda ()
                  (set (make-local-variable 'pangu-spacing-real-insert-separtor) t))))
 #+END_SRC
+
 ** undo-tree
 
 #+BEGIN_SRC emacs-lisp
   (use-package undo-tree
-    :defer t
+    :defer 6
     :diminish undo-tree-mode
     :config
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t))
 #+END_SRC
+
 * Dired and Buffer
 
 #+BEGIN_SRC emacs-lisp
@@ -611,6 +641,7 @@ and defers loading of the module until they are used.
 #+END_SRC
 
 * Navigation
+
 #+BEGIN_SRC emacs-lisp
   ;; bookmark setting
   (setq bookmark-default-file "~/.emacs.d/emacs.bmk")
@@ -632,13 +663,16 @@ and defers loading of the module until they are used.
     :config
     (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 #+END_SRC
+
 * Search and Finding
 ** swiper replaces isearch
+
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
     :bind
     ("C-s" . swiper))
 #+END_SRC
+
 ** ag: the silver searcher
 
 =ag= [fn:8] is really a very fast grep tool, and =ag.el= [fn:9] provide the
@@ -652,6 +686,7 @@ Emacs interface to =ag=:
     :config
     (setq ag-highlight-search t))
 #+END_SRC
+
 ** pt: the platium searcher
 
 Because =counsel-ag= is not working in my Win64 machine, so I switch to =pt=
@@ -677,6 +712,7 @@ task for =es.exe=.
     :init
     (setq everything-cmd (concat kimim/path-kimikit "bin/es.exe")))
 #+END_SRC
+
 ** imenu & imenu-anywhere
 
 =imenu= is used to navigate the function definitions in current buffer.
@@ -696,9 +732,11 @@ task for =es.exe=.
 
 * auto-complete
 ** abbrev
+
 #+BEGIN_SRC emacs-lisp
 (diminish 'abbrev-mode)
 #+END_SRC
+
 ** ivy-mode
 
 #+BEGIN_SRC emacs-lisp
@@ -721,6 +759,7 @@ task for =es.exe=.
     :config
     (autopair-global-mode 1))
 #+END_SRC
+
 ** yasnippet
 
 #+BEGIN_SRC emacs-lisp
@@ -753,7 +792,9 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
     (global-company-mode t)
     (add-to-list 'company-backends 'company-ispell))
 #+END_SRC
+
 ** company dict
+
 #+BEGIN_SRC emacs-lisp
   (use-package company-dict
     :defer t
@@ -763,8 +804,11 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
     ;; Optional: if you want it available everywhere
     (add-to-list 'company-backends 'company-dict))
 #+END_SRC
+
 * Programming General
+
 ** Compiling
+
 #+BEGIN_SRC emacs-lisp
   (setq next-error-recenter 20)
   (bind-key "C-<f11>" 'compile)
@@ -773,6 +817,7 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
     :config
     (compile-bookmarks-mode))
 #+END_SRC
+
 ** Tagging
 
 #+BEGIN_SRC emacs-lisp
@@ -796,6 +841,7 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
     ;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
 
 #+END_SRC
+
 ** Version Control
 
 #+BEGIN_SRC emacs-lisp
@@ -822,6 +868,7 @@ this directory as secure because you are the owner.
 #+END_QUOTE
 
 * Programming Language
+
 ** C
 
 #+BEGIN_SRC emacs-lisp
@@ -891,6 +938,7 @@ this directory as secure because you are the owner.
 #+END_SRC
 
 *** irony installation
+
 =irony-mode= is developed by Sarcasm [fn:13]. It is an Emacs minor-mode that
 aims at improving the editing experience for the C, C++ and Objective-C
 languages. It works by using a combination of an Emacs package and a C++ program
@@ -977,6 +1025,7 @@ pip install yapf
 # install virtualenv for jedi
 pip install virtualenv
 #+END_SRC
+
 ** Emacs lisp
 
 #+BEGIN_SRC emacs-lisp
@@ -1021,7 +1070,9 @@ pip install virtualenv
   (setq chinese-calendar-terrestrial-branch
         ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
 #+END_SRC
+
 * Orgmode
+
 ** org general setting
 
 #+BEGIN_SRC emacs-lisp
@@ -1044,7 +1095,9 @@ pip install virtualenv
     (setq org-src-fontify-natively t)
     (setq org-startup-indented t))
 #+END_SRC
+
 ** org for writing
+
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :defer t
@@ -1062,7 +1115,9 @@ pip install virtualenv
                                                  (backward-char 1)))
     )
 #+END_SRC
+
 ** org with source code
+
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :defer t
@@ -1089,6 +1144,7 @@ pip install virtualenv
        ))
     )
 #+END_SRC
+
 ** org exporting
 
 #+BEGIN_SRC emacs-lisp
@@ -1163,6 +1219,7 @@ pip install virtualenv
 #+END_SRC
 
 ** org with diagram
+
 #+BEGIN_SRC emacs-lisp
   ;; plant uml setting
   (use-package org
@@ -1172,6 +1229,7 @@ pip install virtualenv
     (setenv "GRAPHVIZ_DOT" (concat kimim/path-root "bin/dot"))
     (setq org-plantuml-jar-path (concat kimim/path-kimikit "plantuml/plantuml.jar")))
 #+END_SRC
+
 ** org as GTD system
 
 #+BEGIN_SRC emacs-lisp
@@ -1336,6 +1394,7 @@ New link to use everything to locate a file with unique ID:
        "open" "Everything" (concat "-search " path))))
 
 #+END_SRC
+
 ** org publish to jekyll
 
 #+BEGIN_SRC emacs-lisp
@@ -1457,6 +1516,7 @@ New link to use everything to locate a file with unique ID:
       (org-open-file (org-html-export-to-html nil))))
 
 #+END_SRC
+
 * deft for note management
 
 #+BEGIN_SRC emacs-lisp
@@ -1525,6 +1585,7 @@ New link to use everything to locate a file with unique ID:
     (advice-add 'deft-new-file-named
                 :around #'kimim/deft-new-file-named-advice))
 #+END_SRC
+
 * erc and gnus
 
 #+BEGIN_SRC emacs-lisp
@@ -1564,6 +1625,7 @@ New link to use everything to locate a file with unique ID:
 #+END_SRC
 
 * kimim utils
+
 #+BEGIN_SRC emacs-lisp
   (use-package kimim
     :defer 5
@@ -1578,6 +1640,7 @@ New link to use everything to locate a file with unique ID:
     :load-path "~/kimim-emacs/site-lisp/"
     )
 #+END_SRC
+
 * Key Binding
 
 #+BEGIN_SRC emacs-lisp
