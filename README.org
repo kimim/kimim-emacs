@@ -1290,11 +1290,9 @@ pip install virtualenv
       (setq org-location-home-or-office "office")
       (setq org-agenda-files
             (list kimim/path-org
-                  (concat kimim/path-org "work/")
-                  (concat kimim/path-org "mobile.txt")))
+                  (concat kimim/path-org "work/")))
       (setq org-refile-files
             (append
-             (file-expand-wildcards (concat kimim/path-org "*.txt"))
              (file-expand-wildcards (concat kimim/path-org "*.org"))
              (file-expand-wildcards (concat kimim/path-org "work/*.org"))
              (file-expand-wildcards (concat kimim/path-org "home/*.org"))))
@@ -1305,15 +1303,14 @@ pip install virtualenv
       (setq org-location-home-or-office "home")
       (setq org-agenda-files
             (list kimim/path-org
-                  (concat kimim/path-org "home/")
-                  (concat kimim/path-org "mobile.txt")))
+                  (concat kimim/path-org "home/")))
       (setq org-refile-files
             (append
-             (file-expand-wildcards (concat kimim/path-org "*.txt"))
              (file-expand-wildcards (concat kimim/path-org "*.org"))
              (file-expand-wildcards (concat kimim/path-org "home/*.org"))
              (file-expand-wildcards (concat kimim/path-org "work/*.org"))))
       (message "Agenda is from home..."))
+
     (use-package ivy) ; use ivy to complete refile files
     (defun org-toggle-home-or-office()
       (interactive)
