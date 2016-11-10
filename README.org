@@ -782,6 +782,18 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
   To hide this warning, add (yasnippet backquote-change) to ‘warning-suppress-types’.
 #+END_QUOTE
 
+** company dict
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company-dict
+    :defer t
+    :config
+    ;; Where to look for dictionary files. Default is ~/.emacs.d/dict
+    (setq company-dict-dir "~/.emacs.d/dict/")
+    ;; Optional: if you want it available everywhere
+    (add-to-list 'company-backends 'company-dict))
+#+END_SRC
+
 ** company mode
 
 English word list fetch from https://github.com/dwyl/english-words
@@ -796,21 +808,10 @@ English word list fetch from https://github.com/dwyl/english-words
     :defer 5
     :config
     (use-package company-try-hard)
+    (use-package company-dict)
     (global-company-mode t)
     (setq ispell-alternate-dictionary "~/.emacs.d/dict/words3.txt")
     (add-to-list 'company-backends 'company-ispell))
-#+END_SRC
-
-** company dict
-
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package company-dict
-  ;;   :defer t
-  ;;   :config
-  ;;   ;; Where to look for dictionary files. Default is ~/.emacs.d/dict
-  ;;   (setq company-dict-dir "~/.emacs.d/dict/")
-  ;;   ;; Optional: if you want it available everywhere
-  ;;   (add-to-list 'company-backends 'company-dict))
 #+END_SRC
 
 * Programming General
