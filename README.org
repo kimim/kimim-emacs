@@ -1259,9 +1259,7 @@ pip install virtualenv
             (type "REPEAT(r)" "SOMEDAY(m)" "|" "ABORT(a@/!)")))
 
     (setq org-tag-alist
-          '((:startgroup . nil)
-            ("@office" . ?o) ("@home" . ?h)
-            (:endgroup . nil)
+          '(("@office" . ?o) ("@home" . ?h)
             ("team" . ?t) ("leader" . ?l)
             ("risk" . ?k) ("sync" . ?s)
             ("reading" . ?r) ("writing" . ?w)
