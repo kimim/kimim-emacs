@@ -533,7 +533,7 @@ Use self defined color theme 2 seconds after init.
 
 #+BEGIN_SRC emacs-lisp
   (use-package pangu-spacing
-    :defer 6
+    :defer t
     :ensure t
     :diminish pangu-spacing-mode
     :config
@@ -1102,6 +1102,7 @@ pip install virtualenv
   (use-package org
     :defer t
     :config
+    (use-package pangu-spacing)
     (setq org-hide-leading-stars t)
     (setq org-footnote-auto-adjust t)
     (setq org-export-with-sub-superscripts '{})
