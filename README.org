@@ -1334,14 +1334,12 @@ pip install virtualenv
     (setq org-deadline-warning-days 2)
 
     (setq org-agenda-custom-commands
-          '(("t" todo "TODO|OPEN"
+          '(("t" todo "TODO|SCHED"
+             ((org-agenda-sorting-strategy '(priority-down))))
+            ("o" todo "OPEN|WAIT"
              ((org-agenda-sorting-strategy '(priority-down))))
             ;; all task should be done or doing
             ("d" todo "TODO|SCHED|OPEN|WAIT"
-             ((org-agenda-sorting-strategy '(priority-down))))
-            ("o" todo "OPEN"
-             ((org-agenda-sorting-strategy '(priority-down))))
-            ("w" todo "WAIT"
              ((org-agenda-sorting-strategy '(priority-down))))
             ("h" tags "habit/-ABORT-CLOSE"
              ((org-agenda-sorting-strategy '(todo-state-down))))
