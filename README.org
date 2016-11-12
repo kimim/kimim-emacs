@@ -340,7 +340,8 @@ Use self defined color theme 2 seconds after init.
   (tooltip-mode nil)
 #+END_SRC
 
-* Info
+* Help
+** Info
 
 #+BEGIN_SRC emacs-lisp
   (use-package info
@@ -353,6 +354,17 @@ Use self defined color theme 2 seconds after init.
     ;; additional info, collected from internet
     (add-to-list 'Info-additional-directory-list
                  "~/info"))
+#+END_SRC
+
+** tldr
+
+TL;DR stands for "Too Long; Didn't Read"[fn:8]. =tldr.el= [fn:9] is the Emacs
+client.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package tldr
+    :defer t
+    )
 #+END_SRC
 
 * Controlling
@@ -675,7 +687,7 @@ Use self defined color theme 2 seconds after init.
 
 ** ag: the silver searcher
 
-=ag= [fn:8] is really a very fast grep tool, and =ag.el= [fn:9] provide the
+=ag= [fn:10] is really a very fast grep tool, and =ag.el= [fn:11] provide the
 Emacs interface to =ag=:
 
 #+BEGIN_SRC emacs-lisp
@@ -698,9 +710,9 @@ out of the box.
 
 ** Everything
 
-Everything[fn:10] is a wonderful fast file and folder search engine, it provide
+Everything[fn:12] is a wonderful fast file and folder search engine, it provide
 a command line tool to get search result from Everything to command line output:
-=es.exe= [fn:11].
+=es.exe= [fn:13].
 
 Reminded that Everything should be running in background to do the real search
 task for =es.exe=.
@@ -877,7 +889,7 @@ Following error will reported when using magit to commit changes:
 server-ensure-safe-dir: The directory ‘~/.emacs.d/server’ is unsafe
 #+END_QUOTE
 
-The solution is to change the owner of =~/.emacs.d/server= [fn:12]
+The solution is to change the owner of =~/.emacs.d/server= [fn:14]
 
 #+BEGIN_QUOTE
 Click R-mouse on ~/.emacs.d/server and select “Properties” (last item in
@@ -959,7 +971,7 @@ this directory as secure because you are the owner.
 
 *** irony installation
 
-=irony-mode= is developed by Sarcasm [fn:13]. It is an Emacs minor-mode that
+=irony-mode= is developed by Sarcasm [fn:15]. It is an Emacs minor-mode that
 aims at improving the editing experience for the C, C++ and Objective-C
 languages. It works by using a combination of an Emacs package and a C++ program
 (=irony-server=) that uses libclang. When correctly configured, it can provide
@@ -1003,7 +1015,7 @@ Install the project...
 
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:14] is used here:
+Python development configuration is quite easy. =elpy= [fn:16] is used here:
 
 #+BEGIN_SRC emacs-lisp
   (use-package elpy
@@ -1056,7 +1068,7 @@ pip install virtualenv
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:15]
+=ahk-mode= developed by Rich Alesi[fn:17]
 
 #+BEGIN_SRC emacs-lisp
   (use-package ahk-mode
@@ -1717,18 +1729,22 @@ New link to use everything to locate a file with unique ID:
 
 [fn:7] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
 
-[fn:8] https://github.com/ggreer/the_silver_searcher#installation
+[fn:8] https://github.com/tldr-pages/tldr
 
-[fn:9] https://github.com/Wilfred/ag.el
+[fn:9] https://github.com/kuanyui/tldr.el
 
-[fn:10] http://www.voidtools.com
+[fn:10] https://github.com/ggreer/the_silver_searcher#installation
 
-[fn:11] http://www.voidtools.com/es.zip
+[fn:11] https://github.com/Wilfred/ag.el
 
-[fn:12] https://github.com/syl20bnr/spacemacs/issues/381
+[fn:12] http://www.voidtools.com
 
-[fn:13] https://github.com/Sarcasm/irony-mode
+[fn:13] http://www.voidtools.com/es.zip
 
-[fn:14] https://github.com/jorgenschaefer/elpy
+[fn:14] https://github.com/syl20bnr/spacemacs/issues/381
 
-[fn:15] https://github.com/ralesi/ahk-mode
+[fn:15] https://github.com/Sarcasm/irony-mode
+
+[fn:16] https://github.com/jorgenschaefer/elpy
+
+[fn:17] https://github.com/ralesi/ahk-mode
