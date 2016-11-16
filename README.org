@@ -270,7 +270,8 @@ Set default font and frame size for both Windows and macOS.
     (advice-add 'ph--display-header :around #'kimim/ph--display-header)
     ;; display file path in headerline
     ;; useful when in fullscreen mode
-    (path-headerline-mode t))
+    ;;(path-headerline-mode t)
+    )
 #+END_SRC
 
 * Mode Line
@@ -844,10 +845,11 @@ English word list fetch from https://github.com/dwyl/english-words
 #+BEGIN_SRC emacs-lisp
   (setq next-error-recenter 20)
   (bind-key "C-<f11>" 'compile)
-  (use-package compile-bookmarks
-    :defer t
-    :config
-    (compile-bookmarks-mode))
+  ;; error during init
+  ;; (use-package compile-bookmarks
+  ;;   :defer t
+  ;;   :config
+  ;;   (compile-bookmarks-mode))
 #+END_SRC
 
 ** Tagging
@@ -1272,6 +1274,10 @@ pip install virtualenv
     :bind (:map org-mode-map
            ("C-c  。" . org-time-stamp))
     :config
+    (add-hook 'kill-emacs-hook
+              (lambda ()
+                (org-clock-out nil t nil)
+                (org-save-all-org-buffers)))
     (setq org-todo-keywords
           '(
             ;; for tasks
