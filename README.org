@@ -759,6 +759,8 @@ task for =es.exe=.
     :bind ("<f6>" . ivy-resume)
     :config
     (setq ivy-use-virtual-buffers t)
+    (setq ivy-count-format "(%d/%d) ")
+    (setq ivy-wrap nil)
     (ivy-mode 1))
 #+END_SRC
 
