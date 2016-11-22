@@ -1281,6 +1281,7 @@ pip install virtualenv
            ;;                 (org-agenda-todo 'right)))
            )
     :config
+    (require 'org-agenda)
     (define-key org-agenda-mode-map
       (kbd "<S-right>") (lambda ()
                           (interactive)
