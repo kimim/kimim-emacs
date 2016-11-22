@@ -1274,8 +1274,17 @@ pip install virtualenv
     :defer t
     :commands (org-toggle-office org-toggle-home)
     :bind (:map org-mode-map
-           ("C-c  。" . org-time-stamp))
+           ("C-c  。" . org-time-stamp)
+           ;;:map org-agenda-mode-map
+           ;;("<S-right>" . (lambda ()
+           ;;                 (interactive)
+           ;;                 (org-agenda-todo 'right)))
+           )
     :config
+    (define-key org-agenda-mode-map
+      (kbd "<S-right>") (lambda ()
+                          (interactive)
+                          (org-agenda-todo 'right)))
     (add-hook 'kill-emacs-hook
               (lambda ()
                 (org-clock-out nil t nil)
