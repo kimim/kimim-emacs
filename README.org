@@ -1339,10 +1339,15 @@ pip install virtualenv
                     (org-defkey org-agenda-mode-map "x"
                                 'org-agenda-list-stuck-projects))))
 
+    ;; (setq org-stuck-projects
+    ;;       '("+LEVEL>=2-category-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
+    ;;         ("TODO" "SCEHD" "OPEN" "WAIT") nil nil))
     (setq org-stuck-projects
-          '("+LEVEL>=2-category-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
-            ("TODO" "SCEHD" "OPEN" "WAIT") nil nil))
-
+          '("+LEVEL>=2-category-habit"
+            ("TODO" "SCHED"  "DONE"
+             "OPEN" "WAIT" "CLOSE"
+             "ABORT" "SOMEDAY" "REPEAT")
+            nil nil))
     (setq org-refile-targets
           '(;; refile to maxlevel 2 of current file
             (nil . (:maxlevel . 1))
