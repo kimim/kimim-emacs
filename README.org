@@ -1282,10 +1282,6 @@ pip install virtualenv
            )
     :config
     (require 'org-agenda)
-    ;; (define-key org-agenda-mode-map
-    ;;   (kbd "<S-right>") (lambda ()
-    ;;                       (interactive)
-    ;;                       (org-agenda-todo 'right)))
     (org-defkey org-agenda-mode-map
                 [(shift right)]  (lambda ()
                                    (interactive)
@@ -1320,16 +1316,10 @@ pip install virtualenv
             ("habit" . ?H)
             ("next" . ?n)))
 
-    ;; Level=2 or 3, state is not DONE/ABORT/CLOSED/SOMEDAY
-    ;; contains no TODO keywords or SOMEDAY
-    ;; contains no project tag
-    ;; subtree contains TODO
-
-    ;; 子節點不需要繼承父節點的 tag
-    ;; project 表示這個節點下的是項目任務，任務不需要繼承 project tag
-    ;; category 表示該節點是分類節點
     (setq org-tags-exclude-from-inheritance '("project" "category"))
+
     (diminish 'auto-fill-function)
+
     (add-hook 'org-mode-hook
               (lambda ()
                 (auto-fill-mode)
