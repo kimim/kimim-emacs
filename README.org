@@ -682,6 +682,7 @@ client.
 
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
+    :init (setq swiper-action-recenter t)
     :bind
     ("C-s" . swiper))
 #+END_SRC
