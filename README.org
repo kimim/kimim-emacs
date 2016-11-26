@@ -1135,9 +1135,15 @@ pip install virtualenv
 ** org for writing
 
 #+BEGIN_SRC emacs-lisp
+  (use-package org-download
+    :init (setq org-download-timestamp "")
+    :config
+    (setq org-image-actual-width (/ (display-pixel-width) 3)))
+
   (use-package org
     :defer t
     :config
+    (use-package org-download)
     (use-package pangu-spacing)
     (setq org-hide-leading-stars t)
     (setq org-footnote-auto-adjust t)
