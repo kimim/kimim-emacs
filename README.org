@@ -1138,6 +1138,7 @@ pip install virtualenv
 #+BEGIN_SRC emacs-lisp
   (use-package org-download
     :init (setq org-download-timestamp "")
+    :defer t
     :config
     (setq org-image-actual-width (/ (display-pixel-width) 3)))
 
