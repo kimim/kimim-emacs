@@ -432,6 +432,7 @@ client.
     :config
     (use-package ivy)
     (use-package smex)
+    (add-hook 'counsel-grep-post-action-hook 'recenter)
     (ivy-mode 1))
 #+END_SRC
 
