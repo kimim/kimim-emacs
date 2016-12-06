@@ -669,6 +669,8 @@ client.
 
   (use-package ace-jump-mode
     :bind
+    ("C-x j" . ace-jump-mode)
+    ("M-g j" . ace-jump-mode)
     ("C-`" . ace-jump-mode)
     ("<apps>" . ace-jump-mode))
 
@@ -736,6 +738,7 @@ task for =es.exe=.
 #+BEGIN_SRC emacs-lisp
   (use-package imenu
     :defer t
+    :bind ("C-c C-i" . imenu)
     :config
     (advice-add 'imenu-default-goto-function
                 :around
