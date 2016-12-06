@@ -420,6 +420,7 @@ client.
      ("C-x m v" . counsel-describe-variable)
      ("C-x m l" . counsel-load-library)
      ("C-x m i" . counsel-info-lookup-symbol)
+     ("C-x m j" . counsel-bookmark)
      ("C-x m u" . counsel-unicode-char)
      ("C-c j" . counsel-git-grep)
      ("C-c g" . counsel-grep)
@@ -431,6 +432,7 @@ client.
     :config
     (use-package ivy)
     (use-package smex)
+    (add-hook 'counsel-grep-post-action-hook 'recenter)
     (ivy-mode 1))
 #+END_SRC
 
@@ -667,6 +669,8 @@ client.
 
   (use-package ace-jump-mode
     :bind
+    ("C-x j" . ace-jump-mode)
+    ("M-g j" . ace-jump-mode)
     ("C-`" . ace-jump-mode)
     ("<apps>" . ace-jump-mode))
 
@@ -734,6 +738,7 @@ task for =es.exe=.
 #+BEGIN_SRC emacs-lisp
   (use-package imenu
     :defer t
+    :bind ("C-c C-i" . imenu)
     :config
     (advice-add 'imenu-default-goto-function
                 :around
@@ -1738,7 +1743,6 @@ New link to use everything to locate a file with unique ID:
   (bind-key "C-h" 'delete-backward-char)
   (bind-key "M-h" 'backward-kill-word)
   (bind-key "M-?" 'mark-paragraph)
-  (bind-key "C-x j" 'bookmark-jump)
   (bind-key "C-x k" 'kill-this-buffer)
   (bind-key "C-x C-v" 'view-file-other-window)
   (bind-key "C-c C-o" 'occur)
