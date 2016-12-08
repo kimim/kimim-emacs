@@ -362,8 +362,9 @@ Use self defined color theme 2 seconds after init.
     :ensure nil
     :load-path "~/kimim-emacs/site-lisp/"
     :config
-    (if (not (eq window-system nil))
-        (color-theme-kimim)))
+    (if (eq window-system nil)
+        (color-theme-jekyll)
+      (color-theme-kimim)))
 #+END_SRC
 
 * Highlight
