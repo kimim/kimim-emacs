@@ -162,6 +162,9 @@ specify these variables in different way.
          (set-terminal-coding-system 'gbk))
         ((eq window-system 'ns)
          (set-file-name-coding-system 'utf-8)
+         (set-terminal-coding-system 'utf-8))
+        ((eq window-system nil)
+         (set-file-name-coding-system 'utf-8)
          (set-terminal-coding-system 'utf-8)))
 #+END_SRC
 
@@ -174,9 +177,56 @@ Define new command prefix for keys such as "C-x m f", "C-x m v".
   (global-set-key "\C-xm" 'ctl-x-m-map)
 #+END_SRC
 
+* Emacs in Terminal
+** cmd.exe
+** mintty
+nt-emacs running in mintty will report error such as:
+#+BEGIN_SRC sh
+$ /cygdrive/c/kimikit/emacs/bin/emacs -nw
+emacs: standard input is not a tty
+#+END_SRC
+
+Because the native win32 emacs wants to talk to a Windows console window, not to
+an actual tty -- the error message is misleading here.[fn:7]
+
+The solution is to use =winpty= [fn:8]
+#+BEGIN_SRC sh
+$ winpty C:/kimikit/emacs/bin/emacs.exe -nw
+#+END_SRC
+
+Installation of =winpty=:
+#+BEGIN_SRC sh
+$ ./configure
+uname -s identifies a Cygwin environment.
+uname -m identifies an x86_64 environment.
+Found Cygwin/MSYS G++ compiler: x86_64-pc-cygwin-g++
+Found MinGW G++ compiler: x86_64-w64-mingw32-g++
+Writing config.mk
+Build info: git
+$ make
+...
+Linking build/winpty.exe
+$ make install
+mkdir -p /usr/local/bin
+install -m 755 -p -s build/winpty.exe /usr/local/bin
+install -m 755 -p -s build/winpty.dll /usr/local/bin
+install -m 755 -p -s build/winpty-agent.exe /usr/local/bin
+mkdir -p /usr/local/bin
+install -m 755 -p -s build/winpty-debugserver.exe /usr/local/bin
+mkdir -p /usr/local/lib
+install -m 644 -p build/winpty.lib /usr/local/lib
+mkdir -p /usr/local/share/doc/winpty
+install -m 644 -p LICENSE /usr/local/share/doc/winpty
+install -m 644 -p README.md /usr/local/share/doc/winpty
+install -m 644 -p RELEASES.md /usr/local/share/doc/winpty
+mkdir -p /usr/local/include/winpty
+install -m 644 -p src/include/winpty.h /usr/local/include/winpty
+install -m 644 -p src/include/winpty_constants.h /usr/local/include/winpty
+#+END_SRC
+
 * Package
 
-=package= [fn:7] is the modern =elisp= package management system, which let you
+=package= [fn:9] is the modern =elisp= package management system, which let you
 easily download and install packages that implement additional features. Each
 package is a separate Emacs Lisp program, sometimes including other components
 such as an Info manual.
@@ -211,11 +261,15 @@ and defers loading of the module until they are used.
   (cond ((eq window-system 'w32)
          ;; Enable copy and paste in Win32
          (setq select-enable-clipboard t)
-         (menu-bar-mode 0))
+         (menu-bar-mode 0)
+         (tool-bar-mode -1)
+         (scroll-bar-mode -1))
         ((eq window-system 'ns)
-         (menu-bar-mode 1)))
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
+         (menu-bar-mode 1)
+         (tool-bar-mode -1)
+         (scroll-bar-mode -1))
+        ((eq window-system nil)
+         (menu-bar-mode 0)))
 #+END_SRC
 
 ** Font and Frame Size
@@ -308,7 +362,8 @@ Use self defined color theme 2 seconds after init.
     :ensure nil
     :load-path "~/kimim-emacs/site-lisp/"
     :config
-    (color-theme-kimim))
+    (if (not (eq window-system nil))
+        (color-theme-kimim)))
 #+END_SRC
 
 * Highlight
@@ -359,7 +414,7 @@ Use self defined color theme 2 seconds after init.
 
 ** tldr
 
-TL;DR stands for "Too Long; Didn't Read"[fn:8]. =tldr.el= [fn:9] is the Emacs
+TL;DR stands for "Too Long; Didn't Read"[fn:10]. =tldr.el= [fn:11] is the Emacs
 client.
 
 #+BEGIN_SRC emacs-lisp
@@ -388,7 +443,6 @@ client.
 
   (bind-key "C-x m w" 'make-frame)
   ;; donno why, w/o following, new frame still has scroll-bar
-  (scroll-bar-mode -1)
 #+END_SRC
 
 ** Command
@@ -693,7 +747,7 @@ client.
 
 ** ag: the silver searcher
 
-=ag= [fn:10] is really a very fast grep tool, and =ag.el= [fn:11] provide the
+=ag= [fn:12] is really a very fast grep tool, and =ag.el= [fn:13] provide the
 Emacs interface to =ag=:
 
 #+BEGIN_SRC emacs-lisp
@@ -716,9 +770,9 @@ out of the box.
 
 ** Everything
 
-Everything[fn:12] is a wonderful fast file and folder search engine, it provide
+Everything[fn:14] is a wonderful fast file and folder search engine, it provide
 a command line tool to get search result from Everything to command line output:
-=es.exe= [fn:13].
+=es.exe= [fn:15].
 
 Reminded that Everything should be running in background to do the real search
 task for =es.exe=.
@@ -872,6 +926,9 @@ English word list fetch from https://github.com/dwyl/english-words
     ;; Activate cygwin mount for gtags CDPATH issue on W32
     (cond ((eq window-system 'w32)
            (require 'cygwin-mount)
+           (cygwin-mount-activate))
+          ((eq window-system nil)
+           (require 'cygwin-mount)
            (cygwin-mount-activate)))
     (setq ggtags-global-ignore-case t)
     (setq ggtags-sort-by-nearness t))
@@ -899,7 +956,7 @@ Following error will reported when using magit to commit changes:
 server-ensure-safe-dir: The directory ‘~/.emacs.d/server’ is unsafe
 #+END_QUOTE
 
-The solution is to change the owner of =~/.emacs.d/server= [fn:14]
+The solution is to change the owner of =~/.emacs.d/server= [fn:16]
 
 #+BEGIN_QUOTE
 Click R-mouse on ~/.emacs.d/server and select “Properties” (last item in
@@ -981,7 +1038,7 @@ this directory as secure because you are the owner.
 
 *** irony installation
 
-=irony-mode= is developed by Sarcasm [fn:15]. It is an Emacs minor-mode that
+=irony-mode= is developed by Sarcasm [fn:17]. It is an Emacs minor-mode that
 aims at improving the editing experience for the C, C++ and Objective-C
 languages. It works by using a combination of an Emacs package and a C++ program
 (=irony-server=) that uses libclang. When correctly configured, it can provide
@@ -1025,7 +1082,7 @@ Install the project...
 
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:16] is used here:
+Python development configuration is quite easy. =elpy= [fn:18] is used here:
 
 #+BEGIN_SRC emacs-lisp
   (use-package elpy
@@ -1078,7 +1135,7 @@ pip install virtualenv
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:17]
+=ahk-mode= developed by Rich Alesi[fn:19]
 
 #+BEGIN_SRC emacs-lisp
   (use-package ahk-mode
@@ -1781,24 +1838,28 @@ New link to use everything to locate a file with unique ID:
 
 [fn:6] http://brew.sh/
 
-[fn:7] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
+[fn:7] http://stackoverflow.com/questions/14465330/how-to-run-emacs-in-cli-mode-under-mintty-in-windows
 
-[fn:8] https://github.com/tldr-pages/tldr
+[fn:8] https://github.com/rprichard/winpty
 
-[fn:9] https://github.com/kuanyui/tldr.el
+[fn:9] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
 
-[fn:10] https://github.com/ggreer/the_silver_searcher#installation
+[fn:10] https://github.com/tldr-pages/tldr
 
-[fn:11] https://github.com/Wilfred/ag.el
+[fn:11] https://github.com/kuanyui/tldr.el
 
-[fn:12] http://www.voidtools.com
+[fn:12] https://github.com/ggreer/the_silver_searcher#installation
 
-[fn:13] http://www.voidtools.com/es.zip
+[fn:13] https://github.com/Wilfred/ag.el
 
-[fn:14] https://github.com/syl20bnr/spacemacs/issues/381
+[fn:14] http://www.voidtools.com
 
-[fn:15] https://github.com/Sarcasm/irony-mode
+[fn:15] http://www.voidtools.com/es.zip
 
-[fn:16] https://github.com/jorgenschaefer/elpy
+[fn:16] https://github.com/syl20bnr/spacemacs/issues/381
 
-[fn:17] https://github.com/ralesi/ahk-mode
+[fn:17] https://github.com/Sarcasm/irony-mode
+
+[fn:18] https://github.com/jorgenschaefer/elpy
+
+[fn:19] https://github.com/ralesi/ahk-mode
