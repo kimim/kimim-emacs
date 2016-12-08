@@ -1462,7 +1462,7 @@ pip install virtualenv
              "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
             ("o" "Action"  entry (file+headline "capture.org" "Inbox")
              "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("h" "Habit"   entry (file+headline "world.org"   "Habit")
+            ("h" "Habit"   entry (file+headline "global.org"   "Habit")
              "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
     (defcustom org-location-home-or-office "office" "office")
