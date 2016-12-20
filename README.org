@@ -1599,7 +1599,7 @@ New link to use everything to locate a file with unique ID:
                          (kill-buffer))
         ))
 
-    (defun jekyll-insert-tag ()
+    (defun jekyll-tag ()
       "add new tags"
       (interactive)
       ;; find "tags: [" and replace with "tags: [new-tag, "
@@ -1636,7 +1636,7 @@ New link to use everything to locate a file with unique ID:
       (insert "]")
       (insert "\ntags: [")
       (while (progn
-               (setq tag (jekyll-insert-tag))
+               (setq tag (jekyll-tag))
                (not (string= "x" tag))))
       (move-end-of-line 1)
       (backward-delete-char 2)
