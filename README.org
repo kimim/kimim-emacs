@@ -24,9 +24,9 @@ github: https://github.com/kimim/kimikit, welcome to fork and have a try.
 
 *** Cygwin
 
-Another tool sets required for this configuration in Windows is the Cygwin
-project[fn:2], which is a large collection of GNU and Open Source tools provide
-functionality similar to a Linux distribution on Windows.
+Cygwin project[fn:2] is required for this configuration in Windows, which is a
+large collection of GNU and Open Source tools provide functionality similar to a
+Linux distribution on Windows.
 
 MSYS2 [fn:3] is better than Cygwin in one aspect that the packages can be
 installed in command line with =pacman -S=.
@@ -179,8 +179,13 @@ Define new command prefix for keys such as "C-x m f", "C-x m v".
 
 * Emacs in Terminal
 ** cmd.exe
+
+=emacs -nw= works perfect in Windows cmd.exe as terminal mode!
+
 ** mintty
+
 nt-emacs running in mintty will report error such as:
+
 #+BEGIN_SRC sh
 $ /cygdrive/c/kimikit/emacs/bin/emacs -nw
 emacs: standard input is not a tty
@@ -189,44 +194,11 @@ emacs: standard input is not a tty
 Because the native win32 emacs wants to talk to a Windows console window, not to
 an actual tty -- the error message is misleading here.[fn:7]
 
-The solution is to use =winpty= [fn:8]
-#+BEGIN_SRC sh
-$ winpty C:/kimikit/emacs/bin/emacs.exe -nw
-#+END_SRC
-
-Installation of =winpty=:
-#+BEGIN_SRC sh
-$ ./configure
-uname -s identifies a Cygwin environment.
-uname -m identifies an x86_64 environment.
-Found Cygwin/MSYS G++ compiler: x86_64-pc-cygwin-g++
-Found MinGW G++ compiler: x86_64-w64-mingw32-g++
-Writing config.mk
-Build info: git
-$ make
-...
-Linking build/winpty.exe
-$ make install
-mkdir -p /usr/local/bin
-install -m 755 -p -s build/winpty.exe /usr/local/bin
-install -m 755 -p -s build/winpty.dll /usr/local/bin
-install -m 755 -p -s build/winpty-agent.exe /usr/local/bin
-mkdir -p /usr/local/bin
-install -m 755 -p -s build/winpty-debugserver.exe /usr/local/bin
-mkdir -p /usr/local/lib
-install -m 644 -p build/winpty.lib /usr/local/lib
-mkdir -p /usr/local/share/doc/winpty
-install -m 644 -p LICENSE /usr/local/share/doc/winpty
-install -m 644 -p README.md /usr/local/share/doc/winpty
-install -m 644 -p RELEASES.md /usr/local/share/doc/winpty
-mkdir -p /usr/local/include/winpty
-install -m 644 -p src/include/winpty.h /usr/local/include/winpty
-install -m 644 -p src/include/winpty_constants.h /usr/local/include/winpty
-#+END_SRC
+In order to use emacs also in mintty, please install emacs-nox with cygwin-setup.
 
 * Package
 
-=package= [fn:9] is the modern =elisp= package management system, which let you
+=package= [fn:8] is the modern =elisp= package management system, which let you
 easily download and install packages that implement additional features. Each
 package is a separate Emacs Lisp program, sometimes including other components
 such as an Info manual.
@@ -348,7 +320,7 @@ Display time and (line, column) numbers in mode line.
 
 * Color Theme
 
-Use self defined color theme 2 seconds after init.
+Use self defined color theme 1 seconds after init.
 
 #+BEGIN_SRC emacs-lisp
   (setq font-lock-maximum-decoration t)
@@ -357,7 +329,7 @@ Use self defined color theme 2 seconds after init.
   (global-font-lock-mode 1)
 
   (use-package color-theme-kimim
-    :defer 2
+    :defer 1
     :commands (color-theme-kimim color-theme-jekyll)
     :ensure nil
     :load-path "~/kimim-emacs/site-lisp/"
@@ -415,7 +387,7 @@ Use self defined color theme 2 seconds after init.
 
 ** tldr
 
-TL;DR stands for "Too Long; Didn't Read"[fn:10]. =tldr.el= [fn:11] is the Emacs
+TL;DR stands for "Too Long; Didn't Read"[fn:9]. =tldr.el= [fn:10] is the Emacs
 client.
 
 #+BEGIN_SRC emacs-lisp
@@ -748,7 +720,7 @@ client.
 
 ** ag: the silver searcher
 
-=ag= [fn:12] is really a very fast grep tool, and =ag.el= [fn:13] provide the
+=ag= [fn:11] is really a very fast grep tool, and =ag.el= [fn:12] provide the
 Emacs interface to =ag=:
 
 #+BEGIN_SRC emacs-lisp
@@ -771,9 +743,9 @@ out of the box.
 
 ** Everything
 
-Everything[fn:14] is a wonderful fast file and folder search engine, it provide
+Everything[fn:13] is a wonderful fast file and folder search engine, it provide
 a command line tool to get search result from Everything to command line output:
-=es.exe= [fn:15].
+=es.exe= [fn:14].
 
 Reminded that Everything should be running in background to do the real search
 task for =es.exe=.
@@ -957,7 +929,7 @@ Following error will reported when using magit to commit changes:
 server-ensure-safe-dir: The directory ‘~/.emacs.d/server’ is unsafe
 #+END_QUOTE
 
-The solution is to change the owner of =~/.emacs.d/server= [fn:16]
+The solution is to change the owner of =~/.emacs.d/server= [fn:15]
 
 #+BEGIN_QUOTE
 Click R-mouse on ~/.emacs.d/server and select “Properties” (last item in
@@ -1039,7 +1011,7 @@ this directory as secure because you are the owner.
 
 *** irony installation
 
-=irony-mode= is developed by Sarcasm [fn:17]. It is an Emacs minor-mode that
+=irony-mode= is developed by Sarcasm [fn:16]. It is an Emacs minor-mode that
 aims at improving the editing experience for the C, C++ and Objective-C
 languages. It works by using a combination of an Emacs package and a C++ program
 (=irony-server=) that uses libclang. When correctly configured, it can provide
@@ -1083,7 +1055,7 @@ Install the project...
 
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:18] is used here:
+Python development configuration is quite easy. =elpy= [fn:17] is used here:
 
 #+BEGIN_SRC emacs-lisp
   (use-package elpy
@@ -1136,7 +1108,7 @@ pip install virtualenv
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:19]
+=ahk-mode= developed by Rich Alesi[fn:18]
 
 #+BEGIN_SRC emacs-lisp
   (use-package ahk-mode
@@ -1540,7 +1512,7 @@ New link to use everything to locate a file with unique ID:
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
-    :defer t
+    :defer 3
     :config
     ;; file in jekyll base will also be uploaded to github
     (setq path-jekyll-base "~/kimi.im/_notes/_posts")
@@ -1849,26 +1821,24 @@ New link to use everything to locate a file with unique ID:
 
 [fn:7] http://stackoverflow.com/questions/14465330/how-to-run-emacs-in-cli-mode-under-mintty-in-windows
 
-[fn:8] https://github.com/rprichard/winpty
+[fn:8] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
 
-[fn:9] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
+[fn:9] https://github.com/tldr-pages/tldr
 
-[fn:10] https://github.com/tldr-pages/tldr
+[fn:10] https://github.com/kuanyui/tldr.el
 
-[fn:11] https://github.com/kuanyui/tldr.el
+[fn:11] https://github.com/ggreer/the_silver_searcher#installation
 
-[fn:12] https://github.com/ggreer/the_silver_searcher#installation
+[fn:12] https://github.com/Wilfred/ag.el
 
-[fn:13] https://github.com/Wilfred/ag.el
+[fn:13] http://www.voidtools.com
 
-[fn:14] http://www.voidtools.com
+[fn:14] http://www.voidtools.com/es.zip
 
-[fn:15] http://www.voidtools.com/es.zip
+[fn:15] https://github.com/syl20bnr/spacemacs/issues/381
 
-[fn:16] https://github.com/syl20bnr/spacemacs/issues/381
+[fn:16] https://github.com/Sarcasm/irony-mode
 
-[fn:17] https://github.com/Sarcasm/irony-mode
+[fn:17] https://github.com/jorgenschaefer/elpy
 
-[fn:18] https://github.com/jorgenschaefer/elpy
-
-[fn:19] https://github.com/ralesi/ahk-mode
+[fn:18] https://github.com/ralesi/ahk-mode
