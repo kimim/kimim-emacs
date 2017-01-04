@@ -40,6 +40,23 @@ However Cygwin standalone package management tool =setup-x86.exe= or
 =setup-x86_64.exe= accept command-line arguments [fn:5], so I will try to use
 the command line option to install packages as many as possible.
 
+With =kimikit=, it is quite easy to upgrade cygwin setup tool:
+
+#+BEGIN_QUOTE
+$cd ~/kimikit/install
+$ make cyg
+wget https://cygwin.com/setup-x86_64.exe
+--2017-01-04 16:50:29--  https://cygwin.com/setup-x86_64.exe
+Length: 916499 (895K) [application/octet-stream]
+Saving to: ‘setup-x86_64.exe’
+
+setup-x86_64.exe         100%[==================================>] 895.02K   293KB/s    in 3.1s
+
+2017-01-04 16:50:35 (293 KB/s) - ‘setup-x86_64.exe’ saved [916499/916499]
+
+mv setup-x86_64.exe ../bin/cygup.exe
+#+END_QUOTE
+
 ** Mac OS
 
 For Apple macOS, most UNIX tools are installed already. Homebrew [fn:6] is used
