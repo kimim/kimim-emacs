@@ -812,7 +812,7 @@ task for =es.exe=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
-    :defer t
+    :defer 3
     :config
     (add-to-list
      'yas-snippet-dirs (concat kimim/path-sync "kimikit/emacs.d/snippets"))
@@ -1068,7 +1068,6 @@ Python development configuration is quite easy. =elpy= [fn:17] is used here:
     :mode ("\\.py\\'" . python-mode)
     :defer t
     :config
-    (use-package elpy)
     (add-hook 'python-mode-hook
               (lambda ()
                 (setq yas-indent-line nil)))
