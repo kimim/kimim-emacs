@@ -433,6 +433,7 @@ client.
 
   (bind-key "C-x m w" 'make-frame)
   ;; donno why, w/o following, new frame still has scroll-bar
+  (scroll-bar-mode -1)
 #+END_SRC
 
 ** Command
