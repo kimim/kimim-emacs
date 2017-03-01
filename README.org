@@ -1448,9 +1448,9 @@ pip install virtualenv
     (setq org-capture-templates
           '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
              "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("t" "TODO"    entry (file+headline "capture.org" "Inbox")
+            ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
              "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("o" "Action"  entry (file+headline "capture.org" "Inbox")
+            ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
              "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
             ("h" "Habit"   entry (file+headline "global.org"   "Habit")
              "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
