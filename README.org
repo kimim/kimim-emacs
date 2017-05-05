@@ -1250,8 +1250,22 @@ pip install virtualenv
     :config
     (setq org-export-allow-BIND t)
     (setq org-export-creator-string "")
-    (setq org-export-html-validation-link nil))
+    (setq org-export-html-validation-link nil)
     (setq org-html-validation-link nil)
+    ;;(setq org-latex-pdf-process
+    ;;      '("xelatex -interaction nonstopmode %f"
+    ;;        "xelatex -interaction nonstopmode %f"))
+    (setq org-latex-pdf-process
+          '("xelatex %f"
+            "xelatex %f"))
+    (add-to-list 'org-latex-classes
+                 '("cn-article"
+                   "\\documentclass[a4paper,UTF8]{ctexbook}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
   (use-package ox-reveal
     :defer t
@@ -1461,7 +1475,8 @@ pip install virtualenv
       (setq org-location-home-or-office "office")
       (setq org-agenda-files
             (list kimim/path-org
-                  (concat kimim/path-org "work/")))
+                  (concat kimim/path-org "work/")
+                  (concat kimim/path-org "memacs/")))
       (setq org-refile-files
             (append
              (file-expand-wildcards (concat kimim/path-org "*.org"))
@@ -1474,7 +1489,8 @@ pip install virtualenv
       (setq org-location-home-or-office "home")
       (setq org-agenda-files
             (list kimim/path-org
-                  (concat kimim/path-org "home/")))
+                  (concat kimim/path-org "home/")
+                  (concat kimim/path-org "memacs/")))
       (setq org-refile-files
             (append
              (file-expand-wildcards (concat kimim/path-org "*.org"))
