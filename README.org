@@ -1,3 +1,6 @@
+#+TITLE: README
+#+LATEX_CLASS: cn-article
+
 * Introduction
 
 This Emacs configuration file is written with literate programming method.[fn:1]
@@ -1387,8 +1390,8 @@ pip install virtualenv
 
     (setq org-tag-alist
           '(("@office" . ?o) ("@home" . ?h)
-            ("team" . ?t) ("leader" . ?l)
-            ("risk" . ?k) ("sync" . ?s)
+            ("team" . ?t) ("leader" . ?l) ("boss" . ?b)
+            ("risk" . ?k) ("sync" . ?s) ("followup" . ?f)
             ("reading" . ?r) ("writing" . ?w)
             ("project" . ?p) ("category" . ?c)
             ("habit" . ?H)
