@@ -1482,8 +1482,7 @@ pip install virtualenv
       (setq org-location-home-or-office "office")
       (setq org-agenda-files
             (list kimim/path-org
-                  (concat kimim/path-org "work/")
-                  (concat kimim/path-org "memacs/")))
+                  (concat kimim/path-org "work/")))
       (setq org-refile-files
             (append
              (file-expand-wildcards (concat kimim/path-org "*.org"))
