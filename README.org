@@ -1,5 +1,6 @@
 #+TITLE: README
 #+LATEX_CLASS: cn-article
+#+OPTIONS: toc:nil
 
 * Introduction
 
@@ -17,7 +18,7 @@ create a =.bat= file =emacs.bat= to set the environment and run Emacs:
   :: set home path for Emacs
   set HOME=C:\Users\kimim\home
   :: execute emacs with debug enable
-  C:\kimikit\emacs\bin\runemacs.exe --debug-init
+  %HOME%\kimikit\emacs\bin\runemacs.exe --debug-init
 #+END_SRC
 
 Another important path in Windows is =kimikit=, which is used to put some
@@ -52,11 +53,7 @@ wget https://cygwin.com/setup-x86_64.exe
 --2017-01-04 16:50:29--  https://cygwin.com/setup-x86_64.exe
 Length: 916499 (895K) [application/octet-stream]
 Saving to: ‘setup-x86_64.exe’
-
-setup-x86_64.exe         100%[==================================>] 895.02K   293KB/s    in 3.1s
-
-2017-01-04 16:50:35 (293 KB/s) - ‘setup-x86_64.exe’ saved [916499/916499]
-
+...
 mv setup-x86_64.exe ../bin/cygup.exe
 #+END_QUOTE
 
