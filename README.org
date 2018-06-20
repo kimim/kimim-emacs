@@ -1479,28 +1479,28 @@ pip install virtualenv
     (defun org-toggle-office ()
       (interactive)
       (setq org-location-home-or-office "office")
-      (setq org-agenda-files
-            (list kimim/path-org
-                  (concat kimim/path-org "work/")))
+      ;;(setq org-agenda-files
+      ;;      (list kimim/path-org
+      ;;            (concat kimim/path-org "work/")))
       (setq org-refile-files
             (append
-             (file-expand-wildcards (concat kimim/path-org "*.org"))
-             (file-expand-wildcards (concat kimim/path-org "work/*.org"))
-             (file-expand-wildcards (concat kimim/path-org "home/*.org"))))
+             (file-expand-wildcards (concat kimim/path-org "*.org"))))
+             ;;(file-expand-wildcards (concat kimim/path-org "work/*.org"))
+             ;;(file-expand-wildcards (concat kimim/path-org "home/*.org"))))
       (message "Agenda is from office..."))
 
     (defun org-toggle-home ()
       (interactive)
       (setq org-location-home-or-office "home")
-      (setq org-agenda-files
-            (list kimim/path-org
-                  (concat kimim/path-org "home/")
-                  (concat kimim/path-org "memacs/")))
+      ;;(setq org-agenda-files
+      ;;      (list kimim/path-org
+      ;;            (concat kimim/path-org "home/")
+      ;;            (concat kimim/path-org "memacs/")))
       (setq org-refile-files
             (append
-             (file-expand-wildcards (concat kimim/path-org "*.org"))
-             (file-expand-wildcards (concat kimim/path-org "home/*.org"))
-             (file-expand-wildcards (concat kimim/path-org "work/*.org"))))
+             (file-expand-wildcards (concat kimim/path-org "*.org"))))
+             ;;(file-expand-wildcards (concat kimim/path-org "home/*.org"))
+             ;;(file-expand-wildcards (concat kimim/path-org "work/*.org"))))
       (message "Agenda is from home..."))
 
     (use-package ivy) ; use ivy to complete refile files
@@ -1820,6 +1820,7 @@ New link to use everything to locate a file with unique ID:
   (bind-key "M-?" 'mark-paragraph)
   (bind-key "C-x k" 'kill-this-buffer)
   (bind-key "C-x C-v" 'view-file-other-window)
+  (bind-key "C-x p" 'simplenote2-list)
   (bind-key "C-c C-o" 'occur)
   (bind-key "C-z" 'set-mark-command)
   (bind-key "M-o" 'other-window)
