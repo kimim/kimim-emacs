@@ -102,7 +102,7 @@ cloned from my github repository.
 Anyway, you can change the path as you want, and set =kimim/path-kimim-emacs=
 accordingly.
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC shell
 git clone https://github.com/kimim/kimim-emacs.git
 #+END_SRC
 
@@ -203,7 +203,7 @@ Define new command prefix for keys such as "C-x m f", "C-x m v".
 
 nt-emacs running in mintty will report error such as:
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC shell
 $ /cygdrive/c/kimikit/emacs/bin/emacs -nw
 emacs: standard input is not a tty
 #+END_SRC
@@ -1040,7 +1040,7 @@ It is quite easy to install =irony-server= under macOS, just invoke the command
 "M-x irony-install-server", and Emacs will compile and install it to
 =~/.emacs.d/irony/bin/irony-server=, by invoking the make commands:
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC shell
   cmake -DCMAKE_INSTALL_PREFIX\=/Users/kimim/.emacs.d/irony/
   /Users/kimim/.emacs.d/elpa/irony-20160925.1030/server && cmake --build
   . --use-stderr --config Release --target install
@@ -1051,7 +1051,7 @@ For Cygwin/Windows, first we should install =libclang= 3.8.1-1 and
 
 Then compile =irony-server= with =cmake= and =make=:
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC shell
 ~/.emacs.d/elpa/irony-20160925.1030/server/build
 $ cmake -DCMAKE_INSTALL_PREFIX=~/.emacs.d/irony/ -G "Unix Makefiles" ..
 
@@ -1100,7 +1100,7 @@ Python development configuration is quite easy. =elpy= [fn:17] is used here:
 
 Following =python= package is required according to =elpy= mannual:
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC shell
 pip install rope
 pip install jedi
 # flake8 for code checks
