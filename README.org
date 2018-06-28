@@ -1230,7 +1230,7 @@ pip install virtualenv
      '((C . t)
        (python . t)
        (emacs-lisp . t)
-       (sh . t)
+       (shell . t)
        (dot . t)
        (ditaa . t)
        (js . t)
