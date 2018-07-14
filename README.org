@@ -472,6 +472,7 @@ client.
      ("C-c k" . counsel-ag)
      ("C-c p" . counsel-pt)
      ("C-x l" . counsel-locate)
+     ("C-c m" . counsel-bbdb-complete-mail)
      :map read-expression-map
      ("C-r" . counsel-expression-history))
     :config
@@ -1824,6 +1825,7 @@ note in "notes" folder.
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
     (setq gnus-select-method '(nnml ""))
     (setq gnus-secondary-select-methods nil)
+    (add-hook 'message-mode-hook 'orgstruct-mode)
     (add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
     (add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
     (add-to-list 'gnus-secondary-select-methods '(nnml "")))
