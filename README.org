@@ -1,6 +1,7 @@
 #+TITLE: README
 #+LATEX_CLASS: cn-article
 #+OPTIONS: toc:nil
+#+STARTUP: showall
 
 * Introduction
 
@@ -1757,7 +1758,8 @@ New link to use everything to locate a file with unique ID:
      ("C-." . simplenote2--create-note-locally))
     :config
     (require 'simplenote2)
-    (simplenote2-setup))
+    (simplenote2-setup)
+    (add-hook 'simplenote2-note-mode-hook 'org-mode))
 #+END_SRC
 
 New orgmode link type for simplenote2. The reason for creating a new kind of
@@ -1877,7 +1879,6 @@ note in "notes" folder.
   (bind-key "M-p" 'previous-error)
   ;;(define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
   (bind-key "M-*" 'pop-tag-mark)
-  (bind-key "C-c =" 'get-file-line)
 
   (bind-key "C-c C-/" 'comment-or-uncomment-region)
   (bind-key "RET" 'newline-and-indent)
