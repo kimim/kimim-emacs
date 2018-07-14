@@ -1786,7 +1786,7 @@ note in "notes" folder.
                      (line-beginning-position) (line-end-position)))
         ;;package orgmode line with buffer name and title
         (setq msg (format "[[simplenote2:%s][%s]]"
-                          (buffer-name)
+                          (file-name-nondirectory (buffer-file-name))
                           title))
         (kill-new msg)
         (message msg))))
