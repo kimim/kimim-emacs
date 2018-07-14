@@ -1863,9 +1863,11 @@ note in "notes" folder.
   (bind-key "<f5>" (lambda()
                      (interactive)
                      (switch-to-buffer "*scratch*") (delete-other-windows)))
-  (bind-key "<f7>" 'kimim/toggle-highlight-tap)
-  (bind-key "<f8>" (lambda()
-                     (interactive) (list-charset-chars 'ascii)))
+  ;;(bind-key "<f7>" 'kimim/toggle-highlight-tap)
+  ;;(bind-key "<f8>" (lambda()
+  ;;                   (interactive) (list-charset-chars 'ascii)))
+  (bind-key "<f7>" 'bury-buffer)
+  (bind-key "<f8>" 'unbury-buffer)
   (bind-key "<f12>" 'org-toggle-home-or-office)
 
   ;; (bind-key "M-<SPC>" (lambda () (interactive)
@@ -1895,6 +1897,8 @@ note in "notes" folder.
 
   (bind-key "C-x m h" 'help)
   (bind-key "C-x m c" 'calculator)
+  (bind-key "C-x m ." 'unbury-buffer)
+  (bind-key "C-x m ," 'bury-buffer)
 #+END_SRC
 
 * Footnotes
