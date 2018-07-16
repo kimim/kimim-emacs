@@ -1,6 +1,7 @@
 #+TITLE: README
 #+LATEX_CLASS: cn-article
 #+OPTIONS: toc:nil
+#+STARTUP: showall
 
 * Introduction
 
@@ -1675,8 +1676,8 @@ New link to use everything to locate a file with unique ID:
 
 #+END_SRC
 
-* deft for note management
-
+* Note Taking Tools
+** Deft
 #+BEGIN_SRC emacs-lisp
   (use-package deft
     :defer t
@@ -1744,6 +1745,57 @@ New link to use everything to locate a file with unique ID:
                 :around #'kimim/deft-new-file-named-advice))
 #+END_SRC
 
+** Simplenote2
+
+#+BEGIN_SRC emacs-lisp
+  (use-package simplenote2
+    :defer t
+    :ensure t
+    :bind
+    (
+     ("C-x p" . simplenote2-list)
+     ;; when in Chinese environment, / is a dot, confusing
+     ("C-;" . simplenote2-list-filter-notes)
+     ("C-." . simplenote2--create-note-locally))
+    :config
+    (require 'simplenote2)
+    (setq simplenote2-notes-mode 'org-mode)
+    (simplenote2-setup)
+    )
+#+END_SRC
+
+New orgmode link type for simplenote2. The reason for creating a new kind of
+link type is that the newly added note is located under folder "new", while the
+synchronized notes are in "notes". We should ensure that all the link points to
+note in "notes" folder.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :defer t
+    :config
+    (org-add-link-type "simplenote2" 'org-simplenote2-open)
+
+    (defun org-simplenote2-open (path)
+      (find-file (concat simplenote2-directory "notes/" path)))
+
+    (defun simplenotes-linkto-note ()
+      "extract orgmode link string to this note"
+      (interactive)
+      (unless (buffer-file-name)
+        (error "No file for buffer %s" (buffer-name)))
+      (beginning-of-buffer)
+      (let (title msg)
+        ;;fetch first line string as title
+        (setq title (buffer-substring-no-properties
+                     (line-beginning-position) (line-end-position)))
+        ;;package orgmode line with buffer name and title
+        (setq msg (format "[[simplenote2:%s][%s]]"
+                          (file-name-nondirectory (buffer-file-name))
+                          title))
+        (kill-new msg)
+        (message msg))))
+#+END_SRC
+
 * erc and gnus
 
 #+BEGIN_SRC emacs-lisp
@@ -1775,12 +1827,13 @@ New link to use everything to locate a file with unique ID:
     (setq gnus-fetch-old-headers nil) ; show previous messages in a thread
     (setq gnus-thread-indent-level 1)
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
-    (setq gnus-select-method '(nnml ""))
-    (setq gnus-secondary-select-methods nil)
+    ;;(setq gnus-select-method '(nnml ""))
+    ;;(setq gnus-secondary-select-methods nil)
     (add-hook 'message-mode-hook 'orgstruct-mode)
-    (add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
-    (add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
-    (add-to-list 'gnus-secondary-select-methods '(nnml "")))
+    ;;(add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
+    ;;(add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
+    ;;(add-to-list 'gnus-secondary-select-methods '(nnml ""))
+    )
 #+END_SRC
 
 * kimim utils
@@ -1809,9 +1862,11 @@ New link to use everything to locate a file with unique ID:
   (bind-key "<f5>" (lambda()
                      (interactive)
                      (switch-to-buffer "*scratch*") (delete-other-windows)))
-  (bind-key "<f7>" 'kimim/toggle-highlight-tap)
-  (bind-key "<f8>" (lambda()
-                     (interactive) (list-charset-chars 'ascii)))
+  ;;(bind-key "<f7>" 'kimim/toggle-highlight-tap)
+  ;;(bind-key "<f8>" (lambda()
+  ;;                   (interactive) (list-charset-chars 'ascii)))
+  (bind-key "<f7>" 'bury-buffer)
+  (bind-key "<f8>" 'unbury-buffer)
   (bind-key "<f12>" 'org-toggle-home-or-office)
 
   ;; (bind-key "M-<SPC>" (lambda () (interactive)
@@ -1821,7 +1876,6 @@ New link to use everything to locate a file with unique ID:
   (bind-key "M-?" 'mark-paragraph)
   (bind-key "C-x k" 'kill-this-buffer)
   (bind-key "C-x C-v" 'view-file-other-window)
-  (bind-key "C-x p" 'simplenote2-list)
   (bind-key "C-c C-o" 'occur)
   (bind-key "C-z" 'set-mark-command)
   (bind-key "M-o" 'other-window)
@@ -1829,7 +1883,6 @@ New link to use everything to locate a file with unique ID:
   (bind-key "M-p" 'previous-error)
   ;;(define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
   (bind-key "M-*" 'pop-tag-mark)
-  (bind-key "C-c =" 'get-file-line)
 
   (bind-key "C-c C-/" 'comment-or-uncomment-region)
   (bind-key "RET" 'newline-and-indent)
@@ -1843,6 +1896,8 @@ New link to use everything to locate a file with unique ID:
 
   (bind-key "C-x m h" 'help)
   (bind-key "C-x m c" 'calculator)
+  (bind-key "C-x m ." 'unbury-buffer)
+  (bind-key "C-x m ," 'bury-buffer)
 #+END_SRC
 
 * Footnotes
