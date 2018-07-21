@@ -3,6 +3,8 @@
 #+OPTIONS: toc:nil
 #+STARTUP: showall
 
+[[https://travis-ci.org/kimim/kimim-emacs.svg?branch=master]]
+
 * Introduction
 
 This Emacs configuration file is written with literate programming method.[fn:1]
