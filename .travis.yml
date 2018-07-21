@@ -1,7 +1,7 @@
 language: emacs-lisp
 env:
   matrix:
-    - emacs=emacs-snapshot
+    - emacs=emacs
 
 before_install:
   - sudo apt-get update -qq
