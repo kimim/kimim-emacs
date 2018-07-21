@@ -8,6 +8,7 @@ before_install:
   - sudo apt-get install -qq $emacs
 
 script:
+  - emacs --version
   - cd ~
   - git clone https://github.com/kimim/kimim-emacs
   - cp kimim-emacs/.emacs ~
