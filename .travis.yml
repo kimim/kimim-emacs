@@ -11,4 +11,4 @@ script:
   - cd ~
   - git clone https://github.com/kimim/kimim-emacs
   - cp kimim-emacs/.emacs ~
-  - emacs --batch
+  - emacs --batch .emacs
