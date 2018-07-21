@@ -820,6 +820,12 @@ task for =es.exe=.
     :bind ("C-c i" . imenu-anywhere))
 #+END_SRC
 
+** helm
+#+BEGIN_SRC emacs-lisp
+  (use-package helm
+    :defer 1)
+#+END_SRC
+
 * auto-complete
 ** abbrev
 
