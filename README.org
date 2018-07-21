@@ -1511,9 +1511,9 @@ pip install virtualenv
     (defun org-toggle-office ()
       (interactive)
       (setq org-location-home-or-office "office")
-      ;;(setq org-agenda-files
-      ;;      (list kimim/path-org
-      ;;            (concat kimim/path-org "work/")))
+      (setq org-agenda-files
+            (list kimim/path-org
+                  (concat kimim/path-org "work/")))
       (setq org-refile-files
             (append
              (file-expand-wildcards (concat kimim/path-org "*.org"))))
@@ -1524,10 +1524,9 @@ pip install virtualenv
     (defun org-toggle-home ()
       (interactive)
       (setq org-location-home-or-office "home")
-      ;;(setq org-agenda-files
-      ;;      (list kimim/path-org
-      ;;            (concat kimim/path-org "home/")
-      ;;            (concat kimim/path-org "memacs/")))
+      (setq org-agenda-files
+            (list kimim/path-org
+                  (concat kimim/path-org "home/")))
       (setq org-refile-files
             (append
              (file-expand-wildcards (concat kimim/path-org "*.org"))))
