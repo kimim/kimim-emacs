@@ -9,9 +9,9 @@ before_install:
   - sudo apt-get install -qq $emacs
 
 script:
-  - emacs --version
+  - emacs-snapshot --version
   - cd ~
   - git clone https://github.com/kimim/kimim-emacs
   - cp kimim-emacs/.emacs ~
   - mkdir .emacs.d
-  - emacs --batch -l .emacs
+  - emacs-snapshot --batch -l .emacs
