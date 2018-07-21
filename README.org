@@ -235,6 +235,14 @@ and defers loading of the module until they are used.
           ("marmalade" . "https://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
 
+  (mapc
+   (lambda (package)
+     (unless (package-installed-p package)
+       (progn (message "installing %s" package)
+              (package-refresh-contents)
+              (package-install package))))
+   '(use-package diminish bind-key))
+
   (require 'use-package)
   (require 'diminish)
   (require 'bind-key)
@@ -344,6 +352,10 @@ Use self defined color theme 1 seconds after init.
   (setq font-lock-global-modes '(not shell-mode text-mode))
   (setq font-lock-verbose t)
   (global-font-lock-mode 1)
+
+  (use-package color-theme
+    :defer 1
+    )
 
   (use-package color-theme-kimim
     :defer 1
@@ -1273,17 +1285,17 @@ pip install virtualenv
                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
-  (use-package ox-reveal
-    :defer t
-    :config
-    (setq org-reveal-root "reveal.js")
-    ;;(setq org-reveal-root "~/../Tools/reveal.js")
-    ;;(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
-    (setq org-reveal-theme "simple")
-    (setq org-reveal-width 1200)
-    (setq org-reveal-height 750)
-    (setq org-reveal-transition "fade")
-    (setq org-reveal-hlevel 2))
+  ;; (use-package ox-reveal
+  ;;   :defer t
+  ;;   :config
+  ;;   (setq org-reveal-root "reveal.js")
+  ;;   ;;(setq org-reveal-root "~/../Tools/reveal.js")
+  ;;   ;;(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
+  ;;   (setq org-reveal-theme "simple")
+  ;;   (setq org-reveal-width 1200)
+  ;;   (setq org-reveal-height 750)
+  ;;   (setq org-reveal-transition "fade")
+  ;;   (setq org-reveal-hlevel 2))
 
   (use-package ox-html
     :defer t
