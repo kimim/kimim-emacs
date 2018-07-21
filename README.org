@@ -8,6 +8,17 @@
 This Emacs configuration file is written with literate programming method.[fn:1]
 =.el= file is loaded by extracting source code from this file.
 
+To make use of this configuration, you can follow below shell commands to
+prepare the emacs configuration files and folders:
+
+#+BEGIN_SRC shell
+cd ~ && mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup && \
+git clone https://github.com/kimim/kimim-emacs && \
+cp kimim-emacs/.emacs ~
+#+END_SRC
+
+Then execute =emacs= to bootstrap itself.
+
 * Preparation
 ** Windows
 *** Starter Script
