@@ -243,7 +243,7 @@ and defers loading of the module until they are used.
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("ELPA" . "http://tromey.com/elpa/")
-          ("marmalade" . "https://marmalade-repo.org/packages/")
+          ;;("marmalade" . "https://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
 
   (mapc
@@ -783,7 +783,7 @@ Download =pt= from
 https://github.com/monochromegane/the_platinum_searcher/releases, and it works
 out of the box.
 
-** Everything
+** COMMENT Everything
 
 Everything[fn:13] is a wonderful fast file and folder search engine, it provide
 a command line tool to get search result from Everything to command line output:
