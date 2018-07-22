@@ -2,6 +2,7 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
+(require 'package)
 (package-initialize)
 
 (setq user-login-name "kimim")
@@ -19,6 +20,8 @@
 ;; path to keep notes
 (defvar kimim/path-notes (concat kimim/path-sync "notes/"))
 
+(if (not (file-exists-p "~/.emacs.d/custom.el"))
+    (with-temp-buffer (write-file "~/.emacs.d/custom.el")))
 (defvar kimim/file-custom "~/.emacs.d/custom.el")
 
 ;; if kimim-emacs is clone to ~/kimim-emacs
