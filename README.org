@@ -916,12 +916,12 @@ English word list fetch from https://github.com/dwyl/english-words
     :config
     ;; ggtags settings
     ;; Activate cygwin mount for gtags CDPATH issue on W32
-    (cond ((eq window-system 'w32)
-           (require 'cygwin-mount)
-           (cygwin-mount-activate))
-          ((eq window-system nil)
-           (require 'cygwin-mount)
-           (cygwin-mount-activate)))
+    ;; (cond ((eq window-system 'w32)
+    ;;        (require 'cygwin-mount)
+    ;;        (cygwin-mount-activate))
+    ;;       ((eq window-system nil)
+    ;;        (require 'cygwin-mount)
+    ;;        (cygwin-mount-activate)))
     (setq ggtags-global-ignore-case t)
     (setq ggtags-sort-by-nearness t))
     ;; let ggtags use split-window with is redefined by ecb mode
@@ -1273,17 +1273,17 @@ pip install virtualenv
                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
-  (use-package ox-reveal
-    :defer t
-    :config
-    (setq org-reveal-root "reveal.js")
-    ;;(setq org-reveal-root "~/../Tools/reveal.js")
-    ;;(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
-    (setq org-reveal-theme "simple")
-    (setq org-reveal-width 1200)
-    (setq org-reveal-height 750)
-    (setq org-reveal-transition "fade")
-    (setq org-reveal-hlevel 2))
+  ;; (use-package ox-reveal
+  ;;   :defer t
+  ;;   :config
+  ;;   (setq org-reveal-root "reveal.js")
+  ;;   ;;(setq org-reveal-root "~/../Tools/reveal.js")
+  ;;   ;;(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
+  ;;   (setq org-reveal-theme "simple")
+  ;;   (setq org-reveal-width 1200)
+  ;;   (setq org-reveal-height 750)
+  ;;   (setq org-reveal-transition "fade")
+  ;;   (setq org-reveal-hlevel 2))
 
   (use-package ox-html
     :defer t
@@ -1814,11 +1814,14 @@ note in "notes" folder.
   ;; gnus settings
   (use-package gnus
     :defer t
-    :config
+    :bind
+    (("C-x m m" . compose-mail))
+  :config
     (setq message-directory "~/Gnus/Mail/")
     (setq gnus-directory "~/Gnus/News/")
     (setq nnfolder-directory "~/Gnus/Mail/Archive")
-
+    (setq gnus-permanently-visible-groups "INBOX")
+    (setq gnus-alias-override-user-mail-address t)
     (setq gnus-agent t)
     (setq gnus-agent-expire-days 90)
                                           ; prompt for how many articles only for larger than 1000 articles
