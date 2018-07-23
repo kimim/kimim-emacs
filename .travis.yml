@@ -1,0 +1,17 @@
+language: emacs-lisp
+env:
+  matrix:
+    - emacs=emacs-snapshot
+
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-elisp
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq $emacs
+
+script:
+  - emacs-snapshot --version
+  - cd ~
+  - git clone https://github.com/kimim/kimim-emacs
+  - cp kimim-emacs/.emacs ~
+  - mkdir .emacs.d
+  - emacs-snapshot --batch -l .emacs

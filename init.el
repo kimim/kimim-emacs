@@ -6,7 +6,6 @@
   (+ (* 65536 (nth 0 (nth 5 (file-attributes file-name))))
      (nth 1 (nth 5 (file-attributes file-name)))))
 
-
 (if (or
      ;; README.el not generated
      (not (file-exists-p readme-el))

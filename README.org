@@ -3,10 +3,23 @@
 #+OPTIONS: toc:nil
 #+STARTUP: showall
 
+[[https://travis-ci.org/kimim/kimim-emacs][https://travis-ci.org/kimim/kimim-emacs.svg?branch=master]]
+
 * Introduction
 
 This Emacs configuration file is written with literate programming method.[fn:1]
 =.el= file is loaded by extracting source code from this file.
+
+To make use of this configuration, you can follow below shell commands to
+prepare the emacs configuration files and folders:
+
+#+BEGIN_SRC shell
+cd ~ && mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup && \
+git clone https://github.com/kimim/kimim-emacs && \
+cp kimim-emacs/.emacs ~
+#+END_SRC
+
+Then execute =emacs= to bootstrap itself.
 
 * Preparation
 ** Windows
@@ -232,8 +245,16 @@ and defers loading of the module until they are used.
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("ELPA" . "http://tromey.com/elpa/")
-          ("marmalade" . "https://marmalade-repo.org/packages/")
+          ;;("marmalade" . "https://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
+
+  (mapc
+   (lambda (package)
+     (unless (package-installed-p package)
+       (progn (message "installing %s" package)
+              (package-refresh-contents)
+              (package-install package))))
+   '(use-package diminish bind-key))
 
   (require 'use-package)
   (require 'diminish)
@@ -344,6 +365,10 @@ Use self defined color theme 1 seconds after init.
   (setq font-lock-global-modes '(not shell-mode text-mode))
   (setq font-lock-verbose t)
   (global-font-lock-mode 1)
+
+  (use-package color-theme
+    :defer 1
+    )
 
   (use-package color-theme-kimim
     :defer 1
@@ -760,7 +785,7 @@ Download =pt= from
 https://github.com/monochromegane/the_platinum_searcher/releases, and it works
 out of the box.
 
-** Everything
+** COMMENT Everything
 
 Everything[fn:13] is a wonderful fast file and folder search engine, it provide
 a command line tool to get search result from Everything to command line output:
@@ -793,6 +818,12 @@ task for =es.exe=.
   (use-package imenu-anywhere
     :defer t
     :bind ("C-c i" . imenu-anywhere))
+#+END_SRC
+
+** helm
+#+BEGIN_SRC emacs-lisp
+  (use-package helm
+    :defer 1)
 #+END_SRC
 
 * auto-complete
@@ -1480,9 +1511,9 @@ pip install virtualenv
     (defun org-toggle-office ()
       (interactive)
       (setq org-location-home-or-office "office")
-      ;;(setq org-agenda-files
-      ;;      (list kimim/path-org
-      ;;            (concat kimim/path-org "work/")))
+      (setq org-agenda-files
+            (list kimim/path-org
+                  (concat kimim/path-org "work/")))
       (setq org-refile-files
             (append
              (file-expand-wildcards (concat kimim/path-org "*.org"))))
@@ -1493,10 +1524,9 @@ pip install virtualenv
     (defun org-toggle-home ()
       (interactive)
       (setq org-location-home-or-office "home")
-      ;;(setq org-agenda-files
-      ;;      (list kimim/path-org
-      ;;            (concat kimim/path-org "home/")
-      ;;            (concat kimim/path-org "memacs/")))
+      (setq org-agenda-files
+            (list kimim/path-org
+                  (concat kimim/path-org "home/")))
       (setq org-refile-files
             (append
              (file-expand-wildcards (concat kimim/path-org "*.org"))))
