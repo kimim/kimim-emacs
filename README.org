@@ -574,7 +574,6 @@ client.
   (add-hook 'text-mode-hook
             (lambda ()
               (when (derived-mode-p 'org-mode 'markdown-mode 'text-mode)
-                (flyspell-mode)
                 (visual-line-mode))))
   (setq-default indent-tabs-mode nil)
 
