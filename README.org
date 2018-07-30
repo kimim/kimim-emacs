@@ -136,7 +136,7 @@ specify these variables in different way.
 
 #+BEGIN_SRC emacs-lisp
   (cond ((eq window-system 'w32)
-         (setq kimim/path-root "C:/Users/kimim/.babun/cygwin/")
+         (setq kimim/path-root "C:/msys64/")
          (add-to-list 'exec-path
                       (concat kimim/path-kimikit "emacs/bin/"))
          (setenv "PATH"
@@ -189,8 +189,8 @@ specify these variables in different way.
   (set-clipboard-coding-system 'utf-16le)
   (cond ((eq window-system 'w32)
          ;; Windows file name is encoded in gbk
-         (set-file-name-coding-system 'gbk)
-         (set-terminal-coding-system 'gbk))
+         (set-file-name-coding-system 'utf-8)
+         (set-terminal-coding-system 'utf-8))
         ((eq window-system 'ns)
          (set-file-name-coding-system 'utf-8)
          (set-terminal-coding-system 'utf-8))
@@ -514,7 +514,8 @@ client.
     :defer 5
     :config
     (keyfreq-mode)
-    (keyfreq-autosave-mode))
+    (keyfreq-autosave-mode)
+    (setq keyfreq-file "~/.emacs.d/emacs.keyfreq"))
 #+END_SRC
 
 * Editing
