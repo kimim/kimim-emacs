@@ -514,7 +514,8 @@ client.
     :defer 5
     :config
     (keyfreq-mode)
-    (keyfreq-autosave-mode))
+    (keyfreq-autosave-mode)
+    (setq keyfreq-file "~/.emacs.d/emacs.keyfreq"))
 #+END_SRC
 
 * Editing
