@@ -994,12 +994,16 @@ this directory as secure because you are the owner.
 
 #+BEGIN_SRC emacs-lisp
   ;; Define the modes/packages you need
+  (use-package company-irony
+    :defer t
+    )
+
   (use-package irony
     :defer t
     :diminish irony-mode
     :config
     (setq w32-pipe-read-delay 0)
-
+    (use-package company-irony)
     (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
@@ -1027,6 +1031,7 @@ this directory as secure because you are the owner.
     :ensure nil
     :config
     (use-package company)
+    (use-package company-irony)
     (add-to-list 'company-backends 'company-irony)
     (use-package company-c-headers)
     (add-to-list 'company-c-headers-path-system "/usr/include")
