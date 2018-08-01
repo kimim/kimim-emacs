@@ -997,6 +997,7 @@ this directory as secure because you are the owner.
   ;; Define the modes/packages you need
   (use-package company-irony
     :defer t
+    :ensure t
     )
 
   (use-package irony
@@ -1019,10 +1020,12 @@ this directory as secure because you are the owner.
 
   (use-package company-c-headers
     :defer t
+    :ensure t
     )
 
   (use-package flycheck
     :defer t
+    :ensure t
     :config
     ;; set up flycheck
     (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
@@ -1437,7 +1440,7 @@ pip install virtualenv
 
     (add-hook 'org-mode-hook
               (lambda ()
-                (auto-fill-mode)
+                ;;(auto-fill-mode)
                 (org-display-inline-images)
                 (drag-stuff-mode -1)
                 ;; seems "g" can refresh stuck tasks now, 2017-07-14
@@ -1783,6 +1786,11 @@ New link to use everything to locate a file with unique ID:
 ** Simplenote2
 
 #+BEGIN_SRC emacs-lisp
+  (use-package visual-fill-column
+    :defer t
+    :ensure t
+    )
+
   (use-package simplenote2
     :defer t
     :ensure t
@@ -1794,7 +1802,9 @@ New link to use everything to locate a file with unique ID:
      ("C-." . simplenote2--create-note-locally))
     :config
     (require 'simplenote2)
+    (require 'visual-fill-column)
     (setq simplenote2-notes-mode 'org-mode)
+    (add-hook 'simplenote2-note-mode-hook 'visual-fill-column-mode)
     (simplenote2-setup)
     )
 #+END_SRC
