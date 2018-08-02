@@ -187,16 +187,8 @@ specify these variables in different way.
   (set-keyboard-coding-system 'utf-8)
   (set-selection-coding-system 'utf-8)
   (set-clipboard-coding-system 'utf-16le)
-  (cond ((eq window-system 'w32)
-         ;; Windows file name is encoded in gbk
-         (set-file-name-coding-system 'utf-8)
-         (set-terminal-coding-system 'utf-8))
-        ((eq window-system 'ns)
-         (set-file-name-coding-system 'utf-8)
-         (set-terminal-coding-system 'utf-8))
-        ((eq window-system nil)
-         (set-file-name-coding-system 'utf-8)
-         (set-terminal-coding-system 'utf-8)))
+  (set-file-name-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
 #+END_SRC
 
 ** global key map
@@ -292,12 +284,12 @@ Set default font and frame size for both Windows and macOS.
     ;; cleaner font setting
     (set-fontset-font
      "fontset-default"
-     'han (font-spec :family "Microsoft Yahei" :size 24))
+     'han (font-spec :family "Microsoft Yahei" :size 26))
     (setq default-frame-alist
           '((top . 80) (left . 250)
             (width . 128) (height . 45)
             ;; if you like anti-alias, use this to have a try
-            (font . "Inconsolata-11")
+            (font . "Inconsolata-12")
             )))
    ((eq window-system 'ns)
     (set-fontset-font
@@ -614,7 +606,15 @@ client.
   ;;    (volatile-highlights-mode t)
   ;;    :diminish volatile-highlights-mode)
 #+END_SRC
+** visual-fille-mode
 
+#+BEGIN_SRC emacs-lisp
+  (use-package visual-fill-column
+    :defer t
+    :ensure t
+    )
+;;(global-visual-fill-column-mode)
+#+END_SRC
 ** pangu-spacing
 
 #+BEGIN_SRC emacs-lisp
@@ -1786,11 +1786,6 @@ New link to use everything to locate a file with unique ID:
 ** Simplenote2
 
 #+BEGIN_SRC emacs-lisp
-  (use-package visual-fill-column
-    :defer t
-    :ensure t
-    )
-
   (use-package simplenote2
     :defer t
     :ensure t
@@ -1802,9 +1797,9 @@ New link to use everything to locate a file with unique ID:
      ("C-." . simplenote2--create-note-locally))
     :config
     (require 'simplenote2)
-    (require 'visual-fill-column)
+    ;;(require 'visual-fill-column)
     (setq simplenote2-notes-mode 'org-mode)
-    (add-hook 'simplenote2-note-mode-hook 'visual-fill-column-mode)
+    ;;(add-hook 'simplenote2-note-mode-hook 'visual-fill-column-mode)
     (simplenote2-setup)
     )
 #+END_SRC
