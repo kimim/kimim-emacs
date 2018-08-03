@@ -1862,6 +1862,8 @@ note in "notes" folder.
     (setq nnfolder-directory "~/Gnus/Mail/Archive")
     (setq gnus-permanently-visible-groups "INBOX")
     (setq gnus-alias-override-user-mail-address t)
+    (setq message-forward-as-mime nil)
+    (setq message-forward-included-headers "^Date\\|^From\\|^To\\|^Subject:")
     (setq gnus-agent t)
     (setq gnus-agent-expire-days 90)
                                           ; prompt for how many articles only for larger than 1000 articles
