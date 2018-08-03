@@ -1836,6 +1836,18 @@ note in "notes" folder.
         (message msg))))
 #+END_SRC
 
+* EBDB - a replacement for BBDB
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ebdb
+    :defer t
+    :ensure t
+    :config
+    (setq ebdb-sources (concat kimim/path-sync "ebdb"))
+  )
+#+END_SRC
+
+
 * erc and gnus
 
 #+BEGIN_SRC emacs-lisp
@@ -1856,7 +1868,9 @@ note in "notes" folder.
     :defer t
     :bind
     (("C-x m m" . compose-mail))
-  :config
+    :config
+    (require 'ebdb-gnus)
+    (require 'ebdb-message)
     (setq message-directory "~/Gnus/Mail/")
     (setq gnus-directory "~/Gnus/News/")
     (setq nnfolder-directory "~/Gnus/Mail/Archive")
