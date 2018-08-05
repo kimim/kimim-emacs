@@ -865,7 +865,7 @@ task for =es.exe=.
     :defer 3
     :config
     (add-to-list
-     'yas-snippet-dirs (concat kimim/path-sync "kimikit/emacs.d/snippets"))
+     'yas-snippet-dirs (concat kimim/path-kimikit "emacs.d/snippets"))
     (yas-global-mode 1)
     (use-package company)
     (add-to-list 'company-backends 'company-yasnippet)
@@ -1786,6 +1786,11 @@ New link to use everything to locate a file with unique ID:
 ** Simplenote2
 
 #+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+    :defer t
+    :ensure t
+    )
+
   (use-package simplenote2
     :defer t
     :ensure t
@@ -1797,8 +1802,9 @@ New link to use everything to locate a file with unique ID:
      ("C-." . simplenote2--create-note-locally))
     :config
     (require 'simplenote2)
+    (require 'markdown-mode)
     ;;(require 'visual-fill-column)
-    (setq simplenote2-notes-mode 'org-mode)
+    (setq simplenote2-notes-mode 'markdown-mode)
     ;;(add-hook 'simplenote2-note-mode-hook 'visual-fill-column-mode)
     (simplenote2-setup)
     )
