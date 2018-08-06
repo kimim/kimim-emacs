@@ -286,8 +286,8 @@ Set default font and frame size for both Windows and macOS.
      "fontset-default"
      'han (font-spec :family "Microsoft Yahei" :size 26))
     (setq default-frame-alist
-          '((top . 80) (left . 250)
-            (width . 128) (height . 45)
+          '((top . 200) (left . 1000)
+            (width . 128) (height . 60)
             ;; if you like anti-alias, use this to have a try
             (font . "Inconsolata-12")
             )))
@@ -865,7 +865,7 @@ task for =es.exe=.
     :defer 3
     :config
     (add-to-list
-     'yas-snippet-dirs (concat kimim/path-kimikit "emacs.d/snippets"))
+     'yas-snippet-dirs (concat kimim/path-sync "kimikit/emacs.d/snippets"))
     (yas-global-mode 1)
     (use-package company)
     (add-to-list 'company-backends 'company-yasnippet)
@@ -1842,7 +1842,7 @@ note in "notes" folder.
         (message msg))))
 #+END_SRC
 
-* EBDB - a replacement for BBDB
+* COMMENT EBDB - a replacement for BBDB
 
 #+BEGIN_SRC emacs-lisp
   (use-package ebdb
@@ -1875,13 +1875,15 @@ note in "notes" folder.
     :bind
     (("C-x m m" . compose-mail))
     :config
-    (require 'ebdb-gnus)
-    (require 'ebdb-message)
+    ;;(require 'ebdb-gnus)
+    ;;(require 'ebdb-message)
     (setq message-directory "~/Gnus/Mail/")
     (setq gnus-directory "~/Gnus/News/")
     (setq nnfolder-directory "~/Gnus/Mail/Archive")
     (setq gnus-permanently-visible-groups "INBOX")
     (setq gnus-alias-override-user-mail-address t)
+    ;; fetch only 50 latest articles to speed up downloading
+    (setq gnus-large-newsgroup 50)
     (setq message-forward-as-mime nil)
     (setq message-forward-included-headers "^Date\\|^From\\|^To\\|^Subject:")
     (setq gnus-agent t)
