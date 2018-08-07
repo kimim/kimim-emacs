@@ -1882,6 +1882,9 @@ note in "notes" folder.
     (setq nnfolder-directory "~/Gnus/Mail/Archive")
     (setq gnus-permanently-visible-groups "INBOX")
     (setq gnus-alias-override-user-mail-address t)
+    (setq gnus-asynchronous t)
+    (setq gnus-use-article-prefetch 1000)
+    (setq gnus-fetch-old-headers 'some)
     ;; fetch only 50 latest articles to speed up downloading
     (setq gnus-large-newsgroup 50)
     (setq message-forward-as-mime nil)
