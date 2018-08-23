@@ -279,6 +279,16 @@ and defers loading of the module until they are used.
 Set default font and frame size for both Windows and macOS.
 
 #+BEGIN_SRC emacs-lisp
+  ;;set default font
+  (set-fontset-font
+   "fontset-default"
+   'han (font-spec :family "Microsoft Yahei" :size 28))
+  (setq default-frame-alist
+        '((top . 200) (left . 1000)
+          (width . 128) (height . 60)
+          ;; if you like anti-alias, use this to have a try
+          (font . "Inconsolata-12")
+          ))
   (cond
    ((eq window-system 'w32)
     ;; cleaner font setting
@@ -370,7 +380,16 @@ Use self defined color theme 1 seconds after init.
     :config
     (if (eq window-system nil)
         (color-theme-jekyll)
-      (color-theme-kimim)))
+      (color-theme-kimim))
+    (add-hook 'before-make-frame-hook
+              '(lambda ()
+                 (tool-bar-mode -1)
+                 (scroll-bar-mode -1)))
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (select-frame frame)
+                (when (display-graphic-p frame)
+                  (color-theme-kimim)))))
 #+END_SRC
 
 * Highlight
@@ -1889,12 +1908,13 @@ note in "notes" folder.
     (setq gnus-large-newsgroup 50)
     (setq message-forward-as-mime nil)
     (setq message-forward-included-headers "^Date\\|^From\\|^To\\|^Subject:")
+    (setq gnus-article-sort-functions '(not gnus-article-sort-by-number))
     (setq gnus-agent t)
     (setq gnus-agent-expire-days 90)
-                                          ; prompt for how many articles only for larger than 1000 articles
+    ; prompt for how many articles only for larger than 1000 articles
     (setq gnus-large-newsgroup 1000)
     (setq gnus-use-cache t)
-    (setq gnus-fetch-old-headers nil) ; show previous messages in a thread
+    (setq gnus-fetch-old-headers 1) ; show previous messages in a thread
     (setq gnus-thread-indent-level 1)
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
     ;;(setq gnus-select-method '(nnml ""))
