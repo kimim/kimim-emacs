@@ -1906,8 +1906,10 @@ note in "notes" folder.
     (setq gnus-fetch-old-headers 'some)
     ;; fetch only 50 latest articles to speed up downloading
     (setq gnus-large-newsgroup 50)
-    (setq message-forward-as-mime nil)
+    (setq message-forward-as-mime t)
+    (setq message-forward-before-signature nil)
     (setq message-forward-included-headers "^Date\\|^From\\|^To\\|^Subject:")
+    (setq message-make-forward-subject-function 'message-forward-subject-fwd)
     (setq gnus-article-sort-functions '(not gnus-article-sort-by-number))
     (setq gnus-agent t)
     (setq gnus-agent-expire-days 90)

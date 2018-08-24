@@ -1,3 +1,29 @@
+(defun gnus-summary-forward-with-original (n &optional wide)
+  "Start composing a reply mail to the current message.
+The original article will be yanked."
+  (interactive "P")
+  (gnus-summary-reply (gnus-summary-work-articles n) wide)
+  (mail-to)
+  (message-beginning-of-line)
+  (kill-line)
+  (mail-subject)
+  (message-beginning-of-line)
+  (delete-char 2)
+  (insert "Fw")
+  (mail-to))
+
+(define-key gnus-summary-mode-map
+  [remap gnus-summary-followup-with-original]
+  'gnus-summary-forward-with-original)
+
+(define-key gnus-summary-mode-map
+  [remap gnus-summary-reply]
+  'gnus-summary-reply-with-original)
+
+(define-key gnus-summary-mode-map
+  [remap gnus-summary-wide-reply]
+  'gnus-summary-very-wide-reply-with-original)
+
 ;; generate timestamp such as 2016_1031KJ__ for file name
 (defun kimim/genfile-timestamp()
   (concat (format-time-string "%Y_%m%d")
