@@ -1912,6 +1912,15 @@ note in "notes" folder.
     (setq message-forward-before-signature nil)
     (setq message-forward-included-headers "^Date\\|^From\\|^To\\|^Subject:")
     (setq message-make-forward-subject-function 'message-forward-subject-fwd)
+    (setq gnus-user-date-format-alist
+          '(((gnus-seconds-today) . "Today %H:%M")
+            ((+ 86400 (gnus-seconds-today)) . "Yest. %H:%M")
+            (604800 . "%a %H:%M")               ; That's one week
+            ((gnus-seconds-month) . "%a %H:%M")
+            ((gnus-seconds-year) . "%b %d")
+            (t . "%b %d %Y")))
+    (setq gnus-summary-line-format
+          ":%U%R | %d%13&user-date; %-13,13f (%5k) | %B %s %-100= \n")
     (setq gnus-article-sort-functions '(not gnus-article-sort-by-number))
     (setq gnus-agent t)
     (setq gnus-agent-expire-days 90)
