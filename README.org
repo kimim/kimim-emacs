@@ -1901,8 +1901,6 @@ note in "notes" folder.
     :bind
     (("C-x m m" . compose-mail))
     :config
-    ;;(require 'ebdb-gnus)
-    ;;(require 'ebdb-message)
     (setq message-directory "~/Gnus/Mail/")
     (setq gnus-directory "~/Gnus/News/")
     (setq nnfolder-directory "~/Gnus/Mail/Archive")
