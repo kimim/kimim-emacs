@@ -1925,8 +1925,8 @@ note in "notes" folder.
             ((gnus-seconds-year) . "%b %d")
             (t . "%b %d %Y")))
     (setq gnus-summary-line-format
-          ":%U%R | %d%13&user-date; %-13,13f (%5k) | %B %s %-100= \n")
-    (setq gnus-article-sort-functions '(not gnus-article-sort-by-number))
+          ":%U%R | %d%13&user-date; %-13,13f (%5k) | %B %s %-120= \n")
+    (setq gnus-article-sort-functions '(not gnus-article-sort-by-date))
     (setq gnus-agent t)
     (setq gnus-agent-expire-days 90)
     ; prompt for how many articles only for larger than 1000 articles
@@ -1935,12 +1935,7 @@ note in "notes" folder.
     (setq gnus-fetch-old-headers 1) ; show previous messages in a thread
     (setq gnus-thread-indent-level 1)
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
-    ;;(setq gnus-select-method '(nnml ""))
-    ;;(setq gnus-secondary-select-methods nil)
     (add-hook 'message-mode-hook 'orgstruct-mode)
-    ;;(add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
-    ;;(add-to-list 'gnus-secondary-select-methods '(nntp "news.gmane.org"))
-    ;;(add-to-list 'gnus-secondary-select-methods '(nnml ""))
     )
 #+END_SRC
 
