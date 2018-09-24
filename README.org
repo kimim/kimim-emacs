@@ -8,10 +8,15 @@
 * Introduction
 
 This Emacs configuration file is written with literate programming method.[fn:1]
-=.el= file is loaded by extracting source code from this file.
+The elisp file is extracted from this file, and then compiled to binary =elc=
+file for fast loading in the future.
 
-To make use of this configuration, you can follow below shell commands to
-prepare the emacs configuration files and folders:
+To use of this configuration, you can follow below shell commands to prepare the
+emacs configuration files and folders:
+
+- back up =.emacs= file and =.emacs.d= folder
+- clone =kimim-emacs= to home folder
+- copy new =.emacs= file from =kimim-emacs=
 
 #+BEGIN_SRC shell
 cd ~ && mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup && \
@@ -25,8 +30,8 @@ Then execute =emacs= to bootstrap itself.
 ** Windows
 *** Starter Script
 
-Because I want to let Emacs be executed in a specific =home= directory, so I
-create a =.bat= file =emacs.bat= to set the environment and run Emacs:
+Because I want Emacs to be executed in a specific =home= directory, so I
+create a =.bat= file named =emacs.bat= to set the environment and run Emacs:
 
 #+BEGIN_SRC bat
   :: set home path for Emacs
@@ -1242,6 +1247,8 @@ pip install virtualenv
     ("C-c b" . org-iswitchb)
     ("C-c c" . org-capture)
     ("C-c l" . org-store-link)
+    ("C-c  ！" . org-time-stamp-inactive)
+    ("C-c  。" . org-time-stamp)
     :config
     (setq org-export-allow-BIND t)
     (setq org-support-shift-select t)
@@ -1418,7 +1425,6 @@ pip install virtualenv
     :defer t
     :commands (org-toggle-office org-toggle-home)
     :bind (:map org-mode-map
-           ("C-c  。" . org-time-stamp)
            ;;:map org-agenda-mode-map
            ;;("<S-right>" . (lambda ()
            ;;                 (interactive)
@@ -1756,6 +1762,8 @@ New link to use everything to locate a file with unique ID:
         (defvar kimim/path-notes (concat kimim/path-sync "notes/")))
     (setq deft-directory kimim/path-notes)
     (setq deft-recursive t)
+    ;; disable auto save
+    (setq deft-auto-save-interval 0)
     (setq deft-file-naming-rules '((noslash . "_")))
     (setq deft-text-mode 'org-mode)
     (setq deft-use-filter-string-for-filename t)
@@ -1769,6 +1777,7 @@ New link to use everything to locate a file with unique ID:
                   "\\)"))
 
     ;;advise deft-open-file to replace spaces in file names with _
+    (require 'kimim)
     (defun kimim/deft-open-file-advice (orig-fun &rest args)
       (setq name (pop args))
       (if (file-exists-p name)
@@ -1899,7 +1908,7 @@ note in "notes" folder.
   (use-package gnus
     :defer t
     :bind
-    (("C-x m m" . compose-mail))
+    (("C-x m m" . compose-mail-kimim))
     :config
     (setq message-directory "~/Gnus/Mail/")
     (setq gnus-directory "~/Gnus/News/")
@@ -1932,6 +1941,7 @@ note in "notes" folder.
     (setq gnus-use-cache t)
     (setq gnus-fetch-old-headers 1) ; show previous messages in a thread
     (setq gnus-thread-indent-level 1)
+    (setq gnus-show-threads t)
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
     (add-hook 'message-mode-hook 'orgstruct-mode)
     )
