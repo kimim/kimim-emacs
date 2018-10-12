@@ -1186,6 +1186,22 @@ pip install yapf
 pip install virtualenv
 #+END_SRC
 
+** Go lang
+Open =.go= file with go-mode.
+#+BEGIN_SRC emacs-lisp
+  (use-package go-mode
+    :defer t
+    :mode ("\\.go\\'" . go-mode))
+#+END_SRC
+
+** Docker file
+Some dockerfile is not end with =.dockerfile=, so lets guess:
+#+BEGIN_SRC emacs-lisp
+  (use-package dockerfile-mode
+    :defer t
+    :mode ("\\dockerfile\\'" . dockerfile-mode))
+#+END_SRC
+
 ** Emacs lisp
 
 #+BEGIN_SRC emacs-lisp
@@ -2017,6 +2033,8 @@ note in "notes" folder.
   (bind-key "C-x C-." 'unbury-buffer)
   (bind-key "C-x  ，" 'bury-buffer)
   (bind-key "C-x  。" 'unbury-buffer)
+  (bind-key "C-x  ‘" 'hippie-expand)
+  (bind-key "C-x  ’" 'hippie-expand)
 #+END_SRC
 
 * Footnotes

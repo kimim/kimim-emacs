@@ -127,6 +127,16 @@ The original article will be yanked."
         ((eq window-system 'ns)
          (mac-open-terminal))))
 
+(defun kimim/msys ()
+  "Open cygwin mintty from emacs."
+  (interactive)
+  (cond ((eq window-system 'w32)
+         (w32-shell-execute
+          "open" "msys2"))
+        ((eq window-system 'ns)
+         (mac-open-terminal))))
+
+
 (defun kimim/4nt ()
   "Open 4NT terminal"
   (interactive)
