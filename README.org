@@ -237,7 +237,7 @@ and defers loading of the module until they are used.
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("ELPA" . "http://tromey.com/elpa/")
-          ;;("marmalade" . "https://marmalade-repo.org/packages/")
+          ("marmalade" . "https://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
 
   (mapc
@@ -1866,6 +1866,14 @@ note in "notes" folder.
                           title))
         (kill-new msg)
         (message msg))))
+#+END_SRC
+
+* Reference management
+
+#+BEGIN_SRC elisp
+(setq org-ref-bibliography-notes (concat kimim/path-ref "notes.org")
+      org-ref-default-bibliography (concat kimim/path-ref "docs.bib")
+      org-ref-pdf-directory (concat kimim/path-ref "pdfs/"))
 #+END_SRC
 
 * COMMENT EBDB - a replacement for BBDB
