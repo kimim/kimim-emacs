@@ -588,10 +588,9 @@ client.
   (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S kimi")
   (add-hook 'write-file-hooks 'time-stamp); 自动更新 time-stamp
 
-  (add-hook 'before-save-hook 'kimim/delete-trailing-whitespace)
-        (defun kimim/save-buffer-advice (orig-fun &rest arg)
-  (delete-trailing-whitespace)
-  (apply orig-fun arg))
+  (defun kimim/save-buffer-advice (orig-fun &rest arg)
+    (delete-trailing-whitespace)
+    (apply orig-fun arg))
 
 
   (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
