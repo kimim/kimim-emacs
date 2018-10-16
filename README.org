@@ -242,7 +242,7 @@ and defers loading of the module until they are used.
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("ELPA" . "http://tromey.com/elpa/")
-          ("marmalade" . "https://marmalade-repo.org/packages/")
+          ;;("marmalade" . "https://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
 
   (mapc
