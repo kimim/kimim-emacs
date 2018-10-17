@@ -116,7 +116,7 @@ The original article will be yanked."
   "Open cmd.exe from emacs just as you type: Win-R, cmd, return."
   (interactive)
   (w32-shell-execute
-   "open" "c:\\kimikit\\PyCmd\\PyCmd.exe"))
+   "open" "cmd"))
 
 (defun kimim/cyg ()
   "Open cygwin mintty from emacs."
@@ -128,11 +128,11 @@ The original article will be yanked."
          (mac-open-terminal))))
 
 (defun kimim/msys ()
-  "Open cygwin mintty from emacs."
+  "Open msys64 bash from emacs."
   (interactive)
   (cond ((eq window-system 'w32)
          (w32-shell-execute
-          "open" "msys2"))
+          "open" "mintty" "  -e bash"))
         ((eq window-system 'ns)
          (mac-open-terminal))))
 
