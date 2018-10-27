@@ -143,7 +143,8 @@ specify these variables in different way.
   (cond ((eq window-system 'w32)
          (setq kimim/path-root "C:/msys64/")
          (add-to-list 'exec-path
-                      (concat kimim/path-kimikit "emacs/bin/"))
+                      (concat kimim/path-kimikit "emacs/bin/")
+                      "C:/msys64/")
          (setenv "PATH"
                  (concat kimim/path-kimikit "emacs/bin" path-separator
                  (getenv "PATH"))))
@@ -242,7 +243,7 @@ and defers loading of the module until they are used.
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("ELPA" . "http://tromey.com/elpa/")
-          ("marmalade" . "https://marmalade-repo.org/packages/")
+          ;;("marmalade" . "https://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
 
   (mapc
@@ -588,10 +589,9 @@ client.
   (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S kimi")
   (add-hook 'write-file-hooks 'time-stamp); 自动更新 time-stamp
 
-  (add-hook 'before-save-hook 'kimim/delete-trailing-whitespace)
-        (defun kimim/save-buffer-advice (orig-fun &rest arg)
-  (delete-trailing-whitespace)
-  (apply orig-fun arg))
+  (defun kimim/save-buffer-advice (orig-fun &rest arg)
+    (delete-trailing-whitespace)
+    (apply orig-fun arg))
 
 
   (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
