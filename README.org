@@ -752,11 +752,11 @@ client.
     ;; Modify the default ibuffer-formats
     (setq ibuffer-formats
           '((mark modified read-only " "
-                  (name 18 18 :left :elide)
+                  (name 32 32 :left :elide)
                   " "
                   (size-h 9 -1 :right)
                   " "
-                  (mode 16 16 :left :elide)
+                  (mode 14 14 :left :elide)
                   " "
                   filename-and-process))))
 #+END_SRC
