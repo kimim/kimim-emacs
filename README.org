@@ -1944,7 +1944,19 @@ note in "notes" folder.
 #+END_SRC
 
 
-* erc and gnus
+* Mail and Contacts
+** BBDB for contact management
+
+#+BEGIN_SRC emacs-lisp
+  (use-package bbdb
+    :defer t
+    :bind
+    :config
+    (setq bbdb-file (concat kimim/path-kimikit "emacs.d/bbdb"))
+    ;; https://www.emacswiki.org/emacs/BbdbMailingLists
+    (add-hook 'message-setup-hook 'bbdb-mail-aliases))
+#+END_SRC
+** erc
 
 #+BEGIN_SRC emacs-lisp
   ;; erc settings
@@ -1958,7 +1970,11 @@ note in "notes" folder.
     (setq erc-autojoin-channels-alist
           '(("irc.freenode.net" "#emacs")))
     (setq erc-hide-list '("JOIN" "PART" "QUIT")))
+#+END_SRC
 
+** GNUS
+
+#+BEGIN_SRC emacs-lisp
   ;; gnus settings
   (use-package gnus
     :defer t
@@ -1999,8 +2015,6 @@ note in "notes" folder.
     (setq gnus-show-threads t)
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
     (add-hook 'message-mode-hook 'orgstruct-mode)
-    ;; https://www.emacswiki.org/emacs/BbdbMailingLists
-    (add-hook 'message-setup-hook 'bbdb-mail-aliases)
     )
 #+END_SRC
 
