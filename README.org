@@ -1651,7 +1651,7 @@ name handling function can be found from emacs manual[fn:19].
     :bind
     (("C-x m d" . kimim/deft-store-link))
     :config
-
+    (use-package deft)
     (defun kimim/deft-store-link()
       "get deft link of current note file."
       (interactive)
