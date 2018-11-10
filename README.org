@@ -1999,6 +1999,8 @@ note in "notes" folder.
     (setq gnus-show-threads t)
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
     (add-hook 'message-mode-hook 'orgstruct-mode)
+    ;; https://www.emacswiki.org/emacs/BbdbMailingLists
+    (add-hook 'message-setup-hook 'bbdb-mail-aliases)
     )
 #+END_SRC
 
