@@ -312,9 +312,9 @@ Set default font and frame size for both Windows and macOS.
       ;; 16 for small screen; 28 for big screen
       (setq default-frame-alist
             '((top . 200) (left . 1000)
-              (width . 128) (height . 60)
+              (width . 128) (height . 50)
               ;; if you like anti-alias, use this to have a try
-              (font . "Inconsolata-12")
+              (font . "Inconsolata-14")
               )))))
    ((eq window-system 'ns)
     (set-fontset-font
@@ -1932,7 +1932,8 @@ note in "notes" folder.
       org-ref-pdf-directory (concat kimim/path-ref "pdfs/"))
 #+END_SRC
 
-* COMMENT EBDB - a replacement for BBDB
+* Mail and Contacts
+** EBDB - a replacement for BBDB, as contact management
 
 #+BEGIN_SRC emacs-lisp
   (use-package ebdb
@@ -1940,12 +1941,12 @@ note in "notes" folder.
     :ensure t
     :config
     (setq ebdb-sources (concat kimim/path-sync "ebdb"))
-  )
+    (require 'ebdb-gnus)
+    (require 'ebdb-message)
+    )
 #+END_SRC
 
-
-* Mail and Contacts
-** BBDB for contact management
+** COMMENT BBDB for contact management
 
 #+BEGIN_SRC emacs-lisp
   (use-package bbdb
@@ -1981,6 +1982,8 @@ note in "notes" folder.
     :bind
     (("C-x m m" . compose-mail-kimim))
     :config
+    (use-package ebdb)
+    (setq compose-mail-user-agent-warnings nil) ;; remove warning
     (setq message-directory "~/Gnus/Mail/")
     (setq gnus-directory "~/Gnus/News/")
     (setq nnfolder-directory "~/Gnus/Mail/Archive")
