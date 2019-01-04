@@ -7,6 +7,8 @@
         (emacs-lisp-docstring-fill-column t))
     (fill-paragraph nil region)))
 
+(use-package gnus)
+
 (defun gnus-summary-forward-with-original (n &optional wide)
   "Start composing a reply mail to the current message.
 The original article will be yanked."
