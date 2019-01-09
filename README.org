@@ -1,5 +1,5 @@
 #+TITLE: README
-#+LATEX_CLASS: cn-article
+#+LATEX_CLASS: article
 #+OPTIONS: toc:nil
 #+STARTUP: showall
 
@@ -143,10 +143,12 @@ specify these variables in different way.
   (cond ((eq window-system 'w32)
          (setq kimim/path-root "C:/msys64/")
          (add-to-list 'exec-path
-                      (concat kimim/path-kimikit "emacs/bin/")
-                      "C:/msys64/")
+                      (concat kimim/path-kimikit "emacs/bin/"))
+         (add-to-list 'exec-path "C:/msys64/")
+         (add-to-list 'exec-path "C:/CTEX/MiKTeX/miktex/bin/")
          (setenv "PATH"
                  (concat kimim/path-kimikit "emacs/bin" path-separator
+                         "C:/CTEX/MiKTeX/miktex/bin/"  path-separator
                  (getenv "PATH"))))
         ((eq window-system 'ns)
          (setq kimim/path-root "/")
@@ -991,12 +993,11 @@ English word list fetch from https://github.com/dwyl/english-words
     (setq ggtags-global-ignore-case t)
     (setq ggtags-sort-by-nearness t))
     ;; let ggtags use split-window with is redefined by ecb mode
-    ;;(setq ggtags-split-window-function 'split-window-below)
+    ;; (setq ggtags-split-window-function 'split-window-below)
 
     ;; close grep window and done ggtags navigation when type C-g
     ;; but some times it will close all the ecb windows, so remove this advice.
     ;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
-
 #+END_SRC
 
 ** Version Control
@@ -1020,7 +1021,7 @@ The solution is to change the owner of =~/.emacs.d/server= [fn:15]
 Click R-mouse on ~/.emacs.d/server and select “Properties” (last item in
 menu). From Properties select the Tab “Security” and then select the button
 “Advanced”. Then select the Tab “Owner” and change the owner from
-“Administrators (\Administrators)” into “ (\”. Now the server code will accept
+=“Administrators (\Administrators)”= into =“ (\”=. Now the server code will accept
 this directory as secure because you are the owner.
 #+END_QUOTE
 
@@ -1345,7 +1346,10 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     (setq org-export-creator-string "")
     (setq org-export-html-validation-link nil)
     (setq org-html-validation-link nil))
+#+END_SRC
 
+*** org to pdf
+#+BEGIN_SRC emacs-lisp
   (use-package org
     :defer t
     :config
@@ -1356,27 +1360,59 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     (setq org-latex-pdf-process
           '("xelatex %f"
             "xelatex %f"))
+    ;; https://www.tuicool.com/articles/ZnAnym
+    ;; remove error: ! LaTeX Error: Command \nobreakspace unavailable in encoding T1.
+    ;; add: \DeclareRobustCommand\nobreakspace{\leavevmode\nobreak\ }
     (add-to-list 'org-latex-classes
                  '("cn-article"
-                   "\\documentclass[a4paper,UTF8]{ctexbook}"
+                   "\\documentclass[a4paper,UTF8]{ctexart}
+  \\DeclareRobustCommand\\nobreakspace{\\leavevmode\\nobreak\\ }"
                    ("\\section{%s}" . "\\section*{%s}")
                    ("\\subsection{%s}" . "\\subsection*{%s}")
                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+    (add-to-list 'org-latex-classes
+                 '("cn-book"
+                   "\\documentclass[a4paper,UTF8]{ctexbook}
+  \\DeclareRobustCommand\\nobreakspace{\\leavevmode\\nobreak\\ }"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+    (add-to-list 'org-latex-classes
+                 '("article"
+                   "\\documentclass{article}
+  \\usepackage[UTF8]{ctex}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+    ;; (setq org-latex-default-class "cn-article")
+    ;; remove fontenc, and AUTO in fromt of inputenc,
+    ;; then francais can be processed
+    (setq org-latex-default-packages-alist
+          (quote
+           (("" "inputenc" t
+             ("pdflatex"))
+            ("" "graphicx" t nil)
+            ("" "grffile" t nil)
+            ("" "longtable" nil nil)
+            ("" "wrapfig" nil nil)
+            ("" "rotating" nil nil)
+            ("normalem" "ulem" t nil)
+            ("" "amsmath" t nil)
+            ("" "textcomp" t nil)
+            ("" "amssymb" t nil)
+            ("" "capt-of" nil nil)
+            ("" "hyperref" nil nil))))
+    )
+#+END_SRC
 
-  ;; (use-package ox-reveal
-  ;;   :defer t
-  ;;   :config
-  ;;   (setq org-reveal-root "reveal.js")
-  ;;   ;;(setq org-reveal-root "~/../Tools/reveal.js")
-  ;;   ;;(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
-  ;;   (setq org-reveal-theme "simple")
-  ;;   (setq org-reveal-width 1200)
-  ;;   (setq org-reveal-height 750)
-  ;;   (setq org-reveal-transition "fade")
-  ;;   (setq org-reveal-hlevel 2))
-
+*** org to html
+#+BEGIN_SRC emacs-lisp
   (use-package ox-html
     :defer t
     :ensure nil
@@ -1424,6 +1460,18 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
                         (expand-file-name result default-directory)
                       result)
                     (if description (concat "[" description "]") "")))))))
+
+  ;; (use-package ox-reveal
+  ;;   :defer t
+  ;;   :config
+  ;;   (setq org-reveal-root "reveal.js")
+  ;;   ;;(setq org-reveal-root "~/../Tools/reveal.js")
+  ;;   ;;(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
+  ;;   (setq org-reveal-theme "simple")
+  ;;   (setq org-reveal-width 1200)
+  ;;   (setq org-reveal-height 750)
+  ;;   (setq org-reveal-transition "fade")
+  ;;   (setq org-reveal-hlevel 2))
 #+END_SRC
 
 ** org with diagram
