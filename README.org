@@ -1779,7 +1779,7 @@ name handling function can be found from emacs manual[fn:19].
         ;;    (color-theme-eclipse)
         ;; go to kimi.im folder and execute cyg command
         (with-temp-buffer(dired "~/kimi.im/")
-                         (kimim/cyg)
+                         (kimim/xterm)
                          (kill-buffer))
         ))
 
@@ -2084,7 +2084,7 @@ note in "notes" folder.
     :defer 5
     :ensure nil
     :bind
-    ("<f9>" . kimim/cyg)
+    ("<f9>" . kimim/xterm)
     ("S-<f9>" . kimim/cmd)
     ("<f10>" . kimim/dc)
     ("C-c r" . kimim/rename-file-and-buffer)

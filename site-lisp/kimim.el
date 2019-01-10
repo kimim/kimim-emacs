@@ -120,24 +120,14 @@ The original article will be yanked."
   (w32-shell-execute
    "open" "cmd"))
 
-(defun kimim/cyg ()
-  "Open cygwin mintty from emacs."
+(defun kimim/xterm ()
+  "Open msys64 bash from emacs."
   (interactive)
   (cond ((eq window-system 'w32)
          (w32-shell-execute
           "open" "mintty" " -e bash"))
         ((eq window-system 'ns)
          (mac-open-terminal))))
-
-(defun kimim/msys ()
-  "Open msys64 bash from emacs."
-  (interactive)
-  (cond ((eq window-system 'w32)
-         (w32-shell-execute
-          "open" "mintty" "  -e bash"))
-        ((eq window-system 'ns)
-         (mac-open-terminal))))
-
 
 (defun kimim/4nt ()
   "Open 4NT terminal"
