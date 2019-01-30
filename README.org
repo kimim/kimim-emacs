@@ -2045,6 +2045,7 @@ note in "notes" folder.
     (setq nnfolder-directory "~/Gnus/Mail/Archive")
     (setq gnus-permanently-visible-groups "INBOX")
     (setq gnus-alias-override-user-mail-address t)
+    (setq mail-signature-file (concat kimim/path-sync "kimikit/emacs.d/signature.txt"))
     (setq gnus-asynchronous t)
     (setq gnus-use-article-prefetch 1000)
     (setq gnus-fetch-old-headers 'some)
