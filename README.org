@@ -573,7 +573,7 @@ client.
   (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
   ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
   ;; 候，备份文件是复本，而不是原件。
-  (setq backup-directory-alist '(("." . "~/Temp")))
+  (setq backup-directory-alist '(("." . "~/temp")))
   (setq version-control t)
   (setq kept-old-versions 10)
   (setq kept-new-versions 20)
@@ -583,8 +583,8 @@ client.
   (setq auto-save-interval 50)
   (setq auto-save-timeout 60)
   (setq auto-save-default nil)           ; auto-save of every file-visiting buffer
-  (setq auto-save-list-file-prefix "~/Temp/auto-saves-")
-  (setq auto-save-file-name-transforms `((".*"  , "~/Temp/")))
+  (setq auto-save-list-file-prefix "~/temp/auto-saves-")
+  (setq auto-save-file-name-transforms `((".*"  , "~/temp/")))
   (setq create-lockfiles nil)
   (setq time-stamp-active t)
   (setq time-stamp-warn-inactive t)
