@@ -177,6 +177,8 @@ specify these variables in different way.
 #+BEGIN_SRC emacs-lisp
   (if (not (boundp 'kimim/file-custom))
       (defvar kimim/file-custom "~/.emacs.d/custom.el"))
+  (if (not (file-exists-p kimim/file-custom))
+      (write-region "" nil kimim/file-custom))
   (setq custom-file kimim/file-custom)
   (load-file custom-file)
 #+END_SRC
