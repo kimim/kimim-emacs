@@ -99,7 +99,13 @@ Most of the external tools I used in this Emacs configuration should be easily
 installed or already available in main Linux distributions.
 
 * Emacs Frame
+
+Set look & feel before all other settings.
+
 ** Menu Bar and Tool Bar
+
+Show menu bar only in macOS desktop environment, because the system preserves
+menu bar for every applications.
 
 #+BEGIN_SRC emacs-lisp
   (cond ((eq window-system 'w32)
