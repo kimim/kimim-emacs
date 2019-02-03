@@ -169,7 +169,7 @@ Set default font and frame size for both Windows and macOS.
      'han (font-spec :family "PingFang SC" :size 16))
     (set-fontset-font
      "fontset-default"
-v    'cjk-misc (font-spec :family "PingFang SC" :size 16))
+    'cjk-misc (font-spec :family "PingFang SC" :size 16))
     (setq default-frame-alist
           '((top . 100) (left . 600)
             (width . 166) (height . 70)
