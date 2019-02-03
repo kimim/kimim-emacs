@@ -20,9 +20,9 @@ emacs configuration files and folders:
 - copy new =.emacs= file from =kimim-emacs= to =~=
 
 #+BEGIN_SRC shell
-cd ~ && mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup && \
-git clone https://github.com/kimim/kimim-emacs && \
-cp kimim-emacs/.emacs ~
+  cd ~ && mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup && \
+  git clone https://github.com/kimim/kimim-emacs && \
+  cp kimim-emacs/.emacs ~
 #+END_SRC
 
 Then execute =emacs= to bootstrap itself.
@@ -57,9 +57,6 @@ Cygwin project[fn:2] is required for this configuration in Windows, which is a
 large collection of GNU and Open Source tools provide functionality similar to a
 Linux distribution on Windows.
 
-MSYS2 [fn:3] is better than Cygwin in one aspect that the packages can be
-installed in command line with =pacman -S=.
-
 The explanation from Cygwin is that because Windows do not allow overwriting of
 in-use executable, so installing a new version of Cygwin DLL while a packager is
 using the DLL is problematic.[fn:4] But I guess MSYS2 should have the same
@@ -81,6 +78,11 @@ Saving to: ‘setup-x86_64.exe’
 ...
 mv setup-x86_64.exe ../bin/cygup.exe
 #+END_QUOTE
+
+*** MSYS2
+
+MSYS2 [fn:3] is better than Cygwin in one aspect that the packages can be
+installed in command line with =pacman -S=.
 
 ** Mac OS
 
@@ -165,10 +167,9 @@ Set default font and frame size for both Windows and macOS.
     (set-fontset-font
      "fontset-default"
      'han (font-spec :family "PingFang SC" :size 16))
-    ;; OS X 下，只有雅黑字體的標點符號顯示的不是那麼難看
     (set-fontset-font
      "fontset-default"
-     'cjk-misc (font-spec :family "PingFang SC" :size 16))
+v    'cjk-misc (font-spec :family "PingFang SC" :size 16))
     (setq default-frame-alist
           '((top . 100) (left . 600)
             (width . 166) (height . 70)
@@ -178,13 +179,6 @@ Set default font and frame size for both Windows and macOS.
 
 * Environment
 ** Synchronization Folders
-
-I'm using this Emacs configuration for both working usage and personal usage,
-and I want to synchronize some files in synchronization service, so I need to
-seperate the working file and personal file in different synchronization
-services. For example, working files are synchronized in Microsoft OneDrive
-Business or Box Business, while personal files are synchronized in Dropbox or
-SugarSync.
 
 The variable for synchronization location is named as: =kimim/path-sync=
 
@@ -204,10 +198,6 @@ cloned from my github repository.
 
 Anyway, you can change the path as you want, and set =kimim/path-kimim-emacs=
 accordingly.
-
-#+BEGIN_SRC shell
-git clone https://github.com/kimim/kimim-emacs.git
-#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
   (if (not (boundp 'kimim/path-kimim-emacs))
