@@ -16,8 +16,8 @@ emacs configuration files and folders:
 
 - back up =.emacs= file and =.emacs.d= folder, if you have your own emacs
   configuration files
-- clone =kimim-emacs= to home folder
-- copy new =.emacs= file from =kimim-emacs= to ~
+- clone =kimim-emacs= to home folder =~=
+- copy new =.emacs= file from =kimim-emacs= to =~=
 
 #+BEGIN_SRC shell
 cd ~ && mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup && \
