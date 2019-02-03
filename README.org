@@ -14,9 +14,10 @@ file for fast loading in the future.
 To use of this configuration, you can follow below shell commands to prepare the
 emacs configuration files and folders:
 
-- back up =.emacs= file and =.emacs.d= folder
+- back up =.emacs= file and =.emacs.d= folder, if you have your own emacs
+  configuration files
 - clone =kimim-emacs= to home folder
-- copy new =.emacs= file from =kimim-emacs=
+- copy new =.emacs= file from =kimim-emacs= to ~
 
 #+BEGIN_SRC shell
 cd ~ && mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup && \
@@ -44,6 +45,11 @@ Another important path in Windows is =kimikit=, which is used to put some
 portable applications. I plan to write some installation scripts to update and
 install these applications automatically. These scripts are now hosted in
 github: https://github.com/kimim/kimikit, welcome to fork and have a try.
+
+*** HOME environment
+
+You can also specify HOME by adding HOME system environment as
+=C:\Users\kimim\home=. This method is easier than a =.bat= starter script.
 
 *** Cygwin
 
