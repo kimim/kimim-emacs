@@ -220,12 +220,13 @@ specify these variables in different way.
          (setq kimim/path-root "C:/msys64/")
          (add-to-list 'exec-path
                       (concat kimim/path-kimikit "emacs/bin/"))
-         (add-to-list 'exec-path "C:/msys64/")
+         (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
          (add-to-list 'exec-path "C:/CTEX/MiKTeX/miktex/bin/")
          (setenv "PATH"
                  (concat kimim/path-kimikit "emacs/bin" path-separator
+                         "C:/msys64/mingw64/bin/" path-separator
                          "C:/CTEX/MiKTeX/miktex/bin/"  path-separator
-                 (getenv "PATH"))))
+                         (getenv "PATH"))))
         ((eq window-system 'ns)
          (setq kimim/path-root "/")
          (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.5/bin")
@@ -237,14 +238,12 @@ specify these variables in different way.
   (add-to-list 'exec-path (concat kimim/path-root "bin"))
   (add-to-list 'exec-path (concat kimim/path-root "usr/bin"))
   (add-to-list 'exec-path (concat kimim/path-root "usr/local/bin"))
-  (add-to-list 'exec-path "~/cross-tools/bin")
 
   (setenv "PATH"
           (concat
            kimim/path-root "bin" path-separator
            kimim/path-root "usr/bin" path-separator
            kimim/path-root "usr/local/bin" path-separator
-           "~/cross-tools/bin" path-separator
            (getenv "PATH")))
 #+END_SRC
 
