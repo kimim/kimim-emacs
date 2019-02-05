@@ -171,7 +171,7 @@ Set default font and frame size for both Windows and macOS.
    (add-to-list 'default-frame-alist
                 (cons 'height (/ (x-display-pixel-height) (* 2 (frame-char-height)))))
    (add-to-list 'default-frame-alist
-                (cons 'width (/ (x-display-pixel-width) (* 2 (frame-char-width)))))
+                (cons 'width (/ (* 2 (x-display-pixel-width)) (* 3 (frame-char-width)))))
 #+END_SRC
 
 * Environment
