@@ -163,15 +163,17 @@ Set default font and frame size for both Windows and macOS.
     (add-to-list 'default-frame-alist
                  (cons 'font "Inconsolata-14"))))
 
-   ;; top, left ... must be integer
-   (add-to-list 'default-frame-alist
-                (cons 'top  (/ (x-display-pixel-height) 10)))
-   (add-to-list 'default-frame-alist
-                (cons 'left (/ (x-display-pixel-width) 10)))
-   (add-to-list 'default-frame-alist
-                (cons 'height (/ (x-display-pixel-height) (* 2 (frame-char-height)))))
-   (add-to-list 'default-frame-alist
-                (cons 'width (/ (* 2 (x-display-pixel-width)) (* 3 (frame-char-width)))))
+  (if (not (eq window-system nil))
+      (progn
+        ;; top, left ... must be integer
+        (add-to-list 'default-frame-alist
+                     (cons 'top  (/ (x-display-pixel-height) 10)))
+        (add-to-list 'default-frame-alist
+                     (cons 'left (/ (x-display-pixel-width) 10)))
+        (add-to-list 'default-frame-alist
+                     (cons 'height (/ (x-display-pixel-height) (* 2 (frame-char-height)))))
+        (add-to-list 'default-frame-alist
+                     (cons 'width (/ (* 2 (x-display-pixel-width)) (* 3 (frame-char-width)))))))
 #+END_SRC
 
 * Environment
