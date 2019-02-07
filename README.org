@@ -159,9 +159,9 @@ Set default font and frame size for both Windows and macOS.
      'han (font-spec :family "PingFang SC" :size 16))
     (set-fontset-font
      "fontset-default"
-     'cjk-misc (font-spec :family "PingFang SC" :size 16))
-    (add-to-list 'default-frame-alist
-                 (cons 'font "Inconsolata-14"))))
+     'cjk-misc (font-spec :family "PingFang SC" :size 16))))
+    ;;(add-to-list 'default-frame-alist
+    ;;             (cons 'font "Inconsolata-14"))))
 
   (if (not (eq window-system nil))
       (progn
@@ -171,9 +171,9 @@ Set default font and frame size for both Windows and macOS.
         (add-to-list 'default-frame-alist
                      (cons 'left (/ (x-display-pixel-width) 10)))
         (add-to-list 'default-frame-alist
-                     (cons 'height (/ (x-display-pixel-height) (* 2 (frame-char-height)))))
+                     (cons 'height (/ (* 4 (x-display-pixel-height)) (* 5 (frame-char-height)))))
         (add-to-list 'default-frame-alist
-                     (cons 'width (/ (* 2 (x-display-pixel-width)) (* 3 (frame-char-width)))))))
+                     (cons 'width (/ (* 4 (x-display-pixel-width)) (* 5 (frame-char-width)))))))
 #+END_SRC
 
 * Environment
