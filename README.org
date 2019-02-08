@@ -521,6 +521,8 @@ client.
      ("C-x m j" . counsel-bookmark)
      ("C-x m r" . counsel-recentf)
      ("C-x m u" . counsel-unicode-char)
+     ("C-x b" . counsel-ibuffer)
+     ("C-c i" . counsel-imenu)
      ("C-c j" . counsel-git-grep)
      ("C-c g" . counsel-grep)
      ("C-c k" . counsel-ag)
