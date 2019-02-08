@@ -313,9 +313,9 @@ and defers loading of the module until they are used.
   (setq package-user-dir "~/.emacs.d/elpa")
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
-          ("ELPA" . "http://tromey.com/elpa/")
-          ;;("marmalade" . "https://marmalade-repo.org/packages/")
-          ("melpa" . "http://melpa.org/packages/")))
+          ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+          ("marmalade" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/marmalade/")
+          ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
 
   (mapc
    (lambda (package)
@@ -485,7 +485,8 @@ client.
 
   (bind-key "C-x m w" 'make-frame)
   ;; donno why, w/o following, new frame still has scroll-bar
-  (scroll-bar-mode -1)
+  (if (not (eq window-system nil))
+      (scroll-bar-mode -1))
 #+END_SRC
 
 ** Command
@@ -518,13 +519,13 @@ client.
      ("C-x m l" . counsel-load-library)
      ("C-x m i" . counsel-info-lookup-symbol)
      ("C-x m j" . counsel-bookmark)
+     ("C-x m r" . counsel-recentf)
      ("C-x m u" . counsel-unicode-char)
      ("C-c j" . counsel-git-grep)
      ("C-c g" . counsel-grep)
      ("C-c k" . counsel-ag)
      ("C-c p" . counsel-pt)
      ("C-x l" . counsel-locate)
-     ("C-c m" . counsel-bbdb-complete-mail)
      :map read-expression-map
      ("C-r" . counsel-expression-history))
     :config
