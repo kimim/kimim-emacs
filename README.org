@@ -146,13 +146,17 @@ calculated with original default font height and width: =frame-char-height= and
       (set-fontset-font
        "fontset-default"
        'han (font-spec :family "Microsoft Yahei" :size 16))
-      (set-default-font "Inconsolata-14"))
+      (set-default-font "Inconsolata-14")
+      (add-to-list 'default-frame-alist
+                   (cons 'font "Inconsolata-14")))
      ((> (display-pixel-width) 1400)
       (set-fontset-font
        "fontset-default"
        'han (font-spec :family "Microsoft Yahei" :size 28))
       ;; if you like anti-alias, use this to have a try
-      (set-default-font "Inconsolata-14"))))
+      (set-default-font "Inconsolata-14")
+      (add-to-list 'default-frame-alist
+                   (cons 'font "Inconsolata-14")))))
    ((eq window-system 'ns)
     (set-fontset-font
      "fontset-default"
@@ -401,11 +405,12 @@ Use self defined color theme 1 seconds after init.
               '(lambda ()
                  (tool-bar-mode -1)
                  (scroll-bar-mode -1)))
-    (add-hook 'after-make-frame-functions
-              (lambda (frame)
-                (select-frame frame)
-                (when (display-graphic-p frame)
-                  (color-theme-kimim)))))
+    ;; (add-hook 'after-make-frame-functions
+    ;;           (lambda (frame)
+    ;;             (select-frame frame)
+    ;;             (when (display-graphic-p frame)
+    ;;               (color-theme-kimim))))
+    )
 #+END_SRC
 
 * Highlight
@@ -521,8 +526,6 @@ client.
      ("C-x m j" . counsel-bookmark)
      ("C-x m r" . counsel-recentf)
      ("C-x m u" . counsel-unicode-char)
-     ("C-x b" . counsel-ibuffer)
-     ("C-c i" . counsel-imenu)
      ("C-c j" . counsel-git-grep)
      ("C-c g" . counsel-grep)
      ("C-c k" . counsel-ag)
@@ -1230,7 +1233,11 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 * Calendar
 
 #+BEGIN_SRC emacs-lisp
-  (setq diary-file "~/.emacs.d/diary")
+  (if (not (boundp 'kimim/file-diary))
+      (defvar kimim/file-diary "~/.emacs.d/diary"))
+  (if (not (file-exists-p kimim/file-diary))
+      (write-region "" nil kimim/file-diary))
+  (setq diary-file kimim/file-diary)
   (setq calendar-latitude +30.16)
   (setq calendar-longitude +120.12)
   (setq calendar-location-name "Hangzhou")
