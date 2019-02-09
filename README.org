@@ -316,7 +316,7 @@ and defers loading of the module until they are used.
 #+BEGIN_SRC emacs-lisp
   (setq package-user-dir "~/.emacs.d/elpa")
   (setq package-archives
-        '(("gnu" . "http://elpa.gnu.org/packages/")
+        '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
           ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
           ("marmalade" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/marmalade/")
           ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
