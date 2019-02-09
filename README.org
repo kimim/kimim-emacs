@@ -1803,8 +1803,9 @@ name handling function can be found from emacs manual[fn:20].
         (setq tag (ivy-read "tags: " '(
                                        "Deutsch" "Français" "English"
                                        "emacs" "org-mode"
-                                       "Windows" "RTOS" "industry"
-                                       "travel"  "street-shots" "photography"
+                                       "Windows" "macOS" "Linux"
+                                       "industry" "edge-computing"
+                                       "travel" "photography"
                                        "leadership"
                                        "x"
                                        )))
@@ -1836,7 +1837,7 @@ name handling function can be found from emacs manual[fn:20].
       (insert "]\n---\n#+END_EXPORT\n\n")
       )
 
-    (defun jekyll ()
+    (defun jekyll-new ()
       (interactive)
       (find-file (concat path-jekyll-draft "/" (read-string "Filename: ") ".org"))
       (jekyll-header)
@@ -1855,7 +1856,6 @@ name handling function can be found from emacs manual[fn:20].
       (color-theme-initialize)
       (color-theme-jekyll)
       (org-open-file (org-html-export-to-html nil))))
-
 #+END_SRC
 
 * Note Taking Tools
