@@ -2087,6 +2087,16 @@ note in "notes" folder.
 
 * kimim utils
 
+In Windows environment, =kimim/xterm= and =kimim/dc= will look up the program
+from system PATH, so you should set these to system PATH:
+
+#+BEGIN_SRC bat
+C:\msys64\
+C:\msys64\usr\bin\
+C:\msys64\mingw64\bin\
+PATH\of\doublecmd\
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
   (use-package kimim
     :defer 5
