@@ -551,9 +551,6 @@ client.
 ** General
 
 #+BEGIN_SRC emacs-lisp
-  ;;========================================
-  ;; Editor setting
-  ;;========================================
   (setq inhibit-eol-conversion nil)       ; 不要轉換 end-of-line style
   ;; fill-column is a buffer-local variable, use setq-default to change it globally
   (setq-default fill-column 80)
@@ -614,9 +611,6 @@ client.
   (setq suggest-key-bindings 5)
 
 
-  ;;========================================
-  ;; Global Mode Settings
-  ;;========================================
   (setq auto-mode-alist
         (append '(("\\.css\\'" . css-mode)
                   ("\\.S\\'" . asm-mode)
@@ -629,19 +623,9 @@ client.
                   )
                 auto-mode-alist))
 
-
-  ;;========================================
-  ;; Load other configuration files
-  ;;========================================
-
   (require 'saveplace)
   (setq-default save-place t)
   (setq save-place-file (expand-file-name "saveplace" "~"))
-
-  ;;  (use-package volatile-highlights
-  ;;    :config
-  ;;    (volatile-highlights-mode t)
-  ;;    :diminish volatile-highlights-mode)
 #+END_SRC
 ** visual-fille-mode
 
