@@ -316,9 +316,7 @@ and defers loading of the module until they are used.
   (setq package-archives
         '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
           ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-          ("marmalade" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/marmalade/")
           ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
-
   (mapc
    (lambda (package)
      (unless (package-installed-p package)
