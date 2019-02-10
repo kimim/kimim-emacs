@@ -223,9 +223,7 @@ specify these variables in different way.
          (add-to-list 'exec-path
                       (concat kimim/path-kimikit "emacs/bin/"))
          (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
-         (add-to-list 'exec-path "C:/CTEX/MiKTeX/miktex/bin/")
-         (add-to-list 'exec-path
-                      (concat kimim/path-kimikit "doublecmd/")))
+         (add-to-list 'exec-path "C:/CTEX/MiKTeX/miktex/bin/"))
         ((eq window-system 'ns)
          (setq kimim/path-root "/")
          (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.5/bin")))
