@@ -952,11 +952,6 @@ English word list fetch from https://github.com/dwyl/english-words
 #+BEGIN_SRC emacs-lisp
   (setq next-error-recenter 20)
   (bind-key "C-<f11>" 'compile)
-  ;; error during init
-  ;; (use-package compile-bookmarks
-  ;;   :defer t
-  ;;   :config
-  ;;   (compile-bookmarks-mode))
 #+END_SRC
 
 ** Tagging
