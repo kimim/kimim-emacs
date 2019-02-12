@@ -1812,7 +1812,7 @@ name handling function can be found from emacs manual[fn:20].
       (insert "]\n---\n#+END_EXPORT\n\n")
       )
 
-    (defun jekyll-new ()
+    (defun jekyll ()
       (interactive)
       (find-file (concat path-jekyll-draft "/" (read-string "Filename: ") ".org"))
       (jekyll-header)
