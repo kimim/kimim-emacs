@@ -2021,7 +2021,7 @@ note in "notes" folder.
     :defer t
     :bind
     (("C-x m m" . kimim/new-empty-mail))
-    (("C-x m n" . compse-mail-kimim))
+    (("C-x m n" . compose-mail-kimim))
     :config
     (use-package ebdb)
 
