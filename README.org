@@ -2020,9 +2020,16 @@ note in "notes" folder.
   (use-package gnus
     :defer t
     :bind
-    (("C-x m m" . compose-mail-kimim))
+    (("C-x m m" . kimim/new-empty-mail))
+    (("C-x m n" . compse-mail-kimim))
     :config
     (use-package ebdb)
+
+    (defun kimim/new-empty-mail ()
+      (interactive)
+      (compose-mail)
+      (kill-region (point-min) (point-max)))
+
     (setq compose-mail-user-agent-warnings nil) ;; remove warning
     (setq message-directory "~/Gnus/Mail/")
     (setq gnus-directory "~/Gnus/News/")
@@ -2058,8 +2065,7 @@ note in "notes" folder.
     (setq gnus-thread-indent-level 1)
     (setq gnus-show-threads t)
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
-    (add-hook 'message-mode-hook 'orgstruct-mode)
-    )
+    (add-hook 'message-mode-hook 'orgstruct-mode))
 #+END_SRC
 
 * kimim utils
