@@ -146,7 +146,7 @@ calculated with original default font height and width: =frame-char-height= and
       (set-fontset-font
        "fontset-default"
        'han (font-spec :family "Microsoft Yahei" :size 16))
-      (set-default-font "Inconsolata-14")
+      (set-frame-font "Inconsolata-14")
       (add-to-list 'default-frame-alist
                    (cons 'font "Inconsolata-14")))
      ((> (display-pixel-width) 1400)
@@ -154,7 +154,7 @@ calculated with original default font height and width: =frame-char-height= and
        "fontset-default"
        'han (font-spec :family "Microsoft Yahei" :size 28))
       ;; if you like anti-alias, use this to have a try
-      (set-default-font "Inconsolata-14")
+      (set-frame-font "Inconsolata-14")
       (add-to-list 'default-frame-alist
                    (cons 'font "Inconsolata-14")))))
    ((eq window-system 'ns)
@@ -488,6 +488,12 @@ client.
   ;; donno why, w/o following, new frame still has scroll-bar
   (if (not (eq window-system nil))
       (scroll-bar-mode -1))
+#+END_SRC
+
+scroll slowly with touchpad.
+
+#+BEGIN_SRC emacs-lisp
+  (setq mouse-wheel-scroll-amount '(0.01))
 #+END_SRC
 
 ** Command
