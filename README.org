@@ -2074,6 +2074,31 @@ note in "notes" folder.
     (add-hook 'message-mode-hook 'orgstruct-mode))
 #+END_SRC
 
+* Reading News
+
+#+BEGIN_SRC emacs-lisp
+  (use-package elfeed
+    :defer t
+    :bind
+    :config
+    ;; open feed link with eww
+    (setq browse-url-browser-function 'eww-browse-url)
+    (setq elfeed-feeds
+          '(("http://planet.emacsen.org/atom.xml" emacs)
+            ("https://news.google.com/news/rss/headlines/section/topic/WORLD?ned=us&hl=en" News)
+            ("http://feeds.bbci.co.uk/news/world/rss.xml" News)
+            ("http://feeds.feedburner.com/dw-world" News)
+            ("http://newsfeed.zeit.de/index" DE)
+            ("http://feeds.bbci.co.uk/news/world/asia/china/rss.xml" CN)
+            ("http://www.france24.com/en/top-stories/rss" FR)
+            ("http://en.rfi.fr/france/rss" FR)
+            ("https://www.theguardian.com/world/china/rss" CN)
+            ("http://www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
+            ("https://www.ft.com/stream/b2997bc8-d54f-3c4b-870f-130a4b337a51?format=rss" CN)
+            ("http://kimi.im/atom.xml" blog)
+            ("https://feedx.net/rss/one.xml" blog))))
+#+END_SRC
+
 * kimim utils
 
 In Windows environment, =kimim/xterm= and =kimim/dc= will look up the program
