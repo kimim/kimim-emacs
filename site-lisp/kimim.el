@@ -35,12 +35,12 @@ The original article will be yanked."
   [remap gnus-summary-wide-reply]
   'gnus-summary-very-wide-reply-with-original)
 
-;; generate timestamp such as 2016_1031KJ__ for file name
+;; generate timestamp such as 2016_1031_ for file name
 (defun kimim/genfile-timestamp()
   (concat (format-time-string "%Y_%m%d")
-          (char-to-string (+ 65 (random 26)))
-          (char-to-string (+ 65 (random 26)))
-          "__"))
+          ;;(char-to-string (+ 65 (random 26)))
+          ;;(char-to-string (+ 65 (random 26)))
+          "_"))
 
 ;; self define functions
 (defun kimim/imenu-default-goto-function-advice (orig-fun &rest args)
