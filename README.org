@@ -316,7 +316,8 @@ and defers loading of the module until they are used.
   (setq package-archives
         '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
           ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-          ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
+          ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+          ("sunrise-commander" . "http://elpa.zilongshanren.com/SC/")))
   (mapc
    (lambda (package)
      (unless (package-installed-p package)
@@ -668,8 +669,8 @@ scroll slowly with touchpad.
     (setq undo-tree-visualizer-timestamps t))
 #+END_SRC
 
-* Dired and Buffer
-
+* File Management
+** dired
 #+BEGIN_SRC emacs-lisp
   (use-package dired
     :defer t
@@ -753,6 +754,23 @@ scroll slowly with touchpad.
                   " "
                   filename-and-process))))
 #+END_SRC
+
+** sunrise commander
+
+The Sunrise Commmander is a powerful and versatile double-pane file manager for
+GNU Emacs. It's built atop of Dired and takes advantage of most of its
+functions, but also provides many handy features of its own.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package sunrise-commander
+    :defer t
+    :ensure t
+    :bind
+    ("C-w" . recenter)
+    :config
+    )
+#+END_SRC
+
 
 * Navigation
 
