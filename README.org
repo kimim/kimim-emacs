@@ -541,7 +541,7 @@ scroll slowly with touchpad.
      ("C-c p" . counsel-pt)
      ("C-x l" . counsel-locate)
      :map read-expression-map
-     ("C-r" . counsel-expression-history))
+     ("C-r" . counsel-minibuffer-history))
     :config
     (use-package ivy)
     (use-package smex)
