@@ -1364,6 +1364,17 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+END_SRC
 
 *** org to pdf
+
+Export =org-mode= to PDF, with font highlight, you need to install =python= and
+=pygments=. Because =pygmentize= from =pygments= is used to generate =latex=
+markups for font highlighting.
+
+Get =pygments= with =pip:
+
+#+BEGIN_SRC shell
+pip install pygments
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :defer t
@@ -1372,9 +1383,11 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     ;;(setq org-latex-pdf-process
     ;;      '("xelatex -interaction nonstopmode %f"
     ;;        "xelatex -interaction nonstopmode %f"))
+    (add-to-list 'org-latex-packages-alist '("" "minted"))
+    (setq org-latex-listings 'minted)
     (setq org-latex-pdf-process
-          '("xelatex %f"
-            "xelatex %f"))
+          '("xelatex -shell-escape %f"
+            "xelatex -shell-escape %f"))
 
     ;; most of the time, I do not need table of contents
     (setq org-latex-toc-command nil)
@@ -1405,6 +1418,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   \\usepackage[UTF8]{ctex}
   \\usepackage{geometry}   %设置页边距的宏包
   \\usepackage{titlesec}   %设置页眉页脚的宏包
+  \\usepackage[cache=false]{minted}
   \\geometry{a4paper,scale=0.8}
   \\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm}"
                    ("\\section{%s}" . "\\section*{%s}")
