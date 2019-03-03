@@ -771,9 +771,6 @@ functions, but also provides many handy features of its own.
   (use-package sunrise-commander
     :defer t
     :ensure t
-    :bind
-    ("C-w" . recenter)
-    :config
     )
 #+END_SRC
 
