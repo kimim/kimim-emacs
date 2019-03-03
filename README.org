@@ -2067,6 +2067,7 @@ note in "notes" folder.
     :bind
     (("C-x m m" . kimim/new-empty-mail))
     (("C-x m n" . compose-mail-kimim))
+    (("C-x m y" . kimim/mail-attach-files))
     :config
     (use-package ebdb)
 
