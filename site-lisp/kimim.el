@@ -422,7 +422,11 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
   (let ((file-list (x-get-clipboard)))
     (save-excursion
       (end-of-buffer)
-      (mapc '(lambda (item) (insert (concat "<#part filename=\"" item "\" disposition=attachment><#/part>\n")))
+      (mapc '(lambda (item)
+               (insert (concat "<#part filename=\""
+                               ;; remove "\\" in Windows environment
+                               (replace-regexp-in-string (regexp-quote "\\") "/" item)
+                               "\" disposition=attachment><#/part>\n")))
             (split-string file-list "\n" t)))))
 
 (provide 'kimim)
