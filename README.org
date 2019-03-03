@@ -1415,7 +1415,7 @@ pip install pygments
   \\usepackage[UTF8]{ctex}
   \\usepackage{geometry}   %设置页边距的宏包
   \\usepackage{titlesec}   %设置页眉页脚的宏包
-  \\usepackage[cache=false]{minted}
+  \\usepackage{minted}
   \\geometry{a4paper,scale=0.8}
   \\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm}"
                    ("\\section{%s}" . "\\section*{%s}")
@@ -1886,7 +1886,7 @@ name handling function can be found from emacs manual[fn:20].
      ("C-x C-d" . deft))
     :config
     (use-package ivy)
-    (setq deft-extensions '("txt" "tex" "org" "md"))
+    (setq deft-extensions '("txt" "org" "md"))
     (if (not (boundp 'kimim/path-notes))
         (defvar kimim/path-notes (concat kimim/path-sync "notes/")))
     (setq deft-directory kimim/path-notes)
