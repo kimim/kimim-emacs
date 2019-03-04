@@ -2022,7 +2022,9 @@ note in "notes" folder.
     :defer t
     :ensure t
     :config
-    (setq ebdb-sources (concat kimim/path-sync "ebdb"))
+    (setq ebdb-sources (concat kimim/path-sync "kimikit/emacs.d/ebdb"))
+    ;; do not pop *EBDB-Gnus* window
+    (setq ebdb-mua-pop-up nil)
     (require 'ebdb-gnus)
     (require 'ebdb-message)
     )
