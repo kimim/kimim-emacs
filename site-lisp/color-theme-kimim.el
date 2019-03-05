@@ -103,6 +103,7 @@ Includes faces for font-lock, widget, custom, speedbar."
      (ff-paths-non-existant-file-face ((t (:foreground "NavyBlue" :bold t))))
      (show-paren-match-face ((t (:background "light blue"))))
      (show-paren-mismatch-face ((t (:foreground "white" :background "purple"))))
+     (gnus-summary-cancelled ((t (:foreground "gainsboro" :background "white"))));;kimim only
      (org-scheduled-previously ((t (:foreground "navy"))))
      (org-todo ((t (:foreground "orange red" :weight bold))))
      (org-warning ((t (:foreground "dark orchid" :weight bold)))))))

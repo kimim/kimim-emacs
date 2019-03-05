@@ -2113,7 +2113,7 @@ note in "notes" folder.
     (setq gnus-thread-indent-level 1)
     (setq gnus-show-threads nil)
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
-    (add-hook 'message-mode-hook 'orgstruct-mode))
+    (add-hook 'message-mode-hook 'orgstruct++-mode))
 #+END_SRC
 
 * Reading News
