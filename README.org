@@ -1198,6 +1198,14 @@ pip install yapf
 pip install virtualenv
 #+END_SRC
 
+** Swift
+
+#+BEGIN_SRC emacs-lisp
+  (use-package swift-mode
+    :defer t
+    :mode ("\\.swift\\'" . swift-mode))
+#+END_SRC
+
 ** Go lang
 Open =.go= file with go-mode.
 #+BEGIN_SRC emacs-lisp
@@ -2068,7 +2076,9 @@ note in "notes" folder.
      ("C-x m n" . compose-mail-kimim)
      ("C-x m y" . kimim/mail-attach-files)
      :map gnus-summary-mode-map
-     ("g" . gnus-summary-insert-new-articles))
+     ("g" . gnus-summary-insert-new-articles)
+     ("<delete>" . gnus-summary-delete-article)
+     ("<insert>" . mail-archive-kimim))
     :config
     (use-package ebdb)
 
@@ -2076,7 +2086,10 @@ note in "notes" folder.
       (interactive)
       (compose-mail)
       (kill-region (point-min) (point-max)))
-
+    (setq gnus-visible-headers
+          "^Subject:\\|^From:\\|^To:\\|^[BGF]?CC:\\|^Date:")
+    (setq gnus-sorted-header-list
+          '("^Subject:" "^From:""^To:" "^[BGF]?CC:" "^Date:"))
     (setq compose-mail-user-agent-warnings nil) ;; remove warning
     (setq message-directory "~/Gnus/Mail/")
     (setq gnus-directory "~/Gnus/News/")
@@ -2091,7 +2104,7 @@ note in "notes" folder.
     ;; fetch only 50 latest articles to speed up downloading
     (setq gnus-large-newsgroup 50)
     (setq message-forward-as-mime t)
-    (setq message-forward-before-signature nil)
+    (setq message-forward-before-signature t) ;; put signature before the fwd msg
     (setq message-forward-included-headers "^Date\\|^From\\|^To\\|^Subject:")
     (setq message-make-forward-subject-function 'message-forward-subject-fwd)
     (setq gnus-user-date-format-alist
