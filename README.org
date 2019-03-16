@@ -1244,7 +1244,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+BEGIN_SRC emacs-lisp
   (if (not (boundp 'kimim/file-diary))
-      (defvar kimim/file-diary "~/.emacs.d/diary"))
+      (defvar kimim/file-diary (concat kimim/path-sync "kimikit/emacs.d/diary"))
   (if (not (file-exists-p kimim/file-diary))
       (write-region "" nil kimim/file-diary))
   (setq diary-file kimim/file-diary)
