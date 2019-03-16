@@ -389,7 +389,10 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
   (let ( doIt
          (myFileList
           (cond
-           ((string-equal major-mode "dired-mode") (dired-get-marked-files))
+           ((or
+             (string-equal major-mode "dired-mode")
+             (string-equal major-mode "sr-mode"))
+            (dired-get-marked-files))
            ((not file) (list (buffer-file-name)))
            (file (list file)))))
 
