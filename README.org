@@ -1251,7 +1251,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+BEGIN_SRC emacs-lisp
   (if (not (boundp 'kimim/file-diary))
-      (defvar kimim/file-diary "~/.emacs.d/diary"))
+      (defvar kimim/file-diary (concat kimim/path-sync "kimikit/emacs.d/diary")))
   (if (not (file-exists-p kimim/file-diary))
       (write-region "" nil kimim/file-diary))
   (setq diary-file kimim/file-diary)
@@ -2045,14 +2045,14 @@ note in "notes" folder.
     )
 #+END_SRC
 
-** COMMENT BBDB for contact management
+** BBDB for contact management
 
 #+BEGIN_SRC emacs-lisp
   (use-package bbdb
     :defer t
     :bind
     :config
-    (setq bbdb-file (concat kimim/path-kimikit "emacs.d/bbdb"))
+    (setq bbdb-file (concat kimim/path-sync "kimikit/emacs.d/bbdb"))
     ;; https://www.emacswiki.org/emacs/BbdbMailingLists
     (add-hook 'message-setup-hook 'bbdb-mail-aliases))
 #+END_SRC
@@ -2102,7 +2102,7 @@ note in "notes" folder.
     (setq gnus-directory "~/Gnus/News/")
     (setq nnfolder-directory "~/Gnus/Mail/Archive")
     ;; unfortunately, following variable not support CN strings
-    (setq gnus-permanently-visible-groups "\\(INBOX\\|已发送邮件\\)")
+    (setq gnus-permanently-visible-groups "\\(Inbox\\|INBOX\\|已发送邮件\\)")
     (setq gnus-alias-override-user-mail-address t)
     (setq mail-signature-file (concat kimim/path-sync "kimikit/emacs.d/signature.txt"))
     (setq gnus-asynchronous t)
@@ -2148,7 +2148,7 @@ note in "notes" folder.
     :config
     ;; open feed link with eww
     (setq browse-url-browser-function 'eww-browse-url)
-    (setq elfeed-db-directory (concat kimim/path-sync "kimikit/elfeed"))
+    (setq elfeed-db-directory (concat kimim/path-sync "kimikit/emacs.d/elfeed"))
     (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
     (setq elfeed-feeds
           '(("http://feeds.bbci.co.uk/news/world/rss.xml" News)
