@@ -139,7 +139,7 @@ The original article will be yanked."
   "Open file location in double commander"
   (interactive)
   (w32-shell-execute
-   "open" "doublecmd" (concat "-L " (replace-regexp-in-string "/" "\\\\" (pwd)))))
+   "open" "doublecmd" (concat "-L \"" (replace-regexp-in-string "/" "\\\\" default-directory) "\"")))
 
 (defun kill-dired-buffers()
   "Kill all dired buffers."
@@ -381,6 +381,7 @@ The original article will be yanked."
           (not (member (current-buffer) deft-auto-save-buffers)))
       (delete-trailing-whitespace)))
 
+
 (defun kimim/open-in-external-app (&optional file)
   "Open the current file or dired marked files in external app.
 The app is chosen from your OS's preference.
@@ -389,7 +390,9 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
   (let ( doIt
          (myFileList
           (cond
-           ((string-equal major-mode "dired-mode") (dired-get-marked-files))
+           ((or (string-equal major-mode "dired-mode")
+                (string-equal major-mode "sr-mode"))
+            (dired-get-marked-files))
            ((not file) (list (buffer-file-name)))
            (file (list file)))))
 

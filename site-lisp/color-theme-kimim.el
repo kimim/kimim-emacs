@@ -104,6 +104,7 @@ Includes faces for font-lock, widget, custom, speedbar."
      (show-paren-match-face ((t (:background "light blue"))))
      (show-paren-mismatch-face ((t (:foreground "white" :background "purple"))))
      (gnus-summary-cancelled ((t (:foreground "lightblue"))));;kimim only
+     (gnus-header-subject ((t (:foreground "blue" :bold t))))
      (org-scheduled-previously ((t (:foreground "navy"))))
      (org-todo ((t (:foreground "orange red" :weight bold))))
      (org-warning ((t (:foreground "dark orchid" :weight bold)))))))
@@ -148,6 +149,7 @@ Includes faces for font-lock, widget, custom, speedbar."
      (show-paren-match-face ((t (:background "blue"))))
      (show-paren-mismatch-face ((t (:foreground "white" :background "purple"))))
      (org-scheduled-previously ((t (:foreground "light blue"))))
+     (gnus-summary-cancelled ((t (:foreground "gray"))))
      (org-todo ((t (:foreground "orange" :weight bold))))
      (outline-3 ((t (:foreground "deep sky blue"))))
      (org-warning ((t (:foreground "orchid" :weight bold)))))))

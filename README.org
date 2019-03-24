@@ -682,7 +682,12 @@ scroll slowly with touchpad.
     :defer t
     :ensure nil
     :bind
-    ("C-x C-j" . dired-jump)
+    (("C-x C-j" . dired-jump)
+     :map dired-mode-map
+     ("<left>" . dired-up-directory)
+     ("<right>" . dired-find-file)
+     ("o" . kimim/open-in-external-app)
+     )
     :config
     (require 'dired-x)
     (add-hook 'dired-mode-hook
@@ -705,8 +710,6 @@ scroll slowly with touchpad.
     ;; 复制(删除)目录的时，第归的复制(删除)其中的子目录。
     (setq dired-recursive-copies t)
     (setq dired-recursive-deletes t)
-    (define-key dired-mode-map (kbd "<left>") 'dired-up-directory)
-    (define-key dired-mode-map (kbd "<right>") 'dired-find-file)
 
     (defadvice dired-next-line (after dired-next-line-advice (arg) activate)
       "Move down lines then position at filename, advice"
@@ -770,6 +773,10 @@ functions, but also provides many handy features of its own.
 #+BEGIN_SRC emacs-lisp
   (use-package sunrise-commander
     :defer t
+    :bind (:map sr-mode-map
+    ("o" . kimim/open-in-external-app)
+    ("<left>" . sr-dired-prev-subdir)
+    ("<right>" . sr-advertised-find-file))
     :ensure t
     )
 #+END_SRC
@@ -1244,7 +1251,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+BEGIN_SRC emacs-lisp
   (if (not (boundp 'kimim/file-diary))
-      (defvar kimim/file-diary "~/.emacs.d/diary"))
+      (defvar kimim/file-diary (concat kimim/path-sync "kimikit/emacs.d/diary")))
   (if (not (file-exists-p kimim/file-diary))
       (write-region "" nil kimim/file-diary))
   (setq diary-file kimim/file-diary)
@@ -2044,14 +2051,14 @@ note in "notes" folder.
     )
 #+END_SRC
 
-** COMMENT BBDB for contact management
+** BBDB for contact management
 
 #+BEGIN_SRC emacs-lisp
   (use-package bbdb
     :defer t
     :bind
     :config
-    (setq bbdb-file (concat kimim/path-kimikit "emacs.d/bbdb"))
+    (setq bbdb-file (concat kimim/path-sync "kimikit/emacs.d/bbdb"))
     ;; https://www.emacswiki.org/emacs/BbdbMailingLists
     (add-hook 'message-setup-hook 'bbdb-mail-aliases))
 #+END_SRC
@@ -2101,7 +2108,7 @@ note in "notes" folder.
     (setq gnus-directory "~/Gnus/News/")
     (setq nnfolder-directory "~/Gnus/Mail/Archive")
     ;; unfortunately, following variable not support CN strings
-    (setq gnus-permanently-visible-groups "\\(INBOX\\|已发送邮件\\)")
+    (setq gnus-permanently-visible-groups "\\(Inbox\\|INBOX\\|已发送邮件\\)")
     (setq gnus-alias-override-user-mail-address t)
     (setq mail-signature-file (concat kimim/path-sync "kimikit/emacs.d/signature.txt"))
     (setq gnus-asynchronous t)
@@ -2121,7 +2128,7 @@ note in "notes" folder.
             ((gnus-seconds-year) . "%b %d")
             (t . "%b %d %Y")))
     (setq gnus-summary-line-format
-          ":%U%R | %d%13&user-date; %-13,13f (%5k) | %B %s %-120= \n")
+          ":%U%R | %d%13&user-date; %-13,13f (%5k) | %B %s %-125= \n")
     (setq gnus-article-sort-functions '((not gnus-article-sort-by-date)))
     (setq gnus-thread-sort-functions '((not gnus-thread-sort-by-date)))
     (setq gnus-thread-ignore-subject t)
@@ -2132,7 +2139,8 @@ note in "notes" folder.
     (setq gnus-use-cache t)
     (setq gnus-fetch-old-headers 1) ; show previous messages in a thread
     (setq gnus-thread-indent-level 1)
-    (setq gnus-show-threads nil)
+    (setq gnus-show-threads t)
+    (setq gnus-thread-hide-subtree nil)
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
     (add-hook 'message-mode-hook 'orgstruct++-mode))
 #+END_SRC
@@ -2146,7 +2154,7 @@ note in "notes" folder.
     :config
     ;; open feed link with eww
     (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
-    (setq elfeed-db-directory (concat kimim/path-sync "kimikit/elfeed"))
+    (setq elfeed-db-directory (concat kimim/path-sync "kimikit/emacs.d/elfeed"))
     (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
     (setq elfeed-feeds
           '(("http://feeds.bbci.co.uk/news/world/rss.xml" News)
