@@ -8,6 +8,7 @@
 (setq user-login-name "kimim")
 (setq system-name "kimi.im")
 
+;; root directory
 (defvar kimim/path-root "/")
 ;; path of kimim-emacs files
 (defvar kimim/path-kimim-emacs "~/kimim-emacs/")
