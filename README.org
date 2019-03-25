@@ -1381,6 +1381,10 @@ Export =org-mode= to PDF, with font highlight, you need to install =python= and
 =pygments=. Because =pygmentize= from =pygments= is used to generate =latex=
 markups for font highlighting.
 
+For Windows environment, please note that =python= and =pygments= installed in
+=msys64= is not working for xetex. You should download Python install file for
+Windows from https://www.python.org/downloads/.
+
 Get =pygments= with =pip:
 
 #+BEGIN_SRC shell
@@ -1392,9 +1396,6 @@ pip install pygments
     :defer t
     :config
     (require 'ox-latex)
-    ;;(setq org-latex-pdf-process
-    ;;      '("xelatex -interaction nonstopmode %f"
-    ;;        "xelatex -interaction nonstopmode %f"))
     (add-to-list 'org-latex-packages-alist '("" "minted"))
     (setq org-latex-listings 'minted)
     (setq org-latex-pdf-process
@@ -1459,7 +1460,7 @@ pip install pygments
     )
 #+END_SRC
 
-*** org to html
+*** org to html page
 #+BEGIN_SRC emacs-lisp
   (use-package ox-html
     :defer t
@@ -1508,20 +1509,25 @@ pip install pygments
                         (expand-file-name result default-directory)
                       result)
                     (if description (concat "[" description "]") "")))))))
-
-  ;; (use-package ox-reveal
-  ;;   :defer t
-  ;;   :config
-  ;;   (setq org-reveal-root "reveal.js")
-  ;;   ;;(setq org-reveal-root "~/../Tools/reveal.js")
-  ;;   ;;(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
-  ;;   (setq org-reveal-theme "simple")
-  ;;   (setq org-reveal-width 1200)
-  ;;   (setq org-reveal-height 750)
-  ;;   (setq org-reveal-transition "fade")
-  ;;   (setq org-reveal-hlevel 2))
 #+END_SRC
 
+** org to html slide
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :defer t
+    :config
+    (use-package htmlize)
+    (require 'ox-reveal)
+    ;;(setq org-reveal-root "reveal.js")
+    ;;(setq org-reveal-root (concat kimim/path-kimikit "reveal.js"))
+    (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
+    (setq org-reveal-theme "simple")
+    (setq org-reveal-width 1200)
+    (setq org-reveal-height 750)
+    (setq org-reveal-transition "fade")
+    (setq org-reveal-hlevel 2))
+#+END_SRC
 ** org with diagram
 
 #+BEGIN_SRC emacs-lisp
@@ -2147,7 +2153,7 @@ note in "notes" folder.
     :bind
     :config
     ;; open feed link with eww
-    (setq browse-url-browser-function 'eww-browse-url)
+    (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
     (setq elfeed-db-directory (concat kimim/path-sync "kimikit/emacs.d/elfeed"))
     (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
     (setq elfeed-feeds
