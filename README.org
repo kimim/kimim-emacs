@@ -2122,7 +2122,7 @@ note in "notes" folder.
             ((gnus-seconds-year) . "%b %d")
             (t . "%b %d %Y")))
     (setq gnus-summary-line-format
-          ":%U%R | %d%13&user-date; %-13,13f (%5k) | %B %s %-125= \n")
+          ":%U%R | %d%13&user-date; %-13,13f (%5k) | %B %s %-120= \n")
     (setq gnus-article-sort-functions '((not gnus-article-sort-by-date)))
     (setq gnus-thread-sort-functions '((not gnus-thread-sort-by-date)))
     (setq gnus-thread-ignore-subject t)
