@@ -16,7 +16,7 @@
 ;; synchronization driver, for example ~/Dropbox/
 (defvar kimim/path-sync "~/")
 (if (not (file-exists-p (concat kimim/path-sync "kimikit/emacs.d")))
-    (make-directory (concat kimim/path-sync "kimikit/emacs.d")))
+    (make-directory (concat kimim/path-sync "kimikit/emacs.d") t))
 ;; path for the GTD files
 (defvar kimim/path-org (concat kimim/path-sync "org/"))
 ;; path to keep notes
