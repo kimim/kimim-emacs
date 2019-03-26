@@ -2058,8 +2058,8 @@ name handling function can be found from emacs manual[fn:20].
     (setq gnus-show-threads t)
     (setq gnus-thread-hide-subtree nil)
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
-    (use-package outshine)
-    (add-hook 'message-mode-hook 'outshine-mode)
+    (use-package orgalist)
+    (add-hook 'message-mode-hook 'orgalist-mode)
     (use-package kimim
       :load-path "~/kimim-emacs/site-lisp"
       )
