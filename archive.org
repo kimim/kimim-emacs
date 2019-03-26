@@ -1,0 +1,72 @@
+** Simplenote2                                            :noexport:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package markdown-mode
+    :defer t
+    :ensure t
+    )
+
+  (use-package simplenote2
+    :defer t
+    :ensure t
+    :bind
+    (
+     ("C-x p" . simplenote2-list)
+     ;; when in Chinese environment, / is a dot, confusing
+     ("C-;" . simplenote2-list-filter-notes)
+     ("C-." . simplenote2--create-note-locally))
+    :config
+    (require 'simplenote2)
+    (require 'markdown-mode)
+    ;;(require 'visual-fill-column)
+    (setq simplenote2-notes-mode 'markdown-mode)
+    ;;(add-hook 'simplenote2-note-mode-hook 'visual-fill-column-mode)
+    (simplenote2-setup)
+    )
+#+END_SRC
+
+New orgmode link type for simplenote2. The reason for creating a new kind of
+link type is that the newly added note is located under folder "new", while the
+synchronized notes are in "notes". We should ensure that all the link points to
+note in "notes" folder.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package org
+    :defer t
+    :config
+    (org-add-link-type "simplenote2" 'org-simplenote2-open)
+
+    (defun org-simplenote2-open (path)
+      (find-file (concat simplenote2-directory "notes/" path)))
+
+    (defun simplenotes-linkto-note ()
+      "extract orgmode link string to this note"
+      (interactive)
+      (unless (buffer-file-name)
+        (error "No file for buffer %s" (buffer-name)))
+      (beginning-of-buffer)
+      (let (title msg)
+        ;;fetch first line string as title
+        (setq title (buffer-substring-no-properties
+                     (line-beginning-position) (line-end-position)))
+        ;;package orgmode line with buffer name and title
+        (setq msg (format "[[simplenote2:%s][%s]]"
+                          (file-name-nondirectory (buffer-file-name))
+                          title))
+        (kill-new msg)
+        (message msg))))
+#+END_SRC
+
+
+** BBDB for contact management                                    :noexport:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package bbdb
+    :defer t
+    :bind
+    :config
+    (setq bbdb-file (concat kimim/path-sync "kimikit/emacs.d/bbdb"))
+    ;; https://www.emacswiki.org/emacs/BbdbMailingLists
+    ;;(add-hook 'message-setup-hook 'bbdb-mail-aliases)
+    )
+#+END_SRC

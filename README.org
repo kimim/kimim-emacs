@@ -841,7 +841,7 @@ Download =pt= from
 https://github.com/monochromegane/the_platinum_searcher/releases, and it works
 out of the box.
 
-** COMMENT Everything
+** Everything
 
 Everything[fn:14] is a wonderful fast file and folder search engine, it provide
 a command line tool to get search result from Everything to command line output:
@@ -1970,65 +1970,6 @@ name handling function can be found from emacs manual[fn:20].
                 :around #'kimim/deft-new-file-named-advice))
 #+END_SRC
 
-** COMMENT Simplenote2
-
-#+BEGIN_SRC emacs-lisp
-  (use-package markdown-mode
-    :defer t
-    :ensure t
-    )
-
-  (use-package simplenote2
-    :defer t
-    :ensure t
-    :bind
-    (
-     ("C-x p" . simplenote2-list)
-     ;; when in Chinese environment, / is a dot, confusing
-     ("C-;" . simplenote2-list-filter-notes)
-     ("C-." . simplenote2--create-note-locally))
-    :config
-    (require 'simplenote2)
-    (require 'markdown-mode)
-    ;;(require 'visual-fill-column)
-    (setq simplenote2-notes-mode 'markdown-mode)
-    ;;(add-hook 'simplenote2-note-mode-hook 'visual-fill-column-mode)
-    (simplenote2-setup)
-    )
-#+END_SRC
-
-New orgmode link type for simplenote2. The reason for creating a new kind of
-link type is that the newly added note is located under folder "new", while the
-synchronized notes are in "notes". We should ensure that all the link points to
-note in "notes" folder.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org
-    :defer t
-    :config
-    (org-add-link-type "simplenote2" 'org-simplenote2-open)
-
-    (defun org-simplenote2-open (path)
-      (find-file (concat simplenote2-directory "notes/" path)))
-
-    (defun simplenotes-linkto-note ()
-      "extract orgmode link string to this note"
-      (interactive)
-      (unless (buffer-file-name)
-        (error "No file for buffer %s" (buffer-name)))
-      (beginning-of-buffer)
-      (let (title msg)
-        ;;fetch first line string as title
-        (setq title (buffer-substring-no-properties
-                     (line-beginning-position) (line-end-position)))
-        ;;package orgmode line with buffer name and title
-        (setq msg (format "[[simplenote2:%s][%s]]"
-                          (file-name-nondirectory (buffer-file-name))
-                          title))
-        (kill-new msg)
-        (message msg))))
-#+END_SRC
-
 * Reference management
 
 #+BEGIN_SRC elisp
@@ -2054,18 +1995,6 @@ note in "notes" folder.
     )
 #+END_SRC
 
-** BBDB for contact management
-
-#+BEGIN_SRC emacs-lisp
-  (use-package bbdb
-    :defer t
-    :bind
-    :config
-    (setq bbdb-file (concat kimim/path-sync "kimikit/emacs.d/bbdb"))
-    ;; https://www.emacswiki.org/emacs/BbdbMailingLists
-    ;;(add-hook 'message-setup-hook 'bbdb-mail-aliases)
-    )
-#+END_SRC
 ** erc
 
 #+BEGIN_SRC emacs-lisp
@@ -2154,34 +2083,34 @@ note in "notes" folder.
 * Reading News
 
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package elfeed
-  ;;   :defer t
-  ;;   :bind
-  ;;   :config
-  ;;   ;; open feed link with eww
-  ;;   (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
-  ;;   (setq elfeed-db-directory (concat kimim/path-sync "kimikit/emacs.d/elfeed"))
-  ;;   (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
-  ;;   (setq elfeed-feeds
-  ;;         '(("http://feeds.bbci.co.uk/news/world/rss.xml" News)
-  ;;           ("http://feeds.feedburner.com/dw-world" News)
-  ;;           ("https://www.theguardian.com/world/china/rss" CN)
-  ;;           ("http://www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
-  ;;           ("http://feeds.bbci.co.uk/news/world/asia/china/rss.xml" CN)
-  ;;           ("https://www.ft.com/stream/b2997bc8-d54f-3c4b-870f-130a4b337a51?format=rss" CN)
-  ;;           ("http://newsfeed.zeit.de/index" DE)
-  ;;           ("http://rfi.fr/france/rss" FR)
-  ;;           ("http://www.rfi.fr/radiofr/podcast/rss_apprendre_francais.xml" FR learn)
-  ;;           ("http://www.rfi.fr/asie-pacifique/rss" FR asia)
-  ;;           ("http://www.rfi.fr/science/rss" FR science)
-  ;;           ("http://www.rfi.fr/culture/rss" FR culture)
-  ;;           ("http://www.rfi.fr/economie/rss" FR economy)
-  ;;           ("https://www.lemonde.fr/rss/une.xml" FR une)
-  ;;           ("https://www.lemonde.fr/economie/rss_full.xml" FR economy)
-  ;;           ("https://www.lemonde.fr/asie-pacifique/rss_full.xml" FR asia)
-  ;;           ("https://www.lemonde.fr/sciences/rss_full.xml" FR science)
-  ;;           ("https://www.lemonde.fr/technologies/rss_full.xml" FR technology)
-  ;;           ("http://kimi.im/atom.xml" blog))))
+  (use-package elfeed
+    :defer t
+    :bind
+    :config
+    ;; open feed link with eww
+    (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
+    (setq elfeed-db-directory (concat kimim/path-sync "kimikit/emacs.d/elfeed"))
+    (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
+    (setq elfeed-feeds
+          '(("http://feeds.bbci.co.uk/news/world/rss.xml" News)
+            ("http://feeds.feedburner.com/dw-world" News)
+            ("https://www.theguardian.com/world/china/rss" CN)
+            ("http://www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
+            ("http://feeds.bbci.co.uk/news/world/asia/china/rss.xml" CN)
+            ("https://www.ft.com/stream/b2997bc8-d54f-3c4b-870f-130a4b337a51?format=rss" CN)
+            ("http://newsfeed.zeit.de/index" DE)
+            ("http://rfi.fr/france/rss" FR)
+            ("http://www.rfi.fr/radiofr/podcast/rss_apprendre_francais.xml" FR learn)
+            ("http://www.rfi.fr/asie-pacifique/rss" FR asia)
+            ("http://www.rfi.fr/science/rss" FR science)
+            ("http://www.rfi.fr/culture/rss" FR culture)
+            ("http://www.rfi.fr/economie/rss" FR economy)
+            ("https://www.lemonde.fr/rss/une.xml" FR une)
+            ("https://www.lemonde.fr/economie/rss_full.xml" FR economy)
+            ("https://www.lemonde.fr/asie-pacifique/rss_full.xml" FR asia)
+            ("https://www.lemonde.fr/sciences/rss_full.xml" FR science)
+            ("https://www.lemonde.fr/technologies/rss_full.xml" FR technology)
+            ("http://kimi.im/atom.xml" blog))))
 #+END_SRC
 
 * kimim utils
