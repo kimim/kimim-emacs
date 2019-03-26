@@ -1723,8 +1723,14 @@ New link to use everything to locate a file with unique ID:
     (defun org-onenote-open (path)
       "Visit the match search on PATH.
        PATH should be a topic that can be thrown at everything/?."
-      (w32-shell-execute
-       "open" (concat "onenote:" path))))
+      (cond
+       ((eq window-system 'w32)
+        (progn
+          (w32-shell-execute
+           "open" (concat "onenote:" path))))
+        ((eq window-system 'ns)
+         (shell-command (replace-regexp-in-string "&" "\\\\&" (format "open onenote:%s" path))))
+        )))
 #+END_SRC
 
 
