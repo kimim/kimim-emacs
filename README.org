@@ -3,7 +3,7 @@
 #+OPTIONS: toc:nil
 #+STARTUP: showall
 
-[[https://travis-ci.org/kimim/kimim-emacs][https://travis-ci.org/kimim/kimim-emacs.svg?branch=master]]
+[[https://travis-ci.org/kimim/kimim-emacs][https://travis-ci.org/kimim/kimim-emacs.svg]]
 
 * Introduction
 

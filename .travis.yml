@@ -14,4 +14,4 @@ script:
   - git clone https://github.com/kimim/kimim-emacs
   - cp kimim-emacs/.emacs ~
   - mkdir .emacs.d
-  - emacs-snapshot --batch -l test.el
+  - emacs-snapshot --batch -l ~/kimim-emacs/test.el
