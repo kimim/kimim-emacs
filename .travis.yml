@@ -7,10 +7,11 @@ before_install:
   - sudo add-apt-repository -y ppa:ubuntu-elisp
   - sudo apt-get update -qq
   - sudo apt-get install -qq $emacs
-  - sudo apt-get install texlive-full
   - sudo apt-get install python3
   - sudo apt-get install python3-pip
-  - pip3 install pygments
+  - sudo pip3 install pygments
+  - sudo apt-get install texlive-full
+
 
 script:
   - emacs-snapshot --version
