@@ -1826,9 +1826,10 @@ name handling function can be found from emacs manual[fn:20].
         (org-publish-current-file)
         ;;    (color-theme-eclipse)
         ;; go to kimi.im folder and execute cyg command
-        (with-temp-buffer(dired "~/kimi.im/")
-                         (kimim/xterm)
-                         (kill-buffer))
+        (with-temp-buffer
+          (dired "~/kimi.im/")
+          (kimim/xterm)
+          (kill-buffer))
         ))
 
     (defun jekyll-tag ()
