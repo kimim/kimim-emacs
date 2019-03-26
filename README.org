@@ -2050,6 +2050,7 @@ note in "notes" folder.
     (setq ebdb-mua-pop-up nil)
     (require 'ebdb-gnus)
     (require 'ebdb-message)
+    (add-hook 'message-setup-hook 'ebdb-mail-aliases)
     )
 #+END_SRC
 
@@ -2062,7 +2063,8 @@ note in "notes" folder.
     :config
     (setq bbdb-file (concat kimim/path-sync "kimikit/emacs.d/bbdb"))
     ;; https://www.emacswiki.org/emacs/BbdbMailingLists
-    (add-hook 'message-setup-hook 'bbdb-mail-aliases))
+    ;;(add-hook 'message-setup-hook 'bbdb-mail-aliases)
+    )
 #+END_SRC
 ** erc
 
@@ -2087,7 +2089,7 @@ note in "notes" folder.
   (use-package gnus
     :defer t
     :bind
-    (("C-x m m" . kimim/new-empty-mail)
+    (("C-x m m" . kimim/mail-new-empty)
      ("C-x m n" . compose-mail-kimim)
      ("C-x m y" . kimim/mail-attach-files)
      :map gnus-summary-mode-map
@@ -2097,10 +2099,6 @@ note in "notes" folder.
     :config
     (use-package ebdb)
 
-    (defun kimim/new-empty-mail ()
-      (interactive)
-      (compose-mail)
-      (kill-region (point-min) (point-max)))
     (setq gnus-visible-headers
           "^Subject:\\|^From:\\|^To:\\|^[BGF]?CC:\\|^Date:")
     (setq gnus-sorted-header-list
@@ -2144,7 +2142,13 @@ note in "notes" folder.
     (setq gnus-show-threads t)
     (setq gnus-thread-hide-subtree nil)
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
-    (add-hook 'message-mode-hook 'orgstruct++-mode))
+    (use-package outshine)
+    (add-hook 'message-mode-hook 'outshine-mode)
+    (use-package kimim
+      :load-path "~/kimim-emacs/site-lisp"
+      )
+    (add-hook 'gnus-message-setup-hook 'kimim/mail-header-new)
+    (add-hook 'gnus-message-setup-hook 'kimim/mail-header-reply))
 #+END_SRC
 
 * Reading News
