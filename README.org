@@ -1665,8 +1665,12 @@ pip install pygments
              "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
             ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
              "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+            ("s" "SCHED Task"    entry (file+headline "capture.org" "Inbox")
+             "* SCHED %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
             ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
              "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+            ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
+             "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
             ("h" "Habit"   entry (file+headline "global.org"   "Habit")
              "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
