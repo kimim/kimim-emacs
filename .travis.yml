@@ -10,7 +10,7 @@ before_install:
   - sudo apt-get install texlive-full
   - sudo apt-get install python3
   - sudo apt-get install python3-pip
-  - pip install pygments
+  - pip3 install pygments
 
 script:
   - emacs-snapshot --version
