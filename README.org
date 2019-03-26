@@ -841,23 +841,6 @@ Download =pt= from
 https://github.com/monochromegane/the_platinum_searcher/releases, and it works
 out of the box.
 
-** Everything
-
-Everything[fn:14] is a wonderful fast file and folder search engine, it provide
-a command line tool to get search result from Everything to command line output:
-=es.exe= [fn:15].
-
-Reminded that Everything should be running in background to do the real search
-task for =es.exe=.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package everything
-    :defer t
-    :ensure t
-    :init
-    (setq everything-cmd (concat kimim/path-kimikit "bin/es.exe")))
-#+END_SRC
-
 ** imenu & imenu-anywhere
 
 =imenu= is used to navigate the function definitions in current buffer.

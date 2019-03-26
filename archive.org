@@ -1,6 +1,23 @@
-** Simplenote2                                            :noexport:
+** Everything
 
-#+BEGIN_SRC emacs-lisp :tangle no
+Everything[fn:14] is a wonderful fast file and folder search engine, it provide
+a command line tool to get search result from Everything to command line output:
+=es.exe= [fn:15].
+
+Reminded that Everything should be running in background to do the real search
+task for =es.exe=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package everything
+    :defer t
+    :ensure t
+    :init
+    (setq everything-cmd (concat kimim/path-kimikit "bin/es.exe")))
+#+END_SRC
+
+** Simplenote2
+
+#+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
     :defer t
     :ensure t
@@ -58,9 +75,9 @@ note in "notes" folder.
 #+END_SRC
 
 
-** BBDB for contact management                                    :noexport:
+** BBDB for contact management
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   (use-package bbdb
     :defer t
     :bind
