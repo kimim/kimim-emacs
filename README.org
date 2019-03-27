@@ -2031,6 +2031,7 @@ name handling function can be found from emacs manual[fn:20].
     (setq nnfolder-directory "~/Gnus/Mail/Archive")
     ;; unfortunately, following variable not support CN strings
     (setq gnus-permanently-visible-groups "\\(Inbox\\|INBOX\\|已发送邮件\\)")
+    (setq mail-self-blind t)
     (setq gnus-alias-override-user-mail-address t)
     (setq mail-signature-file (concat kimim/path-sync "kimikit/emacs.d/signature.txt"))
     (setq gnus-asynchronous t)
@@ -2069,8 +2070,7 @@ name handling function can be found from emacs manual[fn:20].
     (use-package kimim
       :load-path "~/kimim-emacs/site-lisp"
       )
-    (add-hook 'gnus-message-setup-hook 'kimim/mail-header-new)
-    (add-hook 'gnus-message-setup-hook 'kimim/mail-header-reply))
+    (add-hook 'gnus-message-setup-hook 'kimim/mail-setup))
 #+END_SRC
 
 * Reading News
