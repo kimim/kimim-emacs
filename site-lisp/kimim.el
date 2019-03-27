@@ -7,6 +7,9 @@
   (interactive)
   (save-restriction
     (require 'sendmail)
+    ;; always bcc to myself
+    (mail-bcc)
+    (insert user-mail-address)
     ;; construct default mail text stuff
     (mail-text)
     (insert "\n\nBRs\n")
@@ -45,7 +48,7 @@
   (interactive)
   (compose-mail)
   (mail-signature)
-  (kimim/mail-header-new))
+  (kimim/mail-setup))
 
 ;; unfill paragraph: the opposite of fill-paragraph
 (defun kimim/unfill-paragraph-or-region (&optional region)

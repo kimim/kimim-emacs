@@ -2067,6 +2067,7 @@ name handling function can be found from emacs manual[fn:20].
     (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
     (use-package orgalist)
     (add-hook 'message-mode-hook 'orgalist-mode)
+    (add-hook 'message-mode-hook 'turn-off-auto-fill)
     (use-package kimim
       :load-path "~/kimim-emacs/site-lisp"
       )
