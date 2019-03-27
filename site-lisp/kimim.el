@@ -1,5 +1,10 @@
 (use-package gnus)
 
+(defun kimim/mail-new ()
+  (interactive)
+  (compose-mail)
+  (kimim/mail-setup))
+
 (defun kimim/mail-new-empty ()
   (interactive)
   (compose-mail)
@@ -46,13 +51,6 @@
         (if (search-forward-regexp "^To: $" nil t)
             (mail-to)
           (mail-text))))))
-
-
-(defun compose-mail-kimim ()
-  (interactive)
-  (compose-mail)
-  (mail-signature)
-  (kimim/mail-setup))
 
 (defun gnus-summary-forward-with-original (n &optional wide)
   "Start composing a reply mail to the current message.
