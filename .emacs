@@ -33,7 +33,4 @@
 (set-register ?i '(file . "~/kimim-emacs/init.el"))
 (set-register ?o '(file . "~/kimim-emacs/README.org"))
 
-
-;; put other local settings here, for example:
-(eval-after-load 'org
-  '(org-toggle-home))
+;; put other local settings below
