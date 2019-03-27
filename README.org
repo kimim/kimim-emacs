@@ -392,16 +392,13 @@ Use self defined color theme 1 seconds after init.
   (setq font-lock-verbose t)
   (global-font-lock-mode 1)
 
-  (use-package color-theme
-    :defer 6
-    )
-
   (use-package color-theme-kimim
-    :defer 6
+    :defer 0
     :commands (color-theme-kimim color-theme-jekyll)
     :ensure nil
     :load-path "~/kimim-emacs/site-lisp/"
     :config
+    (use-package color-theme)
     (if (eq window-system nil)
         (color-theme-jekyll)
       (color-theme-kimim))
