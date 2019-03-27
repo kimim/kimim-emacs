@@ -1,3 +1,5 @@
+(use-package gnus)
+
 (defun kimim/mail-new-empty ()
   (interactive)
   (compose-mail)
@@ -24,7 +26,8 @@
     (if (search-forward-regexp "^Subject: $" nil t)
         (mail-subject)
       (progn
-        (goto-char (line-beginning-position))
+        (narrow-to-region (line-beginning-position) (line-end-position))
+        (goto-char (point-min))
         (while (search-forward "回复：" nil t)
           (replace-match ""))
         (goto-char (point-min))
@@ -36,6 +39,7 @@
         (goto-char (point-min))
         (while (search-forward "答复: " nil t)
           (replace-match ""))
+        (widen)
         ;; if To: is empty, fill mail-to
         (mail-to)
         (goto-char (line-beginning-position))
@@ -50,17 +54,6 @@
   (mail-signature)
   (kimim/mail-setup))
 
-;; unfill paragraph: the opposite of fill-paragraph
-(defun kimim/unfill-paragraph-or-region (&optional region)
-  "Takes a multi-line paragraph and makes it into a single line of text."
-  (interactive (progn (barf-if-buffer-read-only) '(t)))
-  (let ((fill-column (point-max))
-        ;; This would override `fill-column' if it's an integer.
-        (emacs-lisp-docstring-fill-column t))
-    (fill-paragraph nil region)))
-
-(use-package gnus)
-
 (defun gnus-summary-forward-with-original (n &optional wide)
   "Start composing a reply mail to the current message.
 The original article will be yanked."
@@ -72,7 +65,15 @@ The original article will be yanked."
   (mail-subject)
   (message-beginning-of-line)
   (delete-char 2)
-  (insert "Fw")
+  (narrow-to-region (line-beginning-position) (line-end-position))
+  (goto-char (point-min))
+  (while (search-forward "Fw: " nil t)
+    (replace-match ""))
+  (while (search-forward "转发： " nil t)
+    (replace-match ""))
+  (widen)
+  (message-beginning-of-line)
+  (insert "FW")
   (mail-to))
 
 (define-key gnus-summary-mode-map
@@ -86,6 +87,15 @@ The original article will be yanked."
 (define-key gnus-summary-mode-map
   [remap gnus-summary-wide-reply]
   'gnus-summary-very-wide-reply-with-original)
+
+;; unfill paragraph: the opposite of fill-paragraph
+(defun kimim/unfill-paragraph-or-region (&optional region)
+  "Takes a multi-line paragraph and makes it into a single line of text."
+  (interactive (progn (barf-if-buffer-read-only) '(t)))
+  (let ((fill-column (point-max))
+        ;; This would override `fill-column' if it's an integer.
+        (emacs-lisp-docstring-fill-column t))
+    (fill-paragraph nil region)))
 
 ;; generate timestamp such as 2016_1031_ for file name
 (defun kimim/genfile-timestamp()

@@ -350,6 +350,7 @@ and defers loading of the module until they are used.
                    "%b"))))
 
   (use-package path-headerline-mode
+    :defer t
     :config
     ;; only display headerline for real files
     (defun kimim/ph--display-header (orig-fun &rest args)
@@ -369,7 +370,7 @@ Display time and (line, column) numbers in mode line.
 
 #+BEGIN_SRC emacs-lisp
   (use-package time
-    :defer 1
+    :defer 5
     :init
     (setq display-time-24hr-format t)
     (setq display-time-day-and-date t)
@@ -392,11 +393,11 @@ Use self defined color theme 1 seconds after init.
   (global-font-lock-mode 1)
 
   (use-package color-theme
-    :defer 1
+    :defer 6
     )
 
   (use-package color-theme-kimim
-    :defer 1
+    :defer 6
     :commands (color-theme-kimim color-theme-jekyll)
     :ensure nil
     :load-path "~/kimim-emacs/site-lisp/"
@@ -427,6 +428,7 @@ Use self defined color theme 1 seconds after init.
 
   ;; highlight current symbol
   (use-package auto-highlight-symbol
+    :defer 8
     :diminish auto-highlight-symbol-mode
     :bind ("C-x m e" . ahs-edit-mode)
     :config
@@ -791,10 +793,12 @@ functions, but also provides many handy features of its own.
   (setq bookmark-save-flag 1)
 
   (use-package bm
+    :defer t
     :bind (("C-x m t" . bm-toggle)
            ("C-x m s" . bm-show-all)))
 
   (use-package ace-jump-mode
+    :defer t
     :bind
     ("C-x j" . ace-jump-mode)
     ("M-g j" . ace-jump-mode)
@@ -802,6 +806,7 @@ functions, but also provides many handy features of its own.
     ("<apps>" . ace-jump-mode))
 
   (use-package ace-window
+    :defer t
     :bind
     ("C-\"" . ace-window)
     :config
@@ -813,6 +818,7 @@ functions, but also provides many handy features of its own.
 
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
+    :defer t
     :init (setq swiper-action-recenter t)
     :bind
     ("C-s" . swiper))
@@ -825,6 +831,7 @@ Emacs interface to =ag=:
 
 #+BEGIN_SRC emacs-lisp
   (use-package ag
+    :defer t
     :ensure t
     :bind
     ("C-x g" . ag-project)
@@ -876,7 +883,7 @@ out of the box.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
-    :defer 1
+    :defer 3
     :diminish ivy-mode
     :bind ("<f6>" . ivy-resume)
     :config
@@ -1155,9 +1162,9 @@ Python development configuration is quite easy. =elpy= [fn:18] is used here:
     (elpy-enable))
 
   (use-package python
+    :defer t
     :ensure nil
     :mode ("\\.py\\'" . python-mode)
-    :defer t
     :config
     (add-hook 'python-mode-hook
               (lambda ()
@@ -2016,6 +2023,8 @@ name handling function can be found from emacs manual[fn:20].
      ("C-x m y" . kimim/mail-attach-files)
      :map gnus-summary-mode-map
      ("g" . gnus-summary-insert-new-articles)
+     ("f" . gnus-summary-forward-with-original)
+     ("R" . gnus-summary-very-wide-reply-with-original)
      ("<delete>" . gnus-summary-delete-article)
      ("<insert>" . mail-archive-kimim))
     :config
