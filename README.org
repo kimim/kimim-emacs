@@ -2113,7 +2113,7 @@ name handling function can be found from emacs manual[fn:20].
     ;; Fetch mail by offlineimap
     (setq mu4e-get-mail-command "offlineimap -u quiet")
     ;; Fetch mail in 60 sec interval
-    (setq mu4e-update-interval 60)
+    (setq mu4e-update-interval 300)
     (setq mu4e-use-fancy-chars nil)
     (setq mu4e-view-show-images t)
     (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
@@ -2237,8 +2237,6 @@ PATH\of\doublecmd\
   (bind-key "C-x m  ，" 'bury-buffer)
   (bind-key "C-x ," 'bury-buffer)
   (bind-key "C-x ." 'unbury-buffer)
-  (bind-key "C-x C-," 'bury-buffer)
-  (bind-key "C-x C-." 'unbury-buffer)
   (bind-key "C-x  ，" 'bury-buffer)
   (bind-key "C-x  。" 'unbury-buffer)
   (bind-key "C-x  ‘" 'hippie-expand)
