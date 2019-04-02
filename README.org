@@ -224,10 +224,9 @@ specify these variables in different way.
 
 #+BEGIN_SRC emacs-lisp
   (cond ((eq window-system 'w32)
-         (setq kimim/path-root "C:/msys64/")
+         (setq kimim/path-root "/")
          (add-to-list 'exec-path
                       (concat kimim/path-kimikit "emacs/bin/"))
-         (add-to-list 'exec-path "C:/msys64/mingw64/bin/")
          (add-to-list 'exec-path "C:/CTEX/MiKTeX/miktex/bin/"))
         ((eq window-system 'ns)
          (setq kimim/path-root "/")
@@ -2079,6 +2078,36 @@ name handling function can be found from emacs manual[fn:20].
       )
     (add-hook 'gnus-message-setup-hook 'kimim/mail-setup))
 #+END_SRC
+
+** mu4e
+
+#+begin_src emacs-lisp
+  (use-package mu4e
+    :defer t
+    :load-path "/usr/local/share/emacs/site-lisp/mu4e"
+    :config
+    (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
+
+    (setq mail-user-agent 'mu4e-user-agent)
+    ;; Mail folder set to ~/Maildir
+    (setq mu4e-maildir "~/.mail")         ; NOTE: should not be symbolic link
+    ;; Fetch mail by offlineimap
+    (setq mu4e-get-mail-command "offlineimap -u quiet")
+    ;; Fetch mail in 60 sec interval
+    (setq mu4e-update-interval 60)
+    (setq mu4e-use-fancy-chars nil)
+    (setq mu4e-view-show-images t)
+    (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
+    (add-hook 'mu4e-compose-mode-hook 'kimim/mail-setup))
+
+  (use-package mu-cite
+    :ensure t
+    :defer t
+    :config
+    (setq mu4e-compose-cite-function 'mu-cite-original)
+    (setq mu-cite-top-format '("On " date ", " from " wrote:\n\n"))
+    (setq mu-cite-prefix-format '(" > ")))
+#+end_src
 
 * Reading News
 
