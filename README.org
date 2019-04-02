@@ -799,6 +799,14 @@ functions, but also provides many handy features of its own.
 #+END_SRC
 
 
+** open file with external app
+#+begin_src emacs-lisp
+  (use-package openwith
+    :defer t
+    :config
+    (openwith-mode t)
+    (setq openwith-associations '(("\\.pdf\\'" "xdg-open" (file)))))
+#+end_src
 * Navigation
 
 #+BEGIN_SRC emacs-lisp
