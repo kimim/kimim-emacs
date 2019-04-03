@@ -271,9 +271,13 @@ Then append exec-path to PATH:
   (set-buffer-file-coding-system 'utf-8)
   (set-keyboard-coding-system 'utf-8)
   (set-selection-coding-system 'utf-8)
-  (set-clipboard-coding-system 'utf-16le)
   (set-file-name-coding-system 'utf-8)
   (set-terminal-coding-system 'utf-8)
+  (cond
+   ((eq system-type "windows-nt")
+    (set-clipboard-coding-system 'utf-16e))
+   ((eq system-type "gnu/linux")
+    (set-clipboard-coding-system 'utf-8)))
 #+END_SRC
 
 ** global key map
@@ -688,6 +692,24 @@ scroll slowly with touchpad.
      ("o" . kimim/open-in-external-app)
      )
     :config
+
+    (require 'gnus-dired)
+    ;; make the `gnus-dired-mail-buffers' function also work on
+    ;; message-mode derived modes, such as mu4e-compose-mode
+    (defun gnus-dired-mail-buffers ()
+      "Return a list of active message buffers."
+      (let (buffers)
+        (save-current-buffer
+          (dolist (buffer (buffer-list t))
+            (set-buffer buffer)
+            (when (and (derived-mode-p 'message-mode)
+                       (null message-sent-message-via))
+              (push (buffer-name buffer) buffers))))
+        (nreverse buffers)))
+
+    (setq gnus-dired-mail-mode 'mu4e-user-agent)
+    (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+
     (require 'dired-x)
     (add-hook 'dired-mode-hook
               (lambda ()
@@ -781,6 +803,14 @@ functions, but also provides many handy features of its own.
 #+END_SRC
 
 
+** open file with external app
+#+begin_src emacs-lisp
+  (use-package openwith
+    :defer t
+    :config
+    (openwith-mode t)
+    (setq openwith-associations '(("\\.pdf\\'" "xdg-open" (file)))))
+#+end_src
 * Navigation
 
 #+BEGIN_SRC emacs-lisp
@@ -2084,7 +2114,7 @@ name handling function can be found from emacs manual[fn:20].
 
 #+begin_src emacs-lisp
   (use-package mu4e
-    :defer t
+    :defer 5
     :load-path "/usr/local/share/emacs/site-lisp/mu4e"
     :config
     (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
@@ -2095,7 +2125,7 @@ name handling function can be found from emacs manual[fn:20].
     ;; Fetch mail by offlineimap
     (setq mu4e-get-mail-command "offlineimap -u quiet")
     ;; Fetch mail in 60 sec interval
-    (setq mu4e-update-interval 60)
+    (setq mu4e-update-interval 300)
     (setq mu4e-use-fancy-chars nil)
     (setq mu4e-view-show-images t)
     (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
@@ -2218,8 +2248,6 @@ PATH\of\doublecmd\
   (bind-key "C-x m  ，" 'bury-buffer)
   (bind-key "C-x ," 'bury-buffer)
   (bind-key "C-x ." 'unbury-buffer)
-  (bind-key "C-x C-," 'bury-buffer)
-  (bind-key "C-x C-." 'unbury-buffer)
   (bind-key "C-x  ，" 'bury-buffer)
   (bind-key "C-x  。" 'unbury-buffer)
   (bind-key "C-x  ‘" 'hippie-expand)

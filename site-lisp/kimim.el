@@ -447,27 +447,29 @@ The original article will be yanked."
 The app is chosen from your OS's preference.
 copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html"
   (interactive)
-  (let ( doIt
-         (myFileList
-          (cond
-           ((or (string-equal major-mode "dired-mode")
-                (string-equal major-mode "sr-mode"))
-            (dired-get-marked-files))
-           ((not file) (list (buffer-file-name)))
-           (file (list file)))))
+  (let (doit
+        (flist
+         (cond
+          ((or (string-equal major-mode "dired-mode")
+               (string-equal major-mode "sr-mode"))
+           (dired-get-marked-files))
+          ((not file) (list (buffer-file-name)))
+          (file (list file)))))
 
-    (setq doIt (if (<= (length myFileList) 5)
+    (setq doit (if (<= (length flist) 5)
                    t
                  (y-or-n-p "Open more than 5 files? ")))
 
-    (when doIt
+    (when doit
       (cond
        ((string-equal system-type "windows-nt")
-        (mapc (lambda (fPath) (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t)) ) myFileList))
+        (mapc (lambda (path) (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" path t t)) ) flist))
        ((string-equal system-type "darwin")
-        (mapc (lambda (fPath) (shell-command (format "open \"%s\"" fPath)))  myFileList))
+        (mapc (lambda (path) (shell-command (format "open \"%s\"" path)))  flist))
        ((string-equal system-type "gnu/linux")
-        (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList))))))
+        (mapc (lambda (path) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" path)) ) flist))
+       ((string-equal system-type "cygwin")
+        (mapc (lambda (path) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" path)) ) flist))))))
 
 (defun kimim/update-kimim-emacs()
   (interactive)
