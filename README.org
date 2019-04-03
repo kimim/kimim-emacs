@@ -2119,7 +2119,6 @@ name handling function can be found from emacs manual[fn:20].
     :config
     ;; open feed link with eww
     (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
-    (setq elfeed-db-directory (concat kimim/path-sync "kimikit/emacs.d/elfeed"))
     (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
     (setq elfeed-feeds
           '(("http://feeds.bbci.co.uk/news/world/rss.xml" News)
