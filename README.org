@@ -2034,6 +2034,7 @@ name handling function can be found from emacs manual[fn:20].
   ;; erc settings
   (use-package erc
     :defer t
+    :commands (erc)
     :config
     (require 'erc-join)
     (erc-autojoin-mode 1)
@@ -2120,7 +2121,8 @@ name handling function can be found from emacs manual[fn:20].
 
 #+begin_src emacs-lisp
   (use-package mu4e
-    :defer 5
+    :defer t
+    :commands (mu4e)
     :load-path "/usr/local/share/emacs/site-lisp/mu4e"
     :config
     (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
@@ -2151,7 +2153,7 @@ name handling function can be found from emacs manual[fn:20].
 #+BEGIN_SRC emacs-lisp
   (use-package elfeed
     :defer t
-    :bind
+    :commands (elfeed)
     :config
     ;; open feed link with eww
     (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)

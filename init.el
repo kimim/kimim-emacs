@@ -16,6 +16,5 @@
     ;; load and byte compile the latest configuration
     (progn
       (org-babel-load-file readme-org t)
-      ;;(load-file readme-el)) ;; will compile el to elc
-      (load readme-el)) ;; won't compile to elc
-  (load readme-el))
+      (load-file readme-el))
+  (load-file readme-el))
