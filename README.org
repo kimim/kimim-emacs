@@ -635,7 +635,6 @@ scroll slowly with touchpad.
   (setq auto-mode-alist
         (append '(("\\.css\\'" . css-mode)
                   ("\\.S\\'" . asm-mode)
-                  ("\\.C\\w*\\'" . c-mode)
                   ("\\.md\\'" . markdown-mode)
                   ("\\.markdown\\'" . markdown-mode)
                   ("\\.svg\\'" . html-mode)
@@ -1106,6 +1105,7 @@ this directory as secure because you are the owner.
     :defer t
     :ensure nil
     :config
+    (add-to-list 'auto-mode-alist '("\\.C\\w*\\'" . c-mode))
     (use-package company)
     (use-package company-irony)
     (add-to-list 'company-backends 'company-irony)
@@ -1197,6 +1197,7 @@ Python development configuration is quite easy. =elpy= [fn:18] is used here:
     :defer t
     :ensure nil
     :mode ("\\.py\\'" . python-mode)
+    :interpreter ("python" . python-mode)
     :config
     (add-hook 'python-mode-hook
               (lambda ()
