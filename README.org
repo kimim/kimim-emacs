@@ -224,12 +224,17 @@ As I have a Windows box in the office, and a Apple macOS at home, so I need to
 specify these variables in different way.
 
 #+BEGIN_SRC emacs-lisp
-  (cond ((eq window-system 'w32)
-         (setq kimim/path-root "/")
+  (cond ((eq system-type 'windows-nt)
+         (setq kimim/path-root "C:/msys2")
          (add-to-list 'exec-path
                       (concat kimim/path-kimikit "emacs/bin/"))
          (add-to-list 'exec-path "C:/CTEX/MiKTeX/miktex/bin/"))
-        ((eq window-system 'ns)
+        ((eq system-type 'cygwin)
+         (setq kimim/path-root "/")
+         (add-to-list 'exec-path "/cygdrive/C/CTEX/MiKTeX/miktex/bin/"))
+        ((eq system-type 'gnu/linux)
+         (setq kimim/path-root "/"))
+        ((eq system-type 'darwin)
          (setq kimim/path-root "/")
          (add-to-list 'exec-path "/Library/TeX/texbin")
          (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.5/bin")))
@@ -982,7 +987,7 @@ English word list fetch from https://github.com/dwyl/english-words
     (use-package company-dict)
     (global-company-mode t)
     ;; macOS will use system dict file directly
-    (cond ((eq window-system 'w32)
+    (cond ((eq system-type 'windows-nt)
            (setq ispell-alternate-dictionary "~/.emacs.d/dict/words3.txt")))
     (add-to-list 'company-backends 'company-ispell))
 #+END_SRC
@@ -1758,7 +1763,7 @@ New link to use everything to locate a file with unique ID:
       "Visit the match search on PATH.
        PATH should be a topic that can be thrown at everything/?."
       (cond
-       ((eq window-system 'w32)
+       ((eq system-type 'windows-nt)
         (progn
           (w32-shell-execute
            "open" (concat "onenote:" path))))
