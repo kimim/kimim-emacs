@@ -2128,7 +2128,7 @@ name handling function can be found from emacs manual[fn:20].
     :load-path "/usr/local/share/emacs/site-lisp/mu4e"
     :config
     (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
-
+    (setq mu4e-mu-binary "/usr/local/bin/mu")
     (setq mail-user-agent 'mu4e-user-agent)
     ;; Mail folder set to ~/Maildir
     (setq mu4e-maildir "~/.mail")         ; NOTE: should not be symbolic link
