@@ -279,9 +279,11 @@ Then append exec-path to PATH:
   (set-file-name-coding-system 'utf-8)
   (set-terminal-coding-system 'utf-8)
   (cond
-   ((eq system-type "windows-nt")
-    (set-clipboard-coding-system 'utf-16e))
-   ((eq system-type "gnu/linux")
+   ((eq system-type 'windows-nt)
+    (set-clipboard-coding-system 'utf-16le))
+   ((eq system-type 'cygwin)
+    (set-clipboard-coding-system 'utf-16le))
+   ((eq system-type 'gnu/linux)
     (set-clipboard-coding-system 'utf-8)))
 #+END_SRC
 
