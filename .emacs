@@ -21,9 +21,7 @@
 (defvar kimim/path-org (concat kimim/path-sync "org/"))
 ;; path to keep notes
 (defvar kimim/path-notes (concat kimim/path-sync "notes/"))
-
-(if (not (file-exists-p "~/.emacs.d/custom.el"))
-    (with-temp-buffer (write-file "~/.emacs.d/custom.el")))
+;; custom.el file location
 (defvar kimim/file-custom "~/.emacs.d/custom.el")
 
 ;; if kimim-emacs is clone to ~/kimim-emacs
