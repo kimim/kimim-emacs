@@ -1362,21 +1362,21 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     (setq org-confirm-babel-evaluate nil)
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((C . t)
-       (python . t)
-       (emacs-lisp . t)
-       (shell . t)
-       (dot . t)
-       (ditaa . t)
-       (js . t)
-       (latex . t)
-       (plantuml . t)
-       (clojure . t)
-       (org . t)
-       ))
-    )
+    ;; (org-babel-do-load-languages
+    ;;  'org-babel-load-languages
+    ;;  '((C . t)
+    ;;    (python . t)
+    ;;    (emacs-lisp . t)
+    ;;    (shell . t)
+    ;;    (dot . t)
+    ;;    (ditaa . t)
+    ;;    (js . t)
+    ;;    (latex . t)
+    ;;    (plantuml . t)
+    ;;    (clojure . t)
+    ;;    (org . t)
+    ;;    ))
+     )
 #+END_SRC
 
 ** org exporting
