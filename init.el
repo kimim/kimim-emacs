@@ -15,6 +15,6 @@
       (kimim/last-modify-time readme-el)))
     ;; load and byte compile the latest configuration
     (progn
-      (org-babel-load-file readme-org nil)
+      (org-babel-load-file readme-org t)
       (load-file readme-el))
   (load-file readme-el))
