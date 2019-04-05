@@ -535,7 +535,7 @@ scroll slowly with touchpad.
     (smex-initialize))
 
   (use-package counsel
-    :defer t
+    :defer 3
     :bind
     (("M-x" . counsel-M-x)
      ("C-x C-f" . counsel-find-file)
