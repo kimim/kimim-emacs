@@ -112,22 +112,23 @@ Show menu bar only in macOS desktop environment, because the system preserves
 menu bar for every applications.
 
 #+BEGIN_SRC emacs-lisp
-  (cond ((eq window-system 'w32)
-         ;; Enable copy and paste in Win32
-         (setq select-enable-clipboard t)
-         (menu-bar-mode 0)
-         (tool-bar-mode -1)
-         (scroll-bar-mode -1))
-        ((eq window-system 'ns)
-         (menu-bar-mode 1)
-         (tool-bar-mode -1)
-         (scroll-bar-mode -1))
-        ((eq window-system 'x)
-         (menu-bar-mode 0)
-         (tool-bar-mode -1)
-         (scroll-bar-mode -1))
-        ((eq window-system nil)
-         (menu-bar-mode 0)))
+  (cond
+   ((eq window-system 'w32)
+    ;; Enable copy and paste in Win32
+    (setq select-enable-clipboard t)
+    (menu-bar-mode 0)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1))
+   ((eq window-system 'ns)
+    (menu-bar-mode 1)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1))
+   ((eq window-system 'x)
+    (menu-bar-mode 0)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1))
+   ((eq window-system nil)
+    (menu-bar-mode 0)))
 #+END_SRC
 
 ** Font and Frame Size
@@ -172,7 +173,7 @@ it from: https://www.levien.com/type/myfonts/inconsolata.html, by click
      'cjk-misc (font-spec :family "Microsoft Yahei" :size 18))))
 
   ;; set default frame dimension
-  (if (not (eq window-system nil))
+  (if window-system
       (progn
         ;; top, left ... must be integer
         (add-to-list 'default-frame-alist
@@ -196,7 +197,6 @@ If the sync path is not set, then use HOME path =~= as the default folder, that
 means, no synchronization. So please set these variables in your =.emacs= file.
 
 #+BEGIN_SRC emacs-lisp
-  ;; Synchronization Folders
   (if (not (boundp 'kimim/path-sync))
       (defvar kimim/path-sync "~/"))
 #+END_SRC
@@ -224,20 +224,21 @@ As I have a Windows box in the office, and a Apple macOS at home, so I need to
 specify these variables in different way.
 
 #+BEGIN_SRC emacs-lisp
-  (cond ((eq system-type 'windows-nt)
-         (setq kimim/path-root "C:/msys2")
-         (add-to-list 'exec-path
-                      (concat kimim/path-kimikit "emacs/bin/"))
-         (add-to-list 'exec-path "C:/CTEX/MiKTeX/miktex/bin/"))
-        ((eq system-type 'cygwin)
-         (setq kimim/path-root "/")
-         (add-to-list 'exec-path "/cygdrive/C/CTEX/MiKTeX/miktex/bin/"))
-        ((eq system-type 'gnu/linux)
-         (setq kimim/path-root "/"))
-        ((eq system-type 'darwin)
-         (setq kimim/path-root "/")
-         (add-to-list 'exec-path "/Library/TeX/texbin")
-         (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.5/bin")))
+  (cond
+   ((eq system-type 'windows-nt)
+    (setq kimim/path-root "C:/msys2")
+    (add-to-list 'exec-path
+                 (concat kimim/path-kimikit "emacs/bin/"))
+    (add-to-list 'exec-path "C:/CTEX/MiKTeX/miktex/bin/"))
+   ((eq system-type 'cygwin)
+    (setq kimim/path-root "/")
+    (add-to-list 'exec-path "/cygdrive/C/CTEX/MiKTeX/miktex/bin/"))
+   ((eq system-type 'gnu/linux)
+    (setq kimim/path-root "/"))
+   ((eq system-type 'darwin)
+    (setq kimim/path-root "/")
+    (add-to-list 'exec-path "/Library/TeX/texbin")
+    (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.5/bin")))
 
   (add-to-list 'exec-path (concat kimim/path-root "bin"))
   (add-to-list 'exec-path (concat kimim/path-root "usr/bin"))
@@ -247,9 +248,10 @@ specify these variables in different way.
 Then append exec-path to PATH:
 
 #+BEGIN_SRC emacs-lisp
-  (setenv "PATH" (concat
-                  (mapconcat #'identity exec-path path-separator)
-                  (getenv "PATH")))
+  (setenv "PATH"
+          (concat
+           (mapconcat #'identity exec-path path-separator)
+           (getenv "PATH")))
 #+END_SRC
 
 ** Custom File
@@ -362,17 +364,14 @@ and defers loading of the module until they are used.
 
   (use-package path-headerline-mode
     :defer t
+    :commands (path-headerline-mode)
     :config
     ;; only display headerline for real files
     (defun kimim/ph--display-header (orig-fun &rest args)
       (if (buffer-file-name)
           (apply orig-fun args)
         (setq header-line-format nil)))
-    (advice-add 'ph--display-header :around #'kimim/ph--display-header)
-    ;; display file path in headerline
-    ;; useful when in fullscreen mode
-    ;;(path-headerline-mode t)
-    )
+    (advice-add 'ph--display-header :around #'kimim/ph--display-header))
 #+END_SRC
 
 * Mode Line
@@ -381,7 +380,7 @@ Display time and (line, column) numbers in mode line.
 
 #+BEGIN_SRC emacs-lisp
   (use-package time
-    :defer 5
+    :defer t
     :init
     (setq display-time-24hr-format t)
     (setq display-time-day-and-date t)
@@ -404,7 +403,7 @@ Use self defined color theme 1 seconds after init.
   (global-font-lock-mode 1)
 
   (use-package color-theme-kimim
-    :defer 0
+    :defer t
     :commands (color-theme-kimim color-theme-jekyll)
     :ensure nil
     :load-path "~/kimim-emacs/site-lisp/"
@@ -430,13 +429,13 @@ Use self defined color theme 1 seconds after init.
 #+BEGIN_SRC emacs-lisp
   ;; highlight current line
   (use-package hl-line
-    :defer 5
+    :defer t
     :config
     (global-hl-line-mode 1))
 
   ;; highlight current symbol
   (use-package auto-highlight-symbol
-    :defer 8
+    :defer t
     :diminish auto-highlight-symbol-mode
     :bind ("C-x m e" . ahs-edit-mode)
     :config
@@ -462,6 +461,7 @@ Use self defined color theme 1 seconds after init.
 #+BEGIN_SRC emacs-lisp
   (use-package info
     :defer t
+    :commands (info)
     :config
     (add-to-list 'Info-additional-directory-list
                  (concat kimim/path-root "usr/share/info"))
@@ -489,14 +489,14 @@ client.
 #+BEGIN_SRC emacs-lisp
   (use-package winner
     ;; restore windows configuration, built-in package
-    :defer 5
+    :defer t
     :commands winner-mode
     :config
     (winner-mode t))
 
   (use-package window-numbering
     :ensure t
-    :defer 5
+    :defer t
     :commands window-numbering-mode
     :config
     (window-numbering-mode 1))
@@ -528,8 +528,9 @@ scroll slowly with touchpad.
 
   ;; smex will list the recent function on top of the cmd list
   (use-package smex
-    :defer t
     :ensure t
+    :defer t
+    :commands (smex)
     :config
     (smex-initialize))
 
@@ -563,7 +564,7 @@ scroll slowly with touchpad.
 
 #+BEGIN_SRC emacs-lisp
   (use-package keyfreq
-    :defer 5
+    :defer t
     :config
     (keyfreq-mode)
     (keyfreq-autosave-mode)
@@ -579,7 +580,7 @@ scroll slowly with touchpad.
   (setq-default fill-column 80)
   (toggle-word-wrap -1)
   (use-package drag-stuff
-    :defer 3
+    :defer t
     :diminish drag-stuff-mode
     :config
     (drag-stuff-global-mode 1))           ; use Alt-up/down to drag line or region
@@ -677,7 +678,7 @@ scroll slowly with touchpad.
 
 #+BEGIN_SRC emacs-lisp
   (use-package undo-tree
-    :defer 6
+    :defer t
     :diminish undo-tree-mode
     :config
     (global-undo-tree-mode)
@@ -889,11 +890,10 @@ out of the box.
     :defer t
     :bind ("C-c i" . imenu-anywhere))
 #+END_SRC
-
 ** helm
 #+BEGIN_SRC emacs-lisp
   (use-package helm
-    :defer 1)
+    :defer t)
 #+END_SRC
 
 * auto-complete
@@ -907,7 +907,7 @@ out of the box.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
-    :defer 3
+    :defer t
     :diminish ivy-mode
     :bind ("<f6>" . ivy-resume)
     :config
@@ -932,7 +932,7 @@ out of the box.
 
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
-    :defer 3
+    :defer t
     :config
     (add-to-list
      'yas-snippet-dirs (concat kimim/path-sync "kimikit/emacs.d/snippets"))
@@ -973,7 +973,7 @@ English word list fetch from https://github.com/dwyl/english-words
 
   (use-package company
     :diminish company-mode
-    :defer 5
+    :defer t
     :config
     (use-package company-try-hard)
     (use-package company-dict)
@@ -1325,9 +1325,9 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-download
-    :init (setq org-download-timestamp "")
     :defer t
     :config
+    (setq org-download-timestamp "")
     (setq org-image-actual-width (/ (display-pixel-width) 3)))
 
   (use-package org
@@ -1562,8 +1562,9 @@ pip install pygments
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :defer t
-    :commands (org-toggle-office org-toggle-home)
-    :bind (:map org-mode-map
+    :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
+    :bind (("<f12>" . org-toggle-home-or-office)
+           :map org-mode-map
            ;;:map org-agenda-mode-map
            ;;("<S-right>" . (lambda ()
            ;;                 (interactive)
@@ -1798,7 +1799,7 @@ name handling function can be found from emacs manual[fn:20].
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
-    :defer 3
+    :defer t
     :config
     ;; file in jekyll base will also be uploaded to github
     (setq path-jekyll-base "~/kimi.im/_notes/_posts")
@@ -2009,8 +2010,9 @@ name handling function can be found from emacs manual[fn:20].
 
 #+BEGIN_SRC emacs-lisp
   (use-package ebdb
-    :defer t
     :ensure t
+    :defer t
+    :commands (ebdb)
     :config
     (setq ebdb-sources (concat kimim/path-sync "kimikit/emacs.d/ebdb"))
     ;; do not pop *EBDB-Gnus* window
@@ -2214,7 +2216,6 @@ PATH\of\doublecmd\
   ;;                   (interactive) (list-charset-chars 'ascii)))
   (bind-key "<f7>" 'bury-buffer)
   (bind-key "<f8>" 'unbury-buffer)
-  (bind-key "<f12>" 'org-toggle-home-or-office)
 
   ;; (bind-key "M-<SPC>" (lambda () (interactive)
   ;;                       (insert ?_)))
