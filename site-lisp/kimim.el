@@ -1,5 +1,3 @@
-(use-package gnus)
-
 (defun kimim/mail-new ()
   (interactive)
   (compose-mail)
@@ -73,18 +71,6 @@ The original article will be yanked."
   (message-beginning-of-line)
   (insert "FW")
   (mail-to))
-
-(define-key gnus-summary-mode-map
-  [remap gnus-summary-followup-with-original]
-  'gnus-summary-forward-with-original)
-
-(define-key gnus-summary-mode-map
-  [remap gnus-summary-reply]
-  'gnus-summary-reply-with-original)
-
-(define-key gnus-summary-mode-map
-  [remap gnus-summary-wide-reply]
-  'gnus-summary-very-wide-reply-with-original)
 
 ;; unfill paragraph: the opposite of fill-paragraph
 (defun kimim/unfill-paragraph-or-region (&optional region)

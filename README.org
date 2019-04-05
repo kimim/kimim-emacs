@@ -403,7 +403,7 @@ Use self defined color theme 1 seconds after init.
   (global-font-lock-mode 1)
 
   (use-package color-theme-kimim
-    :defer t
+    :defer 0
     :commands (color-theme-kimim color-theme-jekyll)
     :ensure nil
     :load-path "~/kimim-emacs/site-lisp/"
@@ -518,7 +518,7 @@ scroll slowly with touchpad.
 #+BEGIN_SRC emacs-lisp
   ;; https://github.com/justbur/emacs-which-key
   (use-package which-key
-    :defer 5
+    :defer t
     :ensure t
     :diminish which-key-mode
     :config
@@ -2109,6 +2109,18 @@ name handling function can be found from emacs manual[fn:20].
     (use-package kimim
       :load-path "~/kimim-emacs/site-lisp"
       )
+    (define-key gnus-summary-mode-map
+      [remap gnus-summary-followup-with-original]
+      'gnus-summary-forward-with-original)
+
+    (define-key gnus-summary-mode-map
+      [remap gnus-summary-reply]
+      'gnus-summary-reply-with-original)
+
+    (define-key gnus-summary-mode-map
+      [remap gnus-summary-wide-reply]
+      'gnus-summary-very-wide-reply-with-original)
+
     (add-hook 'gnus-message-setup-hook 'kimim/mail-setup))
 #+END_SRC
 
