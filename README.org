@@ -2132,6 +2132,7 @@ name handling function can be found from emacs manual[fn:20].
     :commands (mu4e)
     :load-path "/usr/local/share/emacs/site-lisp/mu4e"
     :config
+    (require 'org-mu4e) ;; capture link
     (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
     (setq mu4e-mu-binary "/usr/local/bin/mu")
     (setq mail-user-agent 'mu4e-user-agent)
