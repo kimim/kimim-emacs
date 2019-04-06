@@ -4,8 +4,10 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(setq user-login-name "kimim")
-(setq system-name "kimi.im")
+(setq system-name "kimi.im"
+      user-login-name "kimim"
+      user-full-name "Kimi Ma"
+      user-mail-address "kimim@kimi.im")
 
 ;; root directory
 (defvar kimim/path-root "/")
