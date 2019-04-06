@@ -50,28 +50,6 @@
             (mail-to)
           (mail-text))))))
 
-(defun gnus-summary-forward-with-original (n &optional wide)
-  "Start composing a reply mail to the current message.
-The original article will be yanked."
-  (interactive "P")
-  (gnus-summary-reply (gnus-summary-work-articles n) wide)
-  (mail-to)
-  (message-beginning-of-line)
-  (kill-line)
-  (mail-subject)
-  (message-beginning-of-line)
-  (delete-char 2)
-  (narrow-to-region (line-beginning-position) (line-end-position))
-  (goto-char (point-min))
-  (while (search-forward "Fw: " nil t)
-    (replace-match ""))
-  (while (search-forward "转发： " nil t)
-    (replace-match ""))
-  (widen)
-  (message-beginning-of-line)
-  (insert "FW")
-  (mail-to))
-
 ;; unfill paragraph: the opposite of fill-paragraph
 (defun kimim/unfill-paragraph-or-region (&optional region)
   "Takes a multi-line paragraph and makes it into a single line of text."

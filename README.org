@@ -689,8 +689,8 @@ scroll slowly with touchpad.
 ** dired
 #+BEGIN_SRC emacs-lisp
   (use-package dired
-    :defer t
     :ensure nil
+    :defer t
     :bind
     (("C-x C-j" . dired-jump)
      :map dired-mode-map
@@ -699,27 +699,10 @@ scroll slowly with touchpad.
      ("o" . kimim/open-in-external-app)
      )
     :config
-
-    (require 'gnus-dired)
-    ;; make the `gnus-dired-mail-buffers' function also work on
-    ;; message-mode derived modes, such as mu4e-compose-mode
-    (defun gnus-dired-mail-buffers ()
-      "Return a list of active message buffers."
-      (let (buffers)
-        (save-current-buffer
-          (dolist (buffer (buffer-list t))
-            (set-buffer buffer)
-            (when (and (derived-mode-p 'message-mode)
-                       (null message-sent-message-via))
-              (push (buffer-name buffer) buffers))))
-        (nreverse buffers)))
-
-    (setq gnus-dired-mail-mode 'mu4e-user-agent)
-    (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
-
     (require 'dired-x)
     (add-hook 'dired-mode-hook
               (lambda ()
+                (turn-on-gnus-dired-mode)
                 ;; Set dired-x buffer-local variables here.  For example:
                 (dired-omit-mode 1)
                 (setq dired-omit-localp t)
@@ -1333,7 +1316,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (use-package org
     :defer t
     :config
-    (use-package org-download)
+    ;;(use-package org-download)
     (use-package pangu-spacing)
     (setq org-hide-leading-stars t)
     (setq org-footnote-auto-adjust t)
@@ -1387,8 +1370,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     :config
     (setq org-export-allow-BIND t)
     (setq org-export-creator-string "")
-    (setq org-export-html-validation-link nil)
-    (setq org-html-validation-link nil))
+    (setq org-export-html-validation-link nil))
 #+END_SRC
 
 *** org to pdf
@@ -1408,8 +1390,10 @@ pip install pygments
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org
+  (use-package ox-latex
+    :ensure org
     :defer t
+    :commands (org-latex-publish-to-pdf)
     :config
     (require 'ox-latex)
     (add-to-list 'org-latex-packages-alist '("" "minted"))
@@ -1479,9 +1463,11 @@ pip install pygments
 *** org to html page
 #+BEGIN_SRC emacs-lisp
   (use-package ox-html
+    :ensure org
     :defer t
-    :ensure nil
+    :commands (org-html-publish-to-html)
     :config
+    (setq org-html-validation-link nil)
     (defadvice org-html-paragraph (before fsh-org-html-paragraph-advice
                                           (paragraph contents info) activate)
       "Join consecutive Chinese lines into a single long line without
@@ -1530,11 +1516,11 @@ pip install pygments
 ** org to html slide
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org
+  (use-package ox-reveal
+    :ensure t
     :defer t
     :config
-    (use-package htmlize)
-    (use-package ox-reveal)
+    (use-package htmlize :ensure t)
     ;;(setq org-reveal-root "reveal.js")
     ;;(setq org-reveal-root (concat kimim/path-kimikit "reveal.js"))
     (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
@@ -1549,7 +1535,8 @@ pip install pygments
 
 #+BEGIN_SRC emacs-lisp
   ;; plant uml setting
-  (use-package org
+  (use-package ob-plantuml
+    :ensure org
     :defer t
     :config
     (require 'ob-plantuml)
@@ -1781,8 +1768,6 @@ name handling function can be found from emacs manual[fn:20].
     :bind
     (("C-x m d" . kimim/deft-store-link))
     :config
-    (use-package deft)
-    (require 'kimim)
     (defun kimim/deft-store-link()
       "get deft link of current note file."
       (interactive)
@@ -1799,7 +1784,9 @@ name handling function can be found from emacs manual[fn:20].
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :ensure t
     :defer t
+    :commands (jekyll)
     :config
     ;; file in jekyll base will also be uploaded to github
     (setq path-jekyll-base "~/kimi.im/_notes/_posts")
@@ -1929,8 +1916,8 @@ name handling function can be found from emacs manual[fn:20].
 ** Deft
 #+BEGIN_SRC emacs-lisp
   (use-package deft
-    :defer t
     :ensure t
+    :defer t
     :bind
     (("C-x d" . deft-find-file)
      ("C-x C-d" . deft))
@@ -2040,89 +2027,28 @@ name handling function can be found from emacs manual[fn:20].
     (setq erc-hide-list '("JOIN" "PART" "QUIT")))
 #+END_SRC
 
-** GNUS
+** GNUS dired
 
-#+BEGIN_SRC emacs-lisp
-  ;; gnus settings
-  (use-package gnus
+#+begin_src emacs-lisp
+  (use-package gnus-dired
+    :ensure nil
     :defer t
-    :bind
-    (("C-x m m" . kimim/mail-new-empty)
-     ("C-x m n" . kimim/mail-new)
-     ("C-x m y" . kimim/mail-attach-files)
-     :map gnus-summary-mode-map
-     ("g" . gnus-summary-insert-new-articles)
-     ("f" . gnus-summary-forward-with-original)
-     ("R" . gnus-summary-very-wide-reply-with-original)
-     ("<delete>" . gnus-summary-delete-article)
-     ("<insert>" . mail-archive-kimim))
+    :commands (turn-on-gnus-dired-mode)
     :config
-    (use-package ebdb)
-
-    (setq gnus-visible-headers
-          "^Subject:\\|^From:\\|^To:\\|^[BGF]?CC:\\|^Date:")
-    (setq gnus-sorted-header-list
-          '("^Subject:" "^From:""^To:" "^[BGF]?CC:" "^Date:"))
-    (setq compose-mail-user-agent-warnings nil) ;; remove warning
-    (setq message-directory "~/Gnus/Mail/")
-    (setq gnus-directory "~/Gnus/News/")
-    (setq nnfolder-directory "~/Gnus/Mail/Archive")
-    ;; unfortunately, following variable not support CN strings
-    (setq gnus-permanently-visible-groups "\\(Inbox\\|INBOX\\|已发送邮件\\)")
-    (setq mail-self-blind t)
-    (setq gnus-alias-override-user-mail-address t)
-    (setq mail-signature-file (concat kimim/path-sync "kimikit/emacs.d/signature.txt"))
-    (setq gnus-asynchronous t)
-    (setq gnus-use-article-prefetch 1000)
-    (setq gnus-fetch-old-headers 'some)
-    ;; fetch only 50 latest articles to speed up downloading
-    (setq gnus-large-newsgroup 50)
-    (setq message-forward-as-mime t)
-    (setq message-forward-before-signature t) ;; put signature before the fwd msg
-    (setq message-forward-included-headers "^Date\\|^From\\|^To\\|^Subject:")
-    (setq message-make-forward-subject-function 'message-forward-subject-fwd)
-    (setq gnus-user-date-format-alist
-          '(((gnus-seconds-today) . "Today %H:%M")
-            ((+ 86400 (gnus-seconds-today)) . "Yest. %H:%M")
-            (604800 . "%a %H:%M")               ; That's one week
-            ((gnus-seconds-month) . "%a %H:%M")
-            ((gnus-seconds-year) . "%b %d")
-            (t . "%b %d %Y")))
-    (setq gnus-summary-line-format
-          ":%U%R | %d%13&user-date; %-13,13f (%5k) | %B %s %-120= \n")
-    (setq gnus-article-sort-functions '((not gnus-article-sort-by-date)))
-    (setq gnus-thread-sort-functions '((not gnus-thread-sort-by-date)))
-    (setq gnus-thread-ignore-subject t)
-    (setq gnus-agent t)
-    (setq gnus-agent-expire-days 90)
-    ; prompt for how many articles only for larger than 1000 articles
-    (setq gnus-large-newsgroup 100)
-    (setq gnus-use-cache t)
-    (setq gnus-fetch-old-headers 1) ; show previous messages in a thread
-    (setq gnus-thread-indent-level 1)
-    (setq gnus-show-threads t)
-    (setq gnus-thread-hide-subtree nil)
-    (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
-    (use-package orgalist)
-    (add-hook 'message-mode-hook 'orgalist-mode)
-    (add-hook 'message-mode-hook 'turn-off-auto-fill)
-    (use-package kimim
-      :load-path "~/kimim-emacs/site-lisp"
-      )
-    (define-key gnus-summary-mode-map
-      [remap gnus-summary-followup-with-original]
-      'gnus-summary-forward-with-original)
-
-    (define-key gnus-summary-mode-map
-      [remap gnus-summary-reply]
-      'gnus-summary-reply-with-original)
-
-    (define-key gnus-summary-mode-map
-      [remap gnus-summary-wide-reply]
-      'gnus-summary-very-wide-reply-with-original)
-
-    (add-hook 'gnus-message-setup-hook 'kimim/mail-setup))
-#+END_SRC
+    ;; make the `gnus-dired-mail-buffers' function also work on
+    ;; message-mode derived modes, such as mu4e-compose-mode
+    (defun gnus-dired-mail-buffers ()
+      "Return a list of active message buffers."
+      (let (buffers)
+        (save-current-buffer
+          (dolist (buffer (buffer-list t))
+            (set-buffer buffer)
+            (when (and (derived-mode-p 'message-mode)
+                       (null message-sent-message-via))
+              (push (buffer-name buffer) buffers))))
+        (nreverse buffers)))
+    (setq gnus-dired-mail-mode 'mu4e-user-agent))
+#+end_src
 
 ** mu4e
 
@@ -2140,6 +2066,8 @@ name handling function can be found from emacs manual[fn:20].
     (require 'org-mu4e) ;; capture link
     (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
     (setq mu4e-mu-binary "/usr/local/bin/mu")
+    (setq mail-self-blind t)
+    (setq mail-signature-file (concat kimim/path-sync "kimikit/emacs.d/signature.txt"))
     (setq mail-user-agent 'mu4e-user-agent)
     ;; Mail folder set to ~/Maildir
     (setq mu4e-maildir "~/.mail")         ; NOTE: should not be symbolic link
@@ -2165,6 +2093,7 @@ name handling function can be found from emacs manual[fn:20].
 
 #+BEGIN_SRC emacs-lisp
   (use-package elfeed
+    :ensure t
     :defer t
     :commands (elfeed)
     :config
@@ -2210,12 +2139,15 @@ PATH\of\doublecmd\
     :defer 5
     :ensure nil
     :bind
-    ("<f9>" . kimim/xterm)
-    ("S-<f9>" . kimim/cmd)
-    ("<f10>" . kimim/dc)
-    ("C-c r" . kimim/rename-file-and-buffer)
-    ("C-x m o" . kimim/open-in-external-app)
-    ("C-c d" . kimim/lookinsight)
+    (("C-x m m" . kimim/mail-new-empty)
+     ("C-x m n" . kimim/mail-new)
+     ("C-x m y" . kimim/mail-attach-files)
+     ("<f9>" . kimim/xterm)
+     ("S-<f9>" . kimim/cmd)
+     ("<f10>" . kimim/dc)
+     ("C-c r" . kimim/rename-file-and-buffer)
+     ("C-x m o" . kimim/open-in-external-app)
+     ("C-c d" . kimim/lookinsight))
     :load-path "~/kimim-emacs/site-lisp/"
     )
 #+END_SRC

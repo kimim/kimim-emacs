@@ -87,3 +87,107 @@ note in "notes" folder.
     ;;(add-hook 'message-setup-hook 'bbdb-mail-aliases)
     )
 #+END_SRC
+** GNUS setting
+
+#+begin_src emacs-lisp
+  ;; gnus settings
+  (use-package gnus
+    :ensure nil
+    :defer t
+    :bind
+    (("C-x m m" . kimim/mail-new-empty)
+     ("C-x m n" . kimim/mail-new)
+     ("C-x m y" . kimim/mail-attach-files)
+     :map gnus-summary-mode-map
+     ("g" . gnus-summary-insert-new-articles)
+     ("f" . gnus-summary-forward-with-original)
+     ("R" . gnus-summary-very-wide-reply-with-original)
+     ("<delete>" . gnus-summary-delete-article)
+     ("<insert>" . mail-archive-kimim))
+    :config
+    (message "......gnus[0]")
+    (use-package ebdb)
+    (use-package gnus-dired :ensure nil)
+    (setq gnus-visible-headers
+          "^Subject:\\|^From:\\|^To:\\|^[BGF]?CC:\\|^Date:")
+    (setq gnus-sorted-header-list
+          '("^Subject:" "^From:""^To:" "^[BGF]?CC:" "^Date:"))
+    (setq compose-mail-user-agent-warnings nil) ;; remove warning
+    (setq message-directory "~/Gnus/Mail/")
+    (setq gnus-directory "~/Gnus/News/")
+    (setq nnfolder-directory "~/Gnus/Mail/Archive")
+    ;; unfortunately, following variable not support CN strings
+    (setq gnus-permanently-visible-groups "\\(Inbox\\|INBOX\\|已发送邮件\\)")
+    (setq mail-self-blind t)
+    (setq gnus-alias-override-user-mail-address t)
+    (setq mail-signature-file (concat kimim/path-sync "kimikit/emacs.d/signature.txt"))
+    (setq gnus-asynchronous t)
+    (setq gnus-use-article-prefetch 1000)
+    (setq gnus-fetch-old-headers 'some)
+    ;; fetch only 50 latest articles to speed up downloading
+    (setq gnus-large-newsgroup 50)
+    (setq message-forward-as-mime t)
+    (setq message-forward-before-signature t) ;; put signature before the fwd msg
+    (setq message-forward-included-headers "^Date\\|^From\\|^To\\|^Subject:")
+    (setq message-make-forward-subject-function 'message-forward-subject-fwd)
+    (setq gnus-user-date-format-alist
+          '(((gnus-seconds-today) . "Today %H:%M")
+            ((+ 86400 (gnus-seconds-today)) . "Yest. %H:%M")
+            (604800 . "%a %H:%M")               ; That's one week
+            ((gnus-seconds-month) . "%a %H:%M")
+            ((gnus-seconds-year) . "%b %d")
+            (t . "%b %d %Y")))
+    (setq gnus-summary-line-format
+          ":%U%R | %d%13&user-date; %-13,13f (%5k) | %B %s %-120= \n")
+    (setq gnus-article-sort-functions '((not gnus-article-sort-by-date)))
+    (setq gnus-thread-sort-functions '((not gnus-thread-sort-by-date)))
+    (setq gnus-thread-ignore-subject t)
+    (setq gnus-agent t)
+    (setq gnus-agent-expire-days 90)
+    ; prompt for how many articles only for larger than 1000 articles
+    (setq gnus-large-newsgroup 100)
+    (setq gnus-use-cache t)
+    (setq gnus-fetch-old-headers 1) ; show previous messages in a thread
+    (setq gnus-thread-indent-level 1)
+    (setq gnus-show-threads t)
+    (setq gnus-thread-hide-subtree nil)
+    (add-hook 'gnus-summary-prepare-hook 'gnus-summary-hide-all-threads)
+    ;;(use-package orgalist)
+    ;;(add-hook 'message-mode-hook 'orgalist-mode)
+    (add-hook 'message-mode-hook 'turn-off-auto-fill)
+    (defun gnus-summary-forward-with-original (n &optional wide)
+      "Start composing a reply mail to the current message.
+  The original article will be yanked."
+      (interactive "P")
+      (gnus-summary-reply (gnus-summary-work-articles n) wide)
+      (mail-to)
+      (message-beginning-of-line)
+      (kill-line)
+      (mail-subject)
+      (message-beginning-of-line)
+      (delete-char 2)
+      (narrow-to-region (line-beginning-position) (line-end-position))
+      (goto-char (point-min))
+      (while (search-forward "Fw: " nil t)
+        (replace-match ""))
+      (while (search-forward "转发： " nil t)
+        (replace-match ""))
+      (widen)
+      (message-beginning-of-line)
+      (insert "FW")
+      (mail-to))
+
+    (define-key gnus-summary-mode-map
+      [remap gnus-summary-followup-with-original]
+      'gnus-summary-forward-with-original)
+
+    (define-key gnus-summary-mode-map
+      [remap gnus-summary-reply]
+      'gnus-summary-reply-with-original)
+
+    (define-key gnus-summary-mode-map
+      [remap gnus-summary-wide-reply]
+      'gnus-summary-very-wide-reply-with-original)
+
+    (add-hook 'gnus-message-setup-hook 'kimim/mail-setup))
+#+end_src
