@@ -1999,7 +1999,7 @@ name handling function can be found from emacs manual[fn:20].
   (use-package ebdb
     :ensure t
     :defer t
-    :commands (ebdb)
+    :commands (ebdb ebdb-mail-aliases)
     :config
     (setq ebdb-sources (concat kimim/path-sync "kimikit/emacs.d/ebdb"))
     ;; do not pop *EBDB-Gnus* window
@@ -2053,6 +2053,15 @@ name handling function can be found from emacs manual[fn:20].
 ** mu4e
 
 #+begin_src emacs-lisp
+  (use-package sendmail
+    :ensure nil
+    :defer t
+    :config
+    (setq mail-self-blind t)
+    (setq mail-signature-file (concat kimim/path-sync "kimikit/emacs.d/signature.txt")))
+#+end_src
+
+#+begin_src emacs-lisp
   (use-package mu4e
     :ensure nil
     :defer t
@@ -2064,10 +2073,9 @@ name handling function can be found from emacs manual[fn:20].
                         "/usr/local/share/emacs/site-lisp/mu4e")))
     :config
     (require 'org-mu4e) ;; capture link
+    (use-package sendmail)
     (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
     (setq mu4e-mu-binary "/usr/local/bin/mu")
-    (setq mail-self-blind t)
-    (setq mail-signature-file (concat kimim/path-sync "kimikit/emacs.d/signature.txt"))
     (setq mail-user-agent 'mu4e-user-agent)
     ;; Mail folder set to ~/Maildir
     (setq mu4e-maildir "~/.mail")         ; NOTE: should not be symbolic link
@@ -2138,9 +2146,9 @@ PATH\of\doublecmd\
   (use-package kimim
     :defer 5
     :ensure nil
+    :commands (kimim/mail-setup)
     :bind
     (("C-x m m" . kimim/mail-new-empty)
-     ("C-x m n" . kimim/mail-new)
      ("C-x m y" . kimim/mail-attach-files)
      ("<f9>" . kimim/xterm)
      ("S-<f9>" . kimim/cmd)
@@ -2194,6 +2202,7 @@ PATH\of\doublecmd\
 
   (bind-key "C-x m h" 'help)
   (bind-key "C-x m c" 'calculator)
+  (bind-key "C-x m n" 'compose-mail)
   (bind-key "C-x m ." 'unbury-buffer)
   (bind-key "C-x m ," 'bury-buffer)
   (bind-key "C-x m  。" 'unbury-buffer)

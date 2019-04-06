@@ -11,7 +11,7 @@
 (defun kimim/mail-setup ()
   (interactive)
   (save-restriction
-    (require 'sendmail)
+    (use-package sendmail)
     ;; always bcc to myself
     (mail-bcc)
     (insert user-mail-address)
