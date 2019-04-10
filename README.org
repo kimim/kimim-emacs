@@ -2064,6 +2064,16 @@ name handling function can be found from emacs manual[fn:20].
 #+end_src
 
 #+begin_src emacs-lisp
+  (use-package mu-cite
+    :ensure t
+    :defer t
+    :commands (mu-cite-original)
+    :config
+    (setq mu-cite-top-format '("On " date ", " from " wrote:\n\n"))
+    (setq mu-cite-prefix-format '(" > ")))
+#+end_src
+
+#+begin_src emacs-lisp
   (use-package mu4e
     :ensure nil
     :defer t
@@ -2087,16 +2097,9 @@ name handling function can be found from emacs manual[fn:20].
     (setq mu4e-update-interval 300)
     (setq mu4e-use-fancy-chars nil)
     (setq mu4e-view-show-images t)
+    (setq mu4e-compose-cite-function 'mu-cite-original)
     (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
     (add-hook 'mu4e-compose-mode-hook 'kimim/mail-setup))
-
-  (use-package mu-cite
-    :ensure t
-    :defer t
-    :config
-    (setq mu4e-compose-cite-function 'mu-cite-original)
-    (setq mu-cite-top-format '("On " date ", " from " wrote:\n\n"))
-    (setq mu-cite-prefix-format '(" > ")))
 #+end_src
 
 * Reading News
