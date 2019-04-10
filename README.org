@@ -1710,7 +1710,9 @@ pip install pygments
       (interactive)
       (if (string= org-location-home-or-office "home")
           (org-toggle-office)
-        (org-toggle-home))))
+        (org-toggle-home)))
+
+    (org-toggle-office))
 #+END_SRC
 
 ** org link: match
