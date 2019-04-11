@@ -1279,6 +1279,15 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 * Orgmode
 
+** orgalist
+
+#+begin_src emacs-lisp
+  (use-package orgalist
+    :ensure t
+    :defer t
+    :commands (orgalist-mode)
+    )
+#+end_src
 ** org general setting
 
 #+BEGIN_SRC emacs-lisp
@@ -1993,7 +2002,18 @@ name handling function can be found from emacs manual[fn:20].
       org-ref-default-bibliography (concat kimim/path-ref "docs.bib")
       org-ref-pdf-directory (concat kimim/path-ref "pdfs/"))
 #+END_SRC
+* Dictionary
+** Youdao dictionary
 
+Search dictionary with Ctrl+F3 by youdao dictionary.
+
+#+begin_src emacs-lisp
+  (use-package youdao-dictionary
+    :ensure t
+    :defer t
+    :bind (("C-<f3>" . youdao-dictionary-search-at-point+))
+    )
+#+end_src
 * Mail and Contacts
 ** EBDB - a replacement for BBDB, as contact management
 
@@ -2099,7 +2119,8 @@ name handling function can be found from emacs manual[fn:20].
     (setq mu4e-view-show-images t)
     (setq mu4e-compose-cite-function 'mu-cite-original)
     (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
-    (add-hook 'mu4e-compose-mode-hook 'kimim/mail-setup))
+    (add-hook 'mu4e-compose-mode-hook 'kimim/mail-setup)
+    (add-hook 'mu4e-compose-mode-hook 'orgalist-mode))
 #+end_src
 
 * Reading News
