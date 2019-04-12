@@ -1,4 +1,5 @@
 .DS_Store
 *.elc
 README.el
-mim
+README.pdf
+README.tex
