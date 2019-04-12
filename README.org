@@ -2191,6 +2191,9 @@ PATH\of\doublecmd\
 #+BEGIN_SRC emacs-lisp
   (bind-key "<f1>" 'delete-other-windows)
   (bind-key "C-<f1>" 'nuke-other-buffers)
+  (bind-key "M-<f1>" (lambda()
+                       (interactive)
+                       (switch-to-buffer "*scratch*") (nuke-other-buffers)))
   (bind-key "<f2>" 'other-window)
   (bind-key "<f5>" (lambda()
                      (interactive)
