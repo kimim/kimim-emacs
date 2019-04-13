@@ -102,9 +102,7 @@
             (ido-subdir :weight bold)
             (mode-line :foreground "black" :background "gainsboro" :box nil :height 0.85)
             (mode-line-inactive :foreground "RoyalBlue" :background "gainsboro" :box nil :height 0.85)
-            (modeline-buffer-id :foreground "blue4" :background "gainsboro" :weight bold)
-            (modeline-mousable :foreground "firebrick" :background "gainsboro")
-            (modeline-mousable-minor-mode :foreground "green4" :background "gainsboro")
+            (mode-line-buffer-id :foreground "blue4" :background "gainsboro" :box nil :weight bold)
             (minibuffer-prompt :foreground "medium blue")
             (hl-line :background "gray90")
             ;; defaults
