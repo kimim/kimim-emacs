@@ -394,6 +394,13 @@ Use self defined color theme 1 seconds after init.
   (global-font-lock-mode 1)
 #+END_SRC
 
+#+begin_src emacs-lisp
+  (use-package kimim-theme
+    :ensure nil
+    :defer 0
+    :load-path "~/kimim-emacs/site-lisp/")
+#+end_src
+
 * Highlight
 
 #+BEGIN_SRC emacs-lisp
