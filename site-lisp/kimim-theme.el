@@ -159,4 +159,4 @@
 
 (provide 'kimim-theme)
 
-;;; kimim-color-theme.el ends here
+;;; kimim-theme.el ends here

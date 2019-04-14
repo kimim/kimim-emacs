@@ -645,7 +645,7 @@ scroll slowly with touchpad.
     :ensure t
     :diminish pangu-spacing-mode
     :config
-    (global-pangu-spacing-mode 1)
+    ;; (global-pangu-spacing-mode 1)
     (add-hook 'org-mode-hook
               '(lambda ()
                  (set (make-local-variable 'pangu-spacing-real-insert-separtor) t))))
@@ -2209,6 +2209,10 @@ PATH\of\doublecmd\
   (bind-key "C-x m h" 'help)
   (bind-key "C-x m c" 'calculator)
   (bind-key "C-x m n" 'compose-mail)
+  (bind-key "C-x m s" '(lambda ()
+                         (interactive)
+                         (set-frame-font
+                          (concat "YaheiInconsolata-" (read-string "Enter font size: ")))))
   (bind-key "C-x m ." 'unbury-buffer)
   (bind-key "C-x m ," 'bury-buffer)
   (bind-key "C-x m  。" 'unbury-buffer)

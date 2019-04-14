@@ -1,5 +1,5 @@
-(setq readme-org (concat kimim/path-kimim-emacs "README.org"))
-(setq readme-el (concat kimim/path-kimim-emacs "README.el"))
+(defvar readme-org (concat kimim/path-kimim-emacs "README.org"))
+(defvar readme-el (concat kimim/path-kimim-emacs "README.el"))
 
 (defun kimim/last-modify-time (file-name)
   "get the last modification time of specified file"
