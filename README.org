@@ -155,15 +155,6 @@ https://github.com/loseblue/yaheiInconsolata.ttf/raw/master/yaheiInconsolata.ttf
                                      (* 5 (frame-char-width)))))))
 #+end_src
 
-** Dealing with Unicode fonts
-
-#+begin_src emacs-lisp
-  (use-package unicode-fonts
-    :defer 10
-    :config
-    (unicode-fonts-setup))
-#+end_src
-
 * Environment
 ** Synchronization Folders
 
@@ -400,6 +391,15 @@ Use self defined color theme 1 seconds after init.
     :bind ("C-x m e" . ahs-edit-mode)
     :config
     (global-auto-highlight-symbol-mode t))
+#+end_src
+
+* Dealing with Unicode fonts
+
+#+begin_src emacs-lisp
+  (use-package unicode-fonts
+    :defer 10
+    :config
+    (unicode-fonts-setup))
 #+end_src
 
 * Other Visual Element
