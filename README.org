@@ -2126,7 +2126,7 @@ PATH\of\doublecmd\
   (bind-key "C-x m s" '(lambda ()
                          (interactive)
                          (set-frame-font
-                          (concat "YaheiInconsolata-" (read-string "Enter font size: ")))))
+                          (concat "Inconsolata-" (read-string "Enter font size: ")) t)))
   (bind-key "C-x m ." 'unbury-buffer)
   (bind-key "C-x m ," 'bury-buffer)
   (bind-key "C-x m  。" 'unbury-buffer)
