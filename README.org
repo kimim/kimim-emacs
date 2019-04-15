@@ -127,17 +127,17 @@ https://github.com/loseblue/yaheiInconsolata.ttf/raw/master/yaheiInconsolata.ttf
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "YaheiInconsolata-14"))
+      (set-frame-font "Inconsolata-14"))
      ((> (display-pixel-width) 1400)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "YaheiInconsolata-14"))))
+      (set-frame-font "Inconsolata-14"))))
    ((eq window-system 'ns)
     (set-fontset-font
      "fontset-default"
      'unicode-bmp (font-spec :family "YaheiInconsolata"))
-    (set-frame-font "YaheiInconsolata-18")))
+    (set-frame-font "Inconsolata-18")))
 
   ;; set default frame dimension
   (if window-system
