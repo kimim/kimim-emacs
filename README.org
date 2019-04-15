@@ -19,11 +19,11 @@ emacs configuration files and folders:
 - clone =kimim-emacs= to home folder =~=
 - copy new =.emacs= file from =kimim-emacs= to =~=
 
-#+BEGIN_SRC shell
+#+begin_src shell
   cd ~ && mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup && \
   git clone https://github.com/kimim/kimim-emacs && \
   cp kimim-emacs/.emacs ~
-#+END_SRC
+#+end_src
 
 Then execute =emacs= to bootstrap itself.
 
@@ -69,9 +69,9 @@ to install additional application if it is missing in macOS.
 
 Install Homebrew:
 
-#+BEGIN_SRC shell
+#+begin_src shell
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-#+END_SRC
+#+end_src
 
 ** Linux
 
@@ -87,7 +87,7 @@ Set look & feel before all other settings.
 Show menu bar only in macOS desktop environment, because the system preserves
 menu bar for every applications.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (cond
    ((eq window-system 'w32)
     ;; Enable copy and paste in Win32
@@ -105,7 +105,7 @@ menu bar for every applications.
     (scroll-bar-mode -1))
    ((eq window-system nil)
     (menu-bar-mode 0)))
-#+END_SRC
+#+end_src
 
 ** Font and Frame Size
 
@@ -118,7 +118,7 @@ Because Incosolata font is really great for programming, and Microsoft Yahei is
 nice font to view Chinese characters, you'd better to install it from:
 https://github.com/loseblue/yaheiInconsolata.ttf/raw/master/yaheiInconsolata.ttf
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;;set default font
   (cond
    ((eq window-system 'w32)
@@ -153,7 +153,7 @@ https://github.com/loseblue/yaheiInconsolata.ttf/raw/master/yaheiInconsolata.ttf
         (add-to-list 'default-frame-alist
                      (cons 'width (/ (* 4 (x-display-pixel-width))
                                      (* 5 (frame-char-width)))))))
-#+END_SRC
+#+end_src
 
 * Environment
 ** Synchronization Folders
@@ -163,10 +163,10 @@ The variable for synchronization location is named as: =kimim/path-sync=
 If the sync path is not set, then use HOME path =~= as the default folder, that
 means, no synchronization. So please set these variables in your =.emacs= file.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (if (not (boundp 'kimim/path-sync))
       (defvar kimim/path-sync "~/"))
-#+END_SRC
+#+end_src
 
 ** kimim-emacs path
 
@@ -176,10 +176,10 @@ cloned from my github repository.
 Anyway, you can change the path as you want, and set =kimim/path-kimim-emacs=
 accordingly.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (if (not (boundp 'kimim/path-kimim-emacs))
       (defvar kimim/path-kimim-emacs "~/kimim-emacs/"))
-#+END_SRC
+#+end_src
 
 ** PATH, exec-path and Info
 
@@ -190,7 +190,7 @@ we should set both of them to almost the same paths.
 As I have a Windows box in the office, and a Apple macOS at home, so I need to
 specify these variables in different way.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (cond
    ((eq system-type 'windows-nt)
     (setq kimim/path-root "C:/msys2")
@@ -210,31 +210,31 @@ specify these variables in different way.
   (add-to-list 'exec-path (concat kimim/path-root "bin"))
   (add-to-list 'exec-path (concat kimim/path-root "usr/bin"))
   (add-to-list 'exec-path (concat kimim/path-root "usr/local/bin"))
-#+END_SRC
+#+end_src
 
 Then append exec-path to PATH:
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setenv "PATH"
           (concat
            (mapconcat #'identity exec-path path-separator)
            (getenv "PATH")))
-#+END_SRC
+#+end_src
 
 ** Custom File
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (if (not (boundp 'kimim/file-custom))
       (defvar kimim/file-custom "~/.emacs.d/custom.el"))
   (if (not (file-exists-p kimim/file-custom))
       (write-region "" nil kimim/file-custom))
   (setq custom-file kimim/file-custom)
   (load-file custom-file)
-#+END_SRC
+#+end_src
 
 ** Language
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setenv "LANG" "en_US.UTF-8")
   (setenv "LC_ALL" "en_US.UTF-8")
   ;; remove svn log LC_TYPE not defined warning.
@@ -254,16 +254,16 @@ Then append exec-path to PATH:
     (set-clipboard-coding-system 'utf-16le))
    ((eq system-type 'gnu/linux)
     (set-clipboard-coding-system 'utf-8)))
-#+END_SRC
+#+end_src
 
 ** global key map
 
 Define new command prefix for keys such as "C-x m f", "C-x m v".
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (define-prefix-command 'ctl-x-m-map)
   (global-set-key "\C-xm" 'ctl-x-m-map)
-#+END_SRC
+#+end_src
 
 * Emacs in Terminal
 ** cmd.exe
@@ -274,10 +274,10 @@ Define new command prefix for keys such as "C-x m f", "C-x m v".
 
 nt-emacs running in mintty will report error such as:
 
-#+BEGIN_SRC shell
+#+begin_src shell
 $ /cygdrive/c/kimikit/emacs/bin/emacs -nw
 emacs: standard input is not a tty
-#+END_SRC
+#+end_src
 
 Because the native win32 emacs wants to talk to a Windows console window, not to
 an actual tty -- the error message is misleading here.[fn:6]
@@ -297,7 +297,7 @@ Here I use =use-package= to defer the package loading and even installation,
 When you use the =:commands= keyword, it creates autoloads for those commands
 and defers loading of the module until they are used.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq package-user-dir "~/.emacs.d/elpa")
   (setq package-archives
         '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
@@ -319,11 +319,11 @@ and defers loading of the module until they are used.
   (setq use-package-always-ensure t)
   (setq use-package-always-defer t)
   (setq use-package-verbose t)
-#+END_SRC
+#+end_src
 
 * Title and Header
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq frame-title-format
         '("" invocation-name ": "
           (:eval (if (buffer-file-name)
@@ -339,13 +339,13 @@ and defers loading of the module until they are used.
           (apply orig-fun args)
         (setq header-line-format nil)))
     (advice-add 'ph--display-header :around #'kimim/ph--display-header))
-#+END_SRC
+#+end_src
 
 * Mode Line
 
 Display time and (line, column) numbers in mode line.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package time
     :init
     (setq display-time-24hr-format t)
@@ -356,18 +356,18 @@ Display time and (line, column) numbers in mode line.
 
   (line-number-mode 1)
   (column-number-mode 1)
-#+END_SRC
+#+end_src
 
 * Color Theme
 
 Use self defined color theme 1 seconds after init.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq font-lock-maximum-decoration t)
   (setq font-lock-global-modes '(not shell-mode text-mode))
   (setq font-lock-verbose t)
   (global-font-lock-mode 1)
-#+END_SRC
+#+end_src
 
 #+begin_src emacs-lisp
   (use-package kimim-theme
@@ -378,7 +378,7 @@ Use self defined color theme 1 seconds after init.
 
 * Highlight
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;; highlight current line
   (use-package hl-line
     :defer 5
@@ -391,11 +391,11 @@ Use self defined color theme 1 seconds after init.
     :bind ("C-x m e" . ahs-edit-mode)
     :config
     (global-auto-highlight-symbol-mode t))
-#+END_SRC
+#+end_src
 
 * Other Visual Element
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq inhibit-startup-message t)          ; 不顯示開始畫面
   (setq initial-scratch-message nil)        ; scratch 默認為空
   (setq visible-bell t)
@@ -404,12 +404,12 @@ Use self defined color theme 1 seconds after init.
   (show-paren-mode 1)                       ; 高亮显示匹配的括号
   (blink-cursor-mode 1)                     ; 光标不闪烁
   (tooltip-mode nil)
-#+END_SRC
+#+end_src
 
 * Help
 ** Info
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package info
     :commands (info)
     :config
@@ -420,22 +420,22 @@ Use self defined color theme 1 seconds after init.
     ;; additional info, collected from internet
     (add-to-list 'Info-additional-directory-list
                  "~/info"))
-#+END_SRC
+#+end_src
 
 ** tldr
 
 TL;DR stands for "Too Long; Didn't Read"[fn:8]. =tldr.el= [fn:9] is the Emacs
 client.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package tldr
     )
-#+END_SRC
+#+end_src
 
 * Controlling
 ** Window and Frame
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package winner
     ;; restore windows configuration, built-in package
     :commands winner-mode
@@ -451,17 +451,17 @@ client.
   ;; donno why, w/o following, new frame still has scroll-bar
   (if (not (eq window-system nil))
       (scroll-bar-mode -1))
-#+END_SRC
+#+end_src
 
 scroll slowly with touchpad.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq mouse-wheel-scroll-amount '(0.01))
-#+END_SRC
+#+end_src
 
 ** Command
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;; https://github.com/justbur/emacs-which-key
   (use-package which-key
     :diminish which-key-mode
@@ -500,22 +500,22 @@ scroll slowly with touchpad.
     (use-package smex)
     (add-hook 'counsel-grep-post-action-hook 'recenter)
     (ivy-mode 1))
-#+END_SRC
+#+end_src
 
 ** Key Frequency
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package keyfreq
     :config
     (keyfreq-mode)
     (keyfreq-autosave-mode)
     (setq keyfreq-file "~/.emacs.d/emacs.keyfreq"))
-#+END_SRC
+#+end_src
 
 * Editing
 ** General
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq inhibit-eol-conversion nil)       ; 不要轉換 end-of-line style
   ;; fill-column is a buffer-local variable, use setq-default to change it globally
   (setq-default fill-column 80)
@@ -588,19 +588,19 @@ scroll slowly with touchpad.
   (require 'saveplace)
   (setq-default save-place t)
   (setq save-place-file (expand-file-name "saveplace" "~"))
-#+END_SRC
+#+end_src
 
 ** visual-fille-mode
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package visual-fill-column)
   (setq visual-fill-column-width 80)
   (setq visual-fill-column-center-text t)
-#+END_SRC
+#+end_src
 
 ** pangu-spacing
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package pangu-spacing
     :diminish pangu-spacing-mode
     :config
@@ -608,21 +608,21 @@ scroll slowly with touchpad.
     (add-hook 'org-mode-hook
               '(lambda ()
                  (set (make-local-variable 'pangu-spacing-real-insert-separtor) t))))
-#+END_SRC
+#+end_src
 
 ** undo-tree
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package undo-tree
     :diminish undo-tree-mode
     :config
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t))
-#+END_SRC
+#+end_src
 
 * File Management
 ** dired
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package dired
     :ensure nil
     :bind
@@ -706,7 +706,7 @@ scroll slowly with touchpad.
                   (mode 14 14 :left :elide)
                   " "
                   filename-and-process))))
-#+END_SRC
+#+end_src
 
 ** sunrise commander
 
@@ -714,7 +714,7 @@ The Sunrise Commmander is a powerful and versatile double-pane file manager for
 GNU Emacs. It's built atop of Dired and takes advantage of most of its
 functions, but also provides many handy features of its own.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package sunrise-commander
     :bind (:map sr-mode-map
     ("o" . kimim/open-in-external-app)
@@ -722,11 +722,11 @@ functions, but also provides many handy features of its own.
     ("<right>" . sr-advertised-find-file))
     :ensure t
     )
-#+END_SRC
+#+end_src
 
 * Navigation
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;; bookmark setting
   (setq bookmark-default-file "~/.emacs.d/emacs.bmk")
   ;; 每当设置书签的时候都保存书签文件，否则只在你退出 Emacs 时保存
@@ -748,30 +748,30 @@ functions, but also provides many handy features of its own.
     ("C-\"" . ace-window)
     :config
     (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
-#+END_SRC
+#+end_src
 
 * Search and Finding
 ** swiper replaces isearch
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package swiper
     :init (setq swiper-action-recenter t)
     :bind
     ("C-s" . swiper))
-#+END_SRC
+#+end_src
 
 ** ag: the silver searcher
 
 =ag= [fn:10] is really a very fast grep tool, and =ag.el= [fn:11] provide the
 Emacs interface to =ag=:
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ag
     :bind
     ("C-x g" . ag-project)
     :config
     (setq ag-highlight-search t))
-#+END_SRC
+#+end_src
 
 ** pt: the platium searcher
 
@@ -786,7 +786,7 @@ out of the box.
 
 =imenu= is used to navigate the function definitions in current buffer.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package imenu
     :bind ("C-c C-i" . imenu)
     :config
@@ -796,24 +796,24 @@ out of the box.
 
   (use-package imenu-anywhere
     :bind ("C-c i" . imenu-anywhere))
-#+END_SRC
+#+end_src
 
 ** helm
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package helm)
-#+END_SRC
+#+end_src
 
 * auto-complete
 ** abbrev
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (diminish 'abbrev-mode)
-#+END_SRC
+#+end_src
 
 ** ivy-mode
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ivy
     :diminish ivy-mode
     :bind ("<f6>" . ivy-resume)
@@ -822,21 +822,21 @@ out of the box.
     (setq ivy-count-format "(%d/%d) ")
     (setq ivy-wrap nil)
     (ivy-mode 1))
-#+END_SRC
+#+end_src
 
 ** auto parenthesis
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;; add pair parenthis and quote automatically
   (use-package autopair
     :diminish autopair-mode
     :config
     (autopair-global-mode 1))
-#+END_SRC
+#+end_src
 
 ** yasnippet
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package yasnippet
     :config
     (add-to-list
@@ -846,7 +846,7 @@ out of the box.
     (add-to-list 'company-backends 'company-yasnippet)
     (use-package warnings)
     (setq warning-suppress-types '((yasnippet backquote-change))))
-#+END_SRC
+#+end_src
 
 In order to remove following warning:
 
@@ -857,20 +857,20 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
 
 ** company dict
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package company-dict
     :config
     ;; Where to look for dictionary files
     (setq company-dict-dir (concat kimim/path-sync "kimikit/emacs.d/dict"))
     ;; Optional: if you want it available everywhere
     (add-to-list 'company-backends 'company-dict))
-#+END_SRC
+#+end_src
 
 ** company mode
 
 English word list fetch from https://github.com/dwyl/english-words
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package company-try-hard
     :bind ("C-\\" . company-try-hard))
 
@@ -884,28 +884,28 @@ English word list fetch from https://github.com/dwyl/english-words
     (cond ((eq system-type 'windows-nt)
            (setq ispell-alternate-dictionary "~/.emacs.d/dict/words3.txt")))
     (add-to-list 'company-backends 'company-ispell))
-#+END_SRC
+#+end_src
 
 ** company statistics
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package company-statistics
     :config
     (company-statistics-mode 1))
-#+END_SRC
+#+end_src
 
 * Programming General
 
 ** Compiling
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq next-error-recenter 20)
   (bind-key "C-<f11>" 'compile)
-#+END_SRC
+#+end_src
 
 ** Tagging
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ggtags
     :bind (("C-c f" . ggtags-find-file)
            ("M-." . ggtags-find-tag-dwim))
@@ -926,15 +926,15 @@ English word list fetch from https://github.com/dwyl/english-words
     ;; close grep window and done ggtags navigation when type C-g
     ;; but some times it will close all the ecb windows, so remove this advice.
     ;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
-#+END_SRC
+#+end_src
 
 ** Version Control
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;; ;; magit-status for git
   (use-package magit
     :bind ("C-x m g" . magit-status))
-#+END_SRC
+#+end_src
 
 Following error will reported when using magit to commit changes:
 
@@ -956,7 +956,7 @@ this directory as secure because you are the owner.
 
 ** C
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;; Define the modes/packages you need
   (use-package company-irony)
 
@@ -1019,7 +1019,7 @@ this directory as secure because you are the owner.
                 (local-set-key "\C-co" 'ff-find-other-file)
                 ;;(my-c-mode-common-hook-if0)
                 (setq c-basic-offset 4))))
-#+END_SRC
+#+end_src
 
 *** irony installation
 
@@ -1034,18 +1034,18 @@ It is quite easy to install =irony-server= under macOS, just invoke the command
 "M-x irony-install-server", and Emacs will compile and install it to
 =~/.emacs.d/irony/bin/irony-server=, by invoking the make commands:
 
-#+BEGIN_SRC shell
+#+begin_src shell
   cmake -DCMAKE_INSTALL_PREFIX\=/Users/kimim/.emacs.d/irony/
   /Users/kimim/.emacs.d/elpa/irony-20160925.1030/server && cmake --build
   . --use-stderr --config Release --target install
-#+END_SRC
+#+end_src
 
 For Cygwin/Windows, first we should install =libclang= 3.8.1-1 and
 =libclang-devel= 3.8.1-1 and =cmake= with =setup.exe=.
 
 Then compile =irony-server= with =cmake= and =make=:
 
-#+BEGIN_SRC shell
+#+begin_src shell
 ~/.emacs.d/elpa/irony-20160925.1030/server/build
 $ cmake -DCMAKE_INSTALL_PREFIX=~/.emacs.d/irony/ -G "Unix Makefiles" ..
 
@@ -1063,13 +1063,13 @@ Scanning dependencies of target irony-server
 Install the project...
 -- Install configuration: "Release"
 -- Up-to-date: /home/kimim/.emacs.d/irony/bin/irony-server.exe
-#+END_SRC
+#+end_src
 
 ** Python
 
 Python development configuration is quite easy. =elpy= [fn:14] is used here:
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package elpy
     :config
     (elpy-enable))
@@ -1088,11 +1088,11 @@ Python development configuration is quite easy. =elpy= [fn:14] is used here:
     :config
     (setq elpy-rpc-backend "jedi")
     (add-to-list 'company-backends 'company-jedi))
-#+END_SRC
+#+end_src
 
 Following =python= package is required according to =elpy= mannual:
 
-#+BEGIN_SRC shell
+#+begin_src shell
 pip install rope
 pip install jedi
 # flake8 for code checks
@@ -1105,49 +1105,49 @@ pip install autopep8
 pip install yapf
 # install virtualenv for jedi
 pip install virtualenv
-#+END_SRC
+#+end_src
 
 ** Swift
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package swift-mode
     :mode ("\\.swift\\'" . swift-mode))
-#+END_SRC
+#+end_src
 
 ** Go lang
 Open =.go= file with go-mode.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package go-mode
     :mode ("\\.go\\'" . go-mode))
-#+END_SRC
+#+end_src
 
 ** Docker file
 Some dockerfile is not end with =.dockerfile=, so lets guess:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package dockerfile-mode
     :mode ("\\dockerfile\\'" . dockerfile-mode))
-#+END_SRC
+#+end_src
 
 ** Emacs lisp
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (define-derived-mode lisp-interaction-mode emacs-lisp-mode "λ")
   (eval-after-load 'company
     '(add-to-list 'company-backends 'company-elisp))
-#+END_SRC
+#+end_src
 
 ** AutoHotKey
 
 =ahk-mode= developed by Rich Alesi[fn:15]
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ahk-mode
     :mode ("\\.ahk\\'" . ahk-mode))
-#+END_SRC
+#+end_src
 
 * Calendar
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (if (not (boundp 'kimim/file-diary))
       (defvar kimim/file-diary (concat kimim/path-sync "kimikit/emacs.d/diary")))
   (if (not (file-exists-p kimim/file-diary))
@@ -1174,7 +1174,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
         ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
   (setq chinese-calendar-terrestrial-branch
         ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
-#+END_SRC
+#+end_src
 
 * Orgmode
 
@@ -1188,7 +1188,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 ** org general setting
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;; path and system environment setting for orgmode
   (if (not (boundp 'kimim/path-org))
       (defvar kimim/path-org (concat kimim/path-sync "org/")))
@@ -1208,16 +1208,29 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     (setq org-cycle-separator-lines 0)
     (setq org-src-fontify-natively t)
     (setq org-startup-indented t))
-#+END_SRC
+#+end_src
 
 ** org for writing
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package org-download
     :config
     (setq org-download-timestamp "")
-    (setq org-image-actual-width (/ (display-pixel-width) 3)))
+    (setq org-image-actual-width (/ (display-pixel-width) 3))
+    (setq-default org-download-image-dir "./images")
+    (setq org-download-method 'directory)
+    (setq org-startup-with-inline-images t)
+    (setq image-file-name-extensions
+          (quote
+           ("png" "jpeg" "jpg" "gif" "tiff" "tif" "xbm"
+            "xpm" "pbm" "pgm" "ppm" "pnm" "svg" "pdf" "bmp")))
+    (setq org-image-actual-width 800)
+    (setq org-download-image-html-width 800)
+    (setq org-download-image-latex-width 800)
+    (setq org-download-image-org-width 800))
+#+end_src
 
+#+begin_src emacs-lisp
   (use-package org
     :config
     ;;(use-package org-download)
@@ -1235,11 +1248,11 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
                                                  (insert "_{}")
                                                  (backward-char 1)))
     )
-#+END_SRC
+#+end_src
 
 ** org with source code
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package org
     :config
     ;; src block setting
@@ -1263,17 +1276,17 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     ;;    (org . t)
     ;;    ))
      )
-#+END_SRC
+#+end_src
 
 ** org exporting
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package org
     :config
     (setq org-export-allow-BIND t)
     (setq org-export-creator-string "")
     (setq org-export-html-validation-link nil))
-#+END_SRC
+#+end_src
 
 *** org to pdf
 
@@ -1287,11 +1300,11 @@ Windows from https://www.python.org/downloads/.
 
 Get =pygments= with =pip:
 
-#+BEGIN_SRC shell
+#+begin_src shell
 pip install pygments
-#+END_SRC
+#+end_src
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ox-latex
     :ensure org
     :commands (org-latex-publish-to-pdf)
@@ -1359,10 +1372,10 @@ pip install pygments
             ("" "capt-of" nil nil)
             ("" "hyperref" nil nil))))
     )
-#+END_SRC
+#+end_src
 
 *** org to html page
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ox-html
     :ensure org
     :commands (org-html-publish-to-html)
@@ -1411,11 +1424,11 @@ pip install pygments
                         (expand-file-name result default-directory)
                       result)
                     (if description (concat "[" description "]") "")))))))
-#+END_SRC
+#+end_src
 
 ** org to html slide
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ox-reveal
     :config
     (use-package htmlize :ensure t)
@@ -1427,11 +1440,11 @@ pip install pygments
     (setq org-reveal-height 750)
     (setq org-reveal-transition "fade")
     (setq org-reveal-hlevel 2))
-#+END_SRC
+#+end_src
 
 ** org with diagram
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;; plant uml setting
   (use-package ob-plantuml
     :ensure org
@@ -1439,11 +1452,11 @@ pip install pygments
     (require 'ob-plantuml)
     (setenv "GRAPHVIZ_DOT" (concat kimim/path-root "bin/dot"))
     (setq org-plantuml-jar-path (concat kimim/path-kimikit "plantuml/plantuml.jar")))
-#+END_SRC
+#+end_src
 
 ** org as GTD system
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package org
     :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
     :bind (("<f12>" . org-toggle-home-or-office)
@@ -1609,13 +1622,13 @@ pip install pygments
         (org-toggle-home)))
 
     (org-toggle-office))
-#+END_SRC
+#+end_src
 
 ** org link: match
 
 New link to use everything to locate a file with unique ID:
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package org
     :config
     (org-add-link-type "match" 'org-match-open)
@@ -1626,13 +1639,13 @@ New link to use everything to locate a file with unique ID:
       (w32-shell-execute
        "open" "Everything" (concat "-search " path))))
 
-#+END_SRC
+#+end_src
 
 ** org link: onenote
 
 New link to use everything to locate a file with unique ID:
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package org
     :config
     (org-add-link-type "onenote" 'org-onenote-open)
@@ -1648,7 +1661,7 @@ New link to use everything to locate a file with unique ID:
         ((eq window-system 'ns)
          (shell-command (replace-regexp-in-string "&" "\\\\&" (format "open onenote:%s" path))))
         )))
-#+END_SRC
+#+end_src
 
 
 ** org link: deft
@@ -1658,7 +1671,7 @@ from deft note. Below defines a function to fetch a deft style link, which can
 be used to paste directly in other org files, such as work journal. Buffer file
 name handling function can be found from emacs manual[fn:16].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package org
     :bind
     (("C-x m d" . kimim/deft-store-link))
@@ -1672,12 +1685,12 @@ name handling function can be found from emacs manual[fn:16].
                          (file-name-nondirectory (buffer-name)))))
         (kill-new msg)
         (message msg))))
-#+END_SRC
+#+end_src
 
 
 ** org publish to jekyll
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package org
     :commands (jekyll)
     :config
@@ -1798,11 +1811,11 @@ name handling function can be found from emacs manual[fn:16].
     (defun jekyll-test ()
       (interactive)
       (org-open-file (org-html-export-to-html nil))))
-#+END_SRC
+#+end_src
 
 * Note Taking Tools
 ** Deft
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package deft
     :bind
     (("C-x d" . deft-find-file)
@@ -1868,15 +1881,15 @@ name handling function can be found from emacs manual[fn:16].
 
     (advice-add 'deft-new-file-named
                 :around #'kimim/deft-new-file-named-advice))
-#+END_SRC
+#+end_src
 
 * Reference management
 
-#+BEGIN_SRC elisp
+#+begin_src elisp
 (setq org-ref-bibliography-notes (concat kimim/path-ref "notes.org")
       org-ref-default-bibliography (concat kimim/path-ref "docs.bib")
       org-ref-pdf-directory (concat kimim/path-ref "pdfs/"))
-#+END_SRC
+#+end_src
 * Dictionary
 ** Youdao dictionary
 
@@ -1890,7 +1903,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 * Mail and Contacts
 ** EBDB - a replacement for BBDB, as contact management
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ebdb
     :commands (ebdb ebdb-mail-aliases)
     :config
@@ -1901,11 +1914,11 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     (require 'ebdb-message)
     (add-hook 'message-setup-hook 'ebdb-mail-aliases)
     )
-#+END_SRC
+#+end_src
 
 ** erc
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;; erc settings
   (use-package erc
     :commands (erc)
@@ -1917,7 +1930,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     (setq erc-autojoin-channels-alist
           '(("irc.freenode.net" "#emacs")))
     (setq erc-hide-list '("JOIN" "PART" "QUIT")))
-#+END_SRC
+#+end_src
 
 ** GNUS dired
 
@@ -1995,7 +2008,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 
 * Reading News
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package elfeed
     :commands (elfeed)
     :config
@@ -2022,21 +2035,21 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
             ("https://www.lemonde.fr/sciences/rss_full.xml" FR science)
             ("https://www.lemonde.fr/technologies/rss_full.xml" FR technology)
             ("http://kimi.im/atom.xml" blog))))
-#+END_SRC
+#+end_src
 
 * kimim utils
 
 In Windows environment, =kimim/xterm= and =kimim/dc= will look up the program
 from system PATH, so you should set these to system PATH:
 
-#+BEGIN_SRC bat
+#+begin_src bat
 C:\msys64\
 C:\msys64\usr\bin\
 C:\msys64\mingw64\bin\
 PATH\of\doublecmd\
-#+END_SRC
+#+end_src
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package kimim
     :defer 5
     :ensure nil
@@ -2052,11 +2065,11 @@ PATH\of\doublecmd\
      ("C-c d" . kimim/lookinsight))
     :load-path "~/kimim-emacs/site-lisp/"
     )
-#+END_SRC
+#+end_src
 
 * Key Binding
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (bind-key "<f1>" 'delete-other-windows)
   (bind-key "C-<f1>" 'nuke-other-buffers)
   (bind-key "M-<f1>" (lambda()
@@ -2114,7 +2127,7 @@ PATH\of\doublecmd\
   (bind-key "C-x  。" 'unbury-buffer)
   (bind-key "C-x  ‘" 'hippie-expand)
   (bind-key "C-x  ’" 'hippie-expand)
-#+END_SRC
+#+end_src
 
 * Footnotes
 
