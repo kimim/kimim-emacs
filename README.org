@@ -155,6 +155,15 @@ https://github.com/loseblue/yaheiInconsolata.ttf/raw/master/yaheiInconsolata.ttf
                                      (* 5 (frame-char-width)))))))
 #+end_src
 
+** Dealing with Unicode fonts
+
+#+begin_src emacs-lisp
+  (use-package unicode-fonts
+    :defer 10
+    :config
+    (unicode-fonts-setup))
+#+end_src
+
 * Environment
 ** Synchronization Folders
 
@@ -402,6 +411,7 @@ Use self defined color theme 1 seconds after init.
   (setq ring-bell-function #'ignore)
   (fset 'yes-or-no-p 'y-or-n-p)
   (show-paren-mode 1)                       ; 高亮显示匹配的括号
+  (setq blink-cursor-blinks 3)              ; 光标闪烁三次后不闪烁
   (blink-cursor-mode 1)                     ; 光标不闪烁
   (tooltip-mode nil)
 #+end_src
