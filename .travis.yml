@@ -9,8 +9,8 @@ before_install:
   - sudo apt-get install -qq $emacs
   - sudo apt-get install python3
   - sudo apt-get install python3-pip
-  - sudo pip3 install pygments
-  - sudo apt-get install texlive-full
+#  - sudo pip3 install pygments
+#  - sudo apt-get install texlive-full
 
 
 script:

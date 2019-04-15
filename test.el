@@ -2,4 +2,4 @@
 
 (with-temp-buffer
   (find-file "~/kimim-emacs/README.org")
-  (org-latex-export-to-pdf))
+  (org-html-export-to-html))
