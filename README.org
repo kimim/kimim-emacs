@@ -51,8 +51,8 @@ the command line option to install packages as many as possible.
 
 With =kimikit=, it is quite easy to upgrade cygwin setup tool:
 
-#+BEGIN_QUOTE
-$cd ~/kimikit/install
+#+begin_src shell
+$ cd ~/kimikit/install
 $ make cyg
 wget https://cygwin.com/setup-x86_64.exe
 --2017-01-04 16:50:29--  https://cygwin.com/setup-x86_64.exe
@@ -60,7 +60,7 @@ Length: 916499 (895K) [application/octet-stream]
 Saving to: ‘setup-x86_64.exe’
 ...
 mv setup-x86_64.exe ../bin/cygup.exe
-#+END_QUOTE
+#+end_src
 
 ** Mac OS
 
