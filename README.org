@@ -225,7 +225,8 @@ Then append exec-path to PATH:
 
 #+begin_src emacs-lisp
   (if (not (boundp 'kimim/file-custom))
-      (defvar kimim/file-custom "~/.emacs.d/custom.el"))
+      (defvar kimim/file-custom
+        (concat kimim/path-sync "kimikit/emacs.d/custom.el")))
   (if (not (file-exists-p kimim/file-custom))
       (write-region "" nil kimim/file-custom))
   (setq custom-file kimim/file-custom)
