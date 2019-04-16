@@ -400,6 +400,14 @@ Use self defined color theme 1 seconds after init.
   (use-package unicode-fonts
     :defer 10
     :config
+    (defadvice unicode-fonts-setup (after
+                                    unicode-fonts-setup-advice
+                                    (&optional fontset-names regenerate) activate)
+      (interactive "p")
+      (set-fontset-font
+       "fontset-default"
+       'cjk-misc (font-spec :family "YaheiInconsolata")))
+
     (unicode-fonts-setup))
 #+end_src
 
