@@ -145,6 +145,7 @@
             (wgrep-face :foreground ,kimim-comment)
             (cider-instrumented-face)
             (mu4e-replied-face :foreground "dark green")
+            (mu4e-forwarded-face :foreground "dark green")
             (mu4e-unread-face :foreground "blue")))))
 
 (custom-theme-set-variables
