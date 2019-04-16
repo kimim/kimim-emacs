@@ -143,7 +143,9 @@
             (ivy-highlight-face)
             (ivy-posframe :background "#eeeeee" :foreground "#000000")
             (wgrep-face :foreground ,kimim-comment)
-            (cider-instrumented-face)))))
+            (cider-instrumented-face)
+            (mu4e-replied-face :foreground "dark green")
+            (mu4e-unread-face :foreground "blue")))))
 
 (custom-theme-set-variables
  'kimim
