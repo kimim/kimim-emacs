@@ -670,7 +670,7 @@ scroll slowly with touchpad.
                               "|qms-bmh"))))
     ;; Dired buffer 中列出文件时传递给 ls 的参数。加个 "l" 可以使大写的文
     ;; 件名在顶部，临时的改变可以用 C-u s。
-    (setq dired-listing-switches "-avhl")
+    (setq dired-listing-switches "-avhl --no-group")
     ;; 复制(删除)目录的时，第归的复制(删除)其中的子目录。
     (setq dired-recursive-copies t)
     (setq dired-recursive-deletes t)
