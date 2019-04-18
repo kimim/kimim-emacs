@@ -670,7 +670,7 @@ scroll slowly with touchpad.
                               "|qms-bmh"))))
     ;; Dired buffer 中列出文件时传递给 ls 的参数。加个 "l" 可以使大写的文
     ;; 件名在顶部，临时的改变可以用 C-u s。
-    (setq dired-listing-switches "-avhl --no-group")
+    (setq dired-listing-switches "-avhlgo --group-directories-first")
     ;; 复制(删除)目录的时，第归的复制(删除)其中的子目录。
     (setq dired-recursive-copies t)
     (setq dired-recursive-deletes t)
@@ -739,8 +739,8 @@ functions, but also provides many handy features of its own.
     ("o" . kimim/open-in-external-app)
     ("<left>" . sr-dired-prev-subdir)
     ("<right>" . sr-advertised-find-file))
-    :ensure t
-    )
+    :config
+    (setq sr-listing-switches "-avhlgo --group-directories-first"))
 #+end_src
 
 * Navigation
