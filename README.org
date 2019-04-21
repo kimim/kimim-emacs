@@ -735,10 +735,11 @@ functions, but also provides many handy features of its own.
 
 #+begin_src emacs-lisp
   (use-package sunrise-commander
-    :bind (:map sr-mode-map
-    ("o" . kimim/open-in-external-app)
-    ("<left>" . sr-dired-prev-subdir)
-    ("<right>" . sr-advertised-find-file))
+    :bind (("<f10>" . sunrise)
+           :map sr-mode-map
+           ("o" . kimim/open-in-external-app)
+           ("<left>" . sr-dired-prev-subdir)
+           ("<right>" . sr-advertised-find-file))
     :config
     (setq sr-listing-switches "-avhlgo --group-directories-first"))
 #+end_src
@@ -2078,7 +2079,6 @@ PATH\of\doublecmd\
      ("C-x m y" . kimim/mail-attach-files)
      ("<f9>" . kimim/xterm)
      ("S-<f9>" . kimim/cmd)
-     ("<f10>" . kimim/dc)
      ("C-c r" . kimim/rename-file-and-buffer)
      ("C-x m o" . kimim/open-in-external-app)
      ("C-c d" . kimim/lookinsight))
@@ -2103,7 +2103,6 @@ PATH\of\doublecmd\
   ;;                   (interactive) (list-charset-chars 'ascii)))
   (bind-key "<f7>" 'bury-buffer)
   (bind-key "<f8>" 'unbury-buffer)
-
   ;; (bind-key "M-<SPC>" (lambda () (interactive)
   ;;                       (insert ?_)))
   (bind-key "C-h" 'delete-backward-char)
