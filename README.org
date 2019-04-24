@@ -348,6 +348,7 @@ Display time and (line, column) numbers in mode line.
 
 #+begin_src emacs-lisp
   (use-package time
+    :dever 3
     :init
     (setq display-time-24hr-format t)
     (setq display-time-day-and-date t)
