@@ -191,3 +191,113 @@ note in "notes" folder.
 
     (add-hook 'gnus-message-setup-hook 'kimim/mail-setup))
 #+end_src
+** C
+
+#+begin_src emacs-lisp
+  ;; Define the modes/packages you need
+  (use-package company-irony)
+
+  (use-package irony
+    :diminish irony-mode
+    :config
+    (setq w32-pipe-read-delay 0)
+    (use-package company-irony)
+    (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+    ;; replace the `completion-at-point' and `complete-symbol' bindings in
+    ;; irony-mode's buffers by irony-mode's function
+    (defun my-irony-mode-hook ()
+      (define-key irony-mode-map [remap completion-at-point]
+        'irony-completion-at-point-async)
+      (define-key irony-mode-map [remap complete-symbol]
+        'irony-completion-at-point-async))
+    (add-hook 'irony-mode-hook 'my-irony-mode-hook))
+
+  (use-package company-c-headers)
+
+  (use-package flycheck
+    :config
+    ;; set up flycheck
+    (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+  (use-package cc-mode
+    :ensure nil
+    :config
+    (add-to-list 'auto-mode-alist '("\\.C\\w*\\'" . c-mode))
+    (use-package company)
+    (use-package company-irony)
+    (add-to-list 'company-backends 'company-irony)
+    (use-package company-c-headers)
+    (add-to-list 'company-c-headers-path-system "/usr/include")
+    (require 'irony)
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'objc-mode-hook 'irony-mode)
+    (require 'flycheck)
+    (add-hook 'c-mode-hook 'flycheck-mode)
+    (add-hook 'c++-mode-hook 'flycheck-mode)
+    (require 'ggtags)
+    (add-hook 'c-mode-hook 'ggtags-mode)
+    (add-hook 'c++-mode-hook 'ggtags-mode)
+
+    (add-hook 'c-mode-common-hook
+              (lambda ()
+                ;; show column width indicator
+                ;;(fci-mode 0)
+                ;;(syntax-subword-mode 1)
+                ;;(hs-minor-mode 0)
+                ;;(c-set-style "gnu")
+                (c-toggle-auto-newline 0)
+                (c-toggle-auto-hungry-state 0)
+                (c-toggle-syntactic-indentation 1)
+                ;;(highlight-indentation-mode 1)
+                (which-function-mode 1)
+                (local-set-key "\C-co" 'ff-find-other-file)
+                ;;(my-c-mode-common-hook-if0)
+                (setq c-basic-offset 4))))
+#+end_src
+
+*** irony installation
+
+=irony-mode= is developed by Sarcasm [fn:13]. It is an Emacs minor-mode that
+aims at improving the editing experience for the C, C++ and Objective-C
+languages. It works by using a combination of an Emacs package and a C++ program
+(=irony-server=) that uses libclang. When correctly configured, it can provide
+wonderful auto completion for functions and variables. The function prototypes
+with parameters can be triggered as a yasnippet automatically.
+
+It is quite easy to install =irony-server= under macOS, just invoke the command
+"M-x irony-install-server", and Emacs will compile and install it to
+=~/.emacs.d/irony/bin/irony-server=, by invoking the make commands:
+
+#+begin_src shell
+  cmake -DCMAKE_INSTALL_PREFIX\=/Users/kimim/.emacs.d/irony/
+  /Users/kimim/.emacs.d/elpa/irony-20160925.1030/server && cmake --build
+  . --use-stderr --config Release --target install
+#+end_src
+
+For Cygwin/Windows, first we should install =libclang= 3.8.1-1 and
+=libclang-devel= 3.8.1-1 and =cmake= with =setup.exe=.
+
+Then compile =irony-server= with =cmake= and =make=:
+
+#+begin_src shell
+~/.emacs.d/elpa/irony-20160925.1030/server/build
+$ cmake -DCMAKE_INSTALL_PREFIX=~/.emacs.d/irony/ -G "Unix Makefiles" ..
+
+~/.emacs.d/elpa/irony-20160925.1030/server/build
+$ make install
+Scanning dependencies of target irony-server
+[ 14%] Building CXX object src/CMakeFiles/irony-server.dir/support/CommandLineParser.cpp.o
+[ 28%] Building CXX object src/CMakeFiles/irony-server.dir/support/TemporaryFile.cpp.o
+[ 42%] Building CXX object src/CMakeFiles/irony-server.dir/Command.cpp.o
+[ 57%] Building CXX object src/CMakeFiles/irony-server.dir/Irony.cpp.o
+[ 71%] Building CXX object src/CMakeFiles/irony-server.dir/TUManager.cpp.o
+[ 85%] Building CXX object src/CMakeFiles/irony-server.dir/main.cpp.o
+[100%] Linking CXX executable ../bin/irony-server.exe
+[100%] Built target irony-server
+Install the project...
+-- Install configuration: "Release"
+-- Up-to-date: /home/kimim/.emacs.d/irony/bin/irony-server.exe
+#+end_src
