@@ -1954,6 +1954,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     :commands (elfeed)
     :config
     ;; open feed link with eww
+    (use-package org)
     (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
     (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
     (setq elfeed-feeds
