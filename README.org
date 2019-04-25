@@ -978,6 +978,8 @@ this directory as secure because you are the owner.
 ** C
 
 #+begin_src emacs-lisp
+  (use-package company-c-headers)
+
   (use-package cc-mode
     :ensure nil
     :config
