@@ -1957,6 +1957,10 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+begin_src emacs-lisp
   (use-package elfeed
     :commands (elfeed)
+    :bind
+    (:map elfeed-search-mode-map
+          ("<SPC>" . scroll-up-command)
+          ("<backspace>" . scroll-down-command))
     :config
     ;; open feed link with eww
     (use-package org)
