@@ -15,6 +15,11 @@ task for =es.exe=.
     (setq everything-cmd (concat kimim/path-kimikit "bin/es.exe")))
 #+END_SRC
 
+** helm
+
+#+begin_src emacs-lisp
+  (use-package helm)
+#+end_src
 ** Simplenote2
 
 #+BEGIN_SRC emacs-lisp
@@ -196,6 +201,7 @@ note in "notes" folder.
 #+begin_src emacs-lisp
   ;; Define the modes/packages you need
   (use-package company-irony)
+  (use-package company-c-headers)
 
   (use-package irony
     :diminish irony-mode
@@ -204,6 +210,12 @@ note in "notes" folder.
     (use-package company-irony)
     (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+    (require 'flycheck)
+    (add-hook 'c-mode-hook 'flycheck-mode)
+    (add-hook 'c++-mode-hook 'flycheck-mode)
+    (use-package company)
+    (use-package company-c-headers)
+    (add-to-list 'company-c-headers-path-system "/usr/include")
 
     ;; replace the `completion-at-point' and `complete-symbol' bindings in
     ;; irony-mode's buffers by irony-mode's function

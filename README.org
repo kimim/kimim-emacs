@@ -824,12 +824,6 @@ out of the box.
     :bind ("C-c i" . imenu-anywhere))
 #+end_src
 
-** helm
-
-#+begin_src emacs-lisp
-  (use-package helm)
-#+end_src
-
 * auto-complete
 ** abbrev
 
@@ -914,6 +908,8 @@ English word list fetch from https://github.com/dwyl/english-words
 
 ** company statistics
 
+Sort candidates using completion history.
+
 #+begin_src emacs-lisp
   (use-package company-statistics
     :config
@@ -983,19 +979,11 @@ this directory as secure because you are the owner.
 ** C
 
 #+begin_src emacs-lisp
-  (use-package company-c-headers)
-
   (use-package cc-mode
     :ensure nil
     :config
     (add-to-list 'auto-mode-alist '("\\.C\\w*\\'" . c-mode))
-    (use-package company)
-    (use-package company-c-headers)
-    (add-to-list 'company-c-headers-path-system "/usr/include")
-    (require 'flycheck)
-    (add-hook 'c-mode-hook 'flycheck-mode)
-    (add-hook 'c++-mode-hook 'flycheck-mode)
-    (require 'ggtags)
+    (use-package ggtags)
     (add-hook 'c-mode-hook 'ggtags-mode)
     (add-hook 'c++-mode-hook 'ggtags-mode)
 
