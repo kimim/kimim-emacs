@@ -304,7 +304,7 @@ and defers loading of the module until they are used.
         '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
           ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
           ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-          ("sunrise-commander" . "http://elpa.zilongshanren.com/SC/")))
+          ("sunrise" . "http://elpa.emacs-china.org/sunrise-commander/")))
   (mapc
    (lambda (package)
      (unless (package-installed-p package)
