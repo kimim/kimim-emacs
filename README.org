@@ -864,7 +864,8 @@ out of the box.
      'yas-snippet-dirs (concat kimim/path-sync "kimikit/emacs.d/snippets"))
     (yas-global-mode 1)
     (use-package company)
-    (add-to-list 'company-backends 'company-yasnippet)
+    (eval-after-load 'company
+      '(add-to-list  'company-backends 'company-yasnippet))
     (use-package warnings)
     (setq warning-suppress-types '((yasnippet backquote-change))))
 #+end_src
@@ -884,7 +885,8 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
     ;; Where to look for dictionary files
     (setq company-dict-dir (concat kimim/path-sync "kimikit/emacs.d/dict"))
     ;; Optional: if you want it available everywhere
-    (add-to-list 'company-backends 'company-dict))
+    (eval-after-load 'company
+      '(add-to-list 'company-backends 'company-dict)))
 #+end_src
 
 ** company mode
@@ -904,7 +906,8 @@ English word list fetch from https://github.com/dwyl/english-words
     ;; macOS will use system dict file directly
     (cond ((eq system-type 'windows-nt)
            (setq ispell-alternate-dictionary "~/.emacs.d/dict/words3.txt")))
-    (add-to-list 'company-backends 'company-ispell))
+    (eval-after-load 'company
+      '(add-to-list 'company-backends 'company-ispell)))
 #+end_src
 
 ** company statistics
@@ -1022,7 +1025,8 @@ Python development configuration is quite easy. =elpy= [fn:13] is used here:
   (use-package company-jedi
     :config
     (setq elpy-rpc-backend "jedi")
-    (add-to-list 'company-backends 'company-jedi))
+    (eval-after-load 'company
+      '(add-to-list 'company-backends 'company-jedi)))
 #+end_src
 
 Following =python= package is required according to =elpy= mannual:
