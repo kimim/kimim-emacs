@@ -28,7 +28,7 @@
 ;; custom.el file location
 (defvar kimim/file-custom (concat kimim/path-emacs-sync "custom.el"))
 ;; path to refrence documents
-(defvar kimim/ref (concat kimim/path-sync "ref/"))
+(defvar kimim/path-ref (concat kimim/path-sync "ref/"))
 
 ;; if kimim-emacs is clone to ~/kimim-emacs
 (load-file (concat kimim/path-kimim-emacs "init.el"))
