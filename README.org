@@ -165,7 +165,15 @@ means, no synchronization. So please set these variables in your =.emacs= file.
 
 #+begin_src emacs-lisp
   (if (not (boundp 'kimim/path-sync))
-      (defvar kimim/path-sync "~/"))
+      (error "please set kimim/path-sync in ~/.emacs"))
+  (if (not (boundp 'kimim/path-emacs-sync))
+      (error "please set kimim/path-emacs-sync in ~/.emacs"))
+  (if (not (boundp 'kimim/path-org))
+      (error "please set kimim/path-org in ~/.emacs"))
+  (if (not (boundp 'kimim/path-notes))
+      (error "please set kimim/path-notes in ~/.emacs"))
+  (if (not (boundp 'kimim/path-ref))
+      (error "please set kimim/path-ref in ~/.emacs"))
 #+end_src
 
 ** kimim-emacs path
@@ -174,11 +182,11 @@ Another important folder is the folder for this configuration files, which is
 cloned from my github repository.
 
 Anyway, you can change the path as you want, and set =kimim/path-kimim-emacs=
-accordingly.
+accordingly in =~/.emacs=.
 
 #+begin_src emacs-lisp
   (if (not (boundp 'kimim/path-kimim-emacs))
-      (defvar kimim/path-kimim-emacs "~/kimim-emacs/"))
+      (error "please set kimim/path-kimim-emacs in ~/.emacs"))
 #+end_src
 
 ** PATH, exec-path and Info
@@ -226,7 +234,7 @@ Then append exec-path to PATH:
 #+begin_src emacs-lisp
   (if (not (boundp 'kimim/file-custom))
       (defvar kimim/file-custom
-        (concat kimim/path-sync "kimikit/emacs.d/custom.el")))
+        (concat kimim/path-emacs-sync "custom.el")))
   (if (not (file-exists-p kimim/file-custom))
       (write-region "" nil kimim/file-custom))
   (setq custom-file kimim/file-custom)
@@ -861,7 +869,7 @@ out of the box.
     :defer 10
     :config
     (add-to-list
-     'yas-snippet-dirs (concat kimim/path-sync "kimikit/emacs.d/snippets"))
+     'yas-snippet-dirs (concat kimim/path-emacs-sync "snippets"))
     (yas-global-mode 1)
     (use-package company)
     (eval-after-load 'company
@@ -883,7 +891,7 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
   (use-package company-dict
     :config
     ;; Where to look for dictionary files
-    (setq company-dict-dir (concat kimim/path-sync "kimikit/emacs.d/dict"))
+    (setq company-dict-dir (concat kimim/path-emacs-sync "dict"))
     ;; Optional: if you want it available everywhere
     (eval-after-load 'company
       '(add-to-list 'company-backends 'company-dict)))
@@ -1088,7 +1096,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
   (if (not (boundp 'kimim/file-diary))
-      (defvar kimim/file-diary (concat kimim/path-sync "kimikit/emacs.d/diary")))
+      (defvar kimim/file-diary (concat kimim/path-emacs-sync "diary")))
   (if (not (file-exists-p kimim/file-diary))
       (write-region "" nil kimim/file-diary))
   (setq diary-file kimim/file-diary)
@@ -1129,9 +1137,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
   ;; path and system environment setting for orgmode
-  (if (not (boundp 'kimim/path-org))
-      (defvar kimim/path-org (concat kimim/path-sync "org/")))
-
   (use-package org
     :bind
     ("C-c a" . org-agenda)
@@ -1762,8 +1767,6 @@ name handling function can be found from emacs manual[fn:15].
     :config
     (use-package ivy)
     (setq deft-extensions '("txt" "org" "md"))
-    (if (not (boundp 'kimim/path-notes))
-        (defvar kimim/path-notes (concat kimim/path-sync "notes/")))
     (setq deft-directory kimim/path-notes)
     (setq deft-recursive t)
     ;; disable auto save
@@ -1846,7 +1849,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   (use-package ebdb
     :commands (ebdb ebdb-mail-aliases)
     :config
-    (setq ebdb-sources (concat kimim/path-sync "kimikit/emacs.d/ebdb"))
+    (setq ebdb-sources (concat kimim/path-emacs-sync "ebdb"))
     ;; do not pop *EBDB-Gnus* window
     (setq ebdb-mua-pop-up nil)
     (require 'ebdb-gnus)
@@ -1900,7 +1903,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     :ensure nil
     :config
     (setq mail-self-blind t)
-    (setq mail-signature-file (concat kimim/path-sync "kimikit/emacs.d/signature.txt")))
+    (setq mail-signature-file (concat kimim/path-emacs-sync "signature.txt")))
 #+end_src
 
 #+begin_src emacs-lisp

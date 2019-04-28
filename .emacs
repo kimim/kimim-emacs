@@ -17,14 +17,18 @@
 (defvar kimim/path-kimikit "~/kimikit/")
 ;; synchronization driver, for example ~/Dropbox/
 (defvar kimim/path-sync "~/")
-(if (not (file-exists-p (concat kimim/path-sync "kimikit/emacs.d")))
-    (make-directory (concat kimim/path-sync "kimikit/emacs.d") t))
+;; path to synchronize some files in .emacs.d
+(defvar kimim/path-emacs-sync (concat kimim/path-sync "kimikit/emacs.d/"))
+(if (not (file-exists-p kimim/path-emacs-sync))
+    (make-directory kimim/path-emacs-sync t))
 ;; path for the GTD files
 (defvar kimim/path-org (concat kimim/path-sync "org/"))
 ;; path to keep notes
 (defvar kimim/path-notes (concat kimim/path-sync "notes/"))
 ;; custom.el file location
-(defvar kimim/file-custom "~/.emacs.d/custom.el")
+(defvar kimim/file-custom (concat kimim/path-emacs-sync "custom.el"))
+;; path to refrence documents
+(defvar kimim/ref (concat kimim/path-sync "ref/"))
 
 ;; if kimim-emacs is clone to ~/kimim-emacs
 (load-file (concat kimim/path-kimim-emacs "init.el"))
