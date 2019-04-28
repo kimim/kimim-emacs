@@ -858,6 +858,7 @@ out of the box.
 
 #+begin_src emacs-lisp
   (use-package yasnippet
+    :defer 10
     :config
     (add-to-list
      'yas-snippet-dirs (concat kimim/path-sync "kimikit/emacs.d/snippets"))
