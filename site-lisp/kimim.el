@@ -454,7 +454,9 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
       (mapc #'(lambda (item)
                (insert (concat "<#part filename=\""
                                ;; remove "\\" in Windows environment
-                               (replace-regexp-in-string (regexp-quote "\\") "/" item)
+                               (replace-regexp-in-string
+                                "C:" "/cygdrive/c"
+                                (replace-regexp-in-string (regexp-quote "\\") "/" item) t)
                                "\" disposition=attachment><#/part>\n")))
             (split-string file-list "\n" t)))))
 
