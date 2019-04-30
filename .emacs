@@ -16,7 +16,7 @@
 ;; favorate applications on Windows
 (defvar kimim/path-kimikit "~/kimikit/")
 ;; synchronization driver, for example ~/Dropbox/
-(defvar kimim/path-sync "~/kimim-sync")
+(defvar kimim/path-sync "~/kimim-sync/")
 ;; path to synchronize some files in .emacs.d
 (defvar kimim/path-sync-emacs (concat kimim/path-sync "kimikit/emacs.d/"))
 ;; path for the GTD files
