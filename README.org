@@ -25,6 +25,33 @@ emacs configuration files and folders:
   cp kimim-emacs/.emacs ~
 #+end_src
 
+This emacs setting uses several path to keep different informations, you should
+specify in =~/.emacs=:
+
+- =kimim/path-sync= is the root of sync folder
+- =kimim/path-emacs-sync= to sync emacs settings
+- =kimim/path-org= to sync todo list and journals
+- =kimim/path-notes= to sync notes
+- =kimim/path-ref= to keep reference documents
+- =kimim/path-kimim-emacs= where kimim-emacs you clone to
+
+If these pathes are not set, emacs will report errors:
+
+#+begin_src emacs-lisp
+  (if (not (boundp 'kimim/path-sync))
+      (error "please set kimim/path-sync in ~/.emacs"))
+  (if (not (boundp 'kimim/path-emacs-sync))
+      (error "please set kimim/path-emacs-sync in ~/.emacs"))
+  (if (not (boundp 'kimim/path-org))
+      (error "please set kimim/path-org in ~/.emacs"))
+  (if (not (boundp 'kimim/path-notes))
+      (error "please set kimim/path-notes in ~/.emacs"))
+  (if (not (boundp 'kimim/path-ref))
+      (error "please set kimim/path-ref in ~/.emacs"))
+  (if (not (boundp 'kimim/path-kimim-emacs))
+      (error "please set kimim/path-kimim-emacs in ~/.emacs"))
+#+end_src
+
 Then execute =emacs= to bootstrap itself.
 
 * Preparation
@@ -156,38 +183,6 @@ https://github.com/loseblue/yaheiInconsolata.ttf/raw/master/yaheiInconsolata.ttf
 #+end_src
 
 * Environment
-** Synchronization Folders
-
-The variable for synchronization location is named as: =kimim/path-sync=
-
-If the sync path is not set, then use HOME path =~= as the default folder, that
-means, no synchronization. So please set these variables in your =.emacs= file.
-
-#+begin_src emacs-lisp
-  (if (not (boundp 'kimim/path-sync))
-      (error "please set kimim/path-sync in ~/.emacs"))
-  (if (not (boundp 'kimim/path-emacs-sync))
-      (error "please set kimim/path-emacs-sync in ~/.emacs"))
-  (if (not (boundp 'kimim/path-org))
-      (error "please set kimim/path-org in ~/.emacs"))
-  (if (not (boundp 'kimim/path-notes))
-      (error "please set kimim/path-notes in ~/.emacs"))
-  (if (not (boundp 'kimim/path-ref))
-      (error "please set kimim/path-ref in ~/.emacs"))
-#+end_src
-
-** kimim-emacs path
-
-Another important folder is the folder for this configuration files, which is
-cloned from my github repository.
-
-Anyway, you can change the path as you want, and set =kimim/path-kimim-emacs=
-accordingly in =~/.emacs=.
-
-#+begin_src emacs-lisp
-  (if (not (boundp 'kimim/path-kimim-emacs))
-      (error "please set kimim/path-kimim-emacs in ~/.emacs"))
-#+end_src
 
 ** PATH, exec-path and Info
 
@@ -275,6 +270,7 @@ Define new command prefix for keys such as "C-x m f", "C-x m v".
 #+end_src
 
 * Emacs in Terminal
+
 ** cmd.exe
 
 =emacs -nw= works perfect in Windows cmd.exe as terminal mode!
@@ -944,28 +940,13 @@ Sort candidates using completion history.
     :bind (("C-c f" . ggtags-find-file)
            ("M-." . ggtags-find-tag-dwim))
     :config
-    ;; ggtags settings
-    ;; Activate cygwin mount for gtags CDPATH issue on W32
-    ;; (cond ((eq window-system 'w32)
-    ;;        (require 'cygwin-mount)
-    ;;        (cygwin-mount-activate))
-    ;;       ((eq window-system nil)
-    ;;        (require 'cygwin-mount)
-    ;;        (cygwin-mount-activate)))
     (setq ggtags-global-ignore-case t)
     (setq ggtags-sort-by-nearness t))
-    ;; let ggtags use split-window with is redefined by ecb mode
-    ;; (setq ggtags-split-window-function 'split-window-below)
-
-    ;; close grep window and done ggtags navigation when type C-g
-    ;; but some times it will close all the ecb windows, so remove this advice.
-    ;; (advice-add 'keyboard-quit :before #'kimim/kill-grep-and-ggtags-done)
 #+end_src
 
 ** Version Control
 
 #+begin_src emacs-lisp
-  ;; ;; magit-status for git
   (use-package magit
     :bind ("C-x m g" . magit-status))
 #+end_src
@@ -1199,27 +1180,10 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
   (use-package org
     :config
-    ;; src block setting
     (setq org-src-window-setup 'current-window)
     (setq org-src-fontify-natively t)
     (setq org-confirm-babel-evaluate nil)
-    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-
-    ;; (org-babel-do-load-languages
-    ;;  'org-babel-load-languages
-    ;;  '((C . t)
-    ;;    (python . t)
-    ;;    (emacs-lisp . t)
-    ;;    (shell . t)
-    ;;    (dot . t)
-    ;;    (ditaa . t)
-    ;;    (js . t)
-    ;;    (latex . t)
-    ;;    (plantuml . t)
-    ;;    (clojure . t)
-    ;;    (org . t)
-    ;;    ))
-     )
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
 #+end_src
 
 ** org exporting
@@ -1319,6 +1283,7 @@ pip install pygments
 #+end_src
 
 *** org to html page
+
 #+begin_src emacs-lisp
   (use-package ox-html
     :ensure org
@@ -1454,16 +1419,8 @@ pip install pygments
               (lambda ()
                 ;;(auto-fill-mode)
                 (org-display-inline-images)
-                (drag-stuff-mode -1)
-                ;; seems "g" can refresh stuck tasks now, 2017-07-14
-                ;; (if (boundp 'org-agenda-mode-map)
-                ;;     (org-defkey org-agenda-mode-map "x"
-                ;;                 'org-agenda-list-stuck-projects))))
-                ))
+                (drag-stuff-mode -1)))
 
-    ;; (setq org-stuck-projects
-    ;;       '("+LEVEL>=2-category-project-habit/-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-SOMEDAY-REPEAT-ABORT"
-    ;;         ("TODO" "SCEHD" "OPEN" "WAIT") nil nil))
     (setq org-stuck-projects
           '("+LEVEL>=2-category-habit"
             ("TODO" "SCHED"  "DONE"
@@ -1541,8 +1498,6 @@ pip install pygments
       (setq org-refile-files
             (append
              (file-expand-wildcards (concat kimim/path-org "*.org"))))
-             ;;(file-expand-wildcards (concat kimim/path-org "work/*.org"))
-             ;;(file-expand-wildcards (concat kimim/path-org "home/*.org"))))
       (message "Agenda is from office..."))
 
     (defun org-toggle-home ()
@@ -1554,8 +1509,6 @@ pip install pygments
       (setq org-refile-files
             (append
              (file-expand-wildcards (concat kimim/path-org "*.org"))))
-             ;;(file-expand-wildcards (concat kimim/path-org "home/*.org"))
-             ;;(file-expand-wildcards (concat kimim/path-org "work/*.org"))))
       (message "Agenda is from home..."))
 
     (use-package ivy) ; use ivy to complete refile files
