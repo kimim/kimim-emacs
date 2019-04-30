@@ -1,7 +1,3 @@
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
 (package-initialize)
 
 (setq system-name "kimi.im"
@@ -29,7 +25,7 @@
 (defvar kimim/file-custom (concat kimim/path-sync-emacs "custom.el"))
 
 ;; if kimim-emacs is clone to ~/kimim-emacs
-(load-file (concat kimim/path-kimim-emacs "init.el"))
+(load (concat kimim/path-kimim-emacs "init.el"))
 
 (set-register ?e '(file . "~/.emacs"))
 (set-register ?i '(file . "~/kimim-emacs/init.el"))
