@@ -29,7 +29,7 @@ This emacs setting uses several path to keep different informations, you should
 specify in =~/.emacs=:
 
 - =kimim/path-sync= is the root of sync folder
-- =kimim/path-emacs-sync= to sync emacs settings
+- =kimim/path-sync-emacs= to sync emacs settings
 - =kimim/path-org= to sync todo list and journals
 - =kimim/path-notes= to sync notes
 - =kimim/path-ref= to keep reference documents
@@ -40,8 +40,8 @@ If these pathes are not set, emacs will report errors:
 #+begin_src emacs-lisp
   (if (not (boundp 'kimim/path-sync))
       (error "please set kimim/path-sync in ~/.emacs"))
-  (if (not (boundp 'kimim/path-emacs-sync))
-      (error "please set kimim/path-emacs-sync in ~/.emacs"))
+  (if (not (boundp 'kimim/path-sync-emacs))
+      (error "please set kimim/path-sync-emacs in ~/.emacs"))
   (if (not (boundp 'kimim/path-org))
       (error "please set kimim/path-org in ~/.emacs"))
   (if (not (boundp 'kimim/path-notes))
@@ -229,7 +229,7 @@ Then append exec-path to PATH:
 #+begin_src emacs-lisp
   (if (not (boundp 'kimim/file-custom))
       (defvar kimim/file-custom
-        (concat kimim/path-emacs-sync "custom.el")))
+        (concat kimim/path-sync-emacs "custom.el")))
   (if (not (file-exists-p kimim/file-custom))
       (write-region "" nil kimim/file-custom))
   (setq custom-file kimim/file-custom)
@@ -865,7 +865,7 @@ out of the box.
     :defer 10
     :config
     (add-to-list
-     'yas-snippet-dirs (concat kimim/path-emacs-sync "snippets"))
+     'yas-snippet-dirs (concat kimim/path-sync-emacs "snippets"))
     (yas-global-mode 1)
     (use-package company)
     (eval-after-load 'company
@@ -887,7 +887,7 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
   (use-package company-dict
     :config
     ;; Where to look for dictionary files
-    (setq company-dict-dir (concat kimim/path-emacs-sync "dict"))
+    (setq company-dict-dir (concat kimim/path-sync-emacs "dict"))
     ;; Optional: if you want it available everywhere
     (eval-after-load 'company
       '(add-to-list 'company-backends 'company-dict)))
@@ -1077,7 +1077,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
   (if (not (boundp 'kimim/file-diary))
-      (defvar kimim/file-diary (concat kimim/path-emacs-sync "diary")))
+      (defvar kimim/file-diary (concat kimim/path-sync-emacs "diary")))
   (if (not (file-exists-p kimim/file-diary))
       (write-region "" nil kimim/file-diary))
   (setq diary-file kimim/file-diary)
@@ -1802,7 +1802,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   (use-package ebdb
     :commands (ebdb ebdb-mail-aliases)
     :config
-    (setq ebdb-sources (concat kimim/path-emacs-sync "ebdb"))
+    (setq ebdb-sources (concat kimim/path-sync-emacs "ebdb"))
     ;; do not pop *EBDB-Gnus* window
     (setq ebdb-mua-pop-up nil)
     (require 'ebdb-gnus)
@@ -1856,7 +1856,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     :ensure nil
     :config
     (setq mail-self-blind t)
-    (setq mail-signature-file (concat kimim/path-emacs-sync "signature.txt")))
+    (setq mail-signature-file (concat kimim/path-sync-emacs "signature.txt")))
 #+end_src
 
 #+begin_src emacs-lisp
