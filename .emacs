@@ -28,16 +28,6 @@
 ;; custom.el file location
 (defvar kimim/file-custom (concat kimim/path-emacs-sync "custom.el"))
 
-(mapc (lambda (path)
-        (if (not (file-exists-p kimim/path-emacs-sync))
-            (make-directory path t)))
-      '( kimim/path-kimikit
-         kimim/path-sync
-         kimim/path-sync-emacs
-         kimim/path-org
-         kimim/path-notes
-         kimim/path-ref ))
-
 ;; if kimim-emacs is clone to ~/kimim-emacs
 (load-file (concat kimim/path-kimim-emacs "init.el"))
 

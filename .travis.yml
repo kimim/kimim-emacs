@@ -18,5 +18,7 @@ script:
   - cd ~
   - git clone https://github.com/kimim/kimim-emacs
   - cp kimim-emacs/.emacs ~
-  - mkdir .emacs.d
+  - mkdir kimikit .emacs.d
+  - mkdir -p kimim-sync/kimikit/emacs.d
+  - mkdir -p kimim-sync/org kimim-sync/notes kimim-sync/ref
   - emacs-snapshot --batch -l ~/kimim-emacs/test.el
