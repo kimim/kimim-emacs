@@ -1,3 +1,7 @@
+(defgroup kimim nil
+  "kimim group."
+  :group 'local)
+
 (defun kimim/mail-new ()
   (interactive)
   (compose-mail)

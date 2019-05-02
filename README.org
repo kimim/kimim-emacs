@@ -38,18 +38,15 @@ specify in =~/.emacs=:
 If these pathes are not set, emacs will report errors:
 
 #+begin_src emacs-lisp
-  (if (not (boundp 'kimim/path-sync))
-      (error "please set kimim/path-sync in ~/.emacs"))
-  (if (not (boundp 'kimim/path-sync-emacs))
-      (error "please set kimim/path-sync-emacs in ~/.emacs"))
-  (if (not (boundp 'kimim/path-org))
-      (error "please set kimim/path-org in ~/.emacs"))
-  (if (not (boundp 'kimim/path-notes))
-      (error "please set kimim/path-notes in ~/.emacs"))
-  (if (not (boundp 'kimim/path-ref))
-      (error "please set kimim/path-ref in ~/.emacs"))
-  (if (not (boundp 'kimim/path-kimim-emacs))
-      (error "please set kimim/path-kimim-emacs in ~/.emacs"))
+  (mapc (lambda (path)
+          (if (not (boundp path))
+              (error (concat "please set " (symbol-name path) " in ~/.emacs"))))
+        '(kimim/path-sync
+          kimim/path-sync-emacs
+          kimim/path-org
+          kimim/path-notes
+          kimim/path-ref
+          kimim/path-kimim-emacs))
 #+end_src
 
 Then execute =emacs= to bootstrap itself.
@@ -252,9 +249,7 @@ Then append exec-path to PATH:
   (set-file-name-coding-system 'utf-8)
   (set-terminal-coding-system 'utf-8)
   (cond
-   ((eq system-type 'windows-nt)
-    (set-clipboard-coding-system 'utf-16le))
-   ((eq system-type 'cygwin)
+   ((member system-type '(windows-nt cygwin))
     (set-clipboard-coding-system 'utf-16le))
    ((eq system-type 'gnu/linux)
     (set-clipboard-coding-system 'utf-8)))
@@ -1488,7 +1483,9 @@ pip install pygments
             ("h" "Habit"   entry (file+headline "global.org"   "Habit")
              "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
-    (defcustom org-location-home-or-office "office" "office")
+    (defcustom org-location-home-or-office "office" "office"
+      :type 'string
+      :group 'kimim)
     (defun org-toggle-office ()
       (interactive)
       (setq org-location-home-or-office "office")
@@ -1528,14 +1525,14 @@ New link to use everything to locate a file with unique ID:
 #+begin_src emacs-lisp
   (use-package org
     :config
-    (org-add-link-type "match" 'org-match-open)
+    (org-link-set-parameters "match"
+                             :follow #'org-match-open)
 
     (defun org-match-open (path)
       "Visit the match search on PATH.
        PATH should be a topic that can be thrown at everything/?."
       (w32-shell-execute
        "open" "Everything" (concat "-search " path))))
-
 #+end_src
 
 ** org link: onenote
@@ -1545,7 +1542,8 @@ New link to use everything to locate a file with unique ID:
 #+begin_src emacs-lisp
   (use-package org
     :config
-    (org-add-link-type "onenote" 'org-onenote-open)
+    (org-link-set-parameters "onenote"
+                             :follow #'org-onenote-open)
 
     (defun org-onenote-open (path)
       "Visit the match search on PATH.
@@ -1556,8 +1554,7 @@ New link to use everything to locate a file with unique ID:
           (w32-shell-execute
            "open" (concat "onenote:" path))))
         ((eq window-system 'ns)
-         (shell-command (replace-regexp-in-string "&" "\\\\&" (format "open onenote:%s" path))))
-        )))
+         (shell-command (replace-regexp-in-string "&" "\\\\&" (format "open onenote:%s" path)))))))
 #+end_src
 
 
@@ -1672,24 +1669,24 @@ name handling function can be found from emacs manual[fn:15].
       "Insert jekyll post headers,
   catergories and tags are generated from exisiting posts"
       (interactive)
-      (insert "#+BEGIN_EXPORT html\n---\nlayout: post\ntitle: ")
-      (insert (read-string "Title: "))
-      (insert "\ncategories: [")
-      (insert (ivy-read "categories: " '(
-                                         "technology"
-                                         "productivity" "leadership"
-                                         "psychology" "language"
-                                         "education" "photography"
-                                         )))
-      (insert "]")
-      (insert "\ntags: [")
-      (while (progn
-               (setq tag (jekyll-tag))
-               (not (string= "x" tag))))
-      (move-end-of-line 1)
-      (backward-delete-char 2)
-      (insert "]\n---\n#+END_EXPORT\n\n")
-      )
+      (let (tag)
+        (insert "#+BEGIN_EXPORT html\n---\nlayout: post\ntitle: ")
+        (insert (read-string "Title: "))
+        (insert "\ncategories: [")
+        (insert (ivy-read "categories: " '(
+                                           "technology"
+                                           "productivity" "leadership"
+                                           "psychology" "language"
+                                           "education" "photography"
+                                           )))
+        (insert "]")
+        (insert "\ntags: [")
+        (while (progn
+                 (setq tag (jekyll-tag))
+                 (not (string= "x" tag))))
+        (move-end-of-line 1)
+        (backward-delete-char 2)
+        (insert "]\n---\n#+END_EXPORT\n\n")))
 
     (defun jekyll ()
       (interactive)
@@ -1739,40 +1736,42 @@ name handling function can be found from emacs manual[fn:15].
     ;;advise deft-open-file to replace spaces in file names with _
     (require 'kimim)
     (defun kimim/deft-open-file-advice (orig-fun &rest args)
-      (setq name (pop args))
-      (if (file-exists-p name)
+      (let (name title)
+        (setq name (pop args))
+        (if (file-exists-p name)
+            (progn
+              (push name args)
+              (apply orig-fun args))
           (progn
+            (setq title (file-name-sans-extension
+                         (file-name-nondirectory name)))
+            (setq name (concat
+                        (file-name-directory name)
+                        (kimim/genfile-timestamp)
+                        (downcase
+                         (replace-regexp-in-string
+                          " " "_" (file-name-nondirectory name)))
+                        (if (not (file-name-extension name))
+                            ".txt")))
             (push name args)
-            (apply orig-fun args))
-        (progn
-          (setq title (file-name-sans-extension
-                       (file-name-nondirectory name)))
-          (setq name (concat
-                      (file-name-directory name)
-                      (kimim/genfile-timestamp)
-                      (downcase
-                       (replace-regexp-in-string
-                        " " "_" (file-name-nondirectory name)))
-                      (if (not (file-name-extension name))
-                          ".txt")))
-          (push name args)
-          (apply orig-fun args)
-          (insert (concat "#+TITLE: " title "\n\n")))))
+            (apply orig-fun args)
+            (insert (concat "#+TITLE: " title "\n\n"))))))
 
     (advice-add 'deft-open-file
                 :around #'kimim/deft-open-file-advice)
 
     (defun kimim/deft-new-file-named-advice (orig-fun &rest args)
-      (setq name (pop args))
-      (setq title name)
-      (setq name (concat
-                  (kimim/genfile-timestamp)
-                  (downcase
-                   (replace-regexp-in-string
-                    " " "_" name))))
-      (push name args)
-      (apply orig-fun args)
-      (insert (concat "#+TITLE: " title "\n\n")))
+      (let (name title)
+        (setq name (pop args))
+        (setq title name)
+        (setq name (concat
+                    (kimim/genfile-timestamp)
+                    (downcase
+                     (replace-regexp-in-string
+                      " " "_" name))))
+        (push name args)
+        (apply orig-fun args)
+        (insert (concat "#+TITLE: " title "\n\n"))))
 
     (advice-add 'deft-new-file-named
                 :around #'kimim/deft-new-file-named-advice))
