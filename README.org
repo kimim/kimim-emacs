@@ -52,13 +52,7 @@ If these pathes are not set, emacs will report errors:
 Then execute =emacs= to bootstrap itself.
 
 * Preparation
-** Windows
-*** HOME environment
-
-First of all, You should specify HOME by adding HOME system environment as
-=C:\Users\kimim\home=, for example.
-
-*** Cygwin
+** Windows/Cygwin
 
 Cygwin project[fn:2] is required for this configuration in Windows, which is a
 large collection of GNU and Open Source tools provide functionality similar to a
@@ -69,27 +63,15 @@ in-use executable, so installing a new version of Cygwin DLL while a packager is
 using the DLL is problematic.[fn:3] But I guess MSYS2 should have the same
 issue.
 
-However Cygwin standalone package management tool =setup-x86.exe= or
-=setup-x86_64.exe= accept command-line arguments [fn:4], so I will try to use
-the command line option to install packages as many as possible.
+However, we have two option to install Cygwin packages in terminal, 1) Cygwin
+standalone package management tool =setup-x86.exe= or =setup-x86_64.exe= accept
+command-line arguments [fn:4]; 2) =apt-cyg= can install Cygwin packages in
+=apt-get= style [fn:5].
 
-With =kimikit=, it is quite easy to upgrade cygwin setup tool:
+** macOS
 
-#+begin_src shell
-$ cd ~/kimikit/install
-$ make cyg
-wget https://cygwin.com/setup-x86_64.exe
---2017-01-04 16:50:29--  https://cygwin.com/setup-x86_64.exe
-Length: 916499 (895K) [application/octet-stream]
-Saving to: ‘setup-x86_64.exe’
-...
-mv setup-x86_64.exe ../bin/cygup.exe
-#+end_src
-
-** Mac OS
-
-For Apple macOS, most UNIX tools are installed already. Homebrew [fn:5] is used
-to install additional application if it is missing in macOS.
+For Apple macOS, most UNIX tools are installed already. Homebrew [fn:6] is used
+to install additional application if it is missing.
 
 Install Homebrew:
 
@@ -139,7 +121,7 @@ calculated with original default font height and width: =frame-char-height= and
 =frame-char-width=.
 
 Because Incosolata font is really great for programming, and Microsoft Yahei is
-nice font to view Chinese characters, you'd better to install it from:
+nice font to view Chinese characters, you'd better download and install it from:
 https://github.com/loseblue/yaheiInconsolata.ttf/raw/master/yaheiInconsolata.ttf
 
 #+begin_src emacs-lisp
@@ -192,20 +174,14 @@ specify these variables in different way.
 
 #+begin_src emacs-lisp
   (cond
-   ((eq system-type 'windows-nt)
-    (setq kimim/path-root "C:/msys2")
-    (add-to-list 'exec-path
-                 (concat kimim/path-kimikit "emacs/bin/"))
-    (add-to-list 'exec-path "C:/CTEX/MiKTeX/miktex/bin/"))
    ((eq system-type 'cygwin)
     (setq kimim/path-root "/")
     (add-to-list 'exec-path "/cygdrive/C/CTEX/MiKTeX/miktex/bin/"))
-   ((eq system-type 'gnu/linux)
-    (setq kimim/path-root "/"))
    ((eq system-type 'darwin)
     (setq kimim/path-root "/")
-    (add-to-list 'exec-path "/Library/TeX/texbin")
-    (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.5/bin")))
+    (add-to-list 'exec-path "/Library/TeX/texbin"))
+   ((eq system-type 'gnu/linux)
+    (setq kimim/path-root "/")))
 
   (add-to-list 'exec-path (concat kimim/path-root "bin"))
   (add-to-list 'exec-path (concat kimim/path-root "usr/bin"))
@@ -263,26 +239,6 @@ Define new command prefix for keys such as "C-x m f", "C-x m v".
   (define-prefix-command 'ctl-x-m-map)
   (global-set-key "\C-xm" 'ctl-x-m-map)
 #+end_src
-
-* Emacs in Terminal
-
-** cmd.exe
-
-=emacs -nw= works perfect in Windows cmd.exe as terminal mode!
-
-** mintty
-
-nt-emacs running in mintty will report error such as:
-
-#+begin_src shell
-$ /cygdrive/c/kimikit/emacs/bin/emacs -nw
-emacs: standard input is not a tty
-#+end_src
-
-Because the native win32 emacs wants to talk to a Windows console window, not to
-an actual tty -- the error message is misleading here.[fn:6]
-
-In order to use emacs also in mintty, please install emacs-nox with cygwin-setup.
 
 * Package
 
@@ -355,13 +311,15 @@ Display time and (line, column) numbers in mode line.
     :config
     (display-time-mode t))
 
-  (line-number-mode 1)
-  (column-number-mode 1)
+  (use-package simple
+    :ensure nil
+    :defer 3
+    :config
+    (line-number-mode 1)
+    (column-number-mode 1))
 #+end_src
 
 * Color Theme
-
-Use self defined color theme 1 seconds after init.
 
 #+begin_src emacs-lisp
   (setq font-lock-maximum-decoration t)
@@ -447,8 +405,7 @@ TL;DR stands for "Too Long; Didn't Read"[fn:8]. =tldr.el= [fn:9] is the Emacs
 client.
 
 #+begin_src emacs-lisp
-  (use-package tldr
-    )
+  (use-package tldr)
 #+end_src
 
 * Controlling
@@ -1159,7 +1116,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     (use-package pangu-spacing)
     (setq org-hide-leading-stars t)
     (setq org-footnote-auto-adjust t)
-    (setq org-footnote-define-inline t)
+    (setq org-footnote-define-inline nil)
     (setq org-export-with-sub-superscripts '{})
     (define-key org-mode-map (kbd "C-c C-x h") (lambda()
                                                  (interactive)
@@ -2031,9 +1988,9 @@ from system PATH, so you should set these to system PATH.
 
 [fn:4] https://cygwin.com/faq/faq.html#faq.setup.cli
 
-[fn:5] http://brew.sh/
+[fn:5] https://github.com/transcode-open/apt-cyg
 
-[fn:6] http://stackoverflow.com/questions/14465330/how-to-run-emacs-in-cli-mode-under-mintty-in-windows
+[fn:6] http://brew.sh/
 
 [fn:7] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
 
