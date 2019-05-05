@@ -1582,7 +1582,10 @@ name handling function can be found from emacs manual[fn:15].
             (filename (file-name-nondirectory buffer-file-name))
             newfilename)
         ;; append date to the beginning of the file name
-        (setq newfilename (concat path-jekyll-base "/" category "/" (format-time-string "%Y-%m-%d-") filename))
+        (setq newfilename (concat
+                           path-jekyll-base "/"
+                           category "/"
+                           (format-time-string "%Y-%m-%d-") filename))
         ;; mv the file to the categories folder
         (rename-file buffer-file-name newfilename)
         (switch-to-buffer (find-file-noselect newfilename))
