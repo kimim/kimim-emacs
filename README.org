@@ -1064,8 +1064,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
   (use-package orgalist
-    :commands (orgalist-mode)
-    )
+    :commands (orgalist-mode))
 #+end_src
 
 ** org general setting
@@ -1231,8 +1230,7 @@ pip install pygments
             ("" "textcomp" t nil)
             ("" "amssymb" t nil)
             ("" "capt-of" nil nil)
-            ("" "hyperref" nil nil))))
-    )
+            ("" "hyperref" nil nil)))))
 #+end_src
 
 *** org to html page
@@ -1331,8 +1329,7 @@ pip install pygments
                             (org-agenda-todo 'left)))
            ("<S-right>" . (lambda ()
                             (interactive)
-                            (org-agenda-todo 'right)))
-           )
+                            (org-agenda-todo 'right))))
     :config
     (require 'org-agenda)
     (add-hook 'kill-emacs-hook
@@ -1572,8 +1569,7 @@ name handling function can be found from emacs manual[fn:15].
              :publishing-directory "~/kimi.im/"
              :recursive t
              :publishing-function org-publish-attachment)
-            ("blog" :components ("org-blog-content" "org-blog-static"))
-            ))
+            ("blog" :components ("org-blog-content" "org-blog-static"))))
 
     (use-package ivy)
 
@@ -1648,15 +1644,13 @@ name handling function can be found from emacs manual[fn:15].
       (interactive)
       (find-file (concat path-jekyll-draft "/" (read-string "Filename: ") ".org"))
       (jekyll-header)
-      (save-buffer)
-      )
+      (save-buffer))
 
     (defun jekyll-get-category ()
       (interactive)
       (goto-char (point-min))
       (re-search-forward "^categories: \\[\\([a-z-]*\\)\\]$" nil t)
-      (match-string 1)
-      )
+      (match-string 1))
 
     (defun jekyll-test ()
       (interactive)
@@ -1749,8 +1743,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 
 #+begin_src emacs-lisp
   (use-package youdao-dictionary
-    :bind (("C-<f3>" . youdao-dictionary-search-at-point+))
-    )
+    :bind (("C-<f3>" . youdao-dictionary-search-at-point+)))
 #+end_src
 
 * Mail and Contacts
@@ -1765,8 +1758,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     (setq ebdb-mua-pop-up nil)
     (require 'ebdb-gnus)
     (require 'ebdb-message)
-    (add-hook 'message-setup-hook 'ebdb-mail-aliases)
-    )
+    (add-hook 'message-setup-hook 'ebdb-mail-aliases))
 #+end_src
 
 ** erc
@@ -1913,8 +1905,7 @@ from system PATH, so you should set these to system PATH.
      ("C-c r" . kimim/rename-file-and-buffer)
      ("C-x m o" . kimim/open-in-external-app)
      ("C-c d" . kimim/lookinsight))
-    :load-path "~/kimim-emacs/site-lisp/"
-    )
+    :load-path "~/kimim-emacs/site-lisp/")
 #+end_src
 
 * Key Binding
