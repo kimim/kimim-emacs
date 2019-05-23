@@ -9,8 +9,9 @@
 
 (defun kimim/mail-new-empty ()
   (interactive)
-  (compose-mail)
-  (kill-region (point-min) (point-max)))
+  (save-restriction
+    (compose-mail)
+    (kill-region (point-min) (point-max))))
 
 (defun kimim/mail-setup ()
   (interactive)
