@@ -816,6 +816,7 @@ out of the box.
   (use-package yasnippet
     :defer 10
     :config
+    (require 'yasnippet)
     (add-to-list
      'yas-snippet-dirs (concat kimim/path-sync-emacs "snippets"))
     (yas-global-mode 1)
@@ -1362,7 +1363,8 @@ pip install pygments
               (lambda ()
                 ;;(auto-fill-mode)
                 (org-display-inline-images)
-                (drag-stuff-mode -1)))
+                ;;(drag-stuff-mode -1)
+                ))
 
     (setq org-stuck-projects
           '("+LEVEL>=2-category-habit"
@@ -1808,6 +1810,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   (use-package sendmail
     :ensure nil
     :config
+    (setq mail-user-agent 'sendmail-user-agent)
     (setq mail-self-blind t)
     (setq mail-signature-file (concat kimim/path-sync-emacs "signature.txt")))
 #+end_src

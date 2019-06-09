@@ -4,19 +4,20 @@
 
 (defun kimim/mail-new ()
   (interactive)
-  (compose-mail)
+  (mail)
+  (use-package yasnippet)
   (kimim/mail-setup))
 
 (defun kimim/mail-new-empty ()
   (interactive)
   (save-restriction
-    (compose-mail)
+    (mail)
+    (use-package yasnippet)
     (kill-region (point-min) (point-max))))
 
 (defun kimim/mail-setup ()
   (interactive)
   (save-restriction
-    (use-package sendmail)
     ;; always bcc to myself
     (mail-bcc)
     (insert user-mail-address)
