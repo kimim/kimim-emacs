@@ -5,14 +5,12 @@
 (defun kimim/mail-new ()
   (interactive)
   (mail)
-  (use-package yasnippet)
   (kimim/mail-setup))
 
 (defun kimim/mail-new-empty ()
   (interactive)
   (save-restriction
     (mail)
-    (use-package yasnippet)
     (kill-region (point-min) (point-max))))
 
 (defun kimim/mail-setup ()
