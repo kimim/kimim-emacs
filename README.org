@@ -1826,7 +1826,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+begin_src emacs-lisp
   (use-package mu4e
     :ensure nil
-    :commands (mu4e)
+    :commands (mu4e mu4e-compose-new)
     :load-path (lambda ()
                  (cond ((eq system-type 'darwin)
                         "/usr/local/Cellar/mu/1.0_1/share/emacs/site-lisp/mu/mu4e")

@@ -4,13 +4,13 @@
 
 (defun kimim/mail-new ()
   (interactive)
-  (mail)
+  (mu4e-compose-new)
   (kimim/mail-setup))
 
 (defun kimim/mail-new-empty ()
   (interactive)
   (save-restriction
-    (mail)
+    (mu4e-compose-new)
     (kill-region (point-min) (point-max))))
 
 (defun kimim/mail-setup ()
