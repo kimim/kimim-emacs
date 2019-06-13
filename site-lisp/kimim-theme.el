@@ -104,7 +104,7 @@
             (mode-line-inactive :foreground "RoyalBlue" :background "gainsboro" :box nil :height 0.85)
             (mode-line-buffer-id :foreground "blue4" :background "gainsboro" :box nil :weight bold)
             (minibuffer-prompt :foreground "medium blue")
-            (hl-line :background "gray90")
+            (hl-line :background "azure")
             ;; defaults
             (show-paren-match :background "turquoise")
             (isearch :background "magenta3" :foreground "lightskyblue1")
