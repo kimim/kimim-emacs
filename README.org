@@ -1748,7 +1748,10 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 
 #+begin_src emacs-lisp
   (use-package youdao-dictionary
-    :bind (("C-<f3>" . youdao-dictionary-search-at-point+)))
+    :bind (
+           ("C-<f3>" . youdao-dictionary-search-at-point+)
+           (:map youdao-dictionary-mode-map
+                 ("f" . youdao-dictionary-search-from-input))))
 #+end_src
 
 * Mail and Contacts
