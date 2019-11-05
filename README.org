@@ -1830,6 +1830,8 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   (use-package mu4e
     :ensure nil
     :commands (mu4e mu4e-compose-new)
+    :bind (:map mu4e-compose-mode-map
+                ("<C-tab>" . message-tab))
     :load-path (lambda ()
                  (cond ((eq system-type 'darwin)
                         "/usr/local/Cellar/mu/1.0_1/share/emacs/site-lisp/mu/mu4e")
