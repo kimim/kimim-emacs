@@ -149,12 +149,13 @@
    "open" "cmd"))
 
 (defun kimim/xterm ()
-  "Open msys64 bash from emacs."
+  "Open shell window from emacs."
   (interactive)
-  (cond ((eq window-system 'w32)
-         (w32-shell-execute
-          "open" "mintty" " -e bash"))
-        ((eq window-system 'ns)
+  (cond ((eq system-type 'cygwin)
+         (start-process "" nil "xdg-open" "mintty"))
+        ((eq system-type 'windows-nt)
+         (w32-shell-execute "open" "mintty" " -e bash"))
+        ((eq system-type 'darwin)
          (mac-open-terminal))))
 
 (defun kimim/4nt ()
