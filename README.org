@@ -1870,7 +1870,9 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     :bind
     (:map elfeed-search-mode-map
           ("<SPC>" . scroll-up-command)
-          ("<backspace>" . scroll-down-command))
+          ("<backspace>" . scroll-down-command)
+     :map elfeed-show-mode-map
+          ("M-q" . article-fill-long-lines))
     :config
     ;; open feed link with eww
     (use-package org)
