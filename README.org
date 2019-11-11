@@ -1859,7 +1859,9 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     (setq mu4e-compose-cite-function 'mu-cite-original)
     (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
     (add-hook 'mu4e-compose-mode-hook 'kimim/mail-setup)
-    (add-hook 'mu4e-compose-mode-hook 'orgalist-mode))
+    (add-hook 'mu4e-compose-mode-hook 'orgalist-mode)
+    (add-hook 'mu4e-compose-mode-hook (lambda ()
+                                        (auto-fill-mode -1))))
 #+end_src
 
 * Reading News
