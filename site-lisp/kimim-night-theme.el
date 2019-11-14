@@ -4,7 +4,7 @@
 
 ;; Author:Kimi MA
 ;; Keywords: faces local color theme of kimim's preference
-;; URL: http://github.com/kimim/kimim-theme
+;; URL: http://github.com/kimim/kimim-night-theme
 ;; Version: 0.0.1
 ;; Keywords: theme
 
@@ -33,58 +33,58 @@
 
 ;;; Code:
 
-(deftheme kimim
-    "Color theme by kimim.")
+(deftheme kimim-night
+    "Color theme by kimim-night.")
 
-(let ((class '((class color) (min-colors 88) (background light)))
-      (kimim-bg "#ffffff")
-      (kimim-fg "#000000")
-      (kimim-const "#110099")
-      (kimim-comment "#3F7F5F")
-      (kimim-error "#FF0000")
-      (kimim-builtin "#7F0055")
-      (kimim-string "#2A00FF")
-      (kimim-blue-3 "#758BC6")
-      (kimim-region "LightBlue")
-      (kimim-shadow "grey50"))
-  (apply 'custom-theme-set-faces 'kimim
+(let ((class '((class color) (min-colors 88)))
+      (kimim-night-bg "black")
+      (kimim-night-fg "white")
+      (kimim-night-const "cyan")
+      (kimim-night-comment "yellow green")
+      (kimim-night-error "red")
+      (kimim-night-builtin "orange")
+      (kimim-night-string "cyan ")
+      (kimim-night-blue-3 "blue")
+      (kimim-night-region "light blue")
+      (kimim-night-shadow "grey50"))
+  (apply 'custom-theme-set-faces 'kimim-night
          (mapcar
           (lambda (x) `(,(car x) ((,class ,(cdr x)))))
-          `((default :foreground ,kimim-fg :background ,kimim-bg)
+          `((default :foreground ,kimim-night-fg :background ,kimim-night-bg)
             (cursor :background ,"orange")
-            (shadow :foreground ,kimim-shadow)
-            (success :foreground ,kimim-error)
-            (error :foreground ,kimim-error :weight bold)
+            (shadow :foreground ,kimim-night-shadow)
+            (success :foreground ,kimim-night-error)
+            (error :foreground ,kimim-night-error :weight bold)
             (warning :foreground "DarkOrange" :weight bold)
             (compilation-warning :underline t :inherit warning)
             (compilation-error :underline t :inherit error)
-            (compilation-info :underline t :foreground ,kimim-const)
-            (highlight :background "darkseagreen2")
-            (fringe :background ,kimim-bg)
-            (region :background ,kimim-region :foreground ,kimim-bg)
-            (secondary-selection :background "paleturquoise" :foreground "#f6f3e8")
+            (compilation-info :underline t :foreground ,kimim-night-const)
+            (highlight :background "dark green")
+            (fringe :background ,kimim-night-bg)
+            (region :background ,kimim-night-region :foreground ,kimim-night-bg)
+            (secondary-selection :background "deep sky blue" :foreground "#f6f3e8")
             (whitespace-indentation :background "LightYellow" :foreground "lightgray")
             (term)
             ;; (font-lock-negation-char-face :foreground "#e8e2b7")
-            (font-lock-builtin-face :foreground ,kimim-builtin :bold t)
-            (font-lock-comment-face :foreground ,kimim-comment :slant normal)
-            (font-lock-comment-delimiter-face :foreground ,kimim-comment :slant normal)
-            (font-lock-constant-face :foreground ,kimim-const)
-            (font-lock-doc-face :foreground ,kimim-string)
-            (font-lock-doc-string-face :foreground ,kimim-string)
-            (font-lock-function-name-face :foreground ,kimim-fg :bold t)
-            (font-lock-keyword-face :foreground ,kimim-builtin :weight bold)
-            (font-lock-preprocessor-face :foreground ,kimim-builtin :bold t)
-            (font-lock-regexp-grouping-backslash :foreground ,kimim-builtin)
-            (font-lock-regexp-grouping-construct :foreground ,kimim-builtin)
-            (font-lock-string-face :foreground ,kimim-string)
-            (font-lock-type-face :foreground ,kimim-fg :underline t :slant italic)
-            (font-lock-variable-name-face :foreground ,kimim-fg)
-            (font-lock-warning-face :foreground ,kimim-error)
+            (font-lock-builtin-face :foreground ,kimim-night-builtin :bold t)
+            (font-lock-comment-face :foreground ,kimim-night-comment :slant normal)
+            (font-lock-comment-delimiter-face :foreground ,kimim-night-comment :slant normal)
+            (font-lock-constant-face :foreground ,kimim-night-const)
+            (font-lock-doc-face :foreground ,kimim-night-string)
+            (font-lock-doc-string-face :foreground ,kimim-night-string)
+            (font-lock-function-name-face :foreground ,kimim-night-fg :bold t)
+            (font-lock-keyword-face :foreground ,kimim-night-builtin :weight bold)
+            (font-lock-preprocessor-face :foreground ,kimim-night-builtin :bold t)
+            (font-lock-regexp-grouping-backslash :foreground ,kimim-night-builtin)
+            (font-lock-regexp-grouping-construct :foreground ,kimim-night-builtin)
+            (font-lock-string-face :foreground ,kimim-night-string)
+            (font-lock-type-face :foreground ,kimim-night-fg :underline t :slant italic)
+            (font-lock-variable-name-face :foreground ,kimim-night-fg)
+            (font-lock-warning-face :foreground ,kimim-night-error)
             (font-lock-doxygen-face :foreground "SaddleBrown" :background "#f7f7f7")
-            (org-code :foreground ,kimim-builtin :weight bold)
-            (org-verbatim :foreground ,kimim-const)
-            (org-level-1 :weight bold :foreground "dark blue")
+            (org-code :foreground ,kimim-night-builtin :weight bold)
+            (org-verbatim :foreground ,kimim-night-const)
+            (org-level-1 :weight bold :foreground "light blue")
             (org-level-2 :weight bold :foreground "slate blue")
             (org-level-3 :weight bold :foreground "sienna")
             (org-level-4 :slant normal :foreground "#E3258D")
@@ -92,26 +92,26 @@
             (org-level-6 :slant italic :foreground "#EA6300")
             (org-level-7 :slant italic :foreground "#2EAE2C")
             (org-level-8 :slant italic :foreground "#FD8008")
-            (org-block-begin-line :foreground ,kimim-const)
-            (org-block-end-line :foreground ,kimim-const)
-            (org-scheduled-previously :foreground ,kimim-comment)
-            (org-todo :foreground "orange red" :weight bold)
-            (org-warning :foreground "dark orchid" :weight bold)
+            (org-block-begin-line :foreground ,kimim-night-const)
+            (org-block-end-line :foreground ,kimim-night-const)
+            (org-scheduled-previously :foreground ,kimim-night-comment)
+            (org-todo :foreground "orange" :weight bold)
+            (org-warning :foreground "orange red" :weight bold)
             (gnus-summary-cancelled :foreground "lightblue")
             (gnus-header-subject :foreground "blue" :bold t)
             (ido-subdir :weight bold)
-            (mode-line :foreground "black" :background "gainsboro" :box nil :height 0.85)
-            (mode-line-inactive :foreground "RoyalBlue" :background "gainsboro" :box nil :height 0.85)
-            (mode-line-buffer-id :foreground "blue4" :background "gainsboro" :box nil :weight bold)
-            (minibuffer-prompt :foreground "medium blue")
-            (hl-line :background "azure")
+            (mode-line :foreground "white" :background "dim gray" :box nil :height 0.85)
+            (mode-line-inactive :foreground "light blue" :background "dim gray" :box nil :height 0.85)
+            (mode-line-buffer-id :foreground "light blue" :background "dim gray" :box nil :weight bold)
+            (minibuffer-prompt :foreground "light blue")
+            (hl-line :background "dim gray")
             ;; defaults
             (show-paren-match :background "turquoise")
             (isearch :background "magenta3" :foreground "lightskyblue1")
-            (link :foreground "RoyalBlue3" :underline t)
+            (link :foreground "light blue" :underline t)
             ;; other packages
-            (helm-locate-finish :foreground ,kimim-const)
-            (aw-mode-line-face :foreground ,kimim-string)
+            (helm-locate-finish :foreground ,kimim-night-const)
+            (aw-mode-line-face :foreground ,kimim-night-string)
             (swiper-match-face-1 :background "#FEEA89")
             (swiper-match-face-2 :background "#fb7905")
             (swiper-match-face-3 :background "#F9A35A")
@@ -142,16 +142,17 @@
             ;; (magit-branch-local :background "Grey85" :foreground "LightSkyBlue4" :box t)
             (ivy-highlight-face)
             (ivy-posframe :background "#eeeeee" :foreground "#000000")
-            (wgrep-face :foreground ,kimim-comment)
+            (wgrep-face :foreground ,kimim-night-comment)
             (cider-instrumented-face)
-            (mu4e-replied-face :foreground "dark green")
-            (mu4e-forwarded-face :foreground "dark green")
-            (mu4e-unread-face :foreground "blue")))))
+            (mu4e-header-highlight-face :background "dim gray")
+            (mu4e-replied-face :foreground "light green")
+            (mu4e-forwarded-face :foreground "light green")
+            (mu4e-unread-face :foreground "light blue")))))
 
-(custom-theme-set-variables
- 'kimim
- '(ansi-color-names-vector ["#242424" "#e5786d" "#95e454" "#cae682"
-                            "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"]))
+;;(custom-theme-set-variables
+;; 'kimim-night
+;; '(ansi-color-names-vector ["#242424" "#e5786d" "#95e454" "#cae682"
+;;                            "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"]))
 
 ;;;###autoload
 (and load-file-name
@@ -160,6 +161,6 @@
                   (file-name-as-directory
                    (file-name-directory load-file-name))))
 
-(provide 'kimim-theme)
+(provide-theme 'kimim-night)
 
-;;; kimim-theme.el ends here
+;;; kimim-night-theme.el ends here

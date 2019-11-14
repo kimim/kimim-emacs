@@ -17,8 +17,8 @@
   (interactive)
   (save-restriction
     ;; always bcc to myself
-    (mail-bcc)
-    (insert user-mail-address)
+    ;;(mail-bcc)
+    ;;(insert user-mail-address)
     ;; construct default mail text stuff
     (mail-text)
     (insert "\n\nBRs\n")

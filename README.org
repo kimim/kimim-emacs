@@ -329,7 +329,7 @@ Display time and (line, column) numbers in mode line.
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package kimim-theme
+  (use-package kimim-light-theme
     :ensure nil
     :defer 0
     :load-path "~/kimim-emacs/site-lisp/")
@@ -1830,8 +1830,15 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   (use-package mu4e
     :ensure nil
     :commands (mu4e mu4e-compose-new)
-    :bind (:map mu4e-compose-mode-map
-                ("<C-tab>" . message-tab))
+    :bind (
+           :map mu4e-headers-mode-map
+           ("r" . mu4e-compose-reply)
+           :map mu4e-compose-mode-map
+           ("<C-tab>" . message-tab)
+           :map mu4e-view-mode-map
+           ("<home>" . move-beginning-of-line)
+           ("<end>" . move-end-of-line)
+           ("r" . mu4e-compose-reply))
     :load-path (lambda ()
                  (cond ((eq system-type 'darwin)
                         "/usr/local/Cellar/mu/1.0_1/share/emacs/site-lisp/mu/mu4e")
