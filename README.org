@@ -1320,8 +1320,7 @@ pip install pygments
 #+begin_src emacs-lisp
   (use-package org
     :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
-    :bind (("<f12>" . org-toggle-home-or-office)
-           :map org-mode-map
+    :bind (:map org-mode-map
            :map org-agenda-mode-map
            ("<C-left>"  . org-agenda-do-date-earlier)
            ("<C-right>" . org-agenda-do-date-later)
@@ -1367,7 +1366,7 @@ pip install pygments
                 ))
 
     (setq org-stuck-projects
-          '("+LEVEL>=2-category-habit"
+          '("+LEVEL>=2-category-habit-info"
             ("TODO" "SCHED"  "DONE"
              "OPEN" "WAIT" "CLOSE"
              "ABORT" "SOMEDAY" "REPEAT")
@@ -1749,9 +1748,15 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+begin_src emacs-lisp
   (use-package youdao-dictionary
     :bind (
+           ("<f12>" . youdao-dictionary-def-copied)
            ("C-<f3>" . youdao-dictionary-search-at-point+)
-           (:map youdao-dictionary-mode-map
-                 ("f" . youdao-dictionary-search-from-input))))
+           :map youdao-dictionary-mode-map
+           ("f" . youdao-dictionary-search-from-input))
+    :config
+    (defun youdao-dictionary-def-copied ()
+      (interactive)
+      (youdao-dictionary-search (x-get-clipboard)))
+    )
 #+end_src
 
 * Mail and Contacts
