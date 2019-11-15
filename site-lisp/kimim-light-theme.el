@@ -146,8 +146,8 @@
             (cider-instrumented-face)
             (mu4e-header-highlight-face :background "azure")
             (mu4e-replied-face :foreground "dark green")
-            (mu4e-forwarded-face :foreground "dark green")
-            (mu4e-unread-face :foreground "blue")))))
+            (mu4e-forwarded-face :foreground "dark orange")
+            (mu4e-unread-face :foreground "blue" :bold t)))))
 
 (custom-theme-set-variables
  'kimim-light
