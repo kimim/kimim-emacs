@@ -103,6 +103,7 @@
             (mode-line :foreground "white" :background "dim gray" :box nil :height 0.85)
             (mode-line-inactive :foreground "light blue" :background "dim gray" :box nil :height 0.85)
             (mode-line-buffer-id :foreground "light blue" :background "dim gray" :box nil :weight bold)
+            (which-func :foreground ,kimim-night-builtin)
             (minibuffer-prompt :foreground "light blue")
             (hl-line :background "dim gray")
             ;; defaults
