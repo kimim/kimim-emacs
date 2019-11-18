@@ -103,7 +103,7 @@
             (mode-line :foreground "black" :background "gainsboro" :box nil :height 0.85)
             (mode-line-inactive :foreground "RoyalBlue" :background "gainsboro" :box nil :height 0.85)
             (mode-line-buffer-id :foreground "blue4" :background "gainsboro" :box nil :weight bold)
-            (which-func :foreground ,kimim-night-builtin)
+            (which-func :foreground ,kimim-light-builtin)
             (minibuffer-prompt :foreground "medium blue")
             (hl-line :background "azure")
             ;; defaults
