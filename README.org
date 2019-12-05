@@ -1749,9 +1749,9 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   (use-package youdao-dictionary
     :bind (
            ("<f12>" . youdao-dictionary-def-copied)
-           ("<mouse-3>" . youdao-dictionary-def-copied)
            ("C-<f3>" . youdao-dictionary-search-at-point+)
            :map youdao-dictionary-mode-map
+           ("<mouse-3>" . youdao-dictionary-def-copied)
            ("f" . youdao-dictionary-search-from-input))
     :config
     (defun youdao-dictionary-def-copied ()
