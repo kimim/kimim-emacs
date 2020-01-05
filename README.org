@@ -1772,6 +1772,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     (setq ebdb-mua-pop-up nil)
     (require 'ebdb-gnus)
     (require 'ebdb-message)
+    (require 'ebdb-org)
     (add-hook 'message-setup-hook 'ebdb-mail-aliases))
 #+end_src
 
