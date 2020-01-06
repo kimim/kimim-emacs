@@ -1405,12 +1405,14 @@ pip install pygments
     (setq org-deadline-warning-days 2)
 
     (setq org-agenda-custom-commands
-          '(("t" todo "TODO|SCHED"
+          '(("t" todo "TODO|OPEN"
              ((org-agenda-sorting-strategy '(priority-down))))
-            ("o" todo "OPEN|WAIT"
+            ("w" todo "SCHED|WAIT"
              ((org-agenda-sorting-strategy '(priority-down))))
             ;; all task should be done or doing
             ("d" todo "TODO|SCHED|OPEN|WAIT"
+             ((org-agenda-sorting-strategy '(priority-down))))
+            ("f" todo "SOMEDAY"
              ((org-agenda-sorting-strategy '(priority-down))))
             ("h" tags "habit/-ABORT-CLOSE"
              ((org-agenda-sorting-strategy '(todo-state-down))))
@@ -1433,41 +1435,11 @@ pip install pygments
             ("h" "Habit"   entry (file+headline "global.org"   "Habit")
              "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
-    (defcustom org-location-home-or-office "office" "office"
-      :type 'string
-      :group 'kimim)
-
-    (defun org-toggle-office ()
-      (interactive)
-      (setq org-location-home-or-office "office")
-      (setq org-agenda-files
-            (list kimim/path-org
-                  (concat kimim/path-org "work/")))
-      (setq org-refile-files
-            (append
-             (file-expand-wildcards (concat kimim/path-org "*.org"))))
-      (message "Agenda is from office..."))
-
-    (defun org-toggle-home ()
-      (interactive)
-      (setq org-location-home-or-office "home")
-      (setq org-agenda-files
-            (list kimim/path-org
-                  (concat kimim/path-org "home/")))
-      (setq org-refile-files
-            (append
-             (file-expand-wildcards (concat kimim/path-org "*.org"))))
-      (message "Agenda is from home..."))
-
     (use-package ivy) ; use ivy to complete refile files
-
-    (defun org-toggle-home-or-office()
-      (interactive)
-      (if (string= org-location-home-or-office "home")
-          (org-toggle-office)
-        (org-toggle-home)))
-
-    (org-toggle-office))
+    (setq org-agenda-files
+           (file-expand-wildcards (concat kimim/path-org "*.org")))
+    (setq org-refile-files
+           (file-expand-wildcards (concat kimim/path-org "*.org"))))
 #+end_src
 
 ** org link: match
