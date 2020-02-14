@@ -1712,7 +1712,7 @@ name handling function can be found from emacs manual[fn:15].
 
 * Reference management
 
-#+begin_src elisp
+#+begin_src emacs-lisp
   (use-package org-ref
     :config
     (setq reftex-default-bibliography ())
