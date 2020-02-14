@@ -117,7 +117,7 @@
             (swiper-match-face-2 :background "#fb7905")
             (swiper-match-face-3 :background "#F9A35A")
             (swiper-match-face-4 :background "#F15C79")
-            (swiper-line-face :background "#f3d3d3")
+            (swiper-line-face :background "turquoise4")
             (hydra-face-red :foreground "#cc0000" :bold t)
             (hydra-face-blue :foreground "RoyalBlue3" :bold t)
             (powerline-active1 :background "grey22" :foreground "white" :inherit mode-line)

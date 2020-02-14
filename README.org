@@ -1081,6 +1081,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     ("C-c  ！" . org-time-stamp-inactive)
     ("C-c  。" . org-time-stamp)
     :config
+    (use-package org-ref)
     (setq org-export-allow-BIND t)
     (setq org-support-shift-select t)
     ;; no empty line after collapsed
@@ -1174,7 +1175,10 @@ pip install pygments
     (add-to-list 'org-latex-packages-alist '("" "minted"))
     (setq org-latex-listings 'minted)
     (setq org-latex-pdf-process
-          '("xelatex -shell-escape %f"
+          '("cp ~/../OneDrive/papers/references.bib ."
+            "xelatex -shell-escape %f"
+            "bibtex %b"
+            "xelatex -shell-escape %f"
             "xelatex -shell-escape %f"))
 
     ;; most of the time, I do not need table of contents
@@ -1709,9 +1713,22 @@ name handling function can be found from emacs manual[fn:15].
 * Reference management
 
 #+begin_src elisp
-(setq org-ref-bibliography-notes (concat kimim/path-ref "notes.org")
-      org-ref-default-bibliography (concat kimim/path-ref "docs.bib")
-      org-ref-pdf-directory (concat kimim/path-ref "pdfs/"))
+  (use-package org-ref
+    :config
+    (setq reftex-default-bibliography ())
+    (add-to-list 'reftex-default-bibliography (concat kimim/path-sync "/papers/references.bib"))
+    (setq org-ref-bibliography-notes (concat kimim/path-sync "/papers/notes.org")
+          org-ref-pdf-directory (concat kimim/path-sync "/papers/"))
+    (setq org-ref-default-bibliography ())
+    (add-to-list 'org-ref-default-bibliography (concat kimim/path-sync "/papers/references.bib"))
+    (setq bibtex-completion-bibliography (concat kimim/path-sync "/papers/references.bib")
+          bibtex-completion-library-path (concat kimim/path-sync "/papers/")
+          bibtex-completion-notes-path kimim/path-notes)
+
+    ;; open pdf with system pdf viewer
+    (setq bibtex-completion-pdf-open-function
+          (lambda (fpath)
+            (start-process "open" "*open*" "open" fpath))))
 #+end_src
 
 * Dictionary
@@ -1872,18 +1889,19 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
     (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
     (setq elfeed-feeds
-          '(("http://feeds.bbci.co.uk/news/world/rss.xml" News)
-            ("http://feeds.feedburner.com/dw-world" News)
+          '(
+            ;;("http://feeds.bbci.co.uk/news/world/rss.xml" News)
+            ;;("http://feeds.feedburner.com/dw-world" News)
             ("https://www.theguardian.com/world/china/rss" CN)
             ("http://www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
-            ("http://feeds.bbci.co.uk/news/world/asia/china/rss.xml" CN)
-            ("https://www.ft.com/stream/b2997bc8-d54f-3c4b-870f-130a4b337a51?format=rss" CN)
-            ("http://newsfeed.zeit.de/index" DE)
+            ;;("http://feeds.bbci.co.uk/news/world/asia/china/rss.xml" CN)
+            ;;("https://www.ft.com/stream/b2997bc8-d54f-3c4b-870f-130a4b337a51?format=rss" CN)
+            ;;("http://newsfeed.zeit.de/index" DE)
             ("http://rfi.fr/france/rss" FR)
-            ("http://www.rfi.fr/radiofr/podcast/rss_apprendre_francais.xml" FR learn)
-            ("http://www.rfi.fr/asie-pacifique/rss" FR asia)
-            ("http://www.rfi.fr/science/rss" FR science)
-            ("http://www.rfi.fr/culture/rss" FR culture)
+            ;;("http://www.rfi.fr/radiofr/podcast/rss_apprendre_francais.xml" FR learn)
+            ;;("http://www.rfi.fr/asie-pacifique/rss" FR asia)
+            ;;("http://www.rfi.fr/science/rss" FR science)
+            ;;("http://www.rfi.fr/culture/rss" FR culture)
             ("http://www.rfi.fr/economie/rss" FR economy)
             ("https://www.lemonde.fr/rss/une.xml" FR une)
             ("https://www.lemonde.fr/economie/rss_full.xml" FR economy)
