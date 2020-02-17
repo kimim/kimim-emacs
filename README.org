@@ -1081,8 +1081,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     ("C-c  ！" . org-time-stamp-inactive)
     ("C-c  。" . org-time-stamp)
     :config
-    (use-package org-ref)
-    (setq org-export-allow-BIND t)
     (setq org-support-shift-select t)
     ;; no empty line after collapsed
     (setq org-cycle-separator-lines 0)
@@ -1714,6 +1712,8 @@ name handling function can be found from emacs manual[fn:15].
 
 #+begin_src emacs-lisp
   (use-package org-ref
+    :after org
+    :demand t
     :config
     (setq reftex-default-bibliography ())
     (add-to-list 'reftex-default-bibliography (concat kimim/path-sync "/papers/references.bib"))
