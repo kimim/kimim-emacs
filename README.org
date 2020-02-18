@@ -1885,6 +1885,7 @@ doc-view-mode can view many kind of documents, such as PDF, PS and images.
 #+begin_src emacs-lisp
   (use-package doc-view
     :config
+    (setq doc-view-continuous t)
     (setq doc-view-resolution 300)
     (setq doc-view-image-width 1460))
 #+end_src
