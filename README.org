@@ -372,14 +372,14 @@ Display time and (line, column) numbers in mode line.
 * Other Visual Element
 
 #+begin_src emacs-lisp
-  (setq inhibit-startup-message t)          ; 不顯示開始畫面
-  (setq initial-scratch-message nil)        ; scratch 默認為空
+  (setq inhibit-startup-message t)
+  (setq initial-scratch-message nil)
   (setq visible-bell t)
   (setq ring-bell-function #'ignore)
   (fset 'yes-or-no-p 'y-or-n-p)
-  (show-paren-mode 1)                       ; 高亮显示匹配的括号
-  (setq blink-cursor-blinks 3)              ; 光标闪烁三次后不闪烁
-  (blink-cursor-mode 1)                     ; 光标不闪烁
+  (show-paren-mode 1)
+  (setq blink-cursor-blinks 3)
+  (blink-cursor-mode 1)
   (tooltip-mode nil)
 #+end_src
 
@@ -440,6 +440,7 @@ scroll slowly with touchpad.
 #+begin_src emacs-lisp
   ;; https://github.com/justbur/emacs-which-key
   (use-package which-key
+    :defer 3
     :diminish which-key-mode
     :config
     ;; use minibuffer as the popup type, otherwise conflict in ecb mode
@@ -492,25 +493,23 @@ scroll slowly with touchpad.
 ** General
 
 #+begin_src emacs-lisp
-  (setq inhibit-eol-conversion nil)       ; 不要轉換 end-of-line style
-  ;; fill-column is a buffer-local variable, use setq-default to change it globally
+  (setq inhibit-eol-conversion nil)
+  ;; fill-column is a buffer-local variable
+  ;; use setq-default to change it globally
   (setq-default fill-column 80)
   (toggle-word-wrap -1)
   (use-package drag-stuff
     :diminish drag-stuff-mode
     :config
-    (drag-stuff-global-mode 1))           ; use Alt-up/down to drag line or region
-  ;;(diminish 'drag-stuff-mode)
-  (delete-selection-mode 1)               ; 輸入的文字覆蓋選中的文字
-  (setq kill-ring-max 200)                ; kill-ring 最多的记录个数
-  (setq kill-whole-line t)                ; 在行首 C-k 时，同时删除该行。
-  (setq require-final-newline t)          ; 存盘的时候，要求最后一个字符时换行符
-  (setq-default tab-width 4)              ; 用 space 替换 tab，tab 长度为 4
+    (drag-stuff-global-mode 1))
+  (delete-selection-mode 1)
+  (setq kill-ring-max 200)
+  (setq kill-whole-line t)
+  (setq require-final-newline t)
+  (setq-default tab-width 4)
   (setq tab-stop-list
-        (number-sequence 4 120 4))        ; 每次 tab 空格數
-  (setq track-eol t)                      ; 当光标在行尾上下移动的时候保持在行尾
-  ;; 对于每个备份文件，保留最原始的两个版本和最新的五个版本。并且备份的时
-  ;; 候，备份文件是复本，而不是原件。
+        (number-sequence 4 120 4))
+  (setq track-eol t)
   (setq backup-directory-alist '(("." . "~/temp")))
   (setq version-control t)
   (setq kept-old-versions 10)
@@ -520,14 +519,14 @@ scroll slowly with touchpad.
 
   (setq auto-save-interval 50)
   (setq auto-save-timeout 60)
-  (setq auto-save-default nil)           ; auto-save of every file-visiting buffer
+  (setq auto-save-default nil)
   (setq auto-save-list-file-prefix "~/temp/auto-saves-")
   (setq auto-save-file-name-transforms `((".*"  , "~/temp/")))
   (setq create-lockfiles nil)
   (setq time-stamp-active t)
   (setq time-stamp-warn-inactive t)
   (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S kimi")
-  (add-hook 'write-file-hooks 'time-stamp); 自动更新 time-stamp
+  (add-hook 'write-file-hooks 'time-stamp)
 
   (defun kimim/save-buffer-advice (orig-fun &rest arg)
     (delete-trailing-whitespace)
@@ -543,13 +542,8 @@ scroll slowly with touchpad.
                 (visual-line-mode))))
   (setq-default indent-tabs-mode nil)
 
-  ;; 当有两个文件名相同的缓冲时，使用前缀的目录名做 buffer 名字
   (setq uniquify-buffer-name-style 'forward)
-
-  ;; 当使用 M-x COMMAND 后，显示该 COMMAND 绑定的键 5 秒鐘時間
   (setq suggest-key-bindings 5)
-
-
   (setq auto-mode-alist
         (append '(("\\.css\\'" . css-mode)
                   ("\\.S\\'" . asm-mode)
@@ -574,18 +568,6 @@ scroll slowly with touchpad.
   (setq visual-fill-column-center-text t)
 #+end_src
 
-** pangu-spacing
-
-#+begin_src emacs-lisp
-  (use-package pangu-spacing
-    :diminish pangu-spacing-mode
-    :config
-    ;; (global-pangu-spacing-mode 1)
-    (add-hook 'org-mode-hook
-              '(lambda ()
-                 (set (make-local-variable 'pangu-spacing-real-insert-separtor) t))))
-#+end_src
-
 ** undo-tree
 
 #+begin_src emacs-lisp
@@ -598,6 +580,7 @@ scroll slowly with touchpad.
 
 * File Management
 ** dired
+
 #+begin_src emacs-lisp
   (use-package dired
     :ensure nil
@@ -625,13 +608,10 @@ scroll slowly with touchpad.
                               "|Start\\|SendTo\\"
                               "|^\\.DS_Store\\"
                               "|qms-bmh"))))
-    ;; Dired buffer 中列出文件时传递给 ls 的参数。加个 "l" 可以使大写的文
-    ;; 件名在顶部，临时的改变可以用 C-u s。
     (setq dired-listing-switches "-Avhlgo --group-directories-first")
     (if (eq system-type 'darwin)
         (setq dired-listing-switches "-Avhlgo"))
 
-    ;; 复制(删除)目录的时，第归的复制(删除)其中的子目录。
     (setq dired-recursive-copies t)
     (setq dired-recursive-deletes t)
 
@@ -711,7 +691,6 @@ functions, but also provides many handy features of its own.
 #+begin_src emacs-lisp
   ;; bookmark setting
   (setq bookmark-default-file "~/.emacs.d/emacs.bmk")
-  ;; 每当设置书签的时候都保存书签文件，否则只在你退出 Emacs 时保存
   (setq bookmark-save-flag 1)
 
   (use-package bm

@@ -313,3 +313,16 @@ Install the project...
 -- Install configuration: "Release"
 -- Up-to-date: /home/kimim/.emacs.d/irony/bin/irony-server.exe
 #+end_src
+** pangu-spacing
+
+#+begin_src emacs-lisp
+  (use-package pangu-spacing
+    :diminish pangu-spacing-mode
+    :config
+    (global-pangu-spacing-mode 1)
+    (add-hook 'org-mode-hook
+              '(lambda ()
+                 (set
+                  (make-local-variable
+                   'pangu-spacing-real-insert-separtor) t))))
+#+end_src
