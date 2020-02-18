@@ -1899,6 +1899,17 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
                                         (auto-fill-mode -1))))
 #+end_src
 
+* Viewing Documents
+
+doc-view-mode can view many kind of documents, such as PDF, PS and images.
+
+#+begin_src emacs-lisp
+  (use-package doc-view
+    :config
+    (setq doc-view-resolution 300)
+    (setq doc-view-image-width 1460))
+#+end_src
+
 * Reading News
 
 #+begin_src emacs-lisp
