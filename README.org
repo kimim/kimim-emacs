@@ -303,7 +303,7 @@ Display time and (line, column) numbers in mode line.
 
 #+begin_src emacs-lisp
   (use-package time
-    :defer 3
+    :defer 1
     :init
     (setq display-time-24hr-format t)
     (setq display-time-day-and-date t)
@@ -356,7 +356,7 @@ Display time and (line, column) numbers in mode line.
 
 #+begin_src emacs-lisp
   (use-package unicode-fonts
-    :defer 10
+    :defer 3
     :config
     (defadvice unicode-fonts-setup (after
                                     unicode-fonts-setup-advice
@@ -454,7 +454,7 @@ scroll slowly with touchpad.
     (smex-initialize))
 
   (use-package counsel
-    :defer 3
+    :defer 1
     :bind
     (("M-x" . counsel-M-x)
      ("C-x C-f" . counsel-find-file)
@@ -631,7 +631,9 @@ scroll slowly with touchpad.
           (goto-char (point-max)))))
 
   (use-package ibuffer
-    :bind ("C-x C-b" . ibuffer-other-window)
+    :bind (("C-x C-b" . ibuffer-other-window)
+           :map ibuffer-mode-map
+           ("<right>" . ibuffer-visit-buffer))
     :config
     (defun ibuffer-visit-buffer-other-window (&optional noselect)
       "Visit the buffer on this line in another window."
@@ -1880,7 +1882,8 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 
 * Viewing Documents
 
-doc-view-mode can view many kind of documents, such as PDF, PS and images.
+doc-view-mode can view many kind of documents, such as PDF, PS and images. You
+should install postscript in cygwin.
 
 #+begin_src emacs-lisp
   (use-package doc-view
@@ -1936,7 +1939,7 @@ from system PATH, so you should set these to system PATH.
 
 #+begin_src emacs-lisp
   (use-package kimim
-    :defer 5
+    :defer 1
     :ensure nil
     :commands (kimim/mail-setup)
     :bind
