@@ -997,7 +997,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 ** Emacs lisp
 
 #+begin_src emacs-lisp
-  (define-derived-mode lisp-interaction-mode emacs-lisp-mode "λ")
+  (define-derived-mode lisp-interaction-mode emacs-lisp-mode "𝛌")
   (eval-after-load 'company
     '(add-to-list 'company-backends 'company-elisp))
 #+end_src
