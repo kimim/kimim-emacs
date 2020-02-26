@@ -1768,7 +1768,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     :config
     (defun youdao-dictionary-def-copied ()
       (interactive)
-      (youdao-dictionary-search (x-get-clipboard)))
+      (youdao-dictionary-search (gui-get-selection)))
     )
 #+end_src
 
