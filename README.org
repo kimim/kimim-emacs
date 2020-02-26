@@ -523,10 +523,12 @@ scroll slowly with touchpad.
   (setq auto-save-list-file-prefix "~/temp/auto-saves-")
   (setq auto-save-file-name-transforms `((".*"  , "~/temp/")))
   (setq create-lockfiles nil)
-  (setq time-stamp-active t)
-  (setq time-stamp-warn-inactive t)
-  (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S kimi")
-  (add-hook 'write-file-hooks 'time-stamp)
+  (use-package time-stamp
+    :config
+    (setq time-stamp-active t)
+    (setq time-stamp-warn-inactive t)
+    (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S kimi")
+    (add-hook 'write-file-hooks 'time-stamp))
 
   (defun kimim/save-buffer-advice (orig-fun &rest arg)
     (delete-trailing-whitespace)
@@ -1513,9 +1515,9 @@ name handling function can be found from emacs manual[fn:15].
     :commands (jekyll)
     :config
     ;; file in jekyll base will also be uploaded to github
-    (setq path-jekyll-base "~/kimi.im/_notes/_posts")
+    (defvar path-jekyll-base "~/kimi.im/_notes/_posts")
     ;; in order to sync draft with cloud sync driver
-    (setq path-jekyll-draft (concat kimim/path-sync "kimim/_draft/"))
+    (defvar path-jekyll-draft (concat kimim/path-sync "kimim/_draft/"))
     ;; file in jekyll base will also be uploaded to github
 
     (setq org-publish-project-alist
