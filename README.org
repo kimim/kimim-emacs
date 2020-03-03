@@ -1877,6 +1877,8 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     (setq mu4e-get-mail-command "offlineimap -u quiet")
     ;; Fetch mail in 60 sec interval
     (setq mu4e-update-interval 300)
+    ;; hide indexing messages from minibuffer
+    (setq mu4e-hide-index-messages t)
     (setq mu4e-use-fancy-chars nil)
     (setq mu4e-view-show-images t)
     (setq mu4e-view-fields
