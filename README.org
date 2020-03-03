@@ -1099,7 +1099,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     (setq org-hide-leading-stars t)
     (setq org-footnote-auto-adjust t)
     (setq org-footnote-define-inline nil)
-    (setq org-export-with-sub-superscripts '{})
     (define-key org-mode-map (kbd "C-c C-x h") (lambda ()
                                                  (interactive)
                                                  (insert "^{()}")
@@ -1123,12 +1122,17 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 ** org exporting
 
+When exporting, do not export with author and date.
+
 #+begin_src emacs-lisp
   (use-package org
     :config
     (setq org-export-allow-BIND t)
     (setq org-export-creator-string "")
-    (setq org-export-html-validation-link nil))
+    (setq org-export-html-validation-link nil)
+    (setq org-export-with-sub-superscripts '{})
+    (setq org-export-with-author nil)
+    (setq org-export-with-date nil))
 #+end_src
 
 *** org to pdf
@@ -1493,6 +1497,7 @@ name handling function can be found from emacs manual[fn:15].
 
 #+begin_src emacs-lisp
   (use-package org
+    :defer 5
     :bind
     (("C-x m d" . kimim/deft-store-link))
     :config
