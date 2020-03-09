@@ -467,6 +467,7 @@ scroll slowly with touchpad.
      ("C-x m u" . counsel-unicode-char)
      ("C-c j" . counsel-git-grep)
      ("C-c g" . counsel-grep)
+     ("C-x b" . counsel-ibuffer)
      ("C-c k" . counsel-ag)
      ("C-c p" . counsel-pt)
      ("C-x l" . counsel-locate)
