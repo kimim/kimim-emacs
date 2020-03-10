@@ -1175,6 +1175,13 @@ pip install pygments
                  '("cn-article"
                    "\\documentclass[a4paper,UTF8]{ctexart}
   \\usepackage{enumitem}
+  \\usepackage{fancyhdr, lastpage}
+  \\fancypagestyle{plain}{
+      \\fancyhf{}
+      \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
+      \\renewcommand{\\headrulewidth}{0pt}
+  }
+  \\pagestyle{plain}
   \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
   \\setlength{\\baselineskip}{20pt}
   \\setlength{\\parskip}{5pt}
@@ -1188,6 +1195,13 @@ pip install pygments
                  '("cn-book"
                    "\\documentclass[a4paper,UTF8]{ctexbook}
   \\usepackage{enumitem}
+  \\usepackage{fancyhdr, lastpage}
+  \\fancypagestyle{plain}{
+      \\fancyhf{}
+      \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
+      \\renewcommand{\\headrulewidth}{0pt}
+  }
+  \\pagestyle{plain}
   \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
   \\setlength{\\baselineskip}{20pt}
   \\setlength{\\parskip}{5pt}
@@ -1205,6 +1219,13 @@ pip install pygments
   \\usepackage{titlesec}
   \\usepackage{minted}
   \\usepackage{enumitem}
+  \\usepackage{fancyhdr, lastpage}
+  \\fancypagestyle{plain}{
+      \\fancyhf{}
+      \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
+      \\renewcommand{\\headrulewidth}{0pt}
+  }
+  \\pagestyle{plain}
   \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
   \\geometry{a4paper,scale=0.8}
   \\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm}
@@ -1707,6 +1728,17 @@ name handling function can be found from emacs manual[fn:15].
 
     (advice-add 'deft-new-file-named
                 :around #'kimim/deft-new-file-named-advice))
+#+end_src
+
+* Markdown mode
+
+Markdown is widely used as plain text file format.
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :bind(:map markdown-mode-map
+               ("M-<up>" . markdown-move-subtree-up)
+               ("M-<down>" . markdown-move-subtree-down)))
 #+end_src
 
 * Reference management
