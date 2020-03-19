@@ -1892,6 +1892,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     :bind (
            :map mu4e-headers-mode-map
            ("r" . mu4e-compose-reply)
+           ("f" . kimim/mu4e~view-quit-buffer)
            :map mu4e-compose-mode-map
            ("<C-tab>" . message-tab)
            :map mu4e-view-mode-map
@@ -1932,7 +1933,12 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     (add-hook 'mu4e-compose-mode-hook 'kimim/mail-setup)
     (add-hook 'mu4e-compose-mode-hook 'orgalist-mode)
     (add-hook 'mu4e-compose-mode-hook (lambda ()
-                                        (auto-fill-mode -1))))
+                                        (auto-fill-mode -1)))
+    (defun kimim/mu4e~view-quit-buffer ()
+      (interactive)
+      (when (get-buffer "*mu4e-view*")
+        (switch-to-buffer "*mu4e-view*")
+        (mu4e~view-quit-buffer))))
 #+end_src
 
 * Viewing Documents
