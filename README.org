@@ -1363,11 +1363,11 @@ pip install pygments
     (setq org-todo-keywords
           '(
             ;; for tasks
-            (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
+            (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)" "SOMEDAY(m)" "ABORT(a@/!)")
             ;; for risks, actions, problems
             (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
             ;; special states
-            (type "REPEAT(r)" "SOMEDAY(m)" "|" "ABORT(a@/!)")))
+            (type "REPEAT(r)")))
 
     (setq org-tag-alist
           '(("@office" . ?o) ("@home" . ?h)
