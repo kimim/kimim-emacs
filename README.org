@@ -1427,7 +1427,7 @@ pip install pygments
     (setq org-agenda-skip-scheduled-if-done t)
     (setq org-agenda-skip-deadline-if-done t)
     (setq org-deadline-warning-days 2)
-
+    (add-hook 'org-agenda-after-show-hook 'org-narrow-to-subtree)
     (setq org-agenda-custom-commands
           '(("t" todo "TODO|OPEN"
              ((org-agenda-sorting-strategy '(priority-down))))
