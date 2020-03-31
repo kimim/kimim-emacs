@@ -358,14 +358,12 @@ Display time and (line, column) numbers in mode line.
   (use-package unicode-fonts
     :defer 3
     :config
-    (defadvice unicode-fonts-setup (after
-                                    unicode-fonts-setup-advice
-                                    (&optional fontset-names regenerate) activate)
-      (interactive "p")
-      (set-fontset-font
-       "fontset-default"
-       'cjk-misc (font-spec :family "YaheiInconsolata")))
-
+    (defun unicode-fonts-setup-advice ()
+      (if window-system
+          (set-fontset-font
+           "fontset-default"
+           'cjk-misc (font-spec :family "YaheiInconsolata"))))
+    (advice-add 'unicode-fonts-setup :after 'unicode-fonts-setup-advice)
     (unicode-fonts-setup))
 #+end_src
 
