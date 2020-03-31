@@ -1361,11 +1361,11 @@ pip install pygments
     (setq org-todo-keywords
           '(
             ;; for tasks
-            (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
+            (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)" "SOMEDAY(m)" "ABORT(a@/!)")
             ;; for risks, actions, problems
             (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
             ;; special states
-            (type "REPEAT(r)" "SOMEDAY(m)" "|" "ABORT(a@/!)")))
+            (type "REPEAT(r)")))
 
     (setq org-tag-alist
           '(("@office" . ?o) ("@home" . ?h)
@@ -1425,7 +1425,7 @@ pip install pygments
     (setq org-agenda-skip-scheduled-if-done t)
     (setq org-agenda-skip-deadline-if-done t)
     (setq org-deadline-warning-days 2)
-
+    (add-hook 'org-agenda-after-show-hook 'org-narrow-to-subtree)
     (setq org-agenda-custom-commands
           '(("t" todo "TODO|OPEN"
              ((org-agenda-sorting-strategy '(priority-down))))
