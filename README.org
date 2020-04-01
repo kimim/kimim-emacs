@@ -342,7 +342,8 @@ Display time and (line, column) numbers in mode line.
   (use-package hl-line
     :defer 5
     :config
-    (global-hl-line-mode 1))
+    (if window-system
+        (global-hl-line-mode 1)))
 
   ;; highlight current symbol
   (use-package auto-highlight-symbol
