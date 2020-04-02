@@ -928,6 +928,15 @@ this directory as secure because you are the owner.
                 (setq c-basic-offset 4))))
 #+end_src
 
+** Clojure
+
+Clojure is a lisp over JVM. Emm, I like it.
+
+#+begin_src emacs-lisp
+  (use-package clojure-mode
+    :mode ("\\.clj\\'" . clojure-mode))
+#+end_src
+
 ** Python
 
 Python development configuration is quite easy. =elpy= [fn:13] is used here:
