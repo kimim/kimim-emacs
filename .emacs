@@ -10,11 +10,11 @@
 ;; path of kimim-emacs files
 (defvar kimim/path-kimim-emacs "~/kimim-emacs/")
 ;; favorate applications on Windows
-(defvar kimim/path-kimikit "~/kimikit/")
+(defvar kimim/path-kimikit "~/")
 ;; synchronization driver, for example ~/Dropbox/
-(defvar kimim/path-sync "~/kimim-sync/")
+(defvar kimim/path-sync "~/")
 ;; path to synchronize some files in .emacs.d
-(defvar kimim/path-sync-emacs (concat kimim/path-sync "kimikit/emacs.d/"))
+(defvar kimim/path-sync-emacs (concat kimim/path-sync ".emacs.d/"))
 ;; path for the GTD files
 (defvar kimim/path-org (concat kimim/path-sync "org/"))
 ;; path to keep notes
