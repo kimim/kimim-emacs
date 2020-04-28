@@ -105,7 +105,7 @@
             (mode-line-buffer-id :foreground "light blue" :background "dim gray" :box nil :weight bold)
             (which-func :foreground ,kimim-night-builtin)
             (minibuffer-prompt :foreground "light blue")
-            (hl-line :background "dim gray")
+            (hl-line :background "gray12")
             ;; defaults
             (show-paren-match :background "turquoise")
             (isearch :background "magenta3" :foreground "lightskyblue1")
