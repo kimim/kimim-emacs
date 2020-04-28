@@ -911,7 +911,7 @@ this directory as secure because you are the owner.
   (use-package cc-mode
     :ensure nil
     :config
-    (add-to-list 'auto-mode-alist '("\\.C\\w*\\'" . c-mode))
+    (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
     (use-package ggtags)
     (add-hook 'c-mode-hook 'ggtags-mode)
     (add-hook 'c++-mode-hook 'ggtags-mode)
@@ -928,13 +928,30 @@ this directory as secure because you are the owner.
                 (setq c-basic-offset 4))))
 #+end_src
 
+** C#
+
+#+begin_src emacs-lisp
+  (use-package csharp-mode
+    :mode ("\\.cs\\'" . csharp-mode))
+#+end_src
+
+
 ** Clojure
 
 Clojure is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
+  (use-package paredit)
   (use-package clojure-mode
-    :mode ("\\.clj\\'" . clojure-mode))
+    :mode ("\\.clj\\'" . clojure-mode)
+    :config
+    (add-to-list 'auto-mode-alist '("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode))
+    (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
+    (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
+    (add-to-list 'auto-mode-alist '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
+    (use-package paredit)
+    (defun turn-on-paredit () (paredit-mode 1))
+    (add-hook 'clojure-mode-hook 'turn-on-paredit))
 #+end_src
 
 ** Python
