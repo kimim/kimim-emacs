@@ -125,31 +125,30 @@ nice font to view Chinese characters, you'd better download and install it from:
 https://github.com/loseblue/yaheiInconsolata.ttf/raw/master/yaheiInconsolata.ttf
 
 #+begin_src emacs-lisp
-  ;;set default font
-  (if (font-utils-exists-p "Inconsolata")
-    (cond
-     ((eq window-system 'w32)
-      (cond
-       ((< (display-pixel-width) 1400)
-        (set-fontset-font
-         "fontset-default"
-         'unicode-bmp (font-spec :family "YaheiInconsolata"))
-        (set-frame-font "Inconsolata-14"))
-       ((> (display-pixel-width) 1400)
-        (set-fontset-font
-         "fontset-default"
-         'unicode-bmp (font-spec :family "YaheiInconsolata"))
-        (set-frame-font "Inconsolata-14"))))
-     ((eq window-system 'ns)
-      (set-fontset-font
-       "fontset-default"
-       'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "Inconsolata-18")))
-    (set-frame-font "14"))
-
-  ;; set default frame dimension
+  ;; set default font and default frame dimension
   (if window-system
       (progn
+        (if (font-utils-exists-p "Inconsolata")
+            (cond
+             ((eq window-system 'w32)
+              (cond
+               ((< (display-pixel-width) 1400)
+                (set-fontset-font
+                 "fontset-default"
+                 'unicode-bmp (font-spec :family "YaheiInconsolata"))
+                (set-frame-font "Inconsolata-14"))
+               ((> (display-pixel-width) 1400)
+                (set-fontset-font
+                 "fontset-default"
+                 'unicode-bmp (font-spec :family "YaheiInconsolata"))
+                (set-frame-font "Inconsolata-14"))))
+             ((eq window-system 'ns)
+              (set-fontset-font
+               "fontset-default"
+               'unicode-bmp (font-spec :family "YaheiInconsolata"))
+              (set-frame-font "Inconsolata-18")))
+          (set-frame-font "14"))
+
         ;; top, left ... must be integer
         (add-to-list 'default-frame-alist
                      (cons 'top  (/ (x-display-pixel-height) 10)))
