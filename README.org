@@ -126,24 +126,26 @@ https://github.com/loseblue/yaheiInconsolata.ttf/raw/master/yaheiInconsolata.ttf
 
 #+begin_src emacs-lisp
   ;;set default font
-  (cond
-   ((eq window-system 'w32)
+  (if (font-utils-exists-p "Inconsolata")
     (cond
-     ((< (display-pixel-width) 1400)
+     ((eq window-system 'w32)
+      (cond
+       ((< (display-pixel-width) 1400)
+        (set-fontset-font
+         "fontset-default"
+         'unicode-bmp (font-spec :family "YaheiInconsolata"))
+        (set-frame-font "Inconsolata-14"))
+       ((> (display-pixel-width) 1400)
+        (set-fontset-font
+         "fontset-default"
+         'unicode-bmp (font-spec :family "YaheiInconsolata"))
+        (set-frame-font "Inconsolata-14"))))
+     ((eq window-system 'ns)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "Inconsolata-14"))
-     ((> (display-pixel-width) 1400)
-      (set-fontset-font
-       "fontset-default"
-       'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "Inconsolata-14"))))
-   ((eq window-system 'ns)
-    (set-fontset-font
-     "fontset-default"
-     'unicode-bmp (font-spec :family "YaheiInconsolata"))
-    (set-frame-font "Inconsolata-18")))
+      (set-frame-font "Inconsolata-18")))
+    (set-frame-font "14"))
 
   ;; set default frame dimension
   (if window-system
