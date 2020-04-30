@@ -1186,7 +1186,10 @@ pip install pygments
     (add-to-list 'org-latex-packages-alist '("" "minted"))
     (setq org-latex-listings 'minted)
     (setq org-latex-pdf-process
-          '("cp ~/../OneDrive/papers/references.bib ."
+          `(,(let ((ref (concat kimim/path-sync "papers/references.bib")))
+               (if (file-exists-p ref)
+                   (concat "cp " ref " .")
+                 ""))
             "xelatex -shell-escape %f"
             "bibtex %b"
             "xelatex -shell-escape %f"
