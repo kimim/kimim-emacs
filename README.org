@@ -943,6 +943,7 @@ Clojure is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
   (use-package paredit)
+  (use-package rainbow-delimiters)
   (use-package clojure-mode
     :mode ("\\.clj\\'" . clojure-mode)
     :config
@@ -951,8 +952,10 @@ Clojure is a lisp over JVM. Emm, I like it.
     (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
     (add-to-list 'auto-mode-alist '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
     (use-package paredit)
-    (defun turn-on-paredit () (paredit-mode 1))
-    (add-hook 'clojure-mode-hook 'turn-on-paredit))
+    (use-package rainbow-delimiters)
+    (add-hook 'clojure-mode-hook (lambda ()
+                                   (enable-paredit-mode)
+                                   (rainbow-delimiters-mode-enable))))
 #+end_src
 
 ** Python
