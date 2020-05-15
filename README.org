@@ -1101,21 +1101,19 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 ** org for writing
 
 #+begin_src emacs-lisp
-  (use-package org-download
-    :config
-    (setq org-download-timestamp "")
-    (setq org-image-actual-width (/ (display-pixel-width) 3))
-    (setq-default org-download-image-dir "./images")
-    (setq org-download-method 'directory)
-    (setq org-startup-with-inline-images t)
-    (setq image-file-name-extensions
-          (quote
-           ("png" "jpeg" "jpg" "gif" "tiff" "tif" "xbm"
-            "xpm" "pbm" "pgm" "ppm" "pnm" "svg" "pdf" "bmp")))
-    (setq org-image-actual-width 800)
-    (setq org-download-image-html-width 800)
-    (setq org-download-image-latex-width 800)
-    (setq org-download-image-org-width 800))
+    (use-package org-download
+      :config
+      (setq org-download-timestamp "")
+      (setq org-image-actual-width (/ (display-pixel-width) 3))
+      (setq-default org-download-image-dir "./images")
+      (setq org-download-method 'directory)
+      (setq org-download-heading nil)
+      (setq org-startup-with-inline-images t)
+      (setq image-file-name-extensions
+            (quote
+             ("png" "jpeg" "jpg" "gif" "tiff" "tif" "xbm"
+              "xpm" "pbm" "pgm" "ppm" "pnm" "svg" "pdf" "bmp")))
+      (defun org-download--dir-2 () "."))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1153,6 +1151,7 @@ When exporting, do not export with author and date.
 
 #+begin_src emacs-lisp
   (use-package org
+    :bind ("C-c C-'" . org-insert-structure-template)
     :config
     (setq org-export-allow-BIND t)
     (setq org-export-creator-string "")
@@ -1343,17 +1342,17 @@ pip install pygments
 ** org to html slide
 
 #+begin_src emacs-lisp
-  (use-package ox-reveal
+  (use-package org-re-reveal
+    :bind ("C-x r v" . org-re-reveal-export-to-html-and-browse)
     :config
     (use-package htmlize :ensure t)
-    ;;(setq org-reveal-root "reveal.js")
-    ;;(setq org-reveal-root (concat kimim/path-kimikit "reveal.js"))
-    (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/2.5.0/")
-    (setq org-reveal-theme "simple")
-    (setq org-reveal-width 1200)
-    (setq org-reveal-height 750)
-    (setq org-reveal-transition "fade")
-    (setq org-reveal-hlevel 2))
+    (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js@3.9.2/")
+    (setq org-re-reveal-theme "none")
+    (setq org-re-reveal-width 1000)
+    (setq org-re-reveal-height 750)
+    (setq org-re-reveal-transition "none")
+    (setq org-re-reveal-hlevel 2)
+    (setq org-re-reveal-extra-css "./kimim.css"))
 #+end_src
 
 ** org with diagram
