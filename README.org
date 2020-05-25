@@ -1190,6 +1190,15 @@ pip install pygments
             "xelatex -shell-escape %f"
             "xelatex -shell-escape %f"))
 
+    ;;; Nicolas Goaziou, http://article.gmane.org/gmane.emacs.orgmode/67692
+    (defun org-latex-ignore-heading-filter-headline (headline backend info)
+      "Strip headline from HEADLINE. Ignore BACKEND and INFO."
+      (when (and (org-export-derived-backend-p backend 'latex)
+                 (string-match "\\`.*ignoreheading.*\n" headline))
+        (replace-match "" nil nil headline)))
+    (add-to-list 'org-export-filter-headline-functions
+                 'org-latex-ignore-heading-filter-headline)
+
     ;; most of the time, I do not need table of contents
     (setq org-latex-toc-command nil)
     ;; https://www.tuicool.com/articles/ZnAnym
