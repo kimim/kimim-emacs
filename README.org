@@ -493,6 +493,14 @@ scroll slowly with touchpad.
   ;; fill-column is a buffer-local variable
   ;; use setq-default to change it globally
   (setq-default fill-column 80)
+  (if window-system
+      (setq-default fill-column
+                    (min 80
+                     (ceiling
+                      (/ (x-display-pixel-width)
+                         (frame-char-width)
+                         2.3))))
+    (setq-default fill-column 80))
   (toggle-word-wrap -1)
   (use-package drag-stuff
     :diminish drag-stuff-mode
@@ -558,11 +566,11 @@ scroll slowly with touchpad.
   (setq save-place-file (expand-file-name "saveplace" "~"))
 #+end_src
 
-** visual-fille-mode
+** visual-fill-mode
 
 #+begin_src emacs-lisp
   (use-package visual-fill-column)
-  (setq visual-fill-column-width 80)
+  (setq visual-fill-column-width fill-column)
   (setq visual-fill-column-center-text t)
 #+end_src
 
