@@ -950,6 +950,15 @@ Clojure is a lisp over JVM. Emm, I like it.
                                    (enable-paredit-mode))))
 #+end_src
 
+#+begin_src emacs-lisp
+  (use-package ob-clojure
+    :ensure org
+    :config
+    (require 'ob-clojure)
+    (use-package cider)
+    (setq org-babel-clojure-backend 'cider))
+#+end_src
+
 ** Python
 
 Python development configuration is quite easy. =elpy= [fn:12] is used here:
@@ -1096,19 +1105,21 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 ** org for writing
 
 #+begin_src emacs-lisp
-    (use-package org-download
-      :config
-      (setq org-download-timestamp "")
-      (setq org-image-actual-width (/ (display-pixel-width) 3))
-      (setq-default org-download-image-dir "./images")
-      (setq org-download-method 'directory)
-      (setq org-download-heading nil)
-      (setq org-startup-with-inline-images t)
-      (setq image-file-name-extensions
-            (quote
-             ("png" "jpeg" "jpg" "gif" "tiff" "tif" "xbm"
-              "xpm" "pbm" "pgm" "ppm" "pnm" "svg" "pdf" "bmp")))
-      (defun org-download--dir-2 () "."))
+  (use-package org-download
+    :config
+    (setq org-download-timestamp "")
+    (setq org-image-actual-width (/ (display-pixel-width) 3))
+    (setq-default org-download-image-dir "./images")
+    (setq org-download-method 'directory)
+    (setq org-download-heading nil)
+    (setq org-startup-with-inline-images nil)
+    ;;(setq org-download-annotate-function #'(lambda (link)()))
+    (setq org-download-display-inline-images nil)
+    (setq image-file-name-extensions
+          (quote
+           ("png" "jpeg" "jpg" "gif" "tiff" "tif" "xbm"
+            "xpm" "pbm" "pgm" "ppm" "pnm" "svg" "pdf" "bmp")))
+    (defun org-download--dir-2 () "."))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1183,7 +1194,7 @@ pip install pygments
     (setq org-latex-pdf-process
           `(,(let ((ref (concat kimim/path-sync "papers/references.bib")))
                (if (file-exists-p ref)
-                   (concat "cp " ref " .")
+                   (concat "cp " ref " . -f")
                  ""))
             "xelatex -shell-escape %f"
             "bibtex %b"
@@ -1204,49 +1215,97 @@ pip install pygments
     ;; https://www.tuicool.com/articles/ZnAnym
     ;; remove error: ! LaTeX Error: Command \nobreakspace unavailable in encoding T1.
     ;; add: \DeclareRobustCommand\nobreakspace{\leavevmode\nobreak\ }
-    (add-to-list 'org-latex-classes
-                 '("cn-article"
-                   "\\documentclass[a4paper,UTF8]{ctexart}
+    (setq org-latex-classes
+          '(("cn-article"
+             "\\documentclass[a4paper,UTF8]{ctexart}
+  \\usepackage{geometry}
+  \\usepackage{titlesec}
+  \\usepackage{minted}
   \\usepackage{enumitem}
+  \\usepackage{abstract}
+  \\renewcommand{\\abstractname}{摘要}
+  \\renewcommand\\refname{参考文献}
   \\usepackage{fancyhdr, lastpage}
   \\fancypagestyle{plain}{
       \\fancyhf{}
       \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
       \\renewcommand{\\headrulewidth}{0pt}
   }
+  \\usepackage{hyperref}
+  \\hypersetup{hidelinks}
+  \\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
   \\pagestyle{plain}
   \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
+  \\geometry{a4paper,scale=0.8}
+  \\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm}
   \\setlength{\\baselineskip}{20pt}
   \\setlength{\\parskip}{5pt}
   \\DeclareRobustCommand\\nobreakspace{\\leavevmode\\nobreak\\ }"
-                   ("\\section{%s}" . "\\section*{%s}")
-                   ("\\subsection{%s}" . "\\subsection*{%s}")
-                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-    (add-to-list 'org-latex-classes
-                 '("cn-book"
-                   "\\documentclass[a4paper,UTF8]{ctexbook}
+             ("\\section{%s}" . "\\section*{%s}")
+             ("\\subsection{%s}" . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+             ("\\paragraph{%s}" . "\\paragraph*{%s}")
+             ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+
+            ("cn-book"
+             "\\documentclass[a4paper,UTF8]{ctexbook}
   \\usepackage{enumitem}
+  \\usepackage{abstract}
+  \\renewcommand{\\abstractname}{摘要}
+  \\renewcommand\\refname{参考文献}
   \\usepackage{fancyhdr, lastpage}
   \\fancypagestyle{plain}{
       \\fancyhf{}
       \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
       \\renewcommand{\\headrulewidth}{0pt}
   }
+  \\usepackage{hyperref}
+  \\hypersetup{hidelinks}
+  \\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
   \\pagestyle{plain}
   \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
   \\setlength{\\baselineskip}{20pt}
   \\setlength{\\parskip}{5pt}
   \\DeclareRobustCommand\\nobreakspace{\\leavevmode\\nobreak\\ }"
-                   ("\\section{%s}" . "\\section*{%s}")
-                   ("\\subsection{%s}" . "\\subsection*{%s}")
-                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-    (add-to-list 'org-latex-classes
-                 '("article"
-                   "\\documentclass{article}
+             ("\\section{%s}" . "\\section*{%s}")
+             ("\\subsection{%s}" . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+             ("\\paragraph{%s}" . "\\paragraph*{%s}")
+             ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+
+            ("article"
+             "\\documentclass{article}
+  \\usepackage[UTF8]{ctex}
+  \\usepackage{geometry}
+  \\usepackage{titlesec}
+  \\usepackage{minted}
+  \\usepackage{enumitem}
+  \\usepackage{fancyhdr, lastpage}
+  \\usepackage{hyperref}
+  \\hypersetup{hidelinks}
+  \\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
+  \\fancypagestyle{plain}{
+      \\fancyhf{}
+      \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
+      \\renewcommand{\\headrulewidth}{0pt}
+  }
+  \\usepackage{hyperref}
+  \\hypersetup{hidelinks}
+  \\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
+  \\pagestyle{plain}
+  \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
+  \\geometry{a4paper,scale=0.8}
+  \\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm}
+  \\setlength{\\baselineskip}{20pt}
+  \\setlength{\\parskip}{5pt}"
+             ("\\section{%s}" . "\\section*{%s}")
+             ("\\subsection{%s}" . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+             ("\\paragraph{%s}" . "\\paragraph*{%s}")
+             ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+
+            ("article2c"
+             "\\documentclass[twocolumn]{article}
   \\usepackage[UTF8]{ctex}
   \\usepackage{geometry}
   \\usepackage{titlesec}
@@ -1258,17 +1317,20 @@ pip install pygments
       \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
       \\renewcommand{\\headrulewidth}{0pt}
   }
+  \\usepackage{hyperref}
+  \\hypersetup{hidelinks}
+  \\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
   \\pagestyle{plain}
   \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
   \\geometry{a4paper,scale=0.8}
   \\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm}
   \\setlength{\\baselineskip}{20pt}
   \\setlength{\\parskip}{5pt}"
-                   ("\\section{%s}" . "\\section*{%s}")
-                   ("\\subsection{%s}" . "\\subsection*{%s}")
-                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+             ("\\section{%s}" . "\\section*{%s}")
+             ("\\subsection{%s}" . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+             ("\\paragraph{%s}" . "\\paragraph*{%s}")
+             ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
     (setq org-latex-default-class "article")
     ;; remove fontenc, and AUTO in front of inputenc,
@@ -1285,9 +1347,7 @@ pip install pygments
             ("normalem" "ulem" t nil)
             ("" "amsmath" t nil)
             ("" "textcomp" t nil)
-            ("" "amssymb" t nil)
-            ("" "capt-of" nil nil)
-            ("" "hyperref" nil nil)))))
+            ("" "capt-of" nil nil)))))
 #+end_src
 
 *** org to html page
@@ -1417,7 +1477,6 @@ pip install pygments
     (add-hook 'org-mode-hook
               (lambda ()
                 ;;(auto-fill-mode)
-                (org-display-inline-images)
                 ;;(drag-stuff-mode -1)
                 ))
 
@@ -1782,11 +1841,11 @@ Markdown is widely used as plain text file format.
     :demand t
     :config
     (setq reftex-default-bibliography ())
-    (add-to-list 'reftex-default-bibliography (concat kimim/path-sync "/papers/references.bib"))
+    (add-to-list 'reftex-default-bibliography (concat kimim/path-sync "papers/references.bib"))
     (setq org-ref-bibliography-notes (concat kimim/path-sync "/papers/notes.org")
           org-ref-pdf-directory (concat kimim/path-sync "/papers/"))
     (setq org-ref-default-bibliography ())
-    (add-to-list 'org-ref-default-bibliography (concat kimim/path-sync "/papers/references.bib"))
+    (add-to-list 'org-ref-default-bibliography (concat kimim/path-sync "papers/references.bib"))
     (setq bibtex-completion-bibliography (concat kimim/path-sync "/papers/references.bib")
           bibtex-completion-library-path (concat kimim/path-sync "/papers/")
           bibtex-completion-notes-path kimim/path-notes)
