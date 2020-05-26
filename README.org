@@ -1340,7 +1340,7 @@ pip install pygments
              ("\\paragraph{%s}" . "\\paragraph*{%s}")
              ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
-    (setq org-latex-default-class "cn-article")
+    (setq org-latex-default-class "article")
     ;; remove fontenc, and AUTO in front of inputenc,
     ;; then francais can be processed
     (setq org-latex-default-packages-alist
