@@ -1108,7 +1108,8 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     ;; no empty line after collapsed
     (setq org-cycle-separator-lines 0)
     (setq org-src-fontify-natively t)
-    (setq org-startup-indented t))
+    (setq org-startup-indented t)
+    (setq org-image-actual-width 600))
 #+end_src
 
 ** org for writing
@@ -1246,7 +1247,7 @@ pip install pygments
   \\pagestyle{plain}
   \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
   \\geometry{a4paper,scale=0.8}
-  \\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm}
+  \\geometry{a4paper,left=2.5cm,right=2.5cm,top=3cm,bottom=3cm}
   \\setlength{\\baselineskip}{20pt}
   \\setlength{\\parskip}{5pt}
   \\DeclareRobustCommand\\nobreakspace{\\leavevmode\\nobreak\\ }"
@@ -1304,7 +1305,7 @@ pip install pygments
   \\pagestyle{plain}
   \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
   \\geometry{a4paper,scale=0.8}
-  \\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm}
+  \\geometry{a4paper,left=2.5cm,right=2.5cm,top=3cm,bottom=3cm}
   \\setlength{\\baselineskip}{20pt}
   \\setlength{\\parskip}{5pt}"
              ("\\section{%s}" . "\\section*{%s}")
