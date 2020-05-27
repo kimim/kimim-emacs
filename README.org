@@ -962,6 +962,7 @@ Clojure is a lisp over JVM. Emm, I like it.
   (use-package ob-clojure
     :ensure org
     :config
+    (use-package clojure-mode)
     (require 'ob-clojure)
     (use-package cider)
     (setq org-babel-clojure-backend 'cider))
