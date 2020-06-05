@@ -949,6 +949,7 @@ Clojure is a lisp over JVM. Emm, I like it.
   (use-package clojure-mode
     :mode ("\\.clj\\'" . clojure-mode)
     :config
+    (use-package clojure-mode-extra-font-locking)
     (add-to-list 'auto-mode-alist '("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode))
     (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
     (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
@@ -1118,7 +1119,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (use-package org-download
     :config
     (setq org-download-timestamp "")
-    (setq org-image-actual-width (/ (display-pixel-width) 3))
     (setq-default org-download-image-dir "./images")
     (setq org-download-method 'directory)
     (setq org-download-heading nil)
