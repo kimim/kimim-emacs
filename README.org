@@ -1196,6 +1196,7 @@ pip install pygments
 #+begin_src emacs-lisp
   (use-package ox-latex
     :ensure org
+    :bind ("<C-f7>" . org-latex-export-to-pdf)
     :commands (org-latex-publish-to-pdf)
     :config
     (require 'ox-latex)
