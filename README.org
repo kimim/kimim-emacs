@@ -175,7 +175,8 @@ specify these variables in different way.
     (add-to-list 'exec-path "/cygdrive/C/CTEX/MiKTeX/miktex/bin/"))
    ((eq system-type 'darwin)
     (setq kimim/path-root "/")
-    (add-to-list 'exec-path "/Library/TeX/texbin"))
+    (add-to-list 'exec-path "/Library/TeX/texbin")
+    (add-to-list 'exec-path "~/Library/Python/2.7/bin"))
    ((eq system-type 'gnu/linux)
     (setq kimim/path-root "/")))
 
@@ -1217,12 +1218,13 @@ pip install pygments
     (setq org-latex-pdf-process
           `(,(let ((ref (concat kimim/path-sync "papers/references.bib")))
                (if (file-exists-p ref)
-                   (concat "cp " ref " . -f")
+                   (concat "cp -f \"" ref "\" .")
                  ""))
             "xelatex -shell-escape %f"
             "bibtex %b"
             "xelatex -shell-escape %f"
-            "xelatex -shell-escape %f"))
+            "xelatex -shell-escape %f"
+            "rm references.bib"))
 
     ;;; Nicolas Goaziou, http://article.gmane.org/gmane.emacs.orgmode/67692
     (defun org-latex-ignore-heading-filter-headline (headline backend info)
@@ -1866,12 +1868,12 @@ Markdown is widely used as plain text file format.
     :config
     (setq reftex-default-bibliography ())
     (add-to-list 'reftex-default-bibliography (concat kimim/path-sync "papers/references.bib"))
-    (setq org-ref-bibliography-notes (concat kimim/path-sync "/papers/notes.org")
-          org-ref-pdf-directory (concat kimim/path-sync "/papers/"))
+    (setq org-ref-bibliography-notes (concat kimim/path-sync "papers/notes.org")
+          org-ref-pdf-directory (concat kimim/path-sync "papers/"))
     (setq org-ref-default-bibliography ())
     (add-to-list 'org-ref-default-bibliography (concat kimim/path-sync "papers/references.bib"))
-    (setq bibtex-completion-bibliography (concat kimim/path-sync "/papers/references.bib")
-          bibtex-completion-library-path (concat kimim/path-sync "/papers/")
+    (setq bibtex-completion-bibliography (concat kimim/path-sync "papers/references.bib")
+          bibtex-completion-library-path (concat kimim/path-sync "papers/")
           bibtex-completion-notes-path kimim/path-notes)
 
     ;; open pdf with system pdf viewer
