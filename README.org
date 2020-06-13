@@ -1179,9 +1179,21 @@ When exporting, do not export with author and date.
 
 *** org to pdf
 
-Export =org-mode= to PDF, with font highlight, you need to install =python= and
-=pygments=. Because =pygmentize= from =pygments= is used to generate =latex=
-markups for font highlighting.
+LaTeX is required to convert =org-mode= to PDF.
+
+For MacOS:
+
+#+begin_src shell
+brew cask install mactex-no-gui
+#+end_src
+
+For Windows, download and install CTEX from http://www.ctex.org
+
+For Linux: use pacakge mangagement to install texlive.
+
+To export =org-mode= to PDF, with code style highlight, you need to install
+=python= and =pygments=. Because =pygmentize= from =pygments= is used to
+generate =latex= markups for font highlighting.
 
 For Windows environment, please note that =python= and =pygments= installed in
 =msys64= is not working for xetex. You should download Python install file for
