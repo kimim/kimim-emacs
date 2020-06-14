@@ -52,6 +52,15 @@ If these pathes are not set, emacs will report errors:
 Then execute =emacs= to bootstrap itself.
 
 * Preparation
+
+In order to happily use this Emacs configuration, you need to prepare following
+stuffs:
+1. GUI need Inconsolata and YaheiInconsolata to display Chinese and English
+   characters well. Please download and install fonts file acc. section [[*Font
+   and Frame Size]]
+2. =org-mode= to PDF exporting need LaTeX and pygments. Please install them
+   acc. section [[*org to pdf]]
+
 ** Windows/Cygwin
 
 Cygwin project[fn:2] is required for this configuration in Windows, which is a
