@@ -71,7 +71,8 @@ to install additional application if it is missing.
 Install Homebrew:
 
 #+begin_src shell
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+/bin/bash -c \
+"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 #+end_src
 
 ** Linux
@@ -176,7 +177,7 @@ specify these variables in different way.
    ((eq system-type 'darwin)
     (setq kimim/path-root "/")
     (add-to-list 'exec-path "/Library/TeX/texbin")
-    (add-to-list 'exec-path "~/Library/Python/2.7/bin"))
+    (add-to-list 'exec-path (concat (getenv "HOME") "/Library/Python/2.7/bin")))
    ((eq system-type 'gnu/linux)
     (setq kimim/path-root "/")))
 
@@ -1196,6 +1197,17 @@ To export =org-mode= to PDF, with code style highlight, you need to install
 =python= and =pygments=. Because =pygmentize= from =pygments= is used to
 generate =latex= markups for font highlighting.
 
+For MacOS, the OS shipped =python2.7= does not accompanied with =pip= package
+management script. So you need to install =pip=, and then add =pygments=,
+acc. https://pip.pypa.io/en/stable/installing/ , =pygmentize= will be installed
+under =$HOME/Library/Python/2.7/bin=, which is added to =exec-path= and =PATH=
+in section [[*PATH, exec-path and Info]].
+
+#+begin_src shell
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
+#+end_src
+
 For Windows environment, please note that =python= and =pygments= installed in
 =msys64= is not working for xetex. You should download Python install file for
 Windows from https://www.python.org/downloads/.
@@ -1312,6 +1324,7 @@ pip install pygments
       \\renewcommand{\\headrulewidth}{0pt}
   }
   \\pagestyle{plain}
+  \\setlength{\\parindent}{0em}
   \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
   \\geometry{a4paper,scale=0.8}
   \\geometry{a4paper,left=2.5cm,right=2.5cm,top=3cm,bottom=3cm}
