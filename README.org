@@ -56,7 +56,7 @@ Then execute =emacs= to bootstrap itself.
 In order to happily use this Emacs configuration, you need to prepare following
 stuffs:
 1. GUI need Inconsolata and YaheiInconsolata to display Chinese and English
-   characters well. Please download and install fonts file acc. section [[*Font
+   characters well. Please download and install font files acc. section [[*Font
    and Frame Size]]
 2. =org-mode= to PDF exporting need LaTeX and pygments. Please install them
    acc. section [[*org to pdf]]
@@ -126,8 +126,10 @@ calculated with original default font height and width: =frame-char-height= and
 =frame-char-width=.
 
 Because Incosolata font is really great for programming, and Microsoft Yahei is
-nice font to view Chinese characters, you'd better download and install it from:
-https://github.com/loseblue/yaheiInconsolata.ttf/raw/master/yaheiInconsolata.ttf
+nice font to view Chinese characters, you'd better download and install these
+two fonts from:
+- https://fonts.google.com/specimen/Inconsolata
+- https://github.com/loseblue/yaheiInconsolata.ttf
 
 #+begin_src emacs-lisp
   ;; set default font and default frame dimension
