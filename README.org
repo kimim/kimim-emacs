@@ -1213,7 +1213,6 @@ pip install pygments
     :commands (org-latex-publish-to-pdf)
     :config
     (require 'ox-latex)
-    (add-to-list 'org-latex-packages-alist '("" "minted"))
     (setq org-latex-listings 'minted)
     (setq org-latex-pdf-process
           `(,(let ((ref (concat kimim/path-sync "papers/references.bib")))
@@ -1245,7 +1244,6 @@ pip install pygments
              "\\documentclass[a4paper,UTF8]{ctexart}
   \\usepackage{geometry}
   \\usepackage{titlesec}
-  \\usepackage{minted}
   \\usepackage{enumitem}
   \\usepackage{abstract}
   \\renewcommand{\\abstractname}{摘要}
@@ -1303,7 +1301,6 @@ pip install pygments
   \\usepackage[UTF8]{ctex}
   \\usepackage{geometry}
   \\usepackage{titlesec}
-  \\usepackage{minted}
   \\usepackage{enumitem}
   \\usepackage{fancyhdr, lastpage}
   \\usepackage{hyperref}
