@@ -1370,7 +1370,18 @@ pip install pygments
              ("\\subsection{%s}" . "\\subsection*{%s}")
              ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
              ("\\paragraph{%s}" . "\\paragraph*{%s}")
-             ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+             ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+
+            ("IEEEtran"
+             "\\documentclass[conference]{IEEEtran}
+  \\IEEEoverridecommandlockouts
+  \\usepackage{cite}
+  \\usepackage{amsmath,amssymb,amsfonts}
+  \\usepackage{algorithmic}
+  \\usepackage{xcolor}
+  \\usepackage{hyperref}
+  \\def\\BibTeX{{\\rm B\\kern-.05em{\\sc i\\kern-.025em b}\\kern-.08em
+    T\\kern-.1667em\\lower.7ex\\hbox{E}\\kern-.125emX}}")))
 
     (setq org-latex-default-class "article")
     ;; remove fontenc, and AUTO in front of inputenc,
