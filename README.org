@@ -1314,9 +1314,6 @@ pip install pygments
       \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
       \\renewcommand{\\headrulewidth}{0pt}
   }
-  \\usepackage{hyperref}
-  \\hypersetup{hidelinks}
-  \\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
   \\pagestyle{plain}
   \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
   \\geometry{a4paper,scale=0.8}
@@ -1334,7 +1331,6 @@ pip install pygments
   \\usepackage[UTF8]{ctex}
   \\usepackage{geometry}
   \\usepackage{titlesec}
-  \\usepackage{minted}
   \\usepackage{enumitem}
   \\usepackage{fancyhdr, lastpage}
   \\fancypagestyle{plain}{
@@ -1362,8 +1358,9 @@ pip install pygments
     ;; then francais can be processed
     (setq org-latex-default-packages-alist
           (quote
-           (("" "inputenc" t
-             ("pdflatex"))
+           (("" "inputenc" t ("pdflatex"))
+            ;; add cache=false acc. https://github.com/gpoore/minted/issues/92
+            ("cache=false" "minted" t nil)
             ("" "graphicx" t nil)
             ("" "grffile" t nil)
             ("" "longtable" nil nil)
