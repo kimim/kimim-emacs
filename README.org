@@ -2023,7 +2023,7 @@ Markdown is widely used as plain text file format.
     (setq org-ref-default-bibliography ())
     (add-to-list 'org-ref-default-bibliography (concat kimim/path-ref "references.bib"))
     (setq bibtex-completion-bibliography (concat kimim/path-ref "references.bib")
-          bibtex-completion-library-path org-ref-pdf-directory)
+          bibtex-completion-library-path org-ref-pdf-directory
           bibtex-completion-notes-path org-ref-bibliography-notes)
 
     ;; open pdf with system pdf viewer
