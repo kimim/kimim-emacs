@@ -1090,11 +1090,18 @@ Add following lines to =~/.lein/profiles.clj=, and then you can use
                       ,(buffer-substring-no-properties (point-min) (point-max)))
                     (cdr (assq :package params))))))
           (lein-exec
-           (write-region (concat "(use 'clojure.pprint)" expanded) nil "tmp.clj")
-           (setq result
-                 (replace-regexp-in-string
-                  "" ""
-                  (shell-command-to-string (concat "lein exec tmp.clj"))))))
+           (let ((result-params (cdr (assq :result-params params))))
+             (if (or (member "output" result-params)
+                     (member "pp" result-params))
+                 (write-region (concat "(use 'clojure.pprint)
+  " expanded) nil "tmp.clj")
+               (write-region (concat "(use 'clojure.pprint)
+  (clojure.pprint/pprint
+    (do " expanded "))") nil "tmp.clj"))
+             (setq result
+                   (replace-regexp-in-string
+                    "" ""
+                    (shell-command-to-string (concat "cat tmp.clj | lein exec")))))))
         (org-babel-result-cond (cdr (assq :result-params params))
           result
           (condition-case nil (org-babel-script-escape result)
@@ -2273,7 +2280,7 @@ should install postscript in cygwin.
     :config
     (setq doc-view-continuous t)
     (setq doc-view-resolution 300)
-    (setq doc-view-image-width 1400))
+    (setq doc-view-image-width 1300))
 #+end_src
 
 * Reading News
