@@ -135,26 +135,25 @@ two fonts from:
   ;; set default font and default frame dimension
   (if window-system
       (progn
-        (if (font-utils-exists-p "Inconsolata")
-            (cond
-             ((eq window-system 'w32)
-              (cond
-               ((< (display-pixel-width) 1400)
-                (set-fontset-font
-                 "fontset-default"
-                 'unicode-bmp (font-spec :family "YaheiInconsolata"))
-                (set-frame-font "Inconsolata-14"))
-               ((> (display-pixel-width) 1400)
-                (set-fontset-font
-                 "fontset-default"
-                 'unicode-bmp (font-spec :family "YaheiInconsolata"))
-                (set-frame-font "Inconsolata-14"))))
-             ((eq window-system 'ns)
-              (set-fontset-font
-               "fontset-default"
-               'unicode-bmp (font-spec :family "YaheiInconsolata"))
-              (set-frame-font "Inconsolata-18")))
-          (set-frame-font "14"))
+        (cond
+         ((eq window-system 'w32)
+          (cond
+           ((< (display-pixel-width) 1400)
+            (set-fontset-font
+             "fontset-default"
+             'unicode-bmp (font-spec :family "YaheiInconsolata"))
+            (set-frame-font "Inconsolata-14"))
+           ((> (display-pixel-width) 1400)
+            (set-fontset-font
+             "fontset-default"
+             'unicode-bmp (font-spec :family "YaheiInconsolata"))
+            (set-frame-font "Inconsolata-14"))))
+         ((eq window-system 'ns)
+          (set-fontset-font
+           "fontset-default"
+           'unicode-bmp (font-spec :family "YaheiInconsolata"))
+          (set-frame-font "Inconsolata-18")))
+        (set-frame-font "14"))
 
         ;; top, left ... must be integer
         (add-to-list 'default-frame-alist
@@ -166,7 +165,7 @@ two fonts from:
                                       (* 5 (frame-char-height)))))
         (add-to-list 'default-frame-alist
                      (cons 'width (/ (* 4 (x-display-pixel-width))
-                                     (* 5 (frame-char-width)))))))
+                                     (* 5 (frame-char-width))))))
 #+end_src
 
 * Environment
@@ -1391,8 +1390,7 @@ pip install pygments
     (setq org-latex-default-packages-alist
           (quote
            (("" "inputenc" t ("pdflatex"))
-            ;; add cache=false acc. https://github.com/gpoore/minted/issues/92
-            ("cache=false" "minted" t nil)
+            ("" "minted" t nil)
             ("" "graphicx" t nil)
             ("" "grffile" t nil)
             ("" "longtable" nil nil)
@@ -1908,7 +1906,7 @@ Markdown is widely used as plain text file format.
     ;; open pdf with system pdf viewer
     (setq bibtex-completion-pdf-open-function
           (lambda (fpath)
-            (start-process "open" "*open*" "open" fpath)))
+            (kimim/open-in-external-app fpath)))
 
     (defun kimim/org-ref-get-pdf-filename (key)
       "Return the pdf filename associated with a bibtex KEY.
@@ -1936,6 +1934,21 @@ Markdown is widely used as plain text file format.
         (format "%s.pdf" key)))
 
     (setq org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename))
+#+end_src
+
+There is a built-in =bibtex-mode= to manage references. We can extend it to
+support more functions from =org-ref=:
+
+#+begin_src emacs-lisp
+  (use-package bibtex
+    :after org
+    :demand t
+    :ensure nil
+    :bind (:map bibtex-mode-map
+                ("C-x m p" . org-ref-open-bibtex-pdf)
+                ("C-c C-z" . org-ref-open-bibtex-notes))
+    :config
+    (use-package org-ref))
 #+end_src
 
 * Dictionary
@@ -2097,7 +2110,7 @@ should install postscript in cygwin.
     :config
     (setq doc-view-continuous t)
     (setq doc-view-resolution 300)
-    (setq doc-view-image-width 1460))
+    (setq doc-view-image-width 1400))
 #+end_src
 
 * Reading News
