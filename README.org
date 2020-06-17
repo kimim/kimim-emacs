@@ -153,8 +153,6 @@ two fonts from:
     (set-frame-font "Inconsolata-18")))
 
   (when window-system
-    (set-frame-font "14")
-
     ;; top, left ... must be integer
     (add-to-list 'default-frame-alist
                  (cons 'top  (/ (x-display-pixel-height) 10)))
@@ -1569,6 +1567,7 @@ pip install pygments
             ("normalem" "ulem" t nil)
             ("" "amsmath" t nil)
             ("" "textcomp" t nil)
+            ("" "lettrine" t nil)
             ("" "capt-of" nil nil)))))
 #+end_src
 
