@@ -959,7 +959,10 @@ Clojure[fn:12] is a lisp over JVM. Emm, I like it.
   (use-package clojure-mode
     :mode ("\\.clj\\'" . clojure-mode)
     :config
+    (use-package cider)
     (use-package company)
+    (eval-after-load 'company
+        '(add-to-list 'company-backends 'company-capf))
     (add-hook 'cider-repl-mode-hook #'company-mode)
     (add-hook 'cider-mode-hook #'company-mode)
     (add-hook 'clojure-mode-hook #'cider-mode)
@@ -979,6 +982,8 @@ in Clojure.
 #+begin_src emacs-lisp
   (use-package cider
     :config
+    (setq nrepl-use-ssh-fallback-for-remote-hosts t)
+    (setq nrepl-sync-request-timeout 100)
     (defun nrepl--ssh-tunnel-command (ssh dir port)
       "Command string to open SSH tunnel to the host associated with DIR's PORT."
       (with-parsed-tramp-file-name dir v
