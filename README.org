@@ -11,6 +11,56 @@ This Emacs configuration file is written in literate programming method.[fn:1]
 The elisp file is extracted from this file, and then compiled to binary =elc=
 file for fast loading in the future.
 
+* Installation
+
+First of all, you should get and install =emacs=.
+
+** Windows/Cygwin
+
+Cygwin project[fn:2] is required for this configuration in Windows, which is a
+large collection of GNU and Open Source tools provide functionality similar to a
+Linux distribution on Windows.
+
+In order to make life easier, we will use =apt-cyg= [fn:3] to install =emacs=
+and other tools. Let's download =apt-cyg= and install =emacs= and =git=:
+
+#+begin_src shell
+curl https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg > /usr/local/bin/apt-cyg
+chmod +x /usr/local/bin/apt-cyg
+apt-cyg install emacs-w32 git
+#+end_src
+
+Then start =emacs= from terminal, and right click the =emacs= to pin it to
+taskbar, and click the property of this icon to add "C:\cygwin64\bin\run.exe
+emacs" in the target field. This way will hide the black terminal.
+
+** macOS
+
+For Apple macOS, most UNIX tools are installed already. Homebrew [fn:4] is used
+to install additional application if it is missing.
+
+#+begin_src shell
+/bin/bash -c \
+"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+#+end_src
+
+** Linux
+
+Most of the external tools I used in this Emacs configuration should be easily
+installed or already available in main Linux distributions.
+
+* Preparation
+** Install fonts
+
+Because Incosolata font is really great for programming, and Microsoft Yahei is
+nice font to view Chinese characters, you'd better download and install these
+two fonts from:
+
+- https://fonts.google.com/specimen/Inconsolata
+- https://github.com/loseblue/yaheiInconsolata.ttf
+
+** Get emacs config
+
 To use of this configuration, you can follow below shell commands to prepare the
 emacs configuration files and folders:
 
@@ -51,44 +101,6 @@ If these pathes are not set, emacs will report errors:
 
 Then execute =emacs= to bootstrap itself.
 
-* Preparation
-
-In order to happily use this Emacs configuration, you need to prepare following
-stuffs:
-1. GUI need Inconsolata and YaheiInconsolata to display Chinese and English
-   characters well. Please download and install font files acc. section [[*Font
-   and Frame Size]]
-2. =org-mode= to PDF exporting need LaTeX and pygments. Please install them
-   acc. section [[*org to pdf]]
-
-** Windows/Cygwin
-
-Cygwin project[fn:2] is required for this configuration in Windows, which is a
-large collection of GNU and Open Source tools provide functionality similar to a
-Linux distribution on Windows.
-
-In order to make life easier, we have two option to install Cygwin packages in
-terminal, 1) Cygwin standalone package management tool =setup-x86.exe= or
-=setup-x86_64.exe= accept command-line arguments [fn:3]; 2) =apt-cyg= can
-install Cygwin packages in =apt-get= style [fn:4].
-
-** macOS
-
-For Apple macOS, most UNIX tools are installed already. Homebrew [fn:5] is used
-to install additional application if it is missing.
-
-Install Homebrew:
-
-#+begin_src shell
-/bin/bash -c \
-"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-#+end_src
-
-** Linux
-
-Most of the external tools I used in this Emacs configuration should be easily
-installed or already available in main Linux distributions.
-
 * Emacs Frame
 
 Set look & feel before all other settings.
@@ -124,12 +136,6 @@ Set default font and frame size for both Windows and macOS. You should
 =set-default-font= first, otherwise, the frame height and width will be
 calculated with original default font height and width: =frame-char-height= and
 =frame-char-width=.
-
-Because Incosolata font is really great for programming, and Microsoft Yahei is
-nice font to view Chinese characters, you'd better download and install these
-two fonts from:
-- https://fonts.google.com/specimen/Inconsolata
-- https://github.com/loseblue/yaheiInconsolata.ttf
 
 #+begin_src emacs-lisp
   ;; set default font and default frame dimension
@@ -236,7 +242,7 @@ Define new command prefix for keys such as "C-x m f", "C-x m v".
 
 * Package
 
-=package= [fn:6] is the modern =elisp= package management system, which let you
+=package= [fn:5] is the modern =elisp= package management system, which let you
 easily download and install packages that implement additional features. Each
 package is a separate Emacs Lisp program, sometimes including other components
 such as an Info manual.
@@ -422,7 +428,7 @@ Display time and (line, column) numbers in mode line.
 
 ** tldr
 
-TL;DR stands for "Too Long; Didn't Read"[fn:7]. =tldr.el= [fn:8] is the Emacs
+TL;DR stands for "Too Long; Didn't Read"[fn:6]. =tldr.el= [fn:7] is the Emacs
 client.
 
 #+begin_src emacs-lisp
@@ -757,7 +763,7 @@ functions, but also provides many handy features of its own.
 
 ** ag: the silver searcher
 
-=ag= [fn:9] is really a very fast grep tool, and =ag.el= [fn:10] provide the
+=ag= [fn:8] is really a very fast grep tool, and =ag.el= [fn:9] provide the
 Emacs interface to =ag=:
 
 #+begin_src emacs-lisp
@@ -923,7 +929,7 @@ Following error will reported when using magit to commit changes:
 server-ensure-safe-dir: The directory ‘~/.emacs.d/server’ is unsafe
 #+END_QUOTE
 
-The solution is to change the owner of =~/.emacs.d/server= [fn:11]
+The solution is to change the owner of =~/.emacs.d/server= [fn:10]
 
 #+BEGIN_QUOTE
 Click R-mouse on ~/.emacs.d/server and select “Properties” (last item in
@@ -968,7 +974,7 @@ this directory as secure because you are the owner.
 
 ** Clojure
 
-Clojure[fn:12] is a lisp over JVM. Emm, I like it.
+Clojure[fn:11] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
   (use-package paredit)
@@ -992,7 +998,7 @@ Clojure[fn:12] is a lisp over JVM. Emm, I like it.
                                    (enable-paredit-mode))))
 #+end_src
 
-Cider[fn:13] extends Emacs with support for interactive programming
+Cider[fn:12] extends Emacs with support for interactive programming
 in Clojure.
 
 #+begin_src emacs-lisp
@@ -1156,7 +1162,7 @@ Add following lines to =~/.lein/profiles.clj=, and then you can use
 
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:14] is used here:
+Python development configuration is quite easy. =elpy= [fn:13] is used here:
 
 #+begin_src emacs-lisp
   (use-package elpy
@@ -1230,7 +1236,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:15]
+=ahk-mode= developed by Rich Alesi[fn:14]
 
 #+begin_src emacs-lisp
   (use-package ahk-mode
@@ -1875,7 +1881,7 @@ New link to use everything to locate a file with unique ID:
 =C-x l= keychord can store deft links in deft mode, but cannot fetch the link
 from deft note. Below defines a function to fetch a deft style link, which can
 be used to paste directly in other org files, such as work journal. Buffer file
-name handling function can be found from emacs manual[fn:16].
+name handling function can be found from emacs manual[fn:15].
 
 #+begin_src emacs-lisp
   (use-package org
@@ -2442,30 +2448,28 @@ from system PATH, so you should set these to system PATH.
 
 [fn:2] http://cygwin.com/
 
-[fn:3] https://cygwin.com/faq/faq.html#faq.setup.cli
+[fn:3] https://github.com/transcode-open/apt-cyg
 
-[fn:4] https://github.com/transcode-open/apt-cyg
+[fn:4] http://brew.sh/
 
-[fn:5] http://brew.sh/
+[fn:5] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
 
-[fn:6] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
+[fn:6] https://github.com/tldr-pages/tldr
 
-[fn:7] https://github.com/tldr-pages/tldr
+[fn:7] https://github.com/kuanyui/tldr.el
 
-[fn:8] https://github.com/kuanyui/tldr.el
+[fn:8] https://github.com/ggreer/the_silver_searcher#installation
 
-[fn:9] https://github.com/ggreer/the_silver_searcher#installation
+[fn:9] https://github.com/Wilfred/ag.el
 
-[fn:10] https://github.com/Wilfred/ag.el
+[fn:10] https://github.com/syl20bnr/spacemacs/issues/381
 
-[fn:11] https://github.com/syl20bnr/spacemacs/issues/381
+[fn:11] https://clojure.org/
 
-[fn:12] https://clojure.org/
+[fn:12] https://cider.mx/
 
-[fn:13] https://cider.mx/
+[fn:13] https://github.com/jorgenschaefer/elpy
 
-[fn:14] https://github.com/jorgenschaefer/elpy
+[fn:14] https://github.com/ralesi/ahk-mode
 
-[fn:15] https://github.com/ralesi/ahk-mode
-
-[fn:16] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+[fn:15] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
