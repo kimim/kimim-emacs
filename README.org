@@ -30,9 +30,10 @@ chmod +x /usr/local/bin/apt-cyg
 apt-cyg install emacs-w32 git
 #+end_src
 
-Then start =emacs= from terminal, and right click the =emacs= to pin it to
-taskbar, and click the property of this icon to add "C:\cygwin64\bin\run.exe
-emacs" in the target field. This way will hide the black terminal.
+Then start =emacs= from terminal, and right click the =emacs= to pin
+it to taskbar, and click the property of this icon to add
+=C:\cygwin64\bin\run.exe emacs= in the target field. This way
+will hide the black terminal.
 
 ** macOS
 
@@ -187,7 +188,8 @@ specify these variables in different way.
   (cond
    ((eq system-type 'cygwin)
     (setq kimim/path-root "/")
-    (add-to-list 'exec-path "/cygdrive/C/CTEX/MiKTeX/miktex/bin/"))
+    ;;(add-to-list 'exec-path "/cygdrive/C/CTEX/MiKTeX/miktex/bin/")
+    )
    ((eq system-type 'darwin)
     (setq kimim/path-root "/")
     (add-to-list 'exec-path "/Library/TeX/texbin")
@@ -1379,6 +1381,19 @@ brew cask install mactex-no-gui
 #+end_src
 
 For Windows, download and install CTEX from http://www.ctex.org
+
+#+begin_src shell
+apt-cyg install texlive-collection-xetex texlive-collection-latex
+tlmgr init-usertree
+tlmgr --usermode install ctex titlesec enumitem ctex ms fontspec \
+                         zhnumber fandol lastpage pdftexcmds infwarerr \
+                         minted fvextra etoolbox fancyvrb upquote \
+                         lineno catchfile xstring framed float \
+                         grffile wrapfig ulem lettrine minifp \
+                         capt-of xcolor svg koma-script trimspaces \
+
+fmtutil-sys --all
+#+end_src
 
 For Linux: use pacakge mangagement to install texlive.
 
