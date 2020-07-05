@@ -1390,8 +1390,7 @@ tlmgr --usermode install ctex titlesec enumitem ctex ms fontspec \
                          minted fvextra etoolbox fancyvrb upquote \
                          lineno catchfile xstring framed float \
                          grffile wrapfig ulem lettrine minifp \
-                         capt-of xcolor svg koma-script trimspaces \
-
+                         capt-of xcolor svg koma-script trimspaces
 fmtutil-sys --all
 #+end_src
 
