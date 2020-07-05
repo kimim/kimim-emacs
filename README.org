@@ -1383,7 +1383,7 @@ brew cask install mactex-no-gui
 For Windows, download and install CTEX from http://www.ctex.org
 
 #+begin_src shell
-apt-cyg install texlive-collection-xetex texlive-collection-latex
+apt-cyg install texlive-collection-xetex texlive-collection-latex texlive-collection-fontsrecommended
 tlmgr init-usertree
 tlmgr --usermode install ctex titlesec enumitem ctex ms fontspec \
                          zhnumber fandol lastpage pdftexcmds infwarerr \
