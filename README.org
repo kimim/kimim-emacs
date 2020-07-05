@@ -1412,11 +1412,7 @@ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python get-pip.py
 #+end_src
 
-For Windows environment, please note that =python= and =pygments= installed in
-=msys64= is not working for xetex. You should download Python install file for
-Windows from https://www.python.org/downloads/.
-
-Get =pygments= with =pip:
+Get =pygments= with =pip=:
 
 #+begin_src shell
 pip install pygments
@@ -1430,6 +1426,9 @@ pip install pygments
     :config
     (require 'ox-latex)
     (setq org-latex-listings 'minted)
+    (setq org-latex-minted-options
+    '(("frame" "single") ("fontsize" "\\small")))
+
     (setq org-latex-pdf-process
           `(,(let ((ref (concat kimim/path-sync "papers/references.bib")))
                (if (file-exists-p ref)
