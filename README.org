@@ -1302,6 +1302,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     ;; no empty line after collapsed
     (setq org-cycle-separator-lines 0)
     (setq org-src-fontify-natively t)
+    (setq org-src-preserve-indentation t)
     (setq org-startup-indented t)
     (setq org-image-actual-width 600))
 #+end_src
