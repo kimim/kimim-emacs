@@ -139,38 +139,41 @@ calculated with original default font height and width: =frame-char-height= and
 =frame-char-width=.
 
 #+begin_src emacs-lisp
-  ;; set default font and default frame dimension
-  (cond
-   ((eq window-system 'w32)
+;; set default font and default frame dimension
+(if (and window-system
+         (font-utils-exists-p "YaheiInconsolata")
+         (font-utils-exists-p "Inconsolata"))
     (cond
-     ((< (display-pixel-width) 1400)
+     ((eq window-system 'w32)
+      (cond
+       ((< (display-pixel-width) 1400)
+        (set-fontset-font
+         "fontset-default"
+         'unicode-bmp (font-spec :family "YaheiInconsolata"))
+        (set-frame-font "Inconsolata-14"))
+       ((> (display-pixel-width) 1400)
+        (set-fontset-font
+         "fontset-default"
+         'unicode-bmp (font-spec :family "YaheiInconsolata"))
+        (set-frame-font "Inconsolata-14"))))
+     ((eq window-system 'ns)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "Inconsolata-14"))
-     ((> (display-pixel-width) 1400)
-      (set-fontset-font
-       "fontset-default"
-       'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "Inconsolata-14"))))
-   ((eq window-system 'ns)
-    (set-fontset-font
-     "fontset-default"
-     'unicode-bmp (font-spec :family "YaheiInconsolata"))
-    (set-frame-font "Inconsolata-18")))
+      (set-frame-font "Inconsolata-18"))))
 
-  (when window-system
-    ;; top, left ... must be integer
-    (add-to-list 'default-frame-alist
-                 (cons 'top  (/ (x-display-pixel-height) 10)))
-    (add-to-list 'default-frame-alist
-                 (cons 'left (/ (x-display-pixel-width) 10)))
-    (add-to-list 'default-frame-alist
-                 (cons 'height (/ (* 4 (x-display-pixel-height))
-                                  (* 5 (frame-char-height)))))
-    (add-to-list 'default-frame-alist
-                 (cons 'width (/ (* 4 (x-display-pixel-width))
-                                 (* 5 (frame-char-width))))))
+(when window-system
+  ;; top, left ... must be integer
+  (add-to-list 'default-frame-alist
+               (cons 'top  (/ (x-display-pixel-height) 10)))
+  (add-to-list 'default-frame-alist
+               (cons 'left (/ (x-display-pixel-width) 10)))
+  (add-to-list 'default-frame-alist
+               (cons 'height (/ (* 4 (x-display-pixel-height))
+                                (* 5 (frame-char-height)))))
+  (add-to-list 'default-frame-alist
+               (cons 'width (/ (* 4 (x-display-pixel-width))
+                               (* 5 (frame-char-width))))))
 #+end_src
 
 * Environment
@@ -1310,6 +1313,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     ;; no empty line after collapsed
     (setq org-cycle-separator-lines 0)
     (setq org-src-fontify-natively t)
+    (setq org-src-preserve-indentation t)
     (setq org-startup-indented t)
     (setq org-image-actual-width 600))
 #+end_src
@@ -1356,6 +1360,10 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
   (use-package org
     :config
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((clojure . t)
+       (python . t)))
     (setq org-src-window-setup 'current-window)
     (setq org-src-fontify-natively t)
     (setq org-confirm-babel-evaluate nil)
@@ -1398,7 +1406,8 @@ tlmgr --usermode install ctex titlesec enumitem ctex ms fontspec \
                          minted fvextra etoolbox fancyvrb upquote \
                          lineno catchfile xstring framed float \
                          grffile wrapfig ulem lettrine minifp \
-                         capt-of xcolor svg koma-script trimspaces
+                         capt-of xcolor svg koma-script trimspaces \
+                         abstract titling
 fmtutil-sys --all
 #+end_src
 

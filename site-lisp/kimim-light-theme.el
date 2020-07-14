@@ -46,7 +46,7 @@
       (kimim-light-string "#2A00FF")
       (kimim-light-blue-3 "#758BC6")
       (kimim-light-region "LightBlue")
-      (kimim-light-shadow "grey50"))
+      (kimim-light-shadow "grey20"))
   (apply 'custom-theme-set-faces 'kimim-light
          (mapcar
           (lambda (x) `(,(car x) ((,class ,(cdr x)))))
