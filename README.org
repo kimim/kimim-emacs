@@ -1349,6 +1349,10 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
   (use-package org
     :config
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((clojure . t)
+       (python . t)))
     (setq org-src-window-setup 'current-window)
     (setq org-src-fontify-natively t)
     (setq org-confirm-babel-evaluate nil)
@@ -1391,7 +1395,8 @@ tlmgr --usermode install ctex titlesec enumitem ctex ms fontspec \
                          minted fvextra etoolbox fancyvrb upquote \
                          lineno catchfile xstring framed float \
                          grffile wrapfig ulem lettrine minifp \
-                         capt-of xcolor svg koma-script trimspaces
+                         capt-of xcolor svg koma-script trimspaces \
+                         abstract titling
 fmtutil-sys --all
 #+end_src
 
