@@ -941,6 +941,14 @@ menu). From Properties select the Tab “Security” and then select the button
 this directory as secure because you are the owner.
 #+END_QUOTE
 
+** Code folding
+
+#+begin_src emacs-lisp
+(use-package yafolding
+  :bind (("C-c h" . yafolding-hide-element)
+         ("C-c s" . yafolding-show-element)))
+#+end_src
+
 * Programming Language
 
 ** C
