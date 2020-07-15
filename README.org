@@ -1363,6 +1363,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((clojure . t)
+       (shell . t)
        (python . t)))
     (setq org-src-window-setup 'current-window)
     (setq org-src-fontify-natively t)
