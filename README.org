@@ -568,7 +568,7 @@ scroll slowly with touchpad.
     :config
     (setq time-stamp-active t)
     (setq time-stamp-warn-inactive t)
-    (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S kimi")
+    (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S Kimi MA")
     (add-hook 'write-file-hooks 'time-stamp))
 
   (defun kimim/save-buffer-advice (orig-fun &rest arg)
@@ -1402,13 +1402,13 @@ For Windows, download and install CTEX from http://www.ctex.org
 #+begin_src shell
 apt-cyg install texlive-collection-xetex texlive-collection-latex texlive-collection-fontsrecommended
 tlmgr init-usertree
-tlmgr --usermode install ctex titlesec enumitem ctex ms fontspec \
+tlmgr --usermode install ctex titlesec enumitem ms fontspec abstract \
                          zhnumber fandol lastpage pdftexcmds infwarerr \
                          minted fvextra etoolbox fancyvrb upquote \
                          lineno catchfile xstring framed float \
                          grffile wrapfig ulem lettrine minifp \
                          capt-of xcolor svg koma-script trimspaces \
-                         abstract titling
+                         titling
 fmtutil-sys --all
 #+end_src
 
@@ -1739,130 +1739,138 @@ pip install pygments
 ** org as GTD system
 
 #+begin_src emacs-lisp
-  (use-package org
-    :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
-    :bind (:map org-mode-map
-           :map org-agenda-mode-map
-           ("<C-left>"  . org-agenda-do-date-earlier)
-           ("<C-right>" . org-agenda-do-date-later)
-           ("<S-left>" . (lambda ()
-                            (interactive)
-                            (org-agenda-todo 'left)))
-           ("<S-right>" . (lambda ()
-                            (interactive)
-                            (org-agenda-todo 'right))))
-    :config
-    (require 'org-agenda)
-    (add-hook 'kill-emacs-hook
-              (lambda ()
-                (org-clock-out nil t nil)
-                (org-save-all-org-buffers)))
-    (setq org-todo-keywords
-          '(
-            ;; for tasks
-            (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
-            ;; for risks, actions, problems
-            (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
-            (sequence "|" "SOMEDAY(m)")
-            (sequence "|" "ABORT(a@/!)")
-            (sequence "REPEAT(r)" "|")))
+(use-package org
+  :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
+  :bind (:map org-mode-map
+              :map org-agenda-mode-map
+              ("C-c C-k" . org-agenda-kill-files)
+              ("<C-left>"  . org-agenda-do-date-earlier)
+              ("<C-right>" . org-agenda-do-date-later)
+              ("<S-left>" . (lambda ()
+                              (interactive)
+                              (org-agenda-todo 'left)))
+              ("<S-right>" . (lambda ()
+                               (interactive)
+                               (org-agenda-todo 'right))))
+  :config
+  (require 'org-agenda)
+  (add-hook 'kill-emacs-hook
+            (lambda ()
+              (org-clock-out nil t nil)
+              (org-save-all-org-buffers)))
+  (setq org-todo-keywords
+        '(
+          ;; for tasks
+          (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
+          ;; for risks, actions, problems
+          (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
+          (sequence "|" "SOMEDAY(m)")
+          (sequence "|" "ABORT(a@/!)")
+          (sequence "REPEAT(r)" "|")))
 
-    (setq org-tag-alist
-          '(("@office" . ?o) ("@home" . ?h)
-            ("team" . ?t) ("leader" . ?l) ("boss" . ?b)
-            ("risk" . ?k) ("sync" . ?s) ("followup" . ?f)
-            ("reading" . ?r) ("writing" . ?w)
-            ("project" . ?p) ("category" . ?c)
-            ("habit" . ?H)
-            ("next" . ?n)))
+  (setq org-tag-alist
+        '(("@office" . ?o) ("@home" . ?h)
+          ("team" . ?t) ("leader" . ?l) ("boss" . ?b)
+          ("risk" . ?k) ("sync" . ?s) ("followup" . ?f)
+          ("reading" . ?r) ("writing" . ?w)
+          ("project" . ?p) ("category" . ?c)
+          ("habit" . ?H)
+          ("next" . ?n)))
 
-    (setq org-tags-exclude-from-inheritance '("project" "category"))
+  (setq org-tags-exclude-from-inheritance '("project" "category"))
 
-    (diminish 'auto-fill-function)
+  (diminish 'auto-fill-function)
 
-    (add-hook 'org-mode-hook
-              (lambda ()
-                ;;(auto-fill-mode)
-                ;;(drag-stuff-mode -1)
-                ))
+  (add-hook 'org-mode-hook
+            (lambda ()
+              ;;(auto-fill-mode)
+              ;;(drag-stuff-mode -1)
+              ))
 
-    (setq org-stuck-projects
-          '("+LEVEL>=2-category-habit-info"
-            ("TODO" "SCHED"  "DONE"
-             "OPEN" "WAIT" "CLOSE"
-             "ABORT" "SOMEDAY" "REPEAT")
-            nil nil))
+  (setq org-stuck-projects
+        '("+LEVEL>=2-category-habit-info"
+          ("TODO" "SCHED"  "DONE"
+           "OPEN" "WAIT" "CLOSE"
+           "ABORT" "SOMEDAY" "REPEAT")
+          nil nil))
 
-    (setq org-refile-targets
-          '(;; refile to maxlevel 2 of current file
-            (nil . (:maxlevel . 1))
-            ;; refile to maxlevel 1 of org-refile-files
-            (org-refile-files :maxlevel . 1)
-            ;; refile to item with 'project' tag in org-refile-files
-            (org-refile-files :tag . "project")
-            (org-refile-files :tag . "category")))
+  (setq org-refile-targets
+        '(;; refile to maxlevel 2 of current file
+          (nil . (:maxlevel . 1))
+          ;; refile to maxlevel 1 of org-refile-files
+          (org-refile-files :maxlevel . 1)
+          ;; refile to item with 'project' tag in org-refile-files
+          (org-refile-files :tag . "project")
+          (org-refile-files :tag . "category")))
 
-    (defadvice org-schedule (after add-todo activate)
-      (if (or (string= "OPEN" (org-get-todo-state))
-              (string= "WAIT" (org-get-todo-state))
-              (string= "CLOSE" (org-get-todo-state)))
-          (org-todo "WAIT")
-        (org-todo "SCHED")))
+  (defadvice org-schedule (after add-todo activate)
+    (if (or (string= "OPEN" (org-get-todo-state))
+            (string= "WAIT" (org-get-todo-state))
+            (string= "CLOSE" (org-get-todo-state)))
+        (org-todo "WAIT")
+      (org-todo "SCHED")))
 
-    (defadvice org-deadline (after add-todo activate)
-      (if (or (string= "OPEN" (org-get-todo-state))
-              (string= "WAIT" (org-get-todo-state))
-              (string= "CLOSE" (org-get-todo-state)))
-          (org-todo "WAIT")
-        (org-todo "SCHED")))
+  (defadvice org-deadline (after add-todo activate)
+    (if (or (string= "OPEN" (org-get-todo-state))
+            (string= "WAIT" (org-get-todo-state))
+            (string= "CLOSE" (org-get-todo-state)))
+        (org-todo "WAIT")
+      (org-todo "SCHED")))
 
-    (setq org-log-done t)
-    (setq org-todo-repeat-to-state "REPEAT")
+  (setq org-log-done t)
+  (setq org-todo-repeat-to-state "REPEAT")
 
-    ;; settings for org-agenda-view
-    (setq org-agenda-span 2)
-    (setq org-agenda-skip-scheduled-if-done t)
-    (setq org-agenda-skip-deadline-if-done t)
-    (setq org-deadline-warning-days 2)
-    (add-hook 'org-agenda-after-show-hook 'org-narrow-to-subtree)
-    (setq org-agenda-custom-commands
-          '(("t" todo "TODO|OPEN"
-             ((org-agenda-sorting-strategy '(priority-down))))
-            ("w" todo "SCHED|WAIT"
-             ((org-agenda-sorting-strategy '(priority-down))))
-            ;; all task should be done or doing
-            ("d" todo "TODO|SCHED|OPEN|WAIT"
-             ((org-agenda-sorting-strategy '(priority-down))))
-            ("b" tags "boss/-ABORT-CLOSE-DONE"
-             ((org-agenda-sorting-strategy  '(priority-down))))
-            ("f" todo "SOMEDAY"
-             ((org-agenda-sorting-strategy '(priority-down))))
-            ("h" tags "habit/-ABORT-CLOSE"
-             ((org-agenda-sorting-strategy '(todo-state-down))))
-            ("c" tags "clock"
-             ((org-agenda-sorting-strategy '(priority-down))))))
+  ;; settings for org-agenda-view
+  (setq org-agenda-span 2)
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-deadline-warning-days 2)
+  (add-hook 'org-agenda-after-show-hook 'org-narrow-to-subtree)
+  (setq org-agenda-custom-commands
+        '(("t" todo "TODO|OPEN"
+           ((org-agenda-sorting-strategy '(priority-down))))
+          ("w" todo "SCHED|WAIT"
+           ((org-agenda-sorting-strategy '(priority-down))))
+          ;; all task should be done or doing
+          ("d" todo "TODO|SCHED|OPEN|WAIT"
+           ((org-agenda-sorting-strategy '(priority-down))))
+          ("b" tags "boss/-ABORT-CLOSE-DONE"
+           ((org-agenda-sorting-strategy  '(priority-down))))
+          ("f" todo "SOMEDAY"
+           ((org-agenda-sorting-strategy '(priority-down))))
+          ("h" tags "habit/-ABORT-CLOSE"
+           ((org-agenda-sorting-strategy '(todo-state-down))))
+          ("c" tags "clock"
+           ((org-agenda-sorting-strategy '(priority-down))))))
 
-    (setq org-directory kimim/path-org)
+  (setq org-directory kimim/path-org)
 
-    (setq org-capture-templates
-          '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
-             "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
-             "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("s" "SCHED Task"    entry (file+headline "capture.org" "Inbox")
-             "* SCHED %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
-             "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
-             "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-            ("h" "Habit"   entry (file+headline "global.org"   "Habit")
-             "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
+  (setq org-capture-templates
+        '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
+           "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+          ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
+           "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+          ("s" "SCHED Task"    entry (file+headline "capture.org" "Inbox")
+           "* SCHED %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+          ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
+           "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+          ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
+           "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+          ("h" "Habit"   entry (file+headline "global.org"   "Habit")
+           "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
-    (use-package ivy) ; use ivy to complete refile files
-    (setq org-agenda-files
-           (file-expand-wildcards (concat kimim/path-org "*.org")))
-    (setq org-refile-files
-           (file-expand-wildcards (concat kimim/path-org "*.org"))))
+  (use-package ivy) ; use ivy to complete refile files
+  (setq org-agenda-files
+        (file-expand-wildcards (concat kimim/path-org "*.org")))
+  (setq org-refile-files
+        (file-expand-wildcards (concat kimim/path-org "*.org")))
+  (defun org-agenda-kill-files ()
+    (interactive)
+    (org-agenda-kill-all-agenda-buffers)
+    (mapcar (lambda (file)
+              (if-let (buf (get-file-buffer file))
+                  (kill-buffer buf)))
+            org-agenda-files)))
 #+end_src
 
 ** org link: match
