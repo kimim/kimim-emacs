@@ -1733,9 +1733,14 @@ That's fun to draw UML with =ob-plantuml= inside =orgmode=:
    =(concat kimim/path-kimikit "plantuml/plantuml.jar")=
 
 #+begin_src emacs-lisp
+(use-package plantuml-mode
+  :config
+  (setq plantuml-default-exec-mode 'jar))
+
 (use-package ob-plantuml
   :ensure org
   :config
+  (use-package plantuml-mode)
   (require 'ob-plantuml)
   ;;(setenv "GRAPHVIZ_DOT" (concat kimim/path-root "usr/bin/dot"))
   (setq org-plantuml-jar-path (concat kimim/path-kimikit "plantuml/plantuml.jar"))
