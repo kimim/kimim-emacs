@@ -952,6 +952,14 @@ this directory as secure because you are the owner.
          ("C-c s" . yafolding-show-element)))
 #+end_src
 
+** static code analysis
+
+#+begin_src emacs-lisp
+(use-package flycheck
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
+#+end_src
+
 * Programming Language
 
 ** C
@@ -990,48 +998,64 @@ this directory as secure because you are the owner.
 Clojure[fn:11] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
+(use-package paredit)
+(use-package clojure-mode
+  :mode ("\\.clj\\'" . clojure-mode)
+  :config
+  (use-package cider)
+  (use-package company)
+  (use-package flycheck)
+  (use-package flycheck-clj-kondo)
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-capf))
+  (add-hook 'cider-repl-mode-hook #'company-mode)
+  (add-hook 'cider-mode-hook #'company-mode)
+  (add-hook 'clojure-mode-hook #'cider-mode)
+  (use-package clojure-mode-extra-font-locking)
+  (add-to-list 'auto-mode-alist '("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode))
+  (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
+  (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
+  (add-to-list 'auto-mode-alist '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
   (use-package paredit)
-  (use-package clojure-mode
-    :mode ("\\.clj\\'" . clojure-mode)
-    :config
-    (use-package cider)
-    (use-package company)
-    (eval-after-load 'company
-        '(add-to-list 'company-backends 'company-capf))
-    (add-hook 'cider-repl-mode-hook #'company-mode)
-    (add-hook 'cider-mode-hook #'company-mode)
-    (add-hook 'clojure-mode-hook #'cider-mode)
-    (use-package clojure-mode-extra-font-locking)
-    (add-to-list 'auto-mode-alist '("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode))
-    (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
-    (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
-    (add-to-list 'auto-mode-alist '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
-    (use-package paredit)
-    (add-hook 'clojure-mode-hook (lambda ()
-                                   (enable-paredit-mode))))
+  (add-hook 'clojure-mode-hook (lambda ()
+                                 (enable-paredit-mode))))
 #+end_src
+
+*** clj-kondo
+
+Install with npm:
+
+#+begin_src shell
+npm install -g clj-kondo
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package flycheck-clj-kondo)
+#+end_src
+
+*** Cider
 
 Cider[fn:12] extends Emacs with support for interactive programming
 in Clojure.
 
 #+begin_src emacs-lisp
-  (use-package cider
-    :config
-    (setq nrepl-use-ssh-fallback-for-remote-hosts t)
-    (setq nrepl-sync-request-timeout 100)
-    (defun nrepl--ssh-tunnel-command (ssh dir port)
-      "Command string to open SSH tunnel to the host associated with DIR's PORT."
-      (with-parsed-tramp-file-name dir v
-        ;; this abuses the -v option for ssh to get output when the port
-        ;; forwarding is set up, which is used to synchronise on, so that
-        ;; the port forwarding is up when we try to connect.
-        (format-spec
-         "%s -v -N -L %p:localhost:%p %u'%h' %x"
-         `((?s . ,ssh)
-           (?p . ,port)
-           (?h . ,v-host)
-           (?u . ,(if v-user (format "-l '%s' " v-user) ""))
-           (?x . "-o \"ProxyCommand=nc -X connect -x 127.0.0.1:1080 %h %p\"")))))
+(use-package cider
+  :config
+  (setq nrepl-use-ssh-fallback-for-remote-hosts t)
+  (setq nrepl-sync-request-timeout 100)
+  (defun nrepl--ssh-tunnel-command (ssh dir port)
+    "Command string to open SSH tunnel to the host associated with DIR's PORT."
+    (with-parsed-tramp-file-name dir v
+      ;; this abuses the -v option for ssh to get output when the port
+      ;; forwarding is set up, which is used to synchronise on, so that
+      ;; the port forwarding is up when we try to connect.
+      (format-spec
+       "%s -v -N -L %p:localhost:%p %u'%h' %x"
+       `((?s . ,ssh)
+         (?p . ,port)
+         (?h . ,v-host)
+         (?u . ,(if v-user (format "-l '%s' " v-user) ""))
+         (?x . "-o \"ProxyCommand=nc -X connect -x 127.0.0.1:1080 %h %p\"")))))
   )
 #+end_src
 
