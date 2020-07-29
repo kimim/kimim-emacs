@@ -2215,6 +2215,34 @@ name handling function can be found from emacs manual[fn:15].
                 :around #'kimim/deft-new-file-named-advice))
 #+end_src
 
+** Org-roam
+
+Org-roam implements =zettelkasten= method [fn:16] used by famous German socialogist
+Niklas Luhmann[fn:17].
+
+First you should install =sqlite3=, which is used to index the links:
+
+#+begin_src shell
+apt-cyg install sqlite3
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package org-roam
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory kimim/path-notes)
+      (org-roam-file-extensions '("org" "txt"))
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph-show))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))
+              (("C-c n I" . org-roam-insert-immediate))))
+#+end_src
+
 * Markdown mode
 
 Markdown is widely used as plain text file format.
@@ -2593,3 +2621,7 @@ from system PATH, so you should set these to system PATH.
 [fn:14] https://github.com/ralesi/ahk-mode
 
 [fn:15] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+
+[fn:16] https://zettelkasten.de/
+
+[fn:17] https://en.wikipedia.org/wiki/Niklas_Luhmann
