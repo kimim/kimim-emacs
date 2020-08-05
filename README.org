@@ -1345,20 +1345,25 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 ** org for writing
 
 #+begin_src emacs-lisp
-  (use-package org-download
-    :config
-    (setq org-download-timestamp "")
-    (setq-default org-download-image-dir "./images")
-    (setq org-download-method 'directory)
-    (setq org-download-heading nil)
-    (setq org-startup-with-inline-images nil)
-    ;;(setq org-download-annotate-function #'(lambda (link)()))
-    (setq org-download-display-inline-images nil)
-    (setq image-file-name-extensions
-          (quote
-           ("png" "jpeg" "jpg" "gif" "tiff" "tif" "xbm"
-            "xpm" "pbm" "pgm" "ppm" "pnm" "svg" "pdf" "bmp")))
-    (defun org-download--dir-2 () "."))
+(use-package org-download
+  :config
+  (setq org-download-timestamp "")
+  (setq-default org-download-image-dir "./images")
+  (setq org-download-method 'directory)
+  (setq org-download-heading nil)
+  (setq org-startup-with-inline-images nil)
+
+  (defun kimim/org-download-annotate (link)
+    "Annotate LINK with the time of download."
+    (format "#+NAME: fig:%s\n#+CAPTION: %s\n"
+            (file-name-base link) (file-name-base link)))
+  (setq org-download-annotate-function #'kimim/org-download-annotate)
+  (setq org-download-display-inline-images nil)
+  (setq image-file-name-extensions
+        (quote
+         ("png" "jpeg" "jpg" "gif" "tiff" "tif" "xbm"
+          "xpm" "pbm" "pgm" "ppm" "pnm" "svg" "pdf" "bmp")))
+  (defun org-download--dir-2 () "."))
 #+end_src
 
 #+begin_src emacs-lisp
