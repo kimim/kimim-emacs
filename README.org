@@ -2436,6 +2436,14 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
                        ((eq system-type 'cygwin)
                         "/usr/local/share/emacs/site-lisp/mu4e")))
     :config
+    ;; turn html email to lighter color in dark theme
+    (require 'mu4e-contrib)
+    (setq mu4e-html2text-command 'mu4e-shr2text)
+    (setq shr-color-visible-luminance-min 60)
+    (setq shr-color-visible-distance-min 5)
+    (setq shr-use-colors nil)
+    (advice-add #'shr-colorize-region :around (defun shr-no-colourise-region (&rest ignore)))
+
     (require 'org-mu4e) ;; capture link
     (use-package sendmail)
     (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
