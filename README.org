@@ -1364,7 +1364,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
   (use-package org
     :config
-    ;;(use-package org-download)
+    (use-package org-download)
     (use-package pangu-spacing)
     (setq org-hide-leading-stars t)
     (setq org-footnote-auto-adjust t)
@@ -1546,6 +1546,10 @@ pip install pygments
   \\usepackage{abstract}
   \\renewcommand{\\abstractname}{摘要}
   \\renewcommand\\refname{参考文献}
+  \\CTEXsetup[format={\\Large\\bfseries}]{section}
+  \\renewcommand\\thesection{\\chinese{section}、}
+  \\renewcommand\\thesubsection{\\arabic{section}.\\arabic{subsection}.}
+  \\renewcommand\\thesubsubsection{\\arabic{section}.\\arabic{subsection}.\\arabic{subsubsection}}
   \\usepackage{fancyhdr, lastpage}
   \\fancypagestyle{plain}{
       \\fancyhf{}
