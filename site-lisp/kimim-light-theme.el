@@ -97,6 +97,8 @@
             (org-scheduled-previously :foreground ,kimim-light-comment)
             (org-todo :foreground "orange red" :weight bold)
             (org-warning :foreground "dark orchid" :weight bold)
+            (org-table :foreground "blue1")
+            (org-footnote :foreground "purple" :underline t)
             (gnus-summary-cancelled :foreground "lightblue")
             (gnus-header-subject :foreground "blue" :bold t)
             (ido-subdir :weight bold)
