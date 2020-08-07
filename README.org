@@ -2242,7 +2242,13 @@ apt-cyg install sqlite3
       (after-init . org-roam-mode)
       :custom
       (org-roam-directory kimim/path-notes)
-      (org-roam-file-extensions '("org" "txt"))
+      (org-roam-file-extensions '("txt" "org"))
+      (org-roam-capture-templates
+           (quote
+            (("d" "default" plain
+              (function org-roam-capture--get-point)
+              "%?" :file-name "%<%Y_%m%d>_${slug}"
+              :head "#+TITLE: ${title}\n\n" :unnarrowed t))))
       :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
