@@ -89,15 +89,15 @@ specify in =~/.emacs=:
 If these pathes are not set, emacs will report errors:
 
 #+begin_src emacs-lisp
-  (mapc (lambda (path)
-          (if (not (boundp path))
-              (error (concat "please set " (symbol-name path) " in ~/.emacs"))))
-        '(kimim/path-sync
-          kimim/path-sync-emacs
-          kimim/path-org
-          kimim/path-notes
-          kimim/path-ref
-          kimim/path-kimim-emacs))
+(mapc (lambda (path)
+        (if (not (boundp path))
+            (error (concat "please set " (symbol-name path) " in ~/.emacs"))))
+      '(kimim/path-sync
+        kimim/path-sync-emacs
+        kimim/path-org
+        kimim/path-notes
+        kimim/path-ref
+        kimim/path-kimim-emacs))
 #+end_src
 
 Then execute =emacs= to bootstrap itself.
@@ -112,23 +112,23 @@ Show menu bar only in macOS desktop environment, because the system preserves
 menu bar for every applications.
 
 #+begin_src emacs-lisp
-  (cond
-   ((eq window-system 'w32)
-    ;; Enable copy and paste in Win32
-    (setq select-enable-clipboard t)
-    (menu-bar-mode 0)
-    (tool-bar-mode -1)
-    (scroll-bar-mode -1))
-   ((eq window-system 'ns)
-    (menu-bar-mode 1)
-    (tool-bar-mode -1)
-    (scroll-bar-mode -1))
-   ((eq window-system 'x)
-    (menu-bar-mode 0)
-    (tool-bar-mode -1)
-    (scroll-bar-mode -1))
-   ((eq window-system nil)
-    (menu-bar-mode 0)))
+(cond
+ ((eq window-system 'w32)
+  ;; Enable copy and paste in Win32
+  (setq select-enable-clipboard t)
+  (menu-bar-mode 0)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1))
+ ((eq window-system 'ns)
+  (menu-bar-mode 1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1))
+ ((eq window-system 'x)
+  (menu-bar-mode 0)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1))
+ ((eq window-system nil)
+  (menu-bar-mode 0)))
 #+end_src
 
 ** Font and Frame Size
@@ -188,52 +188,50 @@ As I have a Windows box in the office, and a Apple macOS at home, so I need to
 specify these variables in different way.
 
 #+begin_src emacs-lisp
-  (cond
-   ((eq system-type 'cygwin)
-    (setq kimim/path-root "/")
-    ;;(add-to-list 'exec-path "/cygdrive/C/CTEX/MiKTeX/miktex/bin/")
-    )
-   ((eq system-type 'darwin)
-    (setq kimim/path-root "/")
-    (add-to-list 'exec-path "/Library/TeX/texbin")
-    (add-to-list 'exec-path (concat (getenv "HOME") "/Library/Python/2.7/bin")))
-   ((eq system-type 'gnu/linux)
-    (setq kimim/path-root "/")))
+(cond
+ ((eq system-type 'cygwin)
+  (setq kimim/path-root "/"))
+ ((eq system-type 'darwin)
+  (setq kimim/path-root "/")
+  (add-to-list 'exec-path "/Library/TeX/texbin")
+  (add-to-list 'exec-path (concat (getenv "HOME") "/Library/Python/2.7/bin")))
+ ((eq system-type 'gnu/linux)
+  (setq kimim/path-root "/")))
 
-  (add-to-list 'exec-path (concat kimim/path-root "bin"))
-  (add-to-list 'exec-path (concat kimim/path-root "usr/bin"))
-  (add-to-list 'exec-path (concat kimim/path-root "usr/local/bin"))
+(add-to-list 'exec-path (concat kimim/path-root "bin"))
+(add-to-list 'exec-path (concat kimim/path-root "usr/bin"))
+(add-to-list 'exec-path (concat kimim/path-root "usr/local/bin"))
 #+end_src
 
 Then append exec-path to PATH:
 
 #+begin_src emacs-lisp
-  (setenv "PATH"
-          (concat
-           (mapconcat #'identity exec-path path-separator)
-           (getenv "PATH")))
+(setenv "PATH"
+        (concat
+         (mapconcat #'identity exec-path path-separator)
+         (getenv "PATH")))
 #+end_src
 
 ** Language
 
 #+begin_src emacs-lisp
-  (setenv "LANG" "en_US.UTF-8")
-  (setenv "LC_ALL" "en_US.UTF-8")
-  ;; remove svn log LC_TYPE not defined warning.
-  (setenv "LC_CTYPE" "en_US")
-  (set-locale-environment "English")
-  (set-language-environment 'English)
-  (prefer-coding-system 'utf-8)
-  (set-buffer-file-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-  (set-selection-coding-system 'utf-8)
-  (set-file-name-coding-system 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (cond
-   ((member system-type '(windows-nt cygwin))
-    (set-clipboard-coding-system 'utf-16le))
-   ((eq system-type 'gnu/linux)
-    (set-clipboard-coding-system 'utf-8)))
+(setenv "LANG" "en_US.UTF-8")
+(setenv "LC_ALL" "en_US.UTF-8")
+;; remove svn log LC_TYPE not defined warning.
+(setenv "LC_CTYPE" "en_US")
+(set-locale-environment "English")
+(set-language-environment 'English)
+(prefer-coding-system 'utf-8)
+(set-buffer-file-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(set-file-name-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(cond
+ ((member system-type '(windows-nt cygwin))
+  (set-clipboard-coding-system 'utf-16le))
+ ((eq system-type 'gnu/linux)
+  (set-clipboard-coding-system 'utf-8)))
 #+end_src
 
 ** global key map
@@ -241,8 +239,8 @@ Then append exec-path to PATH:
 Define new command prefix for keys such as "C-x m f", "C-x m v".
 
 #+begin_src emacs-lisp
-  (define-prefix-command 'ctl-x-m-map)
-  (global-set-key "\C-xm" 'ctl-x-m-map)
+(define-prefix-command 'ctl-x-m-map)
+(global-set-key "\C-xm" 'ctl-x-m-map)
 #+end_src
 
 * Package
@@ -259,47 +257,47 @@ When you use the =:commands= keyword, it creates autoloads for those commands
 and defers loading of the module until they are used.
 
 #+begin_src emacs-lisp
-  (setq package-user-dir "~/.emacs.d/elpa")
-  (setq package-archives
-        '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-          ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-          ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-          ("sunrise" . "http://elpa.emacs-china.org/sunrise-commander/")))
-  (mapc
-   (lambda (package)
-     (unless (package-installed-p package)
-       (progn (message "installing %s" package)
-              (package-refresh-contents)
-              (package-install package))))
-   '(use-package diminish bind-key))
+(setq package-user-dir "~/.emacs.d/elpa")
+(setq package-archives
+      '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+        ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+        ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+        ("sunrise" . "http://elpa.emacs-china.org/sunrise-commander/")))
+(mapc
+ (lambda (package)
+   (unless (package-installed-p package)
+     (progn (message "installing %s" package)
+            (package-refresh-contents)
+            (package-install package))))
+ '(use-package diminish bind-key))
 
-  (require 'use-package)
-  (require 'diminish)
-  (require 'bind-key)
-  ;; install package if missing
-  (setq use-package-always-ensure t)
-  (setq use-package-always-defer t)
-  (setq use-package-verbose t)
+(require 'use-package)
+(require 'diminish)
+(require 'bind-key)
+;; install package if missing
+(setq use-package-always-ensure t)
+(setq use-package-always-defer t)
+(setq use-package-verbose t)
 #+end_src
 
 * Title and Header
 
 #+begin_src emacs-lisp
-  (setq frame-title-format
-        '("" invocation-name ": "
-          (:eval (if (buffer-file-name)
-                     (abbreviate-file-name (buffer-file-name))
-                   "%b"))))
+(setq frame-title-format
+      '("" invocation-name ": "
+        (:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
 
-  (use-package path-headerline-mode
-    :commands (path-headerline-mode)
-    :config
-    ;; only display headerline for real files
-    (defun kimim/ph--display-header (orig-fun &rest args)
-      (if (buffer-file-name)
-          (apply orig-fun args)
-        (setq header-line-format nil)))
-    (advice-add 'ph--display-header :around #'kimim/ph--display-header))
+(use-package path-headerline-mode
+  :commands (path-headerline-mode)
+  :config
+  ;; only display headerline for real files
+  (defun kimim/ph--display-header (orig-fun &rest args)
+    (if (buffer-file-name)
+        (apply orig-fun args)
+      (setq header-line-format nil)))
+  (advice-add 'ph--display-header :around #'kimim/ph--display-header))
 #+end_src
 
 * Mode Line
@@ -307,128 +305,121 @@ and defers loading of the module until they are used.
 Display time and (line, column) numbers in mode line.
 
 #+begin_src emacs-lisp
-  (use-package time
-    :defer 1
-    :init
-    (setq display-time-24hr-format t)
-    (setq display-time-day-and-date t)
-    (setq display-time-interval 10)
-    :config
-    (display-time-mode t))
+(use-package time
+  :defer 1
+  :init
+  (setq display-time-24hr-format t)
+  (setq display-time-day-and-date t)
+  (setq display-time-interval 10)
+  :config
+  (display-time-mode t))
 
-  (use-package simple
-    :ensure nil
-    :defer 3
-    :config
-    (line-number-mode 1)
-    (column-number-mode 1))
+(use-package simple
+  :ensure nil
+  :defer 3
+  :config
+  (line-number-mode 1)
+  (column-number-mode 1))
 #+end_src
 
 * Color Theme
 
 #+begin_src emacs-lisp
-  (setq font-lock-maximum-decoration t)
-  (setq font-lock-global-modes '(not shell-mode text-mode))
-  (setq font-lock-verbose t)
-  (global-font-lock-mode 1)
+(setq font-lock-maximum-decoration t)
+(setq font-lock-global-modes '(not shell-mode text-mode))
+(setq font-lock-verbose t)
+(global-font-lock-mode 1)
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package kimim-light-theme
-    :ensure nil
-    :defer 0
-    :load-path "~/kimim-emacs/site-lisp/")
+(use-package kimim-light-theme
+  :ensure nil
+  :defer 0
+  :load-path "~/kimim-emacs/site-lisp/")
 #+end_src
 
 * Highlight
 
 #+begin_src emacs-lisp
-  ;; highlight current line
-  (use-package hl-line
-    :defer 5
-    :config
-    (if window-system
-        (global-hl-line-mode 1)))
+;; highlight current line
+(use-package hl-line
+  :defer 5
+  :config
+  (if window-system
+      (global-hl-line-mode 1)))
 
-  ;; highlight current symbol
-  (use-package auto-highlight-symbol
-    :diminish auto-highlight-symbol-mode
-    :bind ("C-x m e" . ahs-edit-mode)
-    :config
-    (global-auto-highlight-symbol-mode t))
+;; highlight current symbol
+(use-package auto-highlight-symbol
+  :diminish auto-highlight-symbol-mode
+  :bind ("C-x m e" . ahs-edit-mode)
+  :config
+  (global-auto-highlight-symbol-mode t))
 #+end_src
 
 * Dealing with Unicode fonts
 
 #+begin_src emacs-lisp
-  (use-package unicode-fonts
-    :defer 3
-    :config
-    (defun unicode-fonts-setup-advice ()
-      (if window-system
-          (set-fontset-font
-           "fontset-default"
-           'cjk-misc (font-spec :family "YaheiInconsolata"))))
-    (advice-add 'unicode-fonts-setup :after 'unicode-fonts-setup-advice)
-    (defun kimim/add-font (group font)
-      (let ((font-list (assoc group unicode-fonts-block-font-mapping)))
-        (setf (cadr font-list) (cons font (cadr font-list)))))
-
-    ;; (let ((font-list (assoc "Bopomofo" unicode-fonts-block-font-mapping)))
-    ;;   (setf (cadr font-list) (cons  "YaheiInconsolata" (cadr font-list))))
-
-    ;; (seq-map (lambda (group) (kimim/add-font group "YaheiInconsolata"))
-    ;;          '("Bopomofo" "Bopomofo Extended"))
-
-    (seq-map (lambda (group) (kimim/add-font group "YaheiInconsolata"))
-             '("Bopomofo" "Bopomofo Extended" "CJK Compatibility" "CJK Compatibility Forms"
-               "CJK Compatibility Ideographs" "CJK Compatibility Ideographs Supplement"
-               "CJK Radicals Supplement" "CJK Strokes" "CJK Symbols and Punctuation"
-               "CJK Unified Ideographs" "CJK Unified Ideographs Extension A"
-               "CJK Unified Ideographs Extension B" "CJK Unified Ideographs Extension C"
-               "CJK Unified Ideographs Extension D" "CJK Unified Ideographs Extension E"
-               "Enclosed Ideographic Supplement" "Halfwidth and Fullwidth Forms"
-               "Hangul Compatibility Jamo" "Hangul Jamo" "Hangul Jamo Extended-A"
-               "Hangul Jamo Extended-B" "Hangul Syllables" "Ideographic Description Characters"
-               "IPA Extensions" "Mathematical Alphanumeric Symbols"))
-    (seq-map (lambda (group) (kimim/add-font group "Consolas"))
-             '("Combining Diacritical Marks" "Combining Half Marks" "Cyrillic"
-               "Cyrillic Supplement" "Greek Extended" "Greek and Coptic" "Phonetic Extensions"
-               "Phonetic Extensions Supplement" "Superscripts and Subscripts"))
-    (add-to-list 'unicode-fonts-block-font-mapping
-                 '("Spacing Modifier Letters"
-                   ("Consolas" "Monaco" "YaheiInconsolata")))
-    (unicode-fonts-setup))
+(use-package unicode-fonts
+  :defer 3
+  :config
+  (defun unicode-fonts-setup-advice ()
+    (if window-system
+        (set-fontset-font
+         "fontset-default"
+         'cjk-misc (font-spec :family "YaheiInconsolata"))))
+  (advice-add 'unicode-fonts-setup :after 'unicode-fonts-setup-advice)
+  (defun kimim/add-font (group font)
+    (let ((font-list (assoc group unicode-fonts-block-font-mapping)))
+      (setf (cadr font-list) (cons font (cadr font-list)))))
+  (seq-map (lambda (group) (kimim/add-font group "YaheiInconsolata"))
+           '("Bopomofo" "Bopomofo Extended" "CJK Compatibility" "CJK Compatibility Forms"
+             "CJK Compatibility Ideographs" "CJK Compatibility Ideographs Supplement"
+             "CJK Radicals Supplement" "CJK Strokes" "CJK Symbols and Punctuation"
+             "CJK Unified Ideographs" "CJK Unified Ideographs Extension A"
+             "CJK Unified Ideographs Extension B" "CJK Unified Ideographs Extension C"
+             "CJK Unified Ideographs Extension D" "CJK Unified Ideographs Extension E"
+             "Enclosed Ideographic Supplement" "Halfwidth and Fullwidth Forms"
+             "Hangul Compatibility Jamo" "Hangul Jamo" "Hangul Jamo Extended-A"
+             "Hangul Jamo Extended-B" "Hangul Syllables" "Ideographic Description Characters"
+             "IPA Extensions" "Mathematical Alphanumeric Symbols"))
+  (seq-map (lambda (group) (kimim/add-font group "Consolas"))
+           '("Combining Diacritical Marks" "Combining Half Marks" "Cyrillic"
+             "Cyrillic Supplement" "Greek Extended" "Greek and Coptic" "Phonetic Extensions"
+             "Phonetic Extensions Supplement" "Superscripts and Subscripts"))
+  (add-to-list 'unicode-fonts-block-font-mapping
+               '("Spacing Modifier Letters"
+                 ("Consolas" "Monaco" "YaheiInconsolata")))
+  (unicode-fonts-setup))
 #+end_src
 
 * Other Visual Element
 
 #+begin_src emacs-lisp
-  (setq inhibit-startup-message t)
-  (setq initial-scratch-message nil)
-  (setq visible-bell t)
-  (setq ring-bell-function #'ignore)
-  (fset 'yes-or-no-p 'y-or-n-p)
-  (show-paren-mode 1)
-  (setq blink-cursor-blinks 3)
-  (blink-cursor-mode 1)
-  (tooltip-mode nil)
+(setq inhibit-startup-message t)
+(setq initial-scratch-message nil)
+(setq visible-bell t)
+(setq ring-bell-function #'ignore)
+(fset 'yes-or-no-p 'y-or-n-p)
+(show-paren-mode 1)
+(setq blink-cursor-blinks 3)
+(blink-cursor-mode 1)
+(tooltip-mode nil)
 #+end_src
 
 * Help
 ** Info
 
 #+begin_src emacs-lisp
-  (use-package info
-    :commands (info)
-    :config
-    (add-to-list 'Info-additional-directory-list
-                 (concat kimim/path-root "usr/share/info"))
-    (add-to-list 'Info-additional-directory-list
-                 (concat kimim/path-root "usr/local/share/info"))
-    ;; additional info, collected from internet
-    (add-to-list 'Info-additional-directory-list
-                 "~/info"))
+(use-package info
+  :commands (info)
+  :config
+  (add-to-list 'Info-additional-directory-list
+               (concat kimim/path-root "usr/share/info"))
+  (add-to-list 'Info-additional-directory-list
+               (concat kimim/path-root "usr/local/share/info"))
+  ;; additional info, collected from internet
+  (add-to-list 'Info-additional-directory-list
+               "~/info"))
 #+end_src
 
 ** tldr
@@ -437,28 +428,28 @@ TL;DR stands for "Too Long; Didn't Read"[fn:6]. =tldr.el= [fn:7] is the Emacs
 client.
 
 #+begin_src emacs-lisp
-  (use-package tldr)
+(use-package tldr)
 #+end_src
 
 * Controlling
 ** Window and Frame
 
 #+begin_src emacs-lisp
-  (use-package winner
-    ;; restore windows configuration, built-in package
-    :commands winner-mode
-    :config
-    (winner-mode t))
+(use-package winner
+  ;; restore windows configuration, built-in package
+  :commands winner-mode
+  :config
+  (winner-mode t))
 
-  (use-package window-numbering
-    :commands window-numbering-mode
-    :config
-    (window-numbering-mode 1))
+(use-package window-numbering
+  :commands window-numbering-mode
+  :config
+  (window-numbering-mode 1))
 
-  (bind-key "C-x m w" 'make-frame)
-  ;; donno why, w/o following, new frame still has scroll-bar
-  (if (not (eq window-system nil))
-      (scroll-bar-mode -1))
+(bind-key "C-x m w" 'make-frame)
+;; donno why, w/o following, new frame still has scroll-bar
+(if (not (eq window-system nil))
+    (scroll-bar-mode -1))
 #+end_src
 
 scroll slowly with touchpad.
@@ -470,145 +461,146 @@ scroll slowly with touchpad.
 ** Command
 
 #+begin_src emacs-lisp
-  ;; https://github.com/justbur/emacs-which-key
-  (use-package which-key
-    :defer 3
-    :diminish which-key-mode
-    :config
-    ;; use minibuffer as the popup type, otherwise conflict in ecb mode
-    (setq which-key-popup-type 'minibuffer)
-    (which-key-mode 1))
+;; https://github.com/justbur/emacs-which-key
+(use-package which-key
+  :defer 3
+  :diminish which-key-mode
+  :config
+  ;; use minibuffer as the popup type, otherwise conflict in ecb mode
+  (setq which-key-popup-type 'minibuffer)
+  (which-key-mode 1))
 
-  ;; smex will list the recent function on top of the cmd list
-  (use-package smex
-    :commands (smex)
-    :config
-    (smex-initialize))
+;; smex will list the recent function on top of the cmd list
+(use-package smex
+  :commands (smex)
+  :config
+  (smex-initialize))
 
-  (use-package counsel
-    :defer 1
-    :bind
-    (("M-x" . counsel-M-x)
-     ("C-x C-f" . counsel-find-file)
-     ("C-x m f" . counsel-describe-function)
-     ("C-x m v" . counsel-describe-variable)
-     ("C-x m l" . counsel-load-library)
-     ("C-x m i" . counsel-info-lookup-symbol)
-     ("C-x m j" . counsel-bookmark)
-     ("C-x m r" . counsel-recentf)
-     ("C-x m u" . counsel-unicode-char)
-     ("C-c j" . counsel-git-grep)
-     ("C-c g" . counsel-grep)
-     ("C-x b" . counsel-ibuffer)
-     ("C-c k" . counsel-ag)
-     ("C-c p" . counsel-pt)
-     ("C-x l" . counsel-locate)
-     :map read-expression-map
-     ("C-r" . counsel-minibuffer-history))
-    :config
-    (use-package ivy)
-    (use-package smex)
-    (add-hook 'counsel-grep-post-action-hook 'recenter)
-    (ivy-mode 1))
+(use-package counsel
+  :defer 1
+  :bind
+  (("M-x" . counsel-M-x)
+   ("C-x C-f" . counsel-find-file)
+   ("C-x m f" . counsel-describe-function)
+   ("C-x m v" . counsel-describe-variable)
+   ("C-x m l" . counsel-load-library)
+   ("C-x m i" . counsel-info-lookup-symbol)
+   ("C-x m j" . counsel-bookmark)
+   ("C-x m r" . counsel-recentf)
+   ("C-x m u" . counsel-unicode-char)
+   ("C-c j" . counsel-git-grep)
+   ("C-c g" . counsel-grep)
+   ("C-x b" . counsel-ibuffer)
+   ("C-c k" . counsel-ag)
+   ("C-c p" . counsel-pt)
+   ("C-x l" . counsel-locate)
+   :map read-expression-map
+   ("C-r" . counsel-minibuffer-history))
+  :config
+  (use-package ivy)
+  (use-package smex)
+  (add-hook 'counsel-grep-post-action-hook 'recenter)
+  (ivy-mode 1))
 #+end_src
 
 ** Key Frequency
 
 #+begin_src emacs-lisp
-  (use-package keyfreq
-    :config
-    (keyfreq-mode)
-    (keyfreq-autosave-mode)
-    (setq keyfreq-file "~/.emacs.d/emacs.keyfreq"))
+(use-package keyfreq
+  :config
+  (keyfreq-mode)
+  (keyfreq-autosave-mode)
+  (setq keyfreq-file "~/.emacs.d/emacs.keyfreq"))
 #+end_src
 
 * Editing
 ** General
 
 #+begin_src emacs-lisp
-  (setq inhibit-eol-conversion nil)
-  ;; fill-column is a buffer-local variable
-  ;; use setq-default to change it globally
-  (setq-default fill-column 80)
-  (if window-system
-      (setq-default fill-column
-                    (min 80
-                     (ceiling
-                      (/ (x-display-pixel-width)
-                         (frame-char-width)
-                         2.3))))
-    (setq-default fill-column 80))
-  (toggle-word-wrap -1)
-  (use-package drag-stuff
-    :diminish drag-stuff-mode
-    :config
-    (drag-stuff-global-mode 1))
-  (delete-selection-mode 1)
-  (setq kill-ring-max 200)
-  (setq kill-whole-line t)
-  (setq require-final-newline t)
-  (setq-default tab-width 4)
-  (setq tab-stop-list
-        (number-sequence 4 120 4))
-  (setq track-eol t)
-  (setq backup-directory-alist '(("." . "~/temp")))
-  (setq version-control t)
-  (setq kept-old-versions 10)
-  (setq kept-new-versions 20)
-  (setq delete-old-versions t)
-  (setq backup-by-copying t)
+(setq inhibit-eol-conversion nil)
+;; fill-column is a buffer-local variable
+;; use setq-default to change it globally
+(setq-default fill-column 80)
+(if window-system
+    (setq-default fill-column
+                  (min 80
+                       (ceiling
+                        (/ (x-display-pixel-width)
+                           (frame-char-width)
+                           2.3))))
+  (setq-default fill-column 80))
+(toggle-word-wrap -1)
+(use-package drag-stuff
+  :diminish drag-stuff-mode
+  :config
+  (drag-stuff-global-mode 1))
+(delete-selection-mode 1)
+(setq kill-ring-max 200)
+(setq kill-whole-line t)
+(setq require-final-newline t)
+(setq-default tab-width 4)
+(setq tab-stop-list
+      (number-sequence 4 120 4))
+(setq track-eol t)
+(setq backup-directory-alist '(("." . "~/temp")))
+(setq version-control t)
+(setq kept-old-versions 10)
+(setq kept-new-versions 20)
+(setq delete-old-versions t)
+(setq backup-by-copying t)
 
-  (setq auto-save-interval 50)
-  (setq auto-save-timeout 60)
-  (setq auto-save-default nil)
-  (setq auto-save-list-file-prefix "~/temp/auto-saves-")
-  (setq auto-save-file-name-transforms `((".*"  , "~/temp/")))
-  (setq create-lockfiles nil)
-  (use-package time-stamp
-    :config
-    (setq time-stamp-active t)
-    (setq time-stamp-warn-inactive t)
-    (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S Kimi MA")
-    (add-hook 'write-file-hooks 'time-stamp))
+(setq auto-save-interval 50)
+(setq auto-save-timeout 60)
+(setq auto-save-default nil)
+(setq auto-save-list-file-prefix "~/temp/auto-saves-")
+(setq auto-save-file-name-transforms `((".*"  , "~/temp/")))
+(setq create-lockfiles nil)
+(use-package time-stamp
+  :config
+  (setq time-stamp-active t)
+  (setq time-stamp-warn-inactive t)
+  (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S Kimi MA")
+  (add-hook 'write-file-hooks 'time-stamp))
 
-  (defun kimim/save-buffer-advice (orig-fun &rest arg)
-    (delete-trailing-whitespace)
-    (apply orig-fun arg))
+(defun kimim/save-buffer-advice (orig-fun &rest arg)
+  (delete-trailing-whitespace)
+  (apply orig-fun arg))
 
-  (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
+(advice-add 'save-buffer :around #'kimim/save-buffer-advice)
 
-  (setq ispell-program-name "aspell")
-  (diminish 'visual-line-mode)
-  (add-hook 'text-mode-hook
-            (lambda ()
-              (when (derived-mode-p 'org-mode 'markdown-mode 'text-mode)
-                (visual-line-mode))))
-  (setq-default indent-tabs-mode nil)
+(setq ispell-program-name "aspell")
+(diminish 'visual-line-mode)
+(add-hook 'text-mode-hook
+          (lambda ()
+            (when (derived-mode-p 'org-mode 'markdown-mode 'text-mode)
+              (visual-line-mode))))
+(setq-default indent-tabs-mode nil)
 
-  (setq uniquify-buffer-name-style 'forward)
-  (setq suggest-key-bindings 5)
-  (setq auto-mode-alist
-        (append '(("\\.css\\'" . css-mode)
-                  ("\\.S\\'" . asm-mode)
-                  ("\\.md\\'" . markdown-mode)
-                  ("\\.markdown\\'" . markdown-mode)
-                  ("\\.svg\\'" . html-mode)
-                  ("\\.pas\\'" . delphi-mode)
-                  ("\\.txt\\'" . org-mode)
-                  )
-                auto-mode-alist))
+(setq uniquify-buffer-name-style 'forward)
+(setq suggest-key-bindings 5)
+(setq auto-mode-alist
+      (append '(("\\.css\\'" . css-mode)
+                ("\\.S\\'" . asm-mode)
+                ("\\.md\\'" . markdown-mode)
+                ("\\.markdown\\'" . markdown-mode)
+                ("\\.svg\\'" . html-mode)
+                ("\\.pas\\'" . delphi-mode)
+                ("\\.txt\\'" . org-mode)
+                ("\\.org\\'" . org-mode)
+                )
+              auto-mode-alist))
 
-  (require 'saveplace)
-  (setq-default save-place t)
-  (setq save-place-file (expand-file-name "saveplace" "~"))
+(require 'saveplace)
+(setq-default save-place t)
+(setq save-place-file (expand-file-name "saveplace" "~"))
 #+end_src
 
 ** visual-fill-mode
 
 #+begin_src emacs-lisp
-  (use-package visual-fill-column)
-  (setq visual-fill-column-width fill-column)
-  (setq visual-fill-column-center-text t)
+(use-package visual-fill-column)
+(setq visual-fill-column-width fill-column)
+(setq visual-fill-column-center-text t)
 #+end_src
 
 ** undo-tree
@@ -879,6 +871,7 @@ English word list fetch from https://github.com/dwyl/english-words
     :bind ("C-\\" . company-try-hard))
 
   (use-package company
+    :defer 3
     :diminish company-mode
     :config
     (use-package company-try-hard)
@@ -998,7 +991,9 @@ this directory as secure because you are the owner.
 Clojure[fn:11] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
-(use-package paredit)
+(use-package paredit
+  :commands (enable-paredit-mode)
+  )
 (use-package clojure-mode
   :mode ("\\.clj\\'" . clojure-mode)
   :config
@@ -1016,9 +1011,9 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
   (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
   (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
   (add-to-list 'auto-mode-alist '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
-  (use-package paredit)
-  (add-hook 'clojure-mode-hook (lambda ()
-                                 (enable-paredit-mode))))
+  (add-hook 'clojure-mode-hook
+            (lambda ()
+              (enable-paredit-mode))))
 #+end_src
 
 *** clj-kondo
@@ -1266,9 +1261,17 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 ** Emacs lisp
 
 #+begin_src emacs-lisp
-  (define-derived-mode lisp-interaction-mode emacs-lisp-mode "λ")
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-elisp))
+(define-derived-mode lisp-interaction-mode emacs-lisp-mode "λ")
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-elisp))
+
+(use-package elisp-mode
+  :ensure nil
+  :mode ("\\.el\\'" . emacs-lisp-mode)
+  :config
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda ()
+              (enable-paredit-mode))))
 #+end_src
 
 ** AutoHotKey
@@ -1333,6 +1336,8 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     ("C-c  ！" . org-time-stamp-inactive)
     ("C-c  。" . org-time-stamp)
     :config
+    (use-package org-roam)
+    (org-roam-mode)
     (setq org-support-shift-select t)
     ;; no empty line after collapsed
     (setq org-cycle-separator-lines 0)
@@ -2014,7 +2019,6 @@ name handling function can be found from emacs manual[fn:15].
 
 #+begin_src emacs-lisp
   (use-package org
-    :defer 5
     :bind
     (("C-x m d" . kimim/deft-store-link))
     :config
@@ -2237,25 +2241,23 @@ apt-cyg install sqlite3
 
 #+begin_src emacs-lisp
 (use-package org-roam
-      :ensure t
-      :hook
-      (after-init . org-roam-mode)
-      :custom
-      (org-roam-directory kimim/path-notes)
-      (org-roam-file-extensions '("txt" "org"))
-      (org-roam-capture-templates
-           (quote
-            (("d" "default" plain
-              (function org-roam-capture--get-point)
-              "%?" :file-name "%<%Y_%m%d>_${slug}"
-              :head "#+TITLE: ${title}\n\n" :unnarrowed t))))
-      :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-graph-show))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))
-              (("C-c n I" . org-roam-insert-immediate))))
+  :ensure t
+  :custom
+  (org-roam-directory kimim/path-notes)
+  (org-roam-file-extensions '("txt" "org"))
+  (org-roam-capture-templates
+   (quote
+    (("d" "default" plain
+      (function org-roam-capture--get-point)
+      "%?" :file-name "%<%Y_%m%d>_${slug}"
+      :head "#+TITLE: ${title}\n\n" :unnarrowed t))))
+  :bind (:map org-roam-mode-map
+         (("C-c n l" . org-roam)
+          ("C-c n f" . org-roam-find-file)
+          ("C-c n g" . org-roam-graph-show))
+         :map org-mode-map
+         (("C-c n i" . org-roam-insert)
+          ("C-c n I" . org-roam-insert-immediate))))
 #+end_src
 
 * Markdown mode
@@ -2538,7 +2540,6 @@ from system PATH, so you should set these to system PATH.
 
 #+begin_src emacs-lisp
   (use-package kimim
-    :defer 1
     :ensure nil
     :commands (kimim/mail-setup)
     :bind
