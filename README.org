@@ -873,10 +873,9 @@ English word list fetch from https://github.com/dwyl/english-words
   (use-package company
     :defer 3
     :diminish company-mode
+    :commands (global-company-mode)
     :config
-    (use-package company-try-hard)
     (use-package company-dict)
-    (global-company-mode t)
     ;; macOS will use system dict file directly
     (cond ((eq system-type 'windows-nt)
            (setq ispell-alternate-dictionary "~/.emacs.d/dict/words3.txt")))
@@ -949,8 +948,7 @@ this directory as secure because you are the owner.
 
 #+begin_src emacs-lisp
 (use-package flycheck
-  :config
-  (add-hook 'after-init-hook #'global-flycheck-mode))
+  :commands (global-flycheck-mode))
 #+end_src
 
 * Programming Language
@@ -1261,14 +1259,15 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 ** Emacs lisp
 
 #+begin_src emacs-lisp
-(define-derived-mode lisp-interaction-mode emacs-lisp-mode "λ")
-(eval-after-load 'company
-  '(add-to-list 'company-backends 'company-elisp))
-
 (use-package elisp-mode
   :ensure nil
   :mode ("\\.el\\'" . emacs-lisp-mode)
   :config
+  (define-derived-mode lisp-interaction-mode emacs-lisp-mode "λ")
+  (global-company-mode t)
+  (global-flycheck-mode t)
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-elisp))
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
               (enable-paredit-mode))))
@@ -1336,8 +1335,8 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     ("C-c  ！" . org-time-stamp-inactive)
     ("C-c  。" . org-time-stamp)
     :config
-    (use-package org-roam)
-    (org-roam-mode)
+    (org-roam-mode t)
+    (org-download-enable)
     (setq org-support-shift-select t)
     ;; no empty line after collapsed
     (setq org-cycle-separator-lines 0)
@@ -1351,6 +1350,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
 (use-package org-download
+  :commands (org-download-enable)
   :config
   (setq org-download-timestamp "")
   (setq-default org-download-image-dir "./images")
@@ -2499,11 +2499,11 @@ doc-view-mode can view many kind of documents, such as PDF, PS and images. You
 should install postscript in cygwin.
 
 #+begin_src emacs-lisp
-  (use-package doc-view
-    :config
-    (setq doc-view-continuous t)
-    (setq doc-view-resolution 300)
-    (setq doc-view-image-width 1300))
+(use-package doc-view
+  :config
+  (setq doc-view-continuous t)
+  (setq doc-view-resolution 300)
+  (setq doc-view-image-width 1300))
 #+end_src
 
 * Reading News
