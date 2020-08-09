@@ -871,7 +871,6 @@ English word list fetch from https://github.com/dwyl/english-words
     :bind ("C-\\" . company-try-hard))
 
   (use-package company
-    :defer 3
     :diminish company-mode
     :commands (global-company-mode)
     :config
