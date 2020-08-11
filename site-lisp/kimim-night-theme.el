@@ -149,9 +149,9 @@
             (wgrep-face :foreground ,kimim-night-comment)
             (cider-instrumented-face)
             (mu4e-header-highlight-face :background "dim gray")
-            (mu4e-replied-face :foreground "light green")
-            (mu4e-forwarded-face :foreground "light green")
-            (mu4e-unread-face :foreground "light blue")))))
+            (mu4e-replied-face :foreground "deep sky blue")
+            (mu4e-forwarded-face :foreground "turquoise")
+            (mu4e-unread-face :foreground "light green")))))
 
 ;;(custom-theme-set-variables
 ;; 'kimim-night
