@@ -148,7 +148,7 @@
             (ivy-posframe :background "#eeeeee" :foreground "#000000")
             (wgrep-face :foreground ,kimim-night-comment)
             (cider-instrumented-face)
-            (mu4e-header-highlight-face :background "dim gray")
+            (mu4e-header-highlight-face :background "gray20")
             (mu4e-replied-face :foreground "deep sky blue")
             (mu4e-forwarded-face :foreground "turquoise")
             (mu4e-unread-face :foreground "light green")))))
