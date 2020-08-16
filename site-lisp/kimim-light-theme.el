@@ -150,7 +150,8 @@
             (mu4e-header-highlight-face :background "azure")
             (mu4e-replied-face :foreground "dark green")
             (mu4e-forwarded-face :foreground "dark orange")
-            (mu4e-unread-face :foreground "blue" :bold t)))))
+            (mu4e-unread-face :foreground "blue" :bold t)
+            (message-cited-text-1 :foreground "blue")))))
 
 (custom-theme-set-variables
  'kimim-light
