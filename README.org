@@ -335,7 +335,9 @@ Display time and (line, column) numbers in mode line.
 (use-package kimim-light-theme
   :ensure nil
   :defer 0
-  :load-path "~/kimim-emacs/site-lisp/")
+  :load-path "~/kimim-emacs/site-lisp/"
+  :config
+  (load-theme 'kimim-night))
 #+end_src
 
 * Highlight
@@ -1441,7 +1443,8 @@ tlmgr --usermode install ctex titlesec enumitem ms fontspec abstract \
                          lineno catchfile xstring framed float \
                          grffile wrapfig ulem lettrine minifp \
                          capt-of xcolor svg koma-script trimspaces \
-                         titling
+                         titling layaureo parskip extsizes pgf \
+                         moderncv microtype
 fmtutil-sys --all
 #+end_src
 
@@ -2512,10 +2515,9 @@ should install postscript in cygwin.
 
 #+begin_src emacs-lisp
 (use-package doc-view
-  :config
-  (setq doc-view-continuous t)
-  (setq doc-view-resolution 300)
-  (setq doc-view-image-width 1300))
+  :custom ((doc-view-continuous t)
+           (doc-view-image-width 500)
+           (doc-view-resolution 300)))
 #+end_src
 
 * Reading News
