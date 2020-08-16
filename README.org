@@ -1443,7 +1443,8 @@ tlmgr --usermode install ctex titlesec enumitem ms fontspec abstract \
                          lineno catchfile xstring framed float \
                          grffile wrapfig ulem lettrine minifp \
                          capt-of xcolor svg koma-script trimspaces \
-                         titling
+                         titling layaureo parskip extsizes pgf \
+                         moderncv microtype
 fmtutil-sys --all
 #+end_src
 
