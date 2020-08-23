@@ -112,23 +112,26 @@ Show menu bar only in macOS desktop environment, because the system preserves
 menu bar for every applications.
 
 #+begin_src emacs-lisp
-(cond
- ((eq window-system 'w32)
-  ;; Enable copy and paste in Win32
-  (setq select-enable-clipboard t)
-  (menu-bar-mode 0)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1))
- ((eq window-system 'ns)
-  (menu-bar-mode 1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1))
- ((eq window-system 'x)
-  (menu-bar-mode 0)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1))
- ((eq window-system nil)
-  (menu-bar-mode 0)))
+(defun kimim/menu-and-bar ()
+  (cond
+   ((eq window-system 'w32)
+    ;; Enable copy and paste in Win32
+    (setq select-enable-clipboard t)
+    (menu-bar-mode 0)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1))
+   ((eq window-system 'ns)
+    (menu-bar-mode 1)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1))
+   ((eq window-system 'x)
+    (menu-bar-mode 0)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1))
+   ((eq window-system nil)
+    (menu-bar-mode 0))))
+
+(kimim/menu-and-bar)
 #+end_src
 
 ** Font and Frame Size
@@ -140,40 +143,42 @@ calculated with original default font height and width: =frame-char-height= and
 
 #+begin_src emacs-lisp
 ;; set default font and default frame dimension
-(if (and window-system
-         (font-utils-exists-p "YaheiInconsolata")
-         (font-utils-exists-p "Inconsolata"))
-    (cond
-     ((eq window-system 'w32)
+(defun kimim/frame-and-font ()
+  (if (and window-system
+           (font-utils-exists-p "YaheiInconsolata")
+           (font-utils-exists-p "Inconsolata"))
       (cond
-       ((< (display-pixel-width) 1400)
+       ((eq window-system 'w32)
+        (cond
+         ((< (display-pixel-width) 1400)
+          (set-fontset-font
+           "fontset-default"
+           'unicode-bmp (font-spec :family "YaheiInconsolata"))
+          (set-frame-font "Inconsolata-14"))
+         ((> (display-pixel-width) 1400)
+          (set-fontset-font
+           "fontset-default"
+           'unicode-bmp (font-spec :family "YaheiInconsolata"))
+          (set-frame-font "Inconsolata-14"))))
+       ((eq window-system 'ns)
         (set-fontset-font
          "fontset-default"
          'unicode-bmp (font-spec :family "YaheiInconsolata"))
-        (set-frame-font "Inconsolata-14"))
-       ((> (display-pixel-width) 1400)
-        (set-fontset-font
-         "fontset-default"
-         'unicode-bmp (font-spec :family "YaheiInconsolata"))
-        (set-frame-font "Inconsolata-14"))))
-     ((eq window-system 'ns)
-      (set-fontset-font
-       "fontset-default"
-       'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "Inconsolata-18"))))
+        (set-frame-font "Inconsolata-18"))))
+  (when window-system
+    ;; top, left ... must be integer
+    (add-to-list 'default-frame-alist
+                 (cons 'top  (/ (x-display-pixel-height) 10)))
+    (add-to-list 'default-frame-alist
+                 (cons 'left (/ (x-display-pixel-width) 10)))
+    (add-to-list 'default-frame-alist
+                 (cons 'height (/ (* 4 (x-display-pixel-height))
+                                  (* 5 (frame-char-height)))))
+    (add-to-list 'default-frame-alist
+                 (cons 'width (/ (* 4 (x-display-pixel-width))
+                                 (* 5 (frame-char-width)))))))
 
-(when window-system
-  ;; top, left ... must be integer
-  (add-to-list 'default-frame-alist
-               (cons 'top  (/ (x-display-pixel-height) 10)))
-  (add-to-list 'default-frame-alist
-               (cons 'left (/ (x-display-pixel-width) 10)))
-  (add-to-list 'default-frame-alist
-               (cons 'height (/ (* 4 (x-display-pixel-height))
-                                (* 5 (frame-char-height)))))
-  (add-to-list 'default-frame-alist
-               (cons 'width (/ (* 4 (x-display-pixel-width))
-                               (* 5 (frame-char-width))))))
+(kimim/frame-and-font)
 #+end_src
 
 * Environment
@@ -337,7 +342,7 @@ Display time and (line, column) numbers in mode line.
   :defer 0
   :load-path "~/kimim-emacs/site-lisp/"
   :config
-  (load-theme 'kimim-night))
+  (load-theme 'kimim-night t))
 #+end_src
 
 * Highlight
@@ -448,10 +453,16 @@ client.
   :config
   (window-numbering-mode 1))
 
-(bind-key "C-x m w" 'make-frame)
-;; donno why, w/o following, new frame still has scroll-bar
-(if (not (eq window-system nil))
-    (scroll-bar-mode -1))
+(use-package frame
+  :ensure nil
+  :defer 1
+  :bind ("C-x m w" . make-frame)
+  :config
+  (add-hook 'after-make-frame-functions
+	        (lambda (frame)
+	          (select-frame frame)
+	          (kimim/menu-and-bar)
+	          (kimim/frame-and-font))))
 #+end_src
 
 scroll slowly with touchpad.
@@ -562,7 +573,7 @@ scroll slowly with touchpad.
   (setq time-stamp-active t)
   (setq time-stamp-warn-inactive t)
   (setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S Kimi MA")
-  (add-hook 'write-file-hooks 'time-stamp))
+  (add-hook 'write-file-functions 'time-stamp))
 
 (defun kimim/save-buffer-advice (orig-fun &rest arg)
   (delete-trailing-whitespace)
