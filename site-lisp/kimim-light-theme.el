@@ -116,10 +116,15 @@
             ;; other packages
             (helm-locate-finish :foreground ,kimim-light-const)
             (aw-mode-line-face :foreground ,kimim-light-string)
-            (swiper-match-face-1 :background "#FEEA89")
-            (swiper-match-face-2 :background "#fb7905")
-            (swiper-match-face-3 :background "#F9A35A")
-            (swiper-match-face-4 :background "#F15C79")
+            (swiper-match-face-1 :background "white smoke")
+            (swiper-match-face-2 :background "#FFCCCC") ;;selected match 1
+            (swiper-match-face-3 :background "#CCFFFF") ;;selected match 2
+            (swiper-match-face-4 :background "#FFFFCC") ;;selected match 3
+            (swiper-background-match-face-1 :background "white smoke")
+            (swiper-background-match-face-2 :background "#FFECEC") ;; unselected match 1
+            (swiper-background-match-face-3 :background "#ECFFFF") ;; unselected match 2
+            (swiper-background-match-face-4 :background "#FFFFEC") ;; unselected match 3
+            (swiper-line-face :background "azure2")
             (swiper-line-face :background "#f3d3d3")
             (hydra-face-red :foreground "#cc0000" :bold t)
             (hydra-face-blue :foreground "RoyalBlue3" :bold t)
