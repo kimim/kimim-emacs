@@ -21,12 +21,12 @@
     ;;(insert user-mail-address)
     ;; construct default mail text stuff
     (mail-text)
-    (insert "\n\nBRs\n")
+    (insert "\n\n")
     (insert user-full-name)
-    (insert "\n")
-    (insert "--\n")
+    ;;(insert "\n")
+    ;;(insert "--\n")
     (open-line 1)
-    (insert-file mail-signature-file)
+    ;;(insert-file mail-signature-file)
     ;; if subject is empty, fill subject
     (mail-subject)
     (goto-char (line-beginning-position))

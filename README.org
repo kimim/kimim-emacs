@@ -2415,12 +2415,12 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 ** mu4e
 
 #+begin_src emacs-lisp
-  (use-package sendmail
-    :ensure nil
-    :config
-    (setq mail-user-agent 'sendmail-user-agent)
-    (setq mail-self-blind t)
-    (setq mail-signature-file (concat kimim/path-sync-emacs "signature.txt")))
+(use-package sendmail
+  :ensure nil
+  :custom ((mail-user-agent 'sendmail-user-agent)
+           (mail-signature nil)
+           (mail-self-blind t)
+           (mail-signature-file (concat kimim/path-sync-emacs "signature.txt"))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2528,14 +2528,10 @@ should install postscript in cygwin.
     :bind
     (:map elfeed-search-mode-map
           ("<SPC>" . scroll-up-command)
-          ("<backspace>" . scroll-down-command)
-     :map elfeed-show-mode-map
-          ("M-q" . article-fill-long-lines))
+          ("<backspace>" . scroll-down-command))
     :config
     ;; open feed link with eww
     (use-package org)
-    (defadvice elfeed-show-entry (after fill-long-lines activate)
-      (article-fill-long-lines))
     (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
     (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
     (setq elfeed-feeds
@@ -2543,9 +2539,6 @@ should install postscript in cygwin.
             ("https://www.theguardian.com/world/china/rss" CN)
             ("http://www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
             ("https://www.lemonde.fr/rss/une.xml" FR une)
-            ("https://www.lemonde.fr/asie-pacifique/rss_full.xml" FR asia)
-            ("https://www.lemonde.fr/sciences/rss_full.xml" FR science)
-            ("https://www.lemonde.fr/technologies/rss_full.xml" FR technology)
             ("http://kimi.im/atom.xml" blog))))
 #+end_src
 
