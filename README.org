@@ -2104,7 +2104,7 @@ name handling function can be found from emacs manual[fn:15].
               (switch-to-buffer (find-file-noselect newfilename)))
           ;; execute org-publish-current-file
           (org-publish-current-file)
-          (magit-status))))
+          (magit-status-setup-buffer))))
 
     (defun jekyll-tag ()
       "add new tags"
@@ -2478,8 +2478,6 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
     (setq mu4e-mu-binary "/usr/local/bin/mu")
     (setq mail-user-agent 'mu4e-user-agent)
-    ;; Mail folder set to ~/Maildir
-    (setq mu4e-maildir "~/.mail")         ; NOTE: should not be symbolic link
     ;; Fetch mail by offlineimap
     (setq mu4e-get-mail-command "offlineimap -u quiet")
     ;; Fetch mail in 60 sec interval
@@ -2534,23 +2532,29 @@ should install postscript in cygwin.
 * Reading News
 
 #+begin_src emacs-lisp
-  (use-package elfeed
-    :commands (elfeed)
-    :bind
-    (:map elfeed-search-mode-map
-          ("<SPC>" . scroll-up-command)
-          ("<backspace>" . scroll-down-command))
-    :config
-    ;; open feed link with eww
-    (use-package org)
-    (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
-    (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
-    (setq elfeed-feeds
-          '(
-            ("https://www.theguardian.com/world/china/rss" CN)
-            ("http://www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
-            ("https://www.lemonde.fr/rss/une.xml" FR une)
-            ("http://kimi.im/atom.xml" blog))))
+(use-package elfeed
+  :commands (elfeed)
+  :bind (:map elfeed-search-mode-map
+              ("<SPC>" . scroll-up-command)
+              ("<backspace>" . scroll-down-command)
+         :map elfeed-show-mode-map
+         ("M-q" . article-fill-long-lines))
+  :config
+  ;; open feed link with eww
+  (use-package org)
+  (use-package gnus)
+  (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
+  (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
+  (advice-add 'elfeed-show-entry :after
+              (lambda (entry)
+                (article-fill-long-lines)))
+
+  (setq elfeed-feeds
+        '(
+          ("https://www.theguardian.com/world/china/rss" CN)
+          ("http://www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
+          ("https://www.lemonde.fr/rss/une.xml" FR une)
+          ("http://kimi.im/atom.xml" blog))))
 #+end_src
 
 * kimim utils
