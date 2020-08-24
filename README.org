@@ -2423,78 +2423,79 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package mu4e
-    :ensure nil
-    :custom (mu4e-compose-reply-recipients 'sender)
-    :commands (mu4e mu4e-compose-new)
-    :bind (
-           :map mu4e-headers-mode-map
-           ("r" . kimim/mu4e-compose-reply-sender)
-           ("R" . kimim/mu4e-compose-reply-all)
-           ("f" . kimim/mu4e~view-quit-buffer)
-           :map mu4e-compose-mode-map
-           ("<C-tab>" . message-tab)
-           :map mu4e-view-mode-map
-           ("<home>" . move-beginning-of-line)
-           ("<end>" . move-end-of-line)
-           ("r" . kimim/mu4e-compose-reply-sender)
-           ("R" . kimim/mu4e-compose-reply-all))
-    :load-path (lambda ()
-                 (cond ((eq system-type 'darwin)
-                        "/usr/local/Cellar/mu/1.0_1/share/emacs/site-lisp/mu/mu4e")
-                       ((eq system-type 'cygwin)
-                        "/usr/local/share/emacs/site-lisp/mu4e")))
-    :config
-    ;; turn html email to lighter color in dark theme
-    (require 'mu4e-contrib)
-    (setq mu4e-html2text-command 'mu4e-shr2text)
-    (setq shr-color-visible-luminance-min 60)
-    (setq shr-color-visible-distance-min 5)
-    (setq shr-use-colors nil)
-    (advice-add #'shr-colorize-region :around (defun shr-no-colourise-region (&rest ignore)))
+(use-package mu4e
+  :ensure nil
+  :custom ((mu4e-compose-reply-recipients 'sender)
+           (mu4e-compose-signature-auto-include nil))
+  :commands (mu4e mu4e-compose-new)
+  :bind (
+         :map mu4e-headers-mode-map
+         ("r" . kimim/mu4e-compose-reply-sender)
+         ("R" . kimim/mu4e-compose-reply-all)
+         ("f" . kimim/mu4e~view-quit-buffer)
+         :map mu4e-compose-mode-map
+         ("<C-tab>" . message-tab)
+         :map mu4e-view-mode-map
+         ("<home>" . move-beginning-of-line)
+         ("<end>" . move-end-of-line)
+         ("r" . kimim/mu4e-compose-reply-sender)
+         ("R" . kimim/mu4e-compose-reply-all))
+  :load-path (lambda ()
+               (cond ((eq system-type 'darwin)
+                      "/usr/local/Cellar/mu/1.0_1/share/emacs/site-lisp/mu/mu4e")
+                     ((eq system-type 'cygwin)
+                      "/usr/local/share/emacs/site-lisp/mu4e")))
+  :config
+  ;; turn html email to lighter color in dark theme
+  (require 'mu4e-contrib)
+  (setq mu4e-html2text-command 'mu4e-shr2text)
+  (setq shr-color-visible-luminance-min 60)
+  (setq shr-color-visible-distance-min 5)
+  (setq shr-use-colors nil)
+  (advice-add #'shr-colorize-region :around (defun shr-no-colourise-region (&rest ignore)))
 
-    (require 'org-mu4e) ;; capture link
-    (use-package sendmail)
-    (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
-    (setq mu4e-mu-binary "/usr/local/bin/mu")
-    (setq mail-user-agent 'mu4e-user-agent)
-    ;; Fetch mail by offlineimap
-    (setq mu4e-get-mail-command "offlineimap -u quiet")
-    ;; Fetch mail in 60 sec interval
-    (setq mu4e-update-interval 300)
-    ;; hide indexing messages from minibuffer
-    (setq mu4e-hide-index-messages t)
-    (setq mu4e-use-fancy-chars nil)
-    (setq mu4e-view-show-images t)
-    (setq mu4e-view-fields
-          '(:subject :from :to :cc :date :mailing-list
-            :attachments :signature :decryption))
-    (setq mu4e-headers-fields
-          '( (:human-date    .   12)
-             (:flags         .    6)
-             (:from          .   22)
-             (:subject       .   nil)))
-    (setq mu4e-compose-cite-function 'mu-cite-original)
-    (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
-    (add-hook 'mu4e-compose-mode-hook 'kimim/mail-setup)
-    (add-hook 'mu4e-compose-mode-hook 'orgalist-mode)
-    (add-hook 'mu4e-compose-mode-hook (lambda ()
-                                        (auto-fill-mode -1)))
-    (defun kimim/mu4e~view-quit-buffer ()
-      (interactive)
-      (when (get-buffer "*mu4e-view*")
-        (switch-to-buffer "*mu4e-view*")
-        (mu4e~view-quit-buffer)))
+  (require 'org-mu4e) ;; capture link
+  (use-package sendmail)
+  (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
+  (setq mu4e-mu-binary "/usr/local/bin/mu")
+  (setq mail-user-agent 'mu4e-user-agent)
+  ;; Fetch mail by offlineimap
+  (setq mu4e-get-mail-command "offlineimap -u quiet")
+  ;; Fetch mail in 60 sec interval
+  (setq mu4e-update-interval 300)
+  ;; hide indexing messages from minibuffer
+  (setq mu4e-hide-index-messages t)
+  (setq mu4e-use-fancy-chars nil)
+  (setq mu4e-view-show-images t)
+  (setq mu4e-view-fields
+        '(:subject :from :to :cc :date :mailing-list
+                   :attachments :signature :decryption))
+  (setq mu4e-headers-fields
+        '( (:human-date    .   12)
+           (:flags         .    6)
+           (:from          .   22)
+           (:subject       .   nil)))
+  (setq mu4e-compose-cite-function 'mu-cite-original)
+  (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
+  (add-hook 'mu4e-compose-mode-hook 'kimim/mail-setup)
+  (add-hook 'mu4e-compose-mode-hook 'orgalist-mode)
+  (add-hook 'mu4e-compose-mode-hook (lambda ()
+                                      (auto-fill-mode -1)))
+  (defun kimim/mu4e~view-quit-buffer ()
+    (interactive)
+    (when (get-buffer "*mu4e-view*")
+      (switch-to-buffer "*mu4e-view*")
+      (mu4e~view-quit-buffer)))
 
-    (defun kimim/mu4e-compose-reply-sender ()
-      (interactive)
-      (set (make-local-variable 'mu4e-compose-reply-recipients) 'sender)
-      (mu4e-compose-reply))
+  (defun kimim/mu4e-compose-reply-sender ()
+    (interactive)
+    (set (make-local-variable 'mu4e-compose-reply-recipients) 'sender)
+    (mu4e-compose-reply))
 
-    (defun kimim/mu4e-compose-reply-all ()
-      (interactive)
-      (set (make-local-variable 'mu4e-compose-reply-recipients) 'all)
-      (mu4e-compose-reply)))
+  (defun kimim/mu4e-compose-reply-all ()
+    (interactive)
+    (set (make-local-variable 'mu4e-compose-reply-recipients) 'all)
+    (mu4e-compose-reply)))
 #+end_src
 
 * Viewing Documents
