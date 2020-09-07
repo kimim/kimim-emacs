@@ -142,43 +142,45 @@ calculated with original default font height and width: =frame-char-height= and
 =frame-char-width=.
 
 #+begin_src emacs-lisp
-;; set default font and default frame dimension
-(defun kimim/frame-and-font ()
-  (if (and window-system
-           (font-utils-exists-p "YaheiInconsolata")
-           (font-utils-exists-p "Inconsolata"))
+  ;; set default font and default frame dimension
+  (defun kimim/frame-and-font ()
+    (cond
+     ((eq window-system 'w32)
       (cond
-       ((eq window-system 'w32)
-        (cond
-         ((< (display-pixel-width) 1400)
-          (set-fontset-font
-           "fontset-default"
-           'unicode-bmp (font-spec :family "YaheiInconsolata"))
-          (set-frame-font "Inconsolata-14"))
-         ((> (display-pixel-width) 1400)
-          (set-fontset-font
-           "fontset-default"
-           'unicode-bmp (font-spec :family "YaheiInconsolata"))
-          (set-frame-font "Inconsolata-14"))))
-       ((eq window-system 'ns)
+       ((< (display-pixel-width) 1400)
         (set-fontset-font
          "fontset-default"
          'unicode-bmp (font-spec :family "YaheiInconsolata"))
-        (set-frame-font "Inconsolata-18"))))
-  (when window-system
-    ;; top, left ... must be integer
-    (add-to-list 'default-frame-alist
-                 (cons 'top  (/ (x-display-pixel-height) 10)))
-    (add-to-list 'default-frame-alist
-                 (cons 'left (/ (x-display-pixel-width) 10)))
-    (add-to-list 'default-frame-alist
-                 (cons 'height (/ (* 4 (x-display-pixel-height))
-                                  (* 5 (frame-char-height)))))
-    (add-to-list 'default-frame-alist
-                 (cons 'width (/ (* 4 (x-display-pixel-width))
-                                 (* 5 (frame-char-width)))))))
+        (set-frame-font "Inconsolata-14"))
+       ((> (display-pixel-width) 1400)
+        (set-fontset-font
+         "fontset-default"
+         'unicode-bmp (font-spec :family "YaheiInconsolata"))
+        (set-frame-font "Inconsolata-14"))))
+     ((eq window-system 'ns)
+      (set-fontset-font
+       "fontset-default"
+       'unicode-bmp (font-spec :family "YaheiInconsolata"))
+      (set-frame-font "Inconsolata-18"))
+     ((eq window-system 'x)
+      (set-fontset-font
+       "fontset-default"
+       'unicode-bmp (font-spec :family "YaheiInconsolata"))
+      (set-frame-font "Inconsolata-18")))
+    (when window-system
+      ;; top, left ... must be integer
+      (add-to-list 'default-frame-alist
+                   (cons 'top  (/ (x-display-pixel-height) 10)))
+      (add-to-list 'default-frame-alist
+                   (cons 'left (/ (x-display-pixel-width) 10)))
+      (add-to-list 'default-frame-alist
+                   (cons 'height (/ (* 4 (x-display-pixel-height))
+                                    (* 5 (frame-char-height)))))
+      (add-to-list 'default-frame-alist
+                   (cons 'width (/ (* 4 (x-display-pixel-width))
+                                   (* 5 (frame-char-width)))))))
 
-(kimim/frame-and-font)
+  (kimim/frame-and-font)
 #+end_src
 
 * Environment
@@ -224,7 +226,7 @@ Then append exec-path to PATH:
 (setenv "LC_ALL" "en_US.UTF-8")
 ;; remove svn log LC_TYPE not defined warning.
 (setenv "LC_CTYPE" "en_US")
-(set-locale-environment "English")
+(set-locale-environment "en_US.UTF-8")
 (set-language-environment 'English)
 (prefer-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
