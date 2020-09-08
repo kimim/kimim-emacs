@@ -166,7 +166,7 @@ calculated with original default font height and width: =frame-char-height= and
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "Inconsolata-18")))
+      (set-frame-font "Inconsolata-12")))
     (when window-system
       ;; top, left ... must be integer
       (add-to-list 'default-frame-alist
@@ -1329,7 +1329,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     ("C-c  ！" . org-time-stamp-inactive)
     ("C-c  。" . org-time-stamp)
     :config
-    (org-roam-mode t)
+    ;; (org-roam-mode t)
     (org-download-enable)
     (setq org-support-shift-select t)
     ;; no empty line after collapsed
@@ -1476,7 +1476,7 @@ pip install pygments
     '(("frame" "single") ("fontsize" "\\small")))
 
     (setq org-latex-pdf-process
-          `(,(let ((ref (concat kimim/path-sync "papers/references.bib")))
+          `(,(let ((ref (concat kimim/path-ref "references.bib")))
                (if (file-exists-p ref)
                    (concat "cp -f \"" ref "\" .")
                  ""))
