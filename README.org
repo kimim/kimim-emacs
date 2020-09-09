@@ -203,7 +203,8 @@ specify these variables in different way.
   (add-to-list 'exec-path "/Library/TeX/texbin")
   (add-to-list 'exec-path (concat (getenv "HOME") "/Library/Python/2.7/bin")))
  ((eq system-type 'gnu/linux)
-  (setq kimim/path-root "/")))
+  (setq kimim/path-root "/")
+  (add-to-list 'exec-path "/usr/local/texlive/2020/bin/x86_64-linux/")))
 
 (add-to-list 'exec-path (concat kimim/path-root "bin"))
 (add-to-list 'exec-path (concat kimim/path-root "usr/bin"))
@@ -460,10 +461,10 @@ client.
   :bind ("C-x m w" . make-frame)
   :config
   (add-hook 'after-make-frame-functions
-	        (lambda (frame)
-	          (select-frame frame)
-	          (kimim/menu-and-bar)
-	          (kimim/frame-and-font))))
+            (lambda (frame)
+              (select-frame frame)
+              (kimim/menu-and-bar)
+              (kimim/frame-and-font))))
 #+end_src
 
 scroll slowly with touchpad.
@@ -2529,7 +2530,7 @@ should install postscript in cygwin.
   :config
   ;; open feed link with eww
   (use-package org)
-  (use-package gnus)
+  (require 'gnus-art)
   (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
   (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
   (advice-add 'elfeed-show-entry :after
