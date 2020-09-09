@@ -1430,6 +1430,21 @@ For Windows, download and install CTEX from http://www.ctex.org
 
 #+begin_src shell
 apt-cyg install texlive-collection-xetex texlive-collection-latex texlive-collection-fontsrecommended
+#+end_src
+
+For Linux:
+
+Download texlive install pacakge from: http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+
+#+begin_src shell
+tar zxvf install-tl-unx.tar.gz
+cd install-tl-20200908/
+sudo ./install-tl
+#+end_src
+
+Then for all the OS platforms, use =tlmgr= to install user level tex packages:
+
+#+begin_src shell
 tlmgr init-usertree
 tlmgr --usermode install ctex titlesec enumitem ms fontspec abstract \
                          zhnumber fandol lastpage pdftexcmds infwarerr \
@@ -1441,8 +1456,6 @@ tlmgr --usermode install ctex titlesec enumitem ms fontspec abstract \
                          moderncv microtype
 fmtutil-sys --all
 #+end_src
-
-For Linux: use pacakge mangagement to install texlive.
 
 To export =org-mode= to PDF, with code style highlight, you need to install
 =python= and =pygments=. Because =pygmentize= from =pygments= is used to
@@ -1463,6 +1476,12 @@ Get =pygments= with =pip=:
 
 #+begin_src shell
 pip install pygments
+#+end_src
+
+For Ubuntu Linux:
+
+#+begin_src shell
+sudo apt install python3-pygments
 #+end_src
 
 #+begin_src emacs-lisp
