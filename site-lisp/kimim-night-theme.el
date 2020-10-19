@@ -42,7 +42,7 @@
       (kimim-night-const "cyan2")
       (kimim-night-definition "deep sky blue")
       (kimim-night-comment "medium sea green")
-      (kimim-night-error "red")
+      (kimim-night-error "orange red")
       (kimim-night-builtin "#ff55ff")
       (kimim-night-string "lime green")
       (kimim-night-blue-3 "blue")

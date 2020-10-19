@@ -2253,6 +2253,16 @@ apt-cyg install sqlite3
           ("C-c n I" . org-roam-insert-immediate))))
 #+end_src
 
+** zetteldeft
+
+#+begin_src emacs-lisp
+(use-package zetteldeft
+  :after deft
+  :config
+  (zetteldeft-set-classic-keybindings)
+  (setf zetteldeft-id-regex "[0-9]\\{8\\}\\([A-Z]\\{2,\\}\\)"))
+#+end_src
+
 * Markdown mode
 
 Markdown is widely used as plain text file format.
@@ -2523,7 +2533,7 @@ should install postscript in cygwin.
   :config
   ;; open feed link with eww
   (use-package org)
-  (use-package gnus)
+  (require 'gnus-art)
   (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
   (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
   (advice-add 'elfeed-show-entry :after
