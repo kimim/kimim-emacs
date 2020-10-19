@@ -1830,16 +1830,16 @@ This function is called by `org-babel-execute-src-block'."
 (use-package org
   :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
   :bind (:map org-mode-map
-              :map org-agenda-mode-map
-              ("C-c C-k" . org-agenda-kill-files)
-              ("<C-left>"  . org-agenda-do-date-earlier)
-              ("<C-right>" . org-agenda-do-date-later)
-              ("<S-left>" . (lambda ()
-                              (interactive)
-                              (org-agenda-todo 'left)))
-              ("<S-right>" . (lambda ()
-                               (interactive)
-                               (org-agenda-todo 'right))))
+         :map org-agenda-mode-map
+         ("C-c C-k" . org-agenda-kill-files)
+         ("<C-left>"  . org-agenda-do-date-earlier)
+         ("<C-right>" . org-agenda-do-date-later)
+         ("<S-left>" . (lambda ()
+                         (interactive)
+                         (org-agenda-todo 'left)))
+         ("<S-right>" . (lambda ()
+                          (interactive)
+                          (org-agenda-todo 'right))))
   :config
   (require 'org-agenda)
   (add-hook 'kill-emacs-hook
