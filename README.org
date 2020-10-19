@@ -142,43 +142,45 @@ calculated with original default font height and width: =frame-char-height= and
 =frame-char-width=.
 
 #+begin_src emacs-lisp
-;; set default font and default frame dimension
-(defun kimim/frame-and-font ()
-  (if (and window-system
-           (font-utils-exists-p "YaheiInconsolata")
-           (font-utils-exists-p "Inconsolata"))
+  ;; set default font and default frame dimension
+  (defun kimim/frame-and-font ()
+    (cond
+     ((eq window-system 'w32)
       (cond
-       ((eq window-system 'w32)
-        (cond
-         ((< (display-pixel-width) 1400)
-          (set-fontset-font
-           "fontset-default"
-           'unicode-bmp (font-spec :family "YaheiInconsolata"))
-          (set-frame-font "Inconsolata-14"))
-         ((> (display-pixel-width) 1400)
-          (set-fontset-font
-           "fontset-default"
-           'unicode-bmp (font-spec :family "YaheiInconsolata"))
-          (set-frame-font "Inconsolata-14"))))
-       ((eq window-system 'ns)
+       ((< (display-pixel-width) 1400)
         (set-fontset-font
          "fontset-default"
          'unicode-bmp (font-spec :family "YaheiInconsolata"))
-        (set-frame-font "Inconsolata-18"))))
-  (when window-system
-    ;; top, left ... must be integer
-    (add-to-list 'default-frame-alist
-                 (cons 'top  (/ (x-display-pixel-height) 10)))
-    (add-to-list 'default-frame-alist
-                 (cons 'left (/ (x-display-pixel-width) 10)))
-    (add-to-list 'default-frame-alist
-                 (cons 'height (/ (* 4 (x-display-pixel-height))
-                                  (* 5 (frame-char-height)))))
-    (add-to-list 'default-frame-alist
-                 (cons 'width (/ (* 4 (x-display-pixel-width))
-                                 (* 5 (frame-char-width)))))))
+        (set-frame-font "Inconsolata-14"))
+       ((> (display-pixel-width) 1400)
+        (set-fontset-font
+         "fontset-default"
+         'unicode-bmp (font-spec :family "YaheiInconsolata"))
+        (set-frame-font "Inconsolata-14"))))
+     ((eq window-system 'ns)
+      (set-fontset-font
+       "fontset-default"
+       'unicode-bmp (font-spec :family "YaheiInconsolata"))
+      (set-frame-font "Inconsolata-18"))
+     ((eq window-system 'x)
+      (set-fontset-font
+       "fontset-default"
+       'unicode-bmp (font-spec :family "YaheiInconsolata"))
+      (set-frame-font "Inconsolata-12")))
+    (when window-system
+      ;; top, left ... must be integer
+      (add-to-list 'default-frame-alist
+                   (cons 'top  (/ (x-display-pixel-height) 10)))
+      (add-to-list 'default-frame-alist
+                   (cons 'left (/ (x-display-pixel-width) 10)))
+      (add-to-list 'default-frame-alist
+                   (cons 'height (/ (* 4 (x-display-pixel-height))
+                                    (* 5 (frame-char-height)))))
+      (add-to-list 'default-frame-alist
+                   (cons 'width (/ (* 4 (x-display-pixel-width))
+                                   (* 5 (frame-char-width)))))))
 
-(kimim/frame-and-font)
+  (kimim/frame-and-font)
 #+end_src
 
 * Environment
@@ -201,7 +203,8 @@ specify these variables in different way.
   (add-to-list 'exec-path "/Library/TeX/texbin")
   (add-to-list 'exec-path (concat (getenv "HOME") "/Library/Python/2.7/bin")))
  ((eq system-type 'gnu/linux)
-  (setq kimim/path-root "/")))
+  (setq kimim/path-root "/")
+  (add-to-list 'exec-path "/usr/local/texlive/2020/bin/x86_64-linux/")))
 
 (add-to-list 'exec-path (concat kimim/path-root "bin"))
 (add-to-list 'exec-path (concat kimim/path-root "usr/bin"))
@@ -224,7 +227,7 @@ Then append exec-path to PATH:
 (setenv "LC_ALL" "en_US.UTF-8")
 ;; remove svn log LC_TYPE not defined warning.
 (setenv "LC_CTYPE" "en_US")
-(set-locale-environment "English")
+(set-locale-environment "en_US.UTF-8")
 (set-language-environment 'English)
 (prefer-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
@@ -458,10 +461,10 @@ client.
   :bind ("C-x m w" . make-frame)
   :config
   (add-hook 'after-make-frame-functions
-	        (lambda (frame)
-	          (select-frame frame)
-	          (kimim/menu-and-bar)
-	          (kimim/frame-and-font))))
+            (lambda (frame)
+              (select-frame frame)
+              (kimim/menu-and-bar)
+              (kimim/frame-and-font))))
 #+end_src
 
 scroll slowly with touchpad.
@@ -1327,7 +1330,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     ("C-c  ！" . org-time-stamp-inactive)
     ("C-c  。" . org-time-stamp)
     :config
-    (org-roam-mode t)
+    ;; (org-roam-mode t)
     (org-download-enable)
     (setq org-support-shift-select t)
     ;; no empty line after collapsed
@@ -1427,6 +1430,21 @@ For Windows, download and install CTEX from http://www.ctex.org
 
 #+begin_src shell
 apt-cyg install texlive-collection-xetex texlive-collection-latex texlive-collection-fontsrecommended
+#+end_src
+
+For Linux:
+
+Download texlive install pacakge from: http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+
+#+begin_src shell
+tar zxvf install-tl-unx.tar.gz
+cd install-tl-20200908/
+sudo ./install-tl
+#+end_src
+
+Then for all the OS platforms, use =tlmgr= to install user level tex packages:
+
+#+begin_src shell
 tlmgr init-usertree
 tlmgr --usermode install ctex titlesec enumitem ms fontspec abstract \
                          zhnumber fandol lastpage pdftexcmds infwarerr \
@@ -1438,8 +1456,6 @@ tlmgr --usermode install ctex titlesec enumitem ms fontspec abstract \
                          moderncv microtype
 fmtutil-sys --all
 #+end_src
-
-For Linux: use pacakge mangagement to install texlive.
 
 To export =org-mode= to PDF, with code style highlight, you need to install
 =python= and =pygments=. Because =pygmentize= from =pygments= is used to
@@ -1462,6 +1478,12 @@ Get =pygments= with =pip=:
 pip install pygments
 #+end_src
 
+For Ubuntu Linux:
+
+#+begin_src shell
+sudo apt install python3-pygments
+#+end_src
+
 #+begin_src emacs-lisp
   (use-package ox-latex
     :ensure org
@@ -1474,7 +1496,7 @@ pip install pygments
     '(("frame" "single") ("fontsize" "\\small")))
 
     (setq org-latex-pdf-process
-          `(,(let ((ref (concat kimim/path-sync "papers/references.bib")))
+          `(,(let ((ref (concat kimim/path-ref "references.bib")))
                (if (file-exists-p ref)
                    (concat "cp -f \"" ref "\" .")
                  ""))
@@ -2454,7 +2476,9 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
                (cond ((eq system-type 'darwin)
                       "/usr/local/Cellar/mu/1.0_1/share/emacs/site-lisp/mu/mu4e")
                      ((eq system-type 'cygwin)
-                      "/usr/local/share/emacs/site-lisp/mu4e")))
+                      "/usr/local/share/emacs/site-lisp/mu4e")
+                     ((eq system-type 'gnu/linux)
+                      "/snap/maildir-utils/current/share/emacs/site-lisp/mu4e")))
   :config
   ;; turn html email to lighter color in dark theme
   (require 'mu4e-contrib)
@@ -2468,9 +2492,11 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   (use-package sendmail)
   (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
   (setq mu4e-mu-binary "/usr/local/bin/mu")
+  (cond ((eq system-type 'gnu/linux)
+         (setq mu4e-mu-binary "/snap/bin/mu")))
   (setq mail-user-agent 'mu4e-user-agent)
   ;; Fetch mail by offlineimap
-  (setq mu4e-get-mail-command "offlineimap -u quiet")
+  (setq mu4e-get-mail-command "offlineimap -c ~/.offlineimaprc -u quiet")
   ;; Fetch mail in 60 sec interval
   (setq mu4e-update-interval 300)
   ;; hide indexing messages from minibuffer
