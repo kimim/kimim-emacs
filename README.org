@@ -1855,16 +1855,16 @@ This function is called by `org-babel-execute-src-block'."
 (use-package org
   :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
   :bind (:map org-mode-map
-              :map org-agenda-mode-map
-              ("C-c C-k" . org-agenda-kill-files)
-              ("<C-left>"  . org-agenda-do-date-earlier)
-              ("<C-right>" . org-agenda-do-date-later)
-              ("<S-left>" . (lambda ()
-                              (interactive)
-                              (org-agenda-todo 'left)))
-              ("<S-right>" . (lambda ()
-                               (interactive)
-                               (org-agenda-todo 'right))))
+         :map org-agenda-mode-map
+         ("C-c C-k" . org-agenda-kill-files)
+         ("<C-left>"  . org-agenda-do-date-earlier)
+         ("<C-right>" . org-agenda-do-date-later)
+         ("<S-left>" . (lambda ()
+                         (interactive)
+                         (org-agenda-todo 'left)))
+         ("<S-right>" . (lambda ()
+                          (interactive)
+                          (org-agenda-todo 'right))))
   :config
   (require 'org-agenda)
   (add-hook 'kill-emacs-hook
@@ -2276,6 +2276,16 @@ apt-cyg install sqlite3
          :map org-mode-map
          (("C-c n i" . org-roam-insert)
           ("C-c n I" . org-roam-insert-immediate))))
+#+end_src
+
+** zetteldeft
+
+#+begin_src emacs-lisp
+(use-package zetteldeft
+  :after deft
+  :config
+  (zetteldeft-set-classic-keybindings)
+  (setf zetteldeft-id-regex "[0-9]\\{8\\}\\([A-Z]\\{2,\\}\\)"))
 #+end_src
 
 * Markdown mode

@@ -65,9 +65,9 @@
 
 ;; generate timestamp such as 2016_1031_ for file name
 (defun kimim/genfile-timestamp()
-  (concat (format-time-string "%Y_%m%d")
-          ;;(char-to-string (+ 65 (random 26)))
-          ;;(char-to-string (+ 65 (random 26)))
+  (concat (format-time-string "%Y%m%d")
+          (char-to-string (+ 65 (random 26)))
+          (char-to-string (+ 65 (random 26)))
           "_"))
 
 ;; self define functions
