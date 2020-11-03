@@ -38,7 +38,7 @@
 
 (let ((class '((class color) (min-colors 88)))
       (kimim-night-bg "gray15")
-      (kimim-night-fg "brightwhite")
+      (kimim-night-fg "white")
       (kimim-night-const "cyan2")
       (kimim-night-definition "deep sky blue")
       (kimim-night-comment "medium sea green")

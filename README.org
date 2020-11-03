@@ -872,6 +872,7 @@ English word list fetch from https://github.com/dwyl/english-words
     :config
     (use-package company-dict)
     (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 1)
     ;; macOS will use system dict file directly
     (cond ((eq system-type 'windows-nt)
            (setq ispell-alternate-dictionary "~/.emacs.d/dict/words3.txt")))
@@ -1008,6 +1009,29 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
   (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
   (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
   (add-to-list 'auto-mode-alist '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
+  (add-hook 'clojure-mode-hook
+            (lambda ()
+              (enable-paredit-mode))))
+
+(use-package clojurescript-mode
+  :mode ("\\.cljs\\'" . clojurescript-mode)
+  :ensure nil
+  :config
+  (use-package cider)
+  (use-package company)
+  (use-package flycheck)
+  (use-package flycheck-clj-kondo)
+  (use-package clojure-snippets)
+  (eval-after-load 'company
+    '(progn
+       (delete 'company-capf company-backends)
+       (add-to-list 'company-backends 'company-capf)))
+  (add-hook 'cider-repl-mode-hook #'company-mode)
+  (add-hook 'cider-mode-hook #'company-mode)
+  (add-hook 'clojurescript-mode-hook #'cider-mode)
+  (use-package clojure-mode-extra-font-locking)
+  (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
+  (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
   (add-hook 'clojure-mode-hook
             (lambda ()
               (enable-paredit-mode))))
