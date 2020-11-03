@@ -995,6 +995,7 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
   (use-package company)
   (use-package flycheck)
   (use-package flycheck-clj-kondo)
+  (use-package clojure-snippets)
   (eval-after-load 'company
     '(progn
        (delete 'company-capf company-backends)
@@ -1340,7 +1341,9 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     (setq org-cycle-separator-lines 0)
     (setq org-src-fontify-natively t)
     (setq org-src-preserve-indentation t)
-    (setq org-startup-indented t)
+    (if window-system
+        (setq org-startup-indented t)
+      (setq org-startup-indented nil))
     (setq org-image-actual-width 600))
 #+end_src
 

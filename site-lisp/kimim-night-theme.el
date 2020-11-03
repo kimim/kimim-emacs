@@ -38,7 +38,7 @@
 
 (let ((class '((class color) (min-colors 88)))
       (kimim-night-bg "gray15")
-      (kimim-night-fg "white")
+      (kimim-night-fg "brightwhite")
       (kimim-night-const "cyan2")
       (kimim-night-definition "deep sky blue")
       (kimim-night-comment "medium sea green")
@@ -135,7 +135,7 @@
             (powerline-inactive2 :background "grey40" :foreground "white" :inherit mode-line-inactive)
             ;; (magit-tag :background "LemonChiffon1" :foreground "goldenrod4")
             ;; (magit-section-heading :inherit header-line)
-            ;; (magit-section-highlight :weight bold)
+            (magit-section-highlight :weight bold :background ,kimim-night-bg)
             ;; (magit-diff-context :foreground "grey20")
             ;; (magit-diff-context-highlight :weight bold :foreground "grey20")
             ;; (magit-diff-added :inherit diff-added)

@@ -135,7 +135,7 @@
             (powerline-inactive2 :background "grey40" :foreground "white" :inherit mode-line-inactive)
             ;; (magit-tag :background "LemonChiffon1" :foreground "goldenrod4")
             ;; (magit-section-heading :inherit header-line)
-            ;; (magit-section-highlight :weight bold)
+            (magit-section-highlight :weight bold :background "azure")
             ;; (magit-diff-context :foreground "grey20")
             ;; (magit-diff-context-highlight :weight bold :foreground "grey20")
             ;; (magit-diff-added :inherit diff-added)
