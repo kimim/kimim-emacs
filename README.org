@@ -871,6 +871,7 @@ English word list fetch from https://github.com/dwyl/english-words
     :commands (global-company-mode)
     :config
     (use-package company-dict)
+    (setq company-idle-delay 0)
     ;; macOS will use system dict file directly
     (cond ((eq system-type 'windows-nt)
            (setq ispell-alternate-dictionary "~/.emacs.d/dict/words3.txt")))
@@ -995,7 +996,9 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
   (use-package flycheck)
   (use-package flycheck-clj-kondo)
   (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-capf))
+    '(progn
+       (delete 'company-capf company-backends)
+       (add-to-list 'company-backends 'company-capf)))
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'cider-mode)
