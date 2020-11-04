@@ -987,8 +987,10 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package paredit
+  :bind (("C-M-w" . paredit-copy-as-kill))
   :commands (enable-paredit-mode)
   )
+
 (use-package clojure-mode
   :mode ("\\.clj\\'" . clojure-mode)
   :config
