@@ -987,9 +987,10 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package paredit
-  :bind (("C-M-w" . paredit-copy-as-kill))
-  :commands (enable-paredit-mode)
-  )
+  :bind (("C-M-w" . paredit-copy-as-kill)
+         ("M-<right>" . paredit-forward)
+         ("M-<left>" . paredit-backward))
+  :commands (enable-paredit-mode))
 
 (use-package clojure-mode
   :mode ("\\.clj\\'" . clojure-mode)
@@ -1107,6 +1108,32 @@ Add following lines to =~/.lein/profiles.clj=, and then you can use
     (require 'ob-clojure)
     (use-package cider)
     (setq org-babel-clojure-backend 'cider)
+    (defun org-babel-expand-body:clojure (body params)
+      "Expand BODY according to PARAMS, return the expanded body."
+      (let* ((vars (org-babel--get-vars params))
+	         (ns (or (cdr (assq :ns params))
+		             (org-babel-clojure-cider-current-ns)))
+	         (result-params (cdr (assq :result-params params)))
+	         (print-level nil)
+	         (print-length nil)
+	         (body (org-trim
+		            (concat
+		             ;; Source block specified namespace :ns.
+		             (and (cdr (assq :ns params)) (format "(ns %s)\n" ns))
+		             ;; Variables binding.
+		             (if (null vars) (org-trim body)
+		               (format "(let [%s]\n%s)"
+			                   (mapconcat
+			                    (lambda (var)
+			                      (format "%S (quote %S)" (car var) (cdr var)))
+			                    vars
+			                    "\n      ")
+			                   body))))))
+        (if (or (member "code" result-params)
+	            (member "pp" result-params))
+	        (format "(print (str (do %s)))" body)
+          body)))
+
     (defun org-babel-execute:clojure (body params)
       "Execute a block of Clojure code with Babel.
   The underlying process performed by the code block can be output
