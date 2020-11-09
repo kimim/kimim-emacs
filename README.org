@@ -1078,168 +1078,39 @@ in Clojure.
   )
 #+end_src
 
-Add following lines to =~/.lein/profiles.clj=, and then you can use
-=lein-exec= backend to run =clojure= directly.
-
-#+begin_example
-  {
-    :user
-    {
-      :mirrors {
-        "central" {
-        :name "aliyun"
-        :url "https://maven.aliyun.com/nexus/content/groups/public/"
-          }
-    "clojars" {
-      :name "cnnic"
-      :url "https://mirrors.cnnic.cn/clojars/"
-        }
-      }
-    :plugins [[lein-exec "0.3.7"]]
-    }
-  }
-#+end_example
-
 #+begin_src emacs-lisp
-  (use-package ob-clojure
-    :ensure org
-    :config
-    (use-package clojure-mode)
-    (require 'ob-clojure)
-    (use-package cider)
-    (setq org-babel-clojure-backend 'cider)
-    (defun org-babel-expand-body:clojure (body params)
-      "Expand BODY according to PARAMS, return the expanded body."
-      (let* ((vars (org-babel--get-vars params))
-	         (ns (or (cdr (assq :ns params))
-		             (org-babel-clojure-cider-current-ns)))
-	         (result-params (cdr (assq :result-params params)))
-	         (print-level nil)
-	         (print-length nil)
-	         (body (org-trim
-		            (concat
-		             ;; Source block specified namespace :ns.
-		             (and (cdr (assq :ns params)) (format "(ns %s)\n" ns))
-		             ;; Variables binding.
-		             (if (null vars) (org-trim body)
-		               (format "(let [%s]\n%s)"
-			                   (mapconcat
-			                    (lambda (var)
-			                      (format "%S (quote %S)" (car var) (cdr var)))
-			                    vars
-			                    "\n      ")
-			                   body))))))
-        (if (or (member "code" result-params)
-	            (member "pp" result-params))
-	        (format "(print (str (do %s)))" body)
-          body)))
-
-    (defun org-babel-execute:clojure (body params)
-      "Execute a block of Clojure code with Babel.
-  The underlying process performed by the code block can be output
-  using the :show-process parameter."
-      (let* ((expanded (org-babel-expand-body:clojure body params))
-             (response (list 'dict))
-             result)
-        (cl-case org-babel-clojure-backend
-          (cider
-           (require 'cider)
-           (let ((result-params (cdr (assq :result-params params)))
-                 (show (cdr (assq :show-process params))))
-             (if (member show '(nil "no"))
-                 ;; Run code without showing the process.
-                 (progn
-                   (setq response
-                         (let ((nrepl-sync-request-timeout
-                                org-babel-clojure-sync-nrepl-timeout))
-                           (nrepl-sync-request:eval expanded
-                                                    (cider-current-connection))))
-                   (setq result
-                         (concat
-                          (nrepl-dict-get response
-                                          (if (or (member "output" result-params)
-                                                  (member "pp" result-params))
-                                              "out"
-                                            "value"))
-                          (nrepl-dict-get response "ex")
-                          (nrepl-dict-get response "root-ex")
-                          (nrepl-dict-get response "err"))))
-               ;; Show the process in an output buffer/window.
-               (let ((process-buffer (switch-to-buffer-other-window
-                                      "*Clojure Show Process Sub Buffer*"))
-                     status)
-                 ;; Run the Clojure code in nREPL.
-                 (nrepl-request:eval
-                  expanded
-                  (lambda (resp)
-                    (when (member "out" resp)
-                      ;; Print the output of the nREPL in the output buffer.
-                      (princ (nrepl-dict-get resp "out") process-buffer))
-                    (when (member "ex" resp)
-                      ;; In case there is an exception, then add it to the
-                      ;; output buffer as well.
-                      (princ (nrepl-dict-get resp "ex") process-buffer)
-                      (princ (nrepl-dict-get resp "root-ex") process-buffer))
-                    (when (member "err" resp)
-                      ;; In case there is an error, then add it to the
-                      ;; output buffer as well.
-                      (princ (nrepl-dict-get resp "err") process-buffer))
-                    (nrepl--merge response resp)
-                    ;; Update the status of the nREPL output session.
-                    (setq status (nrepl-dict-get response "status")))
-                  (cider-current-connection))
-
-                 ;; Wait until the nREPL code finished to be processed.
-                 (while (not (member "done" status))
-                   (nrepl-dict-put response "status" (remove "need-input" status))
-                   (accept-process-output nil 0.01)
-                   (redisplay))
-
-                 ;; Delete the show buffer & window when the processing is
-                 ;; finalized.
-                 (mapc #'delete-window
-                       (get-buffer-window-list process-buffer nil t))
-                 (kill-buffer process-buffer)
-
-                 ;; Put the output or the value in the result section of
-                 ;; the code block.
-                 (setq result
-                       (concat
-                        (nrepl-dict-get response
-                                        (if (or (member "output" result-params)
-                                                (member "pp" result-params))
-                                            "out"
-                                          "value"))
-                        (nrepl-dict-get response "ex")
-                        (nrepl-dict-get response "root-ex")
-                        (nrepl-dict-get response "err")))))))
-          (slime
-           (require 'slime)
-           (with-temp-buffer
-             (insert expanded)
-             (setq result
-                   (slime-eval
-                    `(swank:eval-and-grab-output
-                      ,(buffer-substring-no-properties (point-min) (point-max)))
-                    (cdr (assq :package params))))))
-          (lein-exec
-           (let ((result-params (cdr (assq :result-params params))))
-             (if (or (member "output" result-params)
-                     (member "pp" result-params))
-                 (write-region (concat "(use 'clojure.pprint)
-  " expanded) nil "tmp.clj")
-               (write-region (concat "(use 'clojure.pprint)
-  (clojure.pprint/pprint
-    (do " expanded "))") nil "tmp.clj"))
-             (setq result
-                   (replace-regexp-in-string
-                    "" ""
-                    (shell-command-to-string (concat "cat tmp.clj | lein exec")))))))
-        (org-babel-result-cond (cdr (assq :result-params params))
-          result
-          (condition-case nil (org-babel-script-escape result)
-            (error result)))))
-    )
+(use-package ob-clojure
+  :ensure org
+  :config
+  (use-package clojure-mode)
+  (require 'ob-clojure)
+  (use-package cider)
+  (setq org-babel-clojure-backend 'cider)
+  (defun org-babel-expand-body:clojure (body params)
+    "Expand BODY according to PARAMS, return the expanded body."
+    (let* ((vars (org-babel--get-vars params))
+	       (ns (or (cdr (assq :ns params))
+		           (org-babel-clojure-cider-current-ns)))
+	       (result-params (cdr (assq :result-params params)))
+	       (print-level nil)
+	       (print-length nil)
+	       (body (org-trim
+		          (concat
+		           ;; Source block specified namespace :ns.
+		           (and (cdr (assq :ns params)) (format "(ns %s)\n" ns))
+		           ;; Variables binding.
+		           (if (null vars) (org-trim body)
+		             (format "(let [%s]\n%s)"
+			                 (mapconcat
+			                  (lambda (var)
+			                    (format "%S (quote %S)" (car var) (cdr var)))
+			                  vars
+			                  "\n      ")
+			                 body))))))
+      (if (or (member "code" result-params)
+	          (member "pp" result-params))
+	      (format "(print (str (do %s)))" body)
+        body))))
 #+end_src
 
 ** Python
