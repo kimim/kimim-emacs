@@ -867,6 +867,9 @@ English word list fetch from https://github.com/dwyl/english-words
     :bind ("C-\\" . company-try-hard))
 
   (use-package company
+    :bind (:map company-active-map
+                ("C-n" . (lambda () (interactive) (company-complete-common-or-cycle 1)))
+                ("C-p" . (lambda () (interactive) (company-complete-common-or-cycle -1))))
     :diminish company-mode
     :commands (global-company-mode)
     :config
