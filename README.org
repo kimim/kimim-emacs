@@ -2586,6 +2586,7 @@ from system PATH, so you should set these to system PATH.
   (bind-key "C-x  。" 'unbury-buffer)
   (bind-key "C-x  ‘" 'hippie-expand)
   (bind-key "C-x  ’" 'hippie-expand)
+  (bind-key "C-x M-s" 'eshell)
 #+end_src
 
 * Footnotes
