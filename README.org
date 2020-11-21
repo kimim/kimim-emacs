@@ -600,8 +600,8 @@ scroll slowly with touchpad.
                 ("\\.markdown\\'" . markdown-mode)
                 ("\\.svg\\'" . html-mode)
                 ("\\.pas\\'" . delphi-mode)
-                ("\\.txt\\'" . org-mode)
-                ("\\.org\\'" . org-mode)
+                ("\\.txt\\'" . poly-org-mode)
+                ("\\.org\\'" . poly-org-mode)
                 )
               auto-mode-alist))
 
@@ -680,6 +680,48 @@ scroll slowly with touchpad.
       (if (= 3 (line-number-at-pos))
           (goto-char (point-max)))))
 
+  (use-package ibuffer
+    :bind (("C-x C-b" . ibuffer-other-window)
+           :map ibuffer-mode-map
+           ("<right>" . ibuffer-visit-buffer))
+    :config
+    (defun ibuffer-visit-buffer-other-window (&optional noselect)
+      "Visit the buffer on this line in another window."
+      (interactive)
+      (let ((buf (ibuffer-current-buffer t)))
+        (bury-buffer (current-buffer))
+        (if noselect
+            (let ((curwin (selected-window)))
+              (pop-to-buffer buf)
+              (select-window curwin))
+          (switch-to-buffer-other-window buf)
+          (kill-buffer-and-its-windows "*Ibuffer*")
+          )))
+
+    ;; Use human readable Size column instead of original one
+    (define-ibuffer-column size-h
+      (:name "Size" :inline t)
+      (cond
+       ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+       ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+       ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+       (t (format "%8d" (buffer-size)))))
+
+    ;; Modify the default ibuffer-formats
+    (setq ibuffer-formats
+          '((mark modified read-only " "
+                  (name 32 32 :left :elide)
+                  " "
+                  (size-h 9 -1 :right)
+                  " "
+                  (mode 14 14 :left :elide)
+                  " "
+                  filename-and-process))))
+#+end_src
+
+** ibuffer
+
+#+begin_src emacs-lisp
   (use-package ibuffer
     :bind (("C-x C-b" . ibuffer-other-window)
            :map ibuffer-mode-map
@@ -1021,7 +1063,7 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
 
 (use-package clojurescript-mode
   :mode ("\\.cljs\\'" . clojurescript-mode)
-  :ensure nil
+  :ensure clojure-mode
   :config
   (use-package cider)
   (use-package company)
@@ -1330,6 +1372,8 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
        (python . t)))
     (setq org-src-window-setup 'current-window)
     (setq org-src-fontify-natively t)
+    (setq org-src-preserve-indentation t)
+    (setq org-edit-src-content-indentation 0)
     (setq org-confirm-babel-evaluate nil)
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
 #+end_src
@@ -1338,8 +1382,8 @@ Polymode [fn:15] is a framework for multiple major modes (MMM) inside a single
 Emacs buffer. It is comfortable to enable it during literating program.
 
 #+begin_src emacs-lisp
-  (use-package poly-org
-    :ensure t)
+(use-package poly-org
+  :ensure t)
 #+end_src
 
 ** org exporting
