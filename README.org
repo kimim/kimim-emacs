@@ -632,55 +632,56 @@ scroll slowly with touchpad.
 ** dired
 
 #+begin_src emacs-lisp
-  (use-package dired
-    :ensure nil
-    :bind
-    (("C-x C-j" . dired-jump)
-     :map dired-mode-map
-     ("<left>" . dired-up-directory)
-     ("<right>" . dired-find-file)
-     ("o" . kimim/open-in-external-app)
-     )
-    :config
-    (require 'dired-x)
-    (use-package dired-collapse)
-    (add-hook 'dired-mode-hook
-              (lambda ()
-                (turn-on-gnus-dired-mode)
-                ;; Set dired-x buffer-local variables here.  For example:
-                (dired-omit-mode 1)
-                (dired-collapse-mode 1)
-                (setq dired-omit-localp t)
-                (setq dired-omit-files
-                      (concat "|NTUSER\\|ntuser\\"
-                              "|Cookies\\|AppData\\"
-                              "|Contacts\\|Links\\"
-                              "|Intel\\|NetHood\\"
-                              "|PrintHood\\|Recent\\"
-                              "|Start\\|SendTo\\"
-                              "|^\\.DS_Store\\"
-                              "|qms-bmh"))))
-    (setq dired-listing-switches "-Avhlgo --group-directories-first")
-    (if (eq system-type 'darwin)
-        (setq dired-listing-switches "-Avhlgo"))
+(use-package dired
+  :ensure nil
+  :bind
+  (("C-x C-j" . dired-jump)
+   :map dired-mode-map
+   ("<left>" . dired-up-directory)
+   ("<right>" . dired-find-file)
+   ("o" . kimim/open-in-external-app)
+   ("M-n" . dired-narrow))
+  :config
+  (require 'dired-x)
+  (use-package dired-narrow)
+  (use-package dired-collapse)
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (turn-on-gnus-dired-mode)
+              ;; Set dired-x buffer-local variables here.  For example:
+              (dired-omit-mode 1)
+              (dired-collapse-mode 1)
+              (setq dired-omit-localp t)
+              (setq dired-omit-files
+                    (concat "|NTUSER\\|ntuser\\"
+                            "|Cookies\\|AppData\\"
+                            "|Contacts\\|Links\\"
+                            "|Intel\\|NetHood\\"
+                            "|PrintHood\\|Recent\\"
+                            "|Start\\|SendTo\\"
+                            "|^\\.DS_Store\\"
+                            "|qms-bmh"))))
+  (setq dired-listing-switches "-Avhlgo --group-directories-first")
+  (if (eq system-type 'darwin)
+      (setq dired-listing-switches "-Avhlgo"))
 
-    (setq dired-recursive-copies t)
-    (setq dired-recursive-deletes t)
+  (setq dired-recursive-copies t)
+  (setq dired-recursive-deletes t)
 
-    (defadvice dired-next-line (after dired-next-line-advice (arg) activate)
-      "Move down lines then position at filename, advice"
-      (interactive "p")
-      (if (eobp)
-          (progn
-            (goto-char (point-min))
-            (forward-line 2)
-            (dired-move-to-filename))))
+  (defadvice dired-next-line (after dired-next-line-advice (arg) activate)
+    "Move down lines then position at filename, advice"
+    (interactive "p")
+    (if (eobp)
+        (progn
+          (goto-char (point-min))
+          (forward-line 2)
+          (dired-move-to-filename))))
 
-    (defadvice dired-previous-line (before dired-previous-line-advice (arg) activate)
-      "Move up lines then position at filename, advice"
-      (interactive "p")
-      (if (= 3 (line-number-at-pos))
-          (goto-char (point-max)))))
+  (defadvice dired-previous-line (before dired-previous-line-advice (arg) activate)
+    "Move up lines then position at filename, advice"
+    (interactive "p")
+    (if (= 3 (line-number-at-pos))
+        (goto-char (point-max)))))
 #+end_src
 
 ** dired-collapse
@@ -689,47 +690,52 @@ scroll slowly with touchpad.
 (use-package dired-collapse)
 #+end_src
 
+** dired-narrow
+
+#+begin_src emacs-lisp
+(use-package dired-narrow)
+#+end_src
+
 ** ibuffer
 
-fer-visit-buffer))
-    :config#+begin_src emacs-lisp
-  (use-package ibuffer
-    :bind (("C-x C-b" . ibuffer-other-window)
-           :map ibuffer-mode-map
-           ("<right>" . ibuffer-visit-buffer))
-    :config
-    (defun ibuffer-visit-buffer-other-window (&optional noselect)
-      "Visit the buffer on this line in another window."
-      (interactive)
-      (let ((buf (ibuffer-current-buffer t)))
-        (bury-buffer (current-buffer))
-        (if noselect
-            (let ((curwin (selected-window)))
-              (pop-to-buffer buf)
-              (select-window curwin))
-          (switch-to-buffer-other-window buf)
-          (kill-buffer-and-its-windows "*Ibuffer*")
-          )))
+#+begin_src emacs-lisp
+(use-package ibuffer
+  :bind (("C-x C-b" . ibuffer-other-window)
+         :map ibuffer-mode-map
+         ("<right>" . ibuffer-visit-buffer))
+  :config
+  (defun ibuffer-visit-buffer-other-window (&optional noselect)
+    "Visit the buffer on this line in another window."
+    (interactive)
+    (let ((buf (ibuffer-current-buffer t)))
+      (bury-buffer (current-buffer))
+      (if noselect
+          (let ((curwin (selected-window)))
+            (pop-to-buffer buf)
+            (select-window curwin))
+        (switch-to-buffer-other-window buf)
+        (kill-buffer-and-its-windows "*Ibuffer*")
+        )))
 
-    ;; Use human readable Size column instead of original one
-    (define-ibuffer-column size-h
-      (:name "Size" :inline t)
-      (cond
-       ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-       ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
-       ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
-       (t (format "%8d" (buffer-size)))))
+  ;; Use human readable Size column instead of original one
+  (define-ibuffer-column size-h
+    (:name "Size" :inline t)
+    (cond
+     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+     (t (format "%8d" (buffer-size)))))
 
-    ;; Modify the default ibuffer-formats
-    (setq ibuffer-formats
-          '((mark modified read-only " "
-                  (name 32 32 :left :elide)
-                  " "
-                  (size-h 9 -1 :right)
-                  " "
-                  (mode 14 14 :left :elide)
-                  " "
-                  filename-and-process))))
+  ;; Modify the default ibuffer-formats
+  (setq ibuffer-formats
+        '((mark modified read-only " "
+                (name 32 32 :left :elide)
+                " "
+                (size-h 9 -1 :right)
+                " "
+                (mode 14 14 :left :elide)
+                " "
+                filename-and-process))))
 #+end_src
 
 * Navigation
