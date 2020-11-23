@@ -1227,6 +1227,17 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     :mode ("\\.ahk\\'" . ahk-mode))
 #+end_src
 
+** yaml mode
+
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :bind (:map
+         yaml-mode-map
+         ("\C-m" . newline-and-indent))
+  :config
+  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+#+end_src
+
 * Calendar
 
 #+begin_src emacs-lisp
