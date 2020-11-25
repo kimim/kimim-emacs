@@ -156,17 +156,17 @@ calculated with original default font height and width: =frame-char-height= and
         (set-fontset-font
          "fontset-default"
          'unicode-bmp (font-spec :family "YaheiInconsolata"))
-        (set-frame-font "Inconsolata-14"))))
+        (set-frame-font "YaheiInconsolata-14"))))
      ((eq window-system 'ns)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "Inconsolata-18"))
+      (set-frame-font "YaheiInconsolata-18"))
      ((eq window-system 'x)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "Inconsolata-12")))
+      (set-frame-font "YaheiInconsolata-12")))
     (when window-system
       ;; top, left ... must be integer
       (add-to-list 'default-frame-alist
@@ -2064,6 +2064,7 @@ name handling function can be found from emacs manual[fn:16].
     (defun jekyll-post ()
       "Post current buffer to kimi.im"
       (interactive)
+      (load-theme 'kimim-light)
       ;; get categories
       ;; get buffer file name
       (let ((category (jekyll-get-category))
@@ -2080,7 +2081,7 @@ name handling function can be found from emacs manual[fn:16].
               (switch-to-buffer (find-file-noselect newfilename)))
           ;; execute org-publish-current-file
           (org-publish-current-file)
-          (magit-status-setup-buffer))))
+          (magit-status))))
 
     (defun jekyll-tag ()
       "add new tags"
