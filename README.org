@@ -640,7 +640,8 @@ scroll slowly with touchpad.
    ("<left>" . dired-up-directory)
    ("<right>" . dired-find-file)
    ("o" . kimim/open-in-external-app)
-   ("M-n" . dired-narrow))
+   ("M-n" . dired-narrow)
+   ("M-c" . compose-attach-marked-files))
   :config
   (require 'dired-x)
   (use-package dired-narrow)
@@ -667,6 +668,19 @@ scroll slowly with touchpad.
 
   (setq dired-recursive-copies t)
   (setq dired-recursive-deletes t)
+
+  (defun compose-attach-marked-files ()
+    "Compose mail and attach all the marked files from a dired buffer."
+    (interactive)
+    (let ((files (dired-get-marked-files))
+          (file-names (dired-copy-filename-as-kill)))
+      (compose-mail nil (concat "Attachments: " file-names) nil t)
+      (dolist (file files)
+        (if (file-regular-p file)
+            (mml-attach-file file
+                             (mm-default-file-encoding file)
+                             nil "attachment")
+          (message "skipping non-regular file %s" file)))))
 
   (defadvice dired-next-line (after dired-next-line-advice (arg) activate)
     "Move down lines then position at filename, advice"
@@ -1383,11 +1397,12 @@ When exporting, do not export with author and date.
     :bind ("C-c C-'" . org-insert-structure-template)
     :config
     (setq org-export-allow-BIND t)
-    (setq org-export-creator-string "")
+    ;;(setq org-export-creator-string "")
     (setq org-export-html-validation-link nil)
     (setq org-export-with-sub-superscripts '{})
     (setq org-export-with-author nil)
-    (setq org-export-with-date nil))
+    ;;(setq org-export-with-date nil)
+    )
 #+end_src
 
 *** org to pdf
