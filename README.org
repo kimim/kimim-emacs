@@ -156,17 +156,17 @@ calculated with original default font height and width: =frame-char-height= and
         (set-fontset-font
          "fontset-default"
          'unicode-bmp (font-spec :family "YaheiInconsolata"))
-        (set-frame-font "Inconsolata-14"))))
+        (set-frame-font "YaheiInconsolata-14"))))
      ((eq window-system 'ns)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "Inconsolata-18"))
+      (set-frame-font "YaheiInconsolata-18"))
      ((eq window-system 'x)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "Inconsolata-12")))
+      (set-frame-font "YaheiInconsolata-12")))
     (when window-system
       ;; top, left ... must be integer
       (add-to-list 'default-frame-alist
@@ -640,7 +640,8 @@ scroll slowly with touchpad.
    ("<left>" . dired-up-directory)
    ("<right>" . dired-find-file)
    ("o" . kimim/open-in-external-app)
-   ("M-n" . dired-narrow))
+   ("M-n" . dired-narrow)
+   ("M-c" . compose-attach-marked-files))
   :config
   (require 'dired-x)
   (use-package dired-narrow)
@@ -667,6 +668,19 @@ scroll slowly with touchpad.
 
   (setq dired-recursive-copies t)
   (setq dired-recursive-deletes t)
+
+  (defun compose-attach-marked-files ()
+    "Compose mail and attach all the marked files from a dired buffer."
+    (interactive)
+    (let ((files (dired-get-marked-files))
+          (file-names (dired-copy-filename-as-kill)))
+      (compose-mail nil (concat "Attachments: " file-names) nil t)
+      (dolist (file files)
+        (if (file-regular-p file)
+            (mml-attach-file file
+                             (mm-default-file-encoding file)
+                             nil "attachment")
+          (message "skipping non-regular file %s" file)))))
 
   (defadvice dired-next-line (after dired-next-line-advice (arg) activate)
     "Move down lines then position at filename, advice"
@@ -1384,11 +1398,12 @@ When exporting, do not export with author and date.
     :bind ("C-c C-'" . org-insert-structure-template)
     :config
     (setq org-export-allow-BIND t)
-    (setq org-export-creator-string "")
+    ;;(setq org-export-creator-string "")
     (setq org-export-html-validation-link nil)
     (setq org-export-with-sub-superscripts '{})
     (setq org-export-with-author nil)
-    (setq org-export-with-date nil))
+    ;;(setq org-export-with-date nil)
+    )
 #+end_src
 
 *** org to pdf
@@ -2065,6 +2080,7 @@ name handling function can be found from emacs manual[fn:16].
     (defun jekyll-post ()
       "Post current buffer to kimi.im"
       (interactive)
+      (load-theme 'kimim-light)
       ;; get categories
       ;; get buffer file name
       (let ((category (jekyll-get-category))
@@ -2081,7 +2097,7 @@ name handling function can be found from emacs manual[fn:16].
               (switch-to-buffer (find-file-noselect newfilename)))
           ;; execute org-publish-current-file
           (org-publish-current-file)
-          (magit-status-setup-buffer))))
+          (magit-status))))
 
     (defun jekyll-tag ()
       "add new tags"
