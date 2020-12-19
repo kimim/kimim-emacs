@@ -867,7 +867,7 @@ out of the box.
     (yas-global-mode 1)
     (use-package company)
     (eval-after-load 'company
-      '(add-to-list  'company-backends 'company-yasnippet))
+      '(add-to-list  'company-backends 'company-yasnippet t))
     (use-package warnings)
     (setq warning-suppress-types '((yasnippet backquote-change))))
 #+end_src
@@ -1029,13 +1029,15 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
   :commands (enable-paredit-mode))
 
 (use-package clojure-mode
-  :mode ("\\.clj\\'" . clojure-mode)
+  :mode (("\\.clj\\'" . clojure-mode)
+         ("\\.cljs\\'" . clojurescript-mode))
   :config
   (use-package cider)
   (use-package company)
   (use-package flycheck)
   (use-package flycheck-clj-kondo)
   (use-package clojure-snippets)
+  (use-package clojure-mode-extra-font-locking)
   (eval-after-load 'company
     '(progn
        (delete 'company-capf company-backends)
@@ -1043,34 +1045,11 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'cider-mode)
-  (use-package clojure-mode-extra-font-locking)
+  (add-hook 'clojurescript-mode-hook #'cider-mode)
   (add-to-list 'auto-mode-alist '("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode))
   (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
   (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
   (add-to-list 'auto-mode-alist '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
-  (add-hook 'clojure-mode-hook
-            (lambda ()
-              (enable-paredit-mode))))
-
-(use-package clojurescript-mode
-  :mode ("\\.cljs\\'" . clojurescript-mode)
-  :ensure clojure-mode
-  :config
-  (use-package cider)
-  (use-package company)
-  (use-package flycheck)
-  (use-package flycheck-clj-kondo)
-  (use-package clojure-snippets)
-  (eval-after-load 'company
-    '(progn
-       (delete 'company-capf company-backends)
-       (add-to-list 'company-backends 'company-capf)))
-  (add-hook 'cider-repl-mode-hook #'company-mode)
-  (add-hook 'cider-mode-hook #'company-mode)
-  (add-hook 'clojurescript-mode-hook #'cider-mode)
-  (use-package clojure-mode-extra-font-locking)
-  (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
-  (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
   (add-hook 'clojure-mode-hook
             (lambda ()
               (enable-paredit-mode))))
