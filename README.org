@@ -483,9 +483,9 @@ scroll slowly with touchpad.
 (use-package which-key
   :defer 3
   :diminish which-key-mode
+  :custom (;; use minibuffer as the popup type, otherwise conflict in ecb mode
+           (which-key-popup-type 'minibuffer))
   :config
-  ;; use minibuffer as the popup type, otherwise conflict in ecb mode
-  (setq which-key-popup-type 'minibuffer)
   (which-key-mode 1))
 
 ;; smex will list the recent function on top of the cmd list
@@ -603,8 +603,8 @@ scroll slowly with touchpad.
                 ("\\.markdown\\'" . markdown-mode)
                 ("\\.svg\\'" . html-mode)
                 ("\\.pas\\'" . delphi-mode)
-                ("\\.txt\\'" . poly-org-mode)
-                ("\\.org\\'" . poly-org-mode)
+                ("\\.txt\\'" . org-mode)
+                ("\\.org\\'" . org-mode)
                 )
               auto-mode-alist))
 
@@ -1376,11 +1376,12 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package org-download
   :commands (org-download-enable)
+  :custom ((org-download-heading nil))
   :config
   (setq org-download-timestamp "")
   (setq-default org-download-image-dir "./images")
   (setq org-download-method 'directory)
-  (setq org-download-heading nil)
+
   (setq org-startup-with-inline-images nil)
 
   (defun kimim/org-download-annotate (link)
@@ -1419,7 +1420,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
   (use-package org
     :config
-    (use-package poly-org)
+    ;;(use-package poly-org)
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((clojure . t)
@@ -1446,16 +1447,15 @@ Emacs buffer. It is comfortable to enable it during literating program.
 When exporting, do not export with author and date.
 
 #+begin_src emacs-lisp
-  (use-package org
-    :bind ("C-c C-'" . org-insert-structure-template)
-    :config
-    (setq org-export-allow-BIND t)
-    ;;(setq org-export-creator-string "")
-    (setq org-export-html-validation-link nil)
-    (setq org-export-with-sub-superscripts '{})
-    (setq org-export-with-author nil)
-    ;;(setq org-export-with-date nil)
-    )
+(use-package org
+  :bind ("C-c C-'" . org-insert-structure-template)
+  :custom ((org-export-allow-BIND t)
+           (org-export-html-validation-link nil)
+           ( org-export-with-sub-superscripts '{})
+           (org-export-with-author nil)
+           (org-export-with-date nil)
+           ;;(setq org-export-creator-string "")
+           ))
 #+end_src
 
 *** org to pdf
@@ -1904,6 +1904,46 @@ This function is called by `org-babel-execute-src-block'."
          ("<S-right>" . (lambda ()
                           (interactive)
                           (org-agenda-todo 'right))))
+  :custom ((org-stuck-projects
+            '("+LEVEL>=2-category-habit-info"
+              ("TODO" "SCHED"  "DONE"
+               "OPEN" "WAIT" "CLOSE"
+               "ABORT" "SOMEDAY" "REPEAT")
+              nil nil))
+           (org-agenda-span 2)
+           (org-agenda-skip-scheduled-if-done t)
+           (org-agenda-skip-deadline-if-done t)
+           (org-agenda-custom-commands
+            '(("t" todo "TODO|OPEN"
+               ((org-agenda-sorting-strategy '(priority-down))))
+              ("w" todo "SCHED|WAIT"
+               ((org-agenda-sorting-strategy '(priority-down))))
+              ;; all task should be done or doing
+              ("d" todo "TODO|SCHED|OPEN|WAIT"
+               ((org-agenda-sorting-strategy '(priority-down))))
+              ("b" tags "boss/-ABORT-CLOSE-DONE"
+               ((org-agenda-sorting-strategy  '(priority-down))))
+              ("f" todo "SOMEDAY"
+               ((org-agenda-sorting-strategy '(priority-down))))
+              ("h" tags "habit/-ABORT-CLOSE"
+               ((org-agenda-sorting-strategy '(todo-state-down))))
+              ("c" tags "clock"
+               ((org-agenda-sorting-strategy '(priority-down))))))
+           (org-capture-templates
+            '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
+               "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+              ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
+               "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+              ("s" "SCHED Task"    entry (file+headline "capture.org" "Inbox")
+               "* SCHED %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+              ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
+               "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+              ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
+               "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+              ("h" "Habit"   entry (file+headline "global.org"   "Habit")
+               "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
+           (org-refile-files
+            (file-expand-wildcards (concat kimim/path-org "*.org"))))
   :config
   (require 'org-agenda)
   (add-hook 'kill-emacs-hook
@@ -1939,12 +1979,7 @@ This function is called by `org-babel-execute-src-block'."
               ;;(drag-stuff-mode -1)
               ))
 
-  (setq org-stuck-projects
-        '("+LEVEL>=2-category-habit-info"
-          ("TODO" "SCHED"  "DONE"
-           "OPEN" "WAIT" "CLOSE"
-           "ABORT" "SOMEDAY" "REPEAT")
-          nil nil))
+
 
   (setq org-refile-targets
         '(;; refile to maxlevel 2 of current file
@@ -1973,48 +2008,15 @@ This function is called by `org-babel-execute-src-block'."
   (setq org-todo-repeat-to-state "REPEAT")
 
   ;; settings for org-agenda-view
-  (setq org-agenda-span 2)
-  (setq org-agenda-skip-scheduled-if-done t)
-  (setq org-agenda-skip-deadline-if-done t)
+
   (setq org-deadline-warning-days 2)
   (add-hook 'org-agenda-after-show-hook 'org-narrow-to-subtree)
-  (setq org-agenda-custom-commands
-        '(("t" todo "TODO|OPEN"
-           ((org-agenda-sorting-strategy '(priority-down))))
-          ("w" todo "SCHED|WAIT"
-           ((org-agenda-sorting-strategy '(priority-down))))
-          ;; all task should be done or doing
-          ("d" todo "TODO|SCHED|OPEN|WAIT"
-           ((org-agenda-sorting-strategy '(priority-down))))
-          ("b" tags "boss/-ABORT-CLOSE-DONE"
-           ((org-agenda-sorting-strategy  '(priority-down))))
-          ("f" todo "SOMEDAY"
-           ((org-agenda-sorting-strategy '(priority-down))))
-          ("h" tags "habit/-ABORT-CLOSE"
-           ((org-agenda-sorting-strategy '(todo-state-down))))
-          ("c" tags "clock"
-           ((org-agenda-sorting-strategy '(priority-down))))))
 
   (setq org-directory kimim/path-org)
 
-  (setq org-capture-templates
-        '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
-           "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-          ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
-           "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-          ("s" "SCHED Task"    entry (file+headline "capture.org" "Inbox")
-           "* SCHED %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-          ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
-           "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-          ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
-           "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-          ("h" "Habit"   entry (file+headline "global.org"   "Habit")
-           "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
 
   (use-package ivy) ; use ivy to complete refile files
   (setq org-agenda-files
-        (file-expand-wildcards (concat kimim/path-org "*.org")))
-  (setq org-refile-files
         (file-expand-wildcards (concat kimim/path-org "*.org")))
   (defun org-agenda-kill-files ()
     (interactive)
@@ -2149,7 +2151,7 @@ name handling function can be found from emacs manual[fn:16].
               (switch-to-buffer (find-file-noselect newfilename)))
           ;; execute org-publish-current-file
           (org-publish-current-file)
-          (magit-status))))
+          (magit-status-setup-buffer))))
 
     (defun jekyll-tag ()
       "add new tags"
@@ -2219,71 +2221,71 @@ name handling function can be found from emacs manual[fn:16].
 ** Deft
 
 #+begin_src emacs-lisp
-  (use-package deft
-    :bind
-    (("C-x d" . deft-find-file)
-     ("C-x C-d" . deft))
-    :config
-    (use-package ivy)
-    (setq deft-extensions '("txt" "org" "md"))
-    (setq deft-directory kimim/path-notes)
-    (setq deft-recursive t)
-    ;; disable auto save
-    (setq deft-auto-save-interval 0)
-    (setq deft-file-naming-rules '((noslash . "_")))
-    (setq deft-text-mode 'org-mode)
-    (setq deft-use-filter-string-for-filename t)
-    (setq deft-org-mode-title-prefix t)
-    (setq deft-use-filename-as-title nil)
-    (setq deft-strip-summary-regexp
-          (concat "\\("
-                  "[\n\t]" ;; blank
-                  "\\|^#\\+[[:upper:]_]+:.*$" ;; org-mode metadata
-                  "\\|^#\\+[[:alnum:]_]+:.*$" ;; org-mode metadata
-                  "\\)"))
+(use-package deft
+  :bind
+  (("C-x d" . deft-find-file)
+   ("C-x C-d" . deft))
+  :custom ((deft-text-mode 'org-mode))
+  :config
+  (use-package ivy)
+  (setq deft-extensions '("txt" "org" "md"))
+  (setq deft-directory kimim/path-notes)
+  (setq deft-recursive t)
+  ;; disable auto save
+  (setq deft-auto-save-interval 0)
+  (setq deft-file-naming-rules '((noslash . "_")))
+  (setq deft-use-filter-string-for-filename t)
+  (setq deft-org-mode-title-prefix t)
+  (setq deft-use-filename-as-title nil)
+  (setq deft-strip-summary-regexp
+        (concat "\\("
+                "[\n\t]" ;; blank
+                "\\|^#\\+[[:upper:]_]+:.*$" ;; org-mode metadata
+                "\\|^#\\+[[:alnum:]_]+:.*$" ;; org-mode metadata
+                "\\)"))
 
-    ;;advise deft-open-file to replace spaces in file names with _
-    (require 'kimim)
-    (defun kimim/deft-open-file-advice (orig-fun &rest args)
-      (let (name title)
-        (setq name (pop args))
-        (if (file-exists-p name)
-            (progn
-              (push name args)
-              (apply orig-fun args))
+  ;;advise deft-open-file to replace spaces in file names with _
+  (require 'kimim)
+  (defun kimim/deft-open-file-advice (orig-fun &rest args)
+    (let (name title)
+      (setq name (pop args))
+      (if (file-exists-p name)
           (progn
-            (setq title (file-name-sans-extension
-                         (file-name-nondirectory name)))
-            (setq name (concat
-                        (file-name-directory name)
-                        (kimim/genfile-timestamp)
-                        (downcase
-                         (replace-regexp-in-string
-                          " " "_" (file-name-nondirectory name)))
-                        (if (not (file-name-extension name))
-                            ".txt")))
             (push name args)
-            (apply orig-fun args)
-            (insert (concat "#+TITLE: " title "\n\n"))))))
+            (apply orig-fun args))
+        (progn
+          (setq title (file-name-sans-extension
+                       (file-name-nondirectory name)))
+          (setq name (concat
+                      (file-name-directory name)
+                      (kimim/genfile-timestamp)
+                      (downcase
+                       (replace-regexp-in-string
+                        " " "_" (file-name-nondirectory name)))
+                      (if (not (file-name-extension name))
+                          ".txt")))
+          (push name args)
+          (apply orig-fun args)
+          (insert (concat "#+TITLE: " title "\n\n"))))))
 
-    (advice-add 'deft-open-file
-                :around #'kimim/deft-open-file-advice)
+  (advice-add 'deft-open-file
+              :around #'kimim/deft-open-file-advice)
 
-    (defun kimim/deft-new-file-named-advice (orig-fun &rest args)
-      (let (name title)
-        (setq name (pop args))
-        (setq title name)
-        (setq name (concat
-                    (kimim/genfile-timestamp)
-                    (downcase
-                     (replace-regexp-in-string
-                      " " "_" name))))
-        (push name args)
-        (apply orig-fun args)
-        (insert (concat "#+TITLE: " title "\n\n"))))
+  (defun kimim/deft-new-file-named-advice (orig-fun &rest args)
+    (let (name title)
+      (setq name (pop args))
+      (setq title name)
+      (setq name (concat
+                  (kimim/genfile-timestamp)
+                  (downcase
+                   (replace-regexp-in-string
+                    " " "_" name))))
+      (push name args)
+      (apply orig-fun args)
+      (insert (concat "#+TITLE: " title "\n\n"))))
 
-    (advice-add 'deft-new-file-named
-                :around #'kimim/deft-new-file-named-advice))
+  (advice-add 'deft-new-file-named
+              :around #'kimim/deft-new-file-named-advice))
 #+end_src
 
 ** Org-roam
@@ -2446,13 +2448,13 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   ;; erc settings
   (use-package erc
     :commands (erc)
+    :custom ((erc-autojoin-channels-alist
+              '(("irc.freenode.net" "#emacs"))))
     :config
     (require 'erc-join)
     (erc-autojoin-mode 1)
     (erc-autojoin-enable)
     (setq erc-default-server "irc.freenode.net")
-    (setq erc-autojoin-channels-alist
-          '(("irc.freenode.net" "#emacs")))
     (setq erc-hide-list '("JOIN" "PART" "QUIT")))
 #+end_src
 
