@@ -43,12 +43,19 @@ to install additional application if it is missing.
 #+begin_src shell
 /bin/bash -c \
 "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+brew cask install emacs-mac
 #+end_src
 
 ** Linux
 
 Most of the external tools I used in this Emacs configuration should be easily
 installed or already available in main Linux distributions.
+
+For example, in Ubuntu, you can install this way:
+
+#+begin_src shell
+sudo snap install emacs --classic
+#+end_src
 
 * Preparation
 ** Install fonts
@@ -145,45 +152,33 @@ calculated with original default font height and width: =frame-char-height= and
 =frame-char-width=.
 
 #+begin_src emacs-lisp
-  ;; set default font and default frame dimension
-  (defun kimim/frame-and-font ()
+;; set default font and default frame dimension
+(defun kimim/frame-and-font ()
+  (when window-system
     (cond
-     ((eq window-system 'w32)
-      (cond
-       ((< (display-pixel-width) 1400)
-        (set-fontset-font
-         "fontset-default"
-         'unicode-bmp (font-spec :family "YaheiInconsolata"))
-        (set-frame-font "Inconsolata-14"))
-       ((> (display-pixel-width) 1400)
-        (set-fontset-font
-         "fontset-default"
-         'unicode-bmp (font-spec :family "YaheiInconsolata"))
-        (set-frame-font "YaheiInconsolata-14"))))
-     ((eq window-system 'ns)
+     ((< (display-pixel-width) 1400)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "YaheiInconsolata-18"))
-     ((eq window-system 'x)
+      (set-frame-font "YaheiInconsolata-14"))
+     ((> (display-pixel-width) 1400)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
       (set-frame-font "YaheiInconsolata-12")))
-    (when window-system
-      ;; top, left ... must be integer
-      (add-to-list 'default-frame-alist
-                   (cons 'top  (/ (x-display-pixel-height) 10)))
-      (add-to-list 'default-frame-alist
-                   (cons 'left (/ (x-display-pixel-width) 10)))
-      (add-to-list 'default-frame-alist
-                   (cons 'height (/ (* 4 (x-display-pixel-height))
-                                    (* 5 (frame-char-height)))))
-      (add-to-list 'default-frame-alist
-                   (cons 'width (/ (* 4 (x-display-pixel-width))
-                                   (* 5 (frame-char-width)))))))
+    ;; top, left ... must be integer
+    (add-to-list 'default-frame-alist
+                 (cons 'top  (/ (x-display-pixel-height) 10)))
+    (add-to-list 'default-frame-alist
+                 (cons 'left (/ (x-display-pixel-width) 10)))
+    (add-to-list 'default-frame-alist
+                 (cons 'height (/ (* 4 (x-display-pixel-height))
+                                  (* 5 (frame-char-height)))))
+    (add-to-list 'default-frame-alist
+                 (cons 'width (/ (* 4 (x-display-pixel-width))
+                                 (* 5 (frame-char-width)))))))
 
-  (kimim/frame-and-font)
+(kimim/frame-and-font)
 #+end_src
 
 * Environment
