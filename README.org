@@ -926,6 +926,13 @@ Sort candidates using completion history.
 
 * Programming General
 
+** Project
+
+#+begin_src emacs-lisp
+(use-package project
+  :bind (("C-x f" . project-find-file)))
+#+end_src
+
 ** Compiling
 
 #+begin_src emacs-lisp
