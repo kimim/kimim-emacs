@@ -1852,10 +1852,14 @@ This function is called by `org-babel-execute-src-block'."
            (full-body (org-babel-plantuml-make-body body params))
            (cmd (if (string= "" org-plantuml-jar-path)
                     (error "`org-plantuml-jar-path' is not set")
-                  (concat "java " java " -jar `cygpath -wp "
-                          (shell-quote-argument
-                           (expand-file-name org-plantuml-jar-path))
-                          " ` "
+                  (concat "java " java " -jar "
+                          (if (eq system-type 'cygwin)
+                              ;; fix cygwin path setting
+                              (concat "`cygpath -wp "
+                                      (shell-quote-argument
+                                       (expand-file-name org-plantuml-jar-path))
+                                      " ` ")
+                            org-plantuml-jar-path)
                           " -charset UTF-8 "
                           (if (string= (file-name-extension out-file) "png")
                               " -tpng" "")
