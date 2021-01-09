@@ -165,7 +165,7 @@ calculated with original default font height and width: =frame-char-height= and
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "YaheiInconsolata-12")))
+      (set-frame-font "YaheiInconsolata-18")))
     ;; top, left ... must be integer
     (add-to-list 'default-frame-alist
                  (cons 'top  (/ (x-display-pixel-height) 10)))
