@@ -1027,11 +1027,17 @@ this directory as secure because you are the owner.
 Clojure[fn:11] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
-(use-package paredit
-  :bind (("C-M-w" . paredit-copy-as-kill)
-         ("M-<right>" . paredit-forward)
-         ("M-<left>" . paredit-backward))
-  :commands (enable-paredit-mode))
+(use-package smartparens
+  :bind (("C-<right>" . sp-forward-slurp-sexp)
+         ("C-<left>" . sp-forward-barf-sexp)
+         ("M-<right>" . sp-backward-barf-sexp)
+         ("M-<left>" . sp-backward-slurp-sexp)
+         ("C-k" . sp-kill-hybrid-sexp)
+         ("M-k" . sp-kill-sexp)
+         ("M-<up>" . sp-splice-sexp-killing-backward)
+         ("M-<down>" . sp-splice-sexp-killing-forward)
+         ("<backspace>" . sp-backward-delete-char)
+         ("C-d" . sp-delete-char)))
 
 (use-package clojure-mode
   :mode (("\\.clj\\'" . clojure-mode)
@@ -1057,7 +1063,7 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
   (add-to-list 'auto-mode-alist '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
   (add-hook 'clojure-mode-hook
             (lambda ()
-              (enable-paredit-mode))))
+              (smartparens-mode))))
 #+end_src
 
 *** clj-kondo
@@ -1284,7 +1290,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     '(add-to-list 'company-backends 'company-elisp))
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
-              (enable-paredit-mode))))
+              (smartparens-mode))))
 #+end_src
 
 ** AutoHotKey
