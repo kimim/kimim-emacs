@@ -1037,7 +1037,9 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
          ("M-<up>" . sp-splice-sexp-killing-backward)
          ("M-<down>" . sp-splice-sexp-killing-forward)
          ("<backspace>" . sp-backward-delete-char)
-         ("C-d" . sp-delete-char)))
+         ("C-d" . sp-delete-char)
+         ("C-M-<backspace>" . sp-backward-copy-sexp)
+         ("C-M-w" . sp-copy-sexp)))
 
 (use-package clojure-mode
   :mode (("\\.clj\\'" . clojure-mode)
