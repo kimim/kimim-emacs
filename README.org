@@ -21,6 +21,10 @@ Cygwin project[fn:2] is required for this configuration in Windows, which is a
 large collection of GNU and Open Source tools provide functionality similar to a
 Linux distribution on Windows.
 
+You can find Cygwin setup here: https://cygwin.com/setup-x86_64.exe , please
+download and install it in your machine, for example, at ==C:\cygwin64=. Then
+you can use mintty.exe to work with bash.
+
 In order to make life easier, we will use =apt-cyg= [fn:3] to install =emacs=
 and other tools. Let's download =apt-cyg= and install =emacs= and =git=:
 
@@ -78,9 +82,9 @@ emacs configuration files and folders:
 - copy =.emacs= from =kimim-emacs= to =~=
 
 #+begin_src shell
-  cd ~ && mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup && \
-  git clone https://github.com/kimim/kimim-emacs && \
-  cp kimim-emacs/.emacs ~
+cd ~ && mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup && \
+git clone https://github.com/kimim/kimim-emacs && \
+cp kimim-emacs/.emacs ~
 #+end_src
 
 This emacs setting uses several path to keep different informations, you should
