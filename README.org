@@ -22,8 +22,8 @@ large collection of GNU and Open Source tools provide functionality similar to a
 Linux distribution on Windows.
 
 You can find Cygwin setup here: https://cygwin.com/setup-x86_64.exe , please
-download and install it in your machine, for example, at ==C:\cygwin64=. Then
-you can use mintty.exe to work with bash.
+download and install it in your machine, for example, at =C:\cygwin64=. Then you
+can use mintty.exe to work with bash.
 
 In order to make life easier, we will use =apt-cyg= [fn:3] to install =emacs=
 and other tools. Let's download =apt-cyg= and install =emacs= and =git=:
@@ -132,7 +132,8 @@ menu bar for every applications.
     (tool-bar-mode -1)
     (tooltip-mode -1)
     (scroll-bar-mode -1))
-   ((eq window-system 'ns)
+   ((or (eq window-system 'mac)
+        (eq window-system 'ns))
     (menu-bar-mode 1)
     (tool-bar-mode -1)
     (tooltip-mode -1)
