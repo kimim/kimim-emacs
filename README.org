@@ -948,12 +948,12 @@ Sort candidates using completion history.
 ** Tagging
 
 #+begin_src emacs-lisp
-  (use-package ggtags
-    :bind (("C-c f" . ggtags-find-file)
-           ("M-." . ggtags-find-tag-dwim))
-    :config
-    (setq ggtags-global-ignore-case t)
-    (setq ggtags-sort-by-nearness t))
+(use-package ggtags
+  :bind (("C-c f" . ggtags-find-file)
+         ("M-." . ggtags-find-tag-dwim))
+  :config
+  (setq ggtags-global-ignore-case t)
+  (setq ggtags-sort-by-nearness t))
 #+end_src
 
 ** Version Control
@@ -1020,31 +1020,31 @@ parentheis. We define some keys for it:
 ** C
 
 #+begin_src emacs-lisp
-  (use-package cc-mode
-    :ensure nil
-    :config
-    (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
-    (use-package ggtags)
-    (add-hook 'c-mode-hook 'ggtags-mode)
-    (add-hook 'c++-mode-hook 'ggtags-mode)
+(use-package cc-mode
+  :ensure nil
+  :config
+  (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
+  (use-package ggtags)
+  (add-hook 'c-mode-hook 'ggtags-mode)
+  (add-hook 'c++-mode-hook 'ggtags-mode)
 
-    (add-hook 'c-mode-common-hook
-              (lambda ()
-                ;;(c-set-style "gnu")
-                (c-toggle-auto-newline 0)
-                (c-toggle-auto-hungry-state 0)
-                (c-toggle-syntactic-indentation 1)
-                ;;(highlight-indentation-mode 1)
-                (which-function-mode 1)
-                (local-set-key "\C-co" 'ff-find-other-file)
-                (setq c-basic-offset 4))))
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              ;;(c-set-style "gnu")
+              (c-toggle-auto-newline 0)
+              (c-toggle-auto-hungry-state 0)
+              (c-toggle-syntactic-indentation 1)
+              ;;(highlight-indentation-mode 1)
+              (which-function-mode 1)
+              (local-set-key "\C-co" 'ff-find-other-file)
+              (setq c-basic-offset 4))))
 #+end_src
 
 ** C#
 
 #+begin_src emacs-lisp
-  (use-package csharp-mode
-    :mode ("\\.cs\\'" . csharp-mode))
+(use-package csharp-mode
+  :mode ("\\.cs\\'" . csharp-mode))
 #+end_src
 
 
@@ -1370,27 +1370,26 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 ** org general setting
 
 #+begin_src emacs-lisp
-  ;; path and system environment setting for orgmode
-  (use-package org
-    :bind
-    ("C-c a" . org-agenda)
-    ("C-c b" . org-iswitchb)
-    ("C-c c" . org-capture)
-    ("C-c l" . org-store-link)
-    ("C-c  ！" . org-time-stamp-inactive)
-    ("C-c  。" . org-time-stamp)
-    :config
-    ;; (org-roam-mode t)
-    (org-download-enable)
-    (setq org-support-shift-select t)
-    ;; no empty line after collapsed
-    (setq org-cycle-separator-lines 0)
-    (setq org-src-fontify-natively t)
-    (setq org-src-preserve-indentation t)
-    (if window-system
-        (setq org-startup-indented t)
-      (setq org-startup-indented nil))
-    (setq org-image-actual-width 600))
+(use-package org
+  :bind
+  ("C-c a" . org-agenda)
+  ("C-c b" . org-iswitchb)
+  ("C-c c" . org-capture)
+  ("C-c l" . org-store-link)
+  ("C-c  ！" . org-time-stamp-inactive)
+  ("C-c  。" . org-time-stamp)
+  :config
+  ;; (org-roam-mode t)
+  ;; (org-download-enable)
+  (setq org-support-shift-select t)
+  ;; no empty line after collapsed
+  (setq org-cycle-separator-lines 0)
+  (setq org-src-fontify-natively t)
+  (setq org-src-preserve-indentation t)
+  (if window-system
+      (setq org-startup-indented t)
+    (setq org-startup-indented nil))
+  (setq org-image-actual-width 600))
 #+end_src
 
 ** org for writing
