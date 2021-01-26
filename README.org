@@ -415,7 +415,7 @@ Display time and (line, column) numbers in mode line.
 (show-paren-mode 1)
 (setq blink-cursor-blinks 3)
 (blink-cursor-mode 1)
-(tooltip-mode nil)
+(tooltip-mode -1)
 #+end_src
 
 * Help
