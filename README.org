@@ -532,6 +532,23 @@ scroll slowly with touchpad.
 #+end_src
 
 * Editing
+** Input Method
+#+begin_src emacs-lisp
+(use-package rime
+  :bind ("C-?" . toggle-input-method)
+  :custom
+  (rime-disable-predicates
+   '(rime-predicate-after-alphabet-char-p))
+  (define-key rime-active-mode-map (kbd "M-j") 'rime-inline-ascii)
+  (default-input-method "rime")
+  (rime-show-candidate 'posframe)
+  (rime-posframe-properties
+   (list :font "YaheiInconsolata-16"
+         :internal-border-width 14))
+  :config
+  (define-key rime-active-mode-map (kbd "M-j") 'rime-inline-ascii))
+#+end_src
+
 ** General
 
 #+begin_src emacs-lisp
@@ -855,7 +872,7 @@ out of the box.
   (use-package autopair
     :diminish autopair-mode
     :config
-    (autopair-global-mode 1))
+    (autopair-global-mode -1))
 #+end_src
 
 ** yasnippet
