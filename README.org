@@ -544,18 +544,18 @@ scroll slowly with touchpad.
 ** Input Method
 #+begin_src emacs-lisp
 (use-package rime
-  :bind ("C-?" . toggle-input-method)
+  :bind ("C-;" . toggle-input-method)
   :custom
+  (default-input-method "rime")
   (rime-disable-predicates
    '(rime-predicate-after-alphabet-char-p))
-  (define-key rime-active-mode-map (kbd "M-j") 'rime-inline-ascii)
-  (default-input-method "rime")
   (rime-show-candidate 'posframe)
   (rime-posframe-properties
    (list :font "YaheiInconsolata-16"
          :internal-border-width 14))
-  :config
-  (define-key rime-active-mode-map (kbd "M-j") 'rime-inline-ascii))
+:config
+(when (eq (window-system) 'mac)
+  (setq rime-librime-root "~/.emacs.d/librime/dist")))
 #+end_src
 
 ** General
