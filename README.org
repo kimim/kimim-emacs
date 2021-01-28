@@ -61,6 +61,12 @@ For example, in Ubuntu, you can install this way:
 sudo snap install emacs --classic
 #+end_src
 
+It is also very quick to add emacs in ArchLinux/Manjaro:
+
+#+begin_src shell
+pacman -S emacs
+#+end_src
+
 * Preparation
 ** Install fonts
 
@@ -70,6 +76,9 @@ two fonts from:
 
 - https://fonts.google.com/specimen/Inconsolata
 - https://github.com/loseblue/yaheiInconsolata.ttf
+
+For Linux, you could just move all above font files to
+=/usr/local/share/fonts/=.
 
 ** Get emacs config
 
