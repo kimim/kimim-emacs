@@ -1023,7 +1023,23 @@ parentheis. We define some keys for it:
          ("<backspace>" . sp-backward-delete-char)
          ("C-d" . sp-delete-char)
          ("C-M-<backspace>" . sp-backward-copy-sexp)
-         ("C-M-w" . sp-copy-sexp)))
+         ("C-M-w" . sp-copy-sexp))
+  :config
+  (setq sp-pairs
+  '((t
+     .
+     ((:open "\\\\(" :close "\\\\)" :actions (insert wrap autoskip navigate))
+      (:open "\\{"   :close "\\}"   :actions (insert wrap autoskip navigate))
+      (:open "\\("   :close "\\)"   :actions (insert wrap autoskip navigate))
+      (:open "\\\""  :close "\\\""  :actions (insert wrap autoskip navigate))
+      (:open "\""    :close "\""
+       :actions (insert wrap autoskip navigate escape)
+       :unless (sp-in-string-quotes-p)
+       :post-handlers (sp-escape-wrapped-region sp-escape-quotes-after-insert))
+      (:open "("     :close ")"     :actions (insert wrap autoskip navigate))
+      (:open "["     :close "]"     :actions (insert wrap autoskip navigate))
+      (:open "{"     :close "}"     :actions (insert wrap autoskip navigate))
+      (:open "`"     :close "`"     :actions (insert wrap autoskip navigate)))))))
 #+end_src
 
 ** Code folding
