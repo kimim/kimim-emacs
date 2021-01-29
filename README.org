@@ -170,7 +170,7 @@ calculated with original default font height and width: =frame-char-height= and
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "YaheiInconsolata-18")))
+      (set-frame-font "YaheiInconsolata-14")))
     ;; top, left ... must be integer
     (add-to-list 'default-frame-alist
                  (cons 'top  (/ (x-display-pixel-height) 10)))
@@ -2565,7 +2565,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
                      ((eq system-type 'cygwin)
                       "/usr/local/share/emacs/site-lisp/mu4e")
                      ((eq system-type 'gnu/linux)
-                      "/snap/maildir-utils/current/share/emacs/site-lisp/mu4e")))
+                      "/usr/local/share/emacs/site-lisp/mu4e/")))
   :config
   ;; turn html email to lighter color in dark theme
   (require 'mu4e-contrib)
@@ -2579,8 +2579,8 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   (use-package sendmail)
   (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
   (setq mu4e-mu-binary "/usr/local/bin/mu")
-  (cond ((eq system-type 'gnu/linux)
-         (setq mu4e-mu-binary "/snap/bin/mu")))
+  ;; (cond ((eq system-type 'gnu/linux)
+  ;;        (setq mu4e-mu-binary "/snap/bin/mu")))
   (setq mail-user-agent 'mu4e-user-agent)
   ;; Fetch mail by offlineimap
   (setq mu4e-get-mail-command "offlineimap -c ~/.offlineimaprc -u quiet")
