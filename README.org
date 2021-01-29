@@ -61,6 +61,12 @@ For example, in Ubuntu, you can install this way:
 sudo snap install emacs --classic
 #+end_src
 
+It is also very quick to add emacs in ArchLinux/Manjaro:
+
+#+begin_src shell
+pacman -S emacs
+#+end_src
+
 * Preparation
 ** Install fonts
 
@@ -70,6 +76,9 @@ two fonts from:
 
 - https://fonts.google.com/specimen/Inconsolata
 - https://github.com/loseblue/yaheiInconsolata.ttf
+
+For Linux, you could just move all above font files to
+=/usr/local/share/fonts/=.
 
 ** Get emacs config
 
@@ -535,18 +544,18 @@ scroll slowly with touchpad.
 ** Input Method
 #+begin_src emacs-lisp
 (use-package rime
-  :bind ("C-?" . toggle-input-method)
+  :bind ("C-;" . toggle-input-method)
   :custom
+  (default-input-method "rime")
   (rime-disable-predicates
    '(rime-predicate-after-alphabet-char-p))
-  (define-key rime-active-mode-map (kbd "M-j") 'rime-inline-ascii)
-  (default-input-method "rime")
   (rime-show-candidate 'posframe)
   (rime-posframe-properties
    (list :font "YaheiInconsolata-16"
          :internal-border-width 14))
-  :config
-  (define-key rime-active-mode-map (kbd "M-j") 'rime-inline-ascii))
+:config
+(when (eq (window-system) 'mac)
+  (setq rime-librime-root "~/.emacs.d/librime/dist")))
 #+end_src
 
 ** General
