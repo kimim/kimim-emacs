@@ -29,7 +29,8 @@ In order to make life easier, we will use =apt-cyg= [fn:3] to install =emacs=
 and other tools. Let's download =apt-cyg= and install =emacs= and =git=:
 
 #+begin_src shell
-curl https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg > /usr/local/bin/apt-cyg
+curl https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg \
+     > /usr/local/bin/apt-cyg
 chmod +x /usr/local/bin/apt-cyg
 apt-cyg install emacs-w32 git
 #+end_src
