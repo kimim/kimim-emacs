@@ -170,16 +170,16 @@ calculated with original default font height and width: =frame-char-height= and
 (defun kimim/frame-and-font ()
   (when window-system
     (cond
-     ((< (display-pixel-width) 1400)
+     ((< (display-pixel-width) 2560)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
       (set-frame-font "YaheiInconsolata-14"))
-     ((> (display-pixel-width) 1400)
+     ((> (display-pixel-width) 2559)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "YaheiInconsolata-14")))
+      (set-frame-font "YaheiInconsolata-18")))
     ;; top, left ... must be integer
     (add-to-list 'default-frame-alist
                  (cons 'top  (/ (x-display-pixel-height) 10)))
@@ -551,8 +551,8 @@ scroll slowly with touchpad.
    '(rime-predicate-after-alphabet-char-p))
   (rime-show-candidate 'posframe)
   (rime-posframe-properties
-   (list :font "YaheiInconsolata-16"
-         :internal-border-width 14))
+   (list :font "YaheiInconsolata-18"
+        :internal-border-width 14))
 :config
 (when (eq (window-system) 'mac)
   (setq rime-librime-root "~/.emacs.d/librime/dist")))
