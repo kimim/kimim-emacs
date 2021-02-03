@@ -504,34 +504,34 @@ scroll slowly with touchpad.
   :config
   (smex-initialize))
 
-;; (use-package counsel
-;;   :defer 1
-;;   :bind
-;;   (("M-x" . counsel-M-x)
-;;    ("C-x C-f" . counsel-find-file)
-;;    ("C-x m f" . counsel-describe-function)
-;;    ("C-x m v" . counsel-describe-variable)
-;;    ("C-x m l" . counsel-load-library)
-;;    ("C-x m i" . counsel-info-lookup-symbol)
-;;    ("C-x m j" . counsel-bookmark)
-;;    ("C-x m r" . counsel-recentf)
-;;    ("C-x m u" . counsel-unicode-char)
-;;    ("C-c j" . counsel-git-grep)
-;;    ("C-c g" . counsel-grep)
-;;    ("C-x b" . counsel-ibuffer)
-;;    ("C-c k" . counsel-ag)
-;;    ("C-c p" . counsel-pt)
-;;    ("C-x l" . counsel-locate)
-;;    :map read-expression-map
-;;    ("C-r" . counsel-minibuffer-history))
-;;   :config
-;;   (use-package ivy)
-;;   (use-package smex)
-;;   (add-hook 'counsel-grep-post-action-hook 'recenter)
-;;   (ivy-mode 1))
+(use-package counsel
+  :defer 1
+  :bind
+  (("M-x" . counsel-M-x)
+   ("C-x C-f" . counsel-find-file)
+   ("C-x m f" . counsel-describe-function)
+   ("C-x m v" . counsel-describe-variable)
+   ("C-x m l" . counsel-load-library)
+   ("C-x m i" . counsel-info-lookup-symbol)
+   ("C-x m j" . counsel-bookmark)
+   ("C-x m r" . counsel-recentf)
+   ("C-x m u" . counsel-unicode-char)
+   ("C-c j" . counsel-git-grep)
+   ("C-c g" . counsel-grep)
+   ("C-x b" . counsel-ibuffer)
+   ("C-c k" . counsel-ag)
+   ("C-c p" . counsel-pt)
+   ("C-x l" . counsel-locate)
+   :map read-expression-map
+   ("C-r" . counsel-minibuffer-history))
+  :config
+  (use-package ivy)
+  (use-package smex)
+  (add-hook 'counsel-grep-post-action-hook 'recenter)
+  (ivy-mode 1))
 #+end_src
 
-** selectrum
+** COMMENT selectrum
 
 #+begin_src emacs-lisp
 (use-package selectrum-prescient
