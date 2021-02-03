@@ -1194,78 +1194,7 @@ in Clojure.
          (?p . ,port)
          (?h . ,v-host)
          (?u . ,(if v-user (format "-l '%s' " v-user) ""))
-         (?x . "-o \"ProxyCommand=nc -X connect -x 127.0.0.1:1080 %h %p\"")))))
-  (defun cider-interactive-notify-and-eval (code)
-    (interactive)
-    (message code)
-    (cider-interactive-eval
-     code
-     (cider-interactive-eval-handler nil (point))
-     nil
-     nil))
-
-  (defun notespace/eval-and-realize-note-at-this-line ()
-    (interactive)
-    (save-buffer)
-    (cider-interactive-notify-and-eval
-     (concat "(notespace.api/eval-and-realize-note-at-line "
-             (number-to-string (line-number-at-pos))
-             ")")))
-
-  (defun notespace/eval-and-realize-notes-from-this-line ()
-    (interactive)
-    (save-buffer)
-    (cider-interactive-notify-and-eval
-     (concat "(notespace.api/eval-and-realize-notes-from-line "
-             (number-to-string (line-number-at-pos))
-             ")")))
-
-  (defun notespace/eval-and-realize-notes-from-change ()
-    (interactive)
-    (save-buffer)
-    (cider-interactive-notify-and-eval
-     (concat "(notespace.api/eval-and-realize-notes-from-change)")))
-
-  (defun notespace/init-with-browser ()
-    (interactive)
-    (save-buffer)
-    (cider-interactive-notify-and-eval
-     (concat "(notespace.api/init-with-browser)")))
-
-  (defun notespace/init ()
-    (interactive)
-    (save-buffer)
-    (cider-interactive-notify-and-eval
-     (concat "(notespace.api/init)")))
-
-  (defun notespace/eval-this-notespace ()
-    (interactive)
-    (save-buffer)
-    (cider-interactive-notify-and-eval
-     "(notespace.api/eval-this-notespace)"))
-
-  (defun notespace/eval-and-realize-this-notespace ()
-    (interactive)
-    (save-buffer)
-    (cider-interactive-notify-and-eval
-     "(notespace.api/eval-and-realize-this-notespace)"))
-
-  (defun notespace/render-static-html ()
-    (interactive)
-    (cider-interactive-notify-and-eval
-     "(notespace.api/render-static-html)"))
-
-  ;; suggested emacs key binding (thanks @mchampine)
-  (add-hook 'clojure-mode-hook
-            (lambda ()
-              (define-key clojure-mode-map (kbd "C-c n e") 'notespace/eval-this-notespace)
-              (define-key clojure-mode-map (kbd "C-c n r") 'notespace/eval-and-realize-this-notespace)
-              (define-key clojure-mode-map (kbd "C-c n n") 'notespace/eval-and-realize-note-at-this-line)
-              (define-key clojure-mode-map (kbd "C-c n f") 'notespace/eval-and-realize-notes-from-this-line)
-              (define-key clojure-mode-map (kbd "C-c n i b") 'notespace/init-with-browser)
-              (define-key clojure-mode-map (kbd "C-c n i i") 'notespace/init)
-              (define-key clojure-mode-map (kbd "C-c n s") 'notespace/render-static-html)
-              (define-key clojure-mode-map (kbd "C-c n c") 'notespace/eval-and-realize-notes-from-change))))
+         (?x . "-o \"ProxyCommand=nc -X connect -x 127.0.0.1:1080 %h %p\""))))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1279,27 +1208,27 @@ in Clojure.
   (defun org-babel-expand-body:clojure (body params)
     "Expand BODY according to PARAMS, return the expanded body."
     (let* ((vars (org-babel--get-vars params))
-	       (ns (or (cdr (assq :ns params))
-		           (org-babel-clojure-cider-current-ns)))
-	       (result-params (cdr (assq :result-params params)))
-	       (print-level nil)
-	       (print-length nil)
-	       (body (org-trim
-		          (concat
-		           ;; Source block specified namespace :ns.
-		           (and (cdr (assq :ns params)) (format "(ns %s)\n" ns))
-		           ;; Variables binding.
-		           (if (null vars) (org-trim body)
-		             (format "(let [%s]\n%s)"
-			                 (mapconcat
-			                  (lambda (var)
-			                    (format "%S (quote %S)" (car var) (cdr var)))
-			                  vars
-			                  "\n      ")
-			                 body))))))
+           (ns (or (cdr (assq :ns params))
+                   (org-babel-clojure-cider-current-ns)))
+           (result-params (cdr (assq :result-params params)))
+           (print-level nil)
+           (print-length nil)
+           (body (org-trim
+                  (concat
+                   ;; Source block specified namespace :ns.
+                   (and (cdr (assq :ns params)) (format "(ns %s)\n" ns))
+                   ;; Variables binding.
+                   (if (null vars) (org-trim body)
+                     (format "(let [%s]\n%s)"
+                             (mapconcat
+                              (lambda (var)
+                                (format "%S (quote %S)" (car var) (cdr var)))
+                              vars
+                              "\n      ")
+                             body))))))
       (if (or (member "code" result-params)
-	          (member "pp" result-params))
-	      (format "(print (str (do %s)))" body)
+              (member "pp" result-params))
+          (format "(print (str (do %s)))" body)
         body))))
 #+end_src
 
