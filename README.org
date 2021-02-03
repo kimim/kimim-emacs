@@ -180,7 +180,7 @@ calculated with original default font height and width: =frame-char-height= and
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "YaheiInconsolata-18")))
+      (set-frame-font "YaheiInconsolata-16")))
     ;; top, left ... must be integer
     (add-to-list 'default-frame-alist
                  (cons 'top  (/ (x-display-pixel-height) 10)))
@@ -538,13 +538,6 @@ scroll slowly with touchpad.
   :config
   (selectrum-prescient-mode +1)
   (prescient-persist-mode +1))
-
-(use-package selectrum
-  :defer 1
-  :config
-  (selectrum-mode +1)
-  (use-package selectrum-prescient)
-  (use-package marginalia))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -560,6 +553,19 @@ scroll slowly with touchpad.
   (advice-add #'marginalia-cycle :after
               (lambda () (when (bound-and-true-p selectrum-mode) (selectrum-exhibit)))))
 #+end_src
+
+#+begin_src emacs-lisp
+(use-package selectrum
+  :defer 1
+  :config
+  (selectrum-mode +1)
+  (use-package selectrum-prescient)
+  (selectrum-prescient-mode +1)
+  (prescient-persist-mode +1)
+  (use-package marginalia)
+  (marginalia-mode +1))
+#+end_src
+
 
 ** Key Frequency
 
