@@ -1155,7 +1155,7 @@ Clojure[fn:14] is a lisp over JVM. Emm, I like it.
   (use-package company)
   (use-package flycheck)
   (use-package flycheck-clj-kondo)
-  (use-package clj-refactor
+  (use-package clj-refactor)
   (use-package clojure-snippets)
   (use-package clojure-mode-extra-font-locking)
   (eval-after-load 'company
