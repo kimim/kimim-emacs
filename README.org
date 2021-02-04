@@ -1165,7 +1165,7 @@ Clojure[fn:14] is a lisp over JVM. Emm, I like it.
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'cider-mode)
-  (add-hook 'clojure-mode-hook #'clj-refactor-mode))
+  (add-hook 'clojure-mode-hook #'clj-refactor-mode)
   (add-hook 'clojurescript-mode-hook #'cider-mode)
   (add-hook 'clojurescript-mode-hook #'clj-refactor-mode)
   (add-to-list 'auto-mode-alist '("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode))
