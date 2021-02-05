@@ -573,6 +573,9 @@ scroll slowly with touchpad.
 
 ** Key Frequency
 
+We will use =keyfreq= to record the frequency of the key typing, and get a
+frequency report by =M-x keyfreq-show=.
+
 #+begin_src emacs-lisp
 (use-package keyfreq
   :config
@@ -582,6 +585,7 @@ scroll slowly with touchpad.
 #+end_src
 
 * Editing
+
 ** Input Method
 #+begin_src emacs-lisp
 (use-package rime
