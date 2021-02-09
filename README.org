@@ -175,7 +175,12 @@ calculated with original default font height and width: =frame-char-height= and
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
       (set-frame-font "YaheiInconsolata-14"))
-     ((> (display-pixel-width) 2560)
+     ((>= (display-pixel-width) 3840)
+      (set-fontset-font
+       "fontset-default"
+       'unicode-bmp (font-spec :family "YaheiInconsolata"))
+      (set-frame-font "YaheiInconsolata-14"))
+     ((>= (display-pixel-width) 2560)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
@@ -568,6 +573,9 @@ scroll slowly with touchpad.
 
 ** Key Frequency
 
+We will use =keyfreq= to record the frequency of the key typing, and get a
+frequency report by =M-x keyfreq-show=.
+
 #+begin_src emacs-lisp
 (use-package keyfreq
   :config
@@ -577,6 +585,7 @@ scroll slowly with touchpad.
 #+end_src
 
 * Editing
+
 ** Input Method
 #+begin_src emacs-lisp
 (use-package rime
@@ -1256,12 +1265,12 @@ in Clojure.
 (use-package clj-refactor
   :defer t
   :config
-  (setq cljr-thread-all-but-last t)
+  (setq clojure-thread-all-but-last t)
   (cljr-add-keybindings-with-prefix "C-c r")
-  (define-key clj-refactor-map "\C-ctf" #'cljr-thread-first-all)
-  (define-key clj-refactor-map "\C-ctl" #'cljr-thread-last-all)
-  (define-key clj-refactor-map "\C-cu" #'cljr-unwind)
-  (define-key clj-refactor-map "\C-cU" #'cljr-unwind-all)
+  (define-key clj-refactor-map "\C-ctf" #'clojure-thread-first-all)
+  (define-key clj-refactor-map "\C-ctl" #'clojure-thread-last-all)
+  (define-key clj-refactor-map "\C-cu" #'clojure-unwind)
+  (define-key clj-refactor-map "\C-cU" #'clojure-unwind-all)
   (add-to-list 'cljr-magic-require-namespaces '("s"  . "clojure.string")))
 #+end_src
 ** Python
