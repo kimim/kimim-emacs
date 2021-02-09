@@ -44,10 +44,19 @@ You can also add =emacs --daemon= in your scheduled task, and change the target
 field as =C:\cygwin64\bin\run.exe emacsclient -c=. This will attach the client
 to the server daemon. You can get a running =emacs= very quick.
 
+** Windows/MSYS2
+
+Install msys2[fn:5], for example, to =C:\msys64=, then open
+=C:\msys64\mingw64.exe=, and run:
+
+#+begin_src shell
+pacman -S git mingw-w64-x86_64-emacs
+#+end_src
+
 ** macOS
 
 For Apple macOS, most UNIX tools are installed already. You can use
-homebrew [fn:5] to install additional application if it is missing.
+homebrew [fn:6] to install additional application if it is missing.
 
 #+begin_src shell
 /bin/bash -c \
@@ -76,7 +85,7 @@ pacman -S emacs
 
 Nowadays, Windows is embracing Linux tightly. You can try =emacs= on Windows
 subsystem for Linux version 2. You can get Ubuntu Linux from Windows App
-Store. And Manjaro Linux for WSL2[fn:6] from
+Store. And Manjaro Linux for WSL2[fn:7] from
 https://github.com/sileshn/ManjaroWSL/releases
 
 * Preparation
@@ -265,7 +274,7 @@ Define new command prefix for keys such as "C-x m f", "C-x m v".
 
 * Package
 
-=package= [fn:7] is the modern =elisp= package management system, which let you
+=package= [fn:8] is the modern =elisp= package management system, which let you
 easily download and install packages that implement additional features. Each
 package is a separate Emacs Lisp program, sometimes including other components
 such as an Info manual.
@@ -445,7 +454,7 @@ Display time and (line, column) numbers in mode line.
 
 ** tldr
 
-TL;DR stands for "Too Long; Didn't Read"[fn:8]. =tldr.el= [fn:9] is the Emacs
+TL;DR stands for "Too Long; Didn't Read"[fn:9]. =tldr.el= [fn:10] is the Emacs
 client.
 
 #+begin_src emacs-lisp
@@ -874,7 +883,7 @@ region. That's amazing.
 
 ** ag: the silver searcher
 
-=ag= [fn:10] is really a very fast grep tool, and =ag.el= [fn:11] provide the
+=ag= [fn:11] is really a very fast grep tool, and =ag.el= [fn:12] provide the
 Emacs interface to =ag=:
 
 #+begin_src emacs-lisp
@@ -1051,7 +1060,7 @@ Following error will reported when using magit to commit changes:
 server-ensure-safe-dir: The directory ‘~/.emacs.d/server’ is unsafe
 #+END_QUOTE
 
-The solution is to change the owner of =~/.emacs.d/server= [fn:12]
+The solution is to change the owner of =~/.emacs.d/server= [fn:13]
 
 #+BEGIN_QUOTE
 Click R-mouse on ~/.emacs.d/server and select “Properties” (last item in
@@ -1063,7 +1072,7 @@ this directory as secure because you are the owner.
 
 ** Parenthesis
 
-~smartparens-mode~[fn:13] is a general purpose mode for dealing with
+~smartparens-mode~[fn:14] is a general purpose mode for dealing with
 parentheis. We define some keys for it:
 
 #+begin_src emacs-lisp
@@ -1148,7 +1157,7 @@ parentheis. We define some keys for it:
 
 ** Clojure
 
-Clojure[fn:14] is a lisp over JVM. Emm, I like it.
+Clojure[fn:15] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
@@ -1195,7 +1204,7 @@ npm install -g clj-kondo
 
 *** Cider
 
-Cider[fn:15] extends Emacs with support for interactive programming
+Cider[fn:16] extends Emacs with support for interactive programming
 in Clojure.
 
 #+begin_src emacs-lisp
@@ -1270,7 +1279,7 @@ in Clojure.
 #+end_src
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:16] is used here:
+Python development configuration is quite easy. =elpy= [fn:17] is used here:
 
 #+begin_src emacs-lisp
   (use-package elpy
@@ -1353,7 +1362,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:17]
+=ahk-mode= developed by Rich Alesi[fn:18]
 
 #+begin_src emacs-lisp
   (use-package ahk-mode
@@ -1499,7 +1508,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
 #+end_src
 
-Polymode [fn:18] is a framework for multiple major modes (MMM) inside a single
+Polymode [fn:19] is a framework for multiple major modes (MMM) inside a single
 Emacs buffer. It is comfortable to enable it during literating program.
 
 #+begin_src emacs-lisp
@@ -2143,7 +2152,7 @@ New link to use everything to locate a file with unique ID:
 =C-x l= keychord can store deft links in deft mode, but cannot fetch the link
 from deft note. Below defines a function to fetch a deft style link, which can
 be used to paste directly in other org files, such as work journal. Buffer file
-name handling function can be found from emacs manual[fn:19].
+name handling function can be found from emacs manual[fn:20].
 
 #+begin_src emacs-lisp
   (use-package org
@@ -2359,8 +2368,8 @@ name handling function can be found from emacs manual[fn:19].
 
 ** Org-roam
 
-Org-roam implements =zettelkasten= method [fn:20] used by famous German socialogist
-Niklas Luhmann[fn:21].
+Org-roam implements =zettelkasten= method [fn:21] used by famous German socialogist
+Niklas Luhmann[fn:22].
 
 First you should install =sqlite3=, which is used to index the links:
 
@@ -2786,36 +2795,38 @@ from system PATH, so you should set these to system PATH.
 
 [fn:4] https://github.com/transcode-open/apt-cyg
 
-[fn:5] http://brew.sh/
+[fn:5] https://www.msys2.org/
 
-[fn:6] http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows
+[fn:6] http://brew.sh/
 
-[fn:7] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
+[fn:7] http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows
 
-[fn:8] https://github.com/tldr-pages/tldr
+[fn:8] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
 
-[fn:9] https://github.com/kuanyui/tldr.el
+[fn:9] https://github.com/tldr-pages/tldr
 
-[fn:10] https://github.com/ggreer/the_silver_searcher#installation
+[fn:10] https://github.com/kuanyui/tldr.el
 
-[fn:11] https://github.com/Wilfred/ag.el
+[fn:11] https://github.com/ggreer/the_silver_searcher#installation
 
-[fn:12] https://github.com/syl20bnr/spacemacs/issues/381
+[fn:12] https://github.com/Wilfred/ag.el
 
-[fn:13] https://github.com/Fuco1/smartparens
+[fn:13] https://github.com/syl20bnr/spacemacs/issues/381
 
-[fn:14] https://clojure.org/
+[fn:14] https://github.com/Fuco1/smartparens
 
-[fn:15] https://cider.mx/
+[fn:15] https://clojure.org/
 
-[fn:16] https://github.com/jorgenschaefer/elpy
+[fn:16] https://cider.mx/
 
-[fn:17] https://github.com/ralesi/ahk-mode
+[fn:17] https://github.com/jorgenschaefer/elpy
 
-[fn:18] https://polymode.github.io/
+[fn:18] https://github.com/ralesi/ahk-mode
 
-[fn:19] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+[fn:19] https://polymode.github.io/
 
-[fn:20] https://zettelkasten.de/
+[fn:20] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
 
-[fn:21] https://en.wikipedia.org/wiki/Niklas_Luhmann
+[fn:21] https://zettelkasten.de/
+
+[fn:22] https://en.wikipedia.org/wiki/Niklas_Luhmann
