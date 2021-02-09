@@ -170,16 +170,16 @@ calculated with original default font height and width: =frame-char-height= and
 (defun kimim/frame-and-font ()
   (when window-system
     (cond
-     ((< (display-pixel-width) 2560)
+     ((<= (display-pixel-width) 2560)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
       (set-frame-font "YaheiInconsolata-14"))
-     ((> (display-pixel-width) 2559)
+     ((> (display-pixel-width) 2560)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "YaheiInconsolata-18")))
+      (set-frame-font "YaheiInconsolata-16")))
     ;; top, left ... must be integer
     (add-to-list 'default-frame-alist
                  (cons 'top  (/ (x-display-pixel-height) 10)))
@@ -743,7 +743,7 @@ region. That's amazing.
                             "|Start\\|SendTo\\"
                             "|^\\.DS_Store\\"
                             "|qms-bmh"))))
-  (setq dired-listing-switches "-Avhlgo --group-directories-first")
+  (setq dired-listing-switches "-AGvhlgo")
   (if (eq system-type 'darwin)
       (setq dired-listing-switches "-Avhlgo"))
 
