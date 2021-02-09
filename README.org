@@ -175,12 +175,7 @@ calculated with original default font height and width: =frame-char-height= and
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
       (set-frame-font "YaheiInconsolata-14"))
-     ((>= (display-pixel-width) 3840)
-      (set-fontset-font
-       "fontset-default"
-       'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "YaheiInconsolata-14"))
-     ((>= (display-pixel-width) 2560)
+     ((> (display-pixel-width) 2560)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
