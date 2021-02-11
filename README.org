@@ -156,16 +156,19 @@ they may catch your attention. But you cannot hide menu bar in macOS desktop
 environment, because the system preserves menu bar for every applications.
 
 #+begin_src emacs-lisp
-(cond
- (window-system
-  ;; Enable copy and paste in Win32
-  (setq select-enable-clipboard t)
-  (menu-bar-mode 0)
-  (tool-bar-mode -1)
-  (tooltip-mode -1)
-  (scroll-bar-mode -1))
- ((eq window-system nil)
-  (menu-bar-mode 0)))
+(defun kimim/menu-and-bar ()
+  (cond
+   (window-system
+    ;; Enable copy and paste in Win32
+    (setq select-enable-clipboard t)
+    (menu-bar-mode 0)
+    (tool-bar-mode -1)
+    (tooltip-mode -1)
+    (scroll-bar-mode -1))
+   ((eq window-system nil)
+    (menu-bar-mode 0))))
+
+(kimim/menu-and-bar)
 #+end_src
 
 ** Font and Frame Size
