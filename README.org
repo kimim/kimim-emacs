@@ -1118,6 +1118,23 @@ parentheis. We define some keys for it:
   :commands (global-flycheck-mode))
 #+end_src
 
+** lsp mode
+
+lsp-mode aims to provide IDE-like experience.
+
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :commands lsp
+  :config
+  (add-hook 'prog-mode-hook #'lsp))
+
+(use-package lsp-ui
+  :commands lsp-ui-mode)
+
+(use-package company-lsp
+  :commands company-lsp)
+#+end_src
+
 * Programming Language
 
 ** C
