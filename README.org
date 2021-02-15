@@ -182,12 +182,12 @@ calculated with original default font height and width: =frame-char-height= and
 (defun kimim/frame-and-font ()
   (when window-system
     (cond
-     ((<= (display-pixel-width) 2560)
+     ((< (display-pixel-width) 2560)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
       (set-frame-font "YaheiInconsolata-14"))
-     ((> (display-pixel-width) 2560)
+     ((>= (display-pixel-width) 2560)
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
@@ -1136,7 +1136,8 @@ lsp-mode aims to provide IDE-like experience.
   (add-hook 'prog-mode-hook #'lsp))
 
 (use-package lsp-ui
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :custom ((lsp-ui-doc-alignment 'window)))
 
 (use-package company-lsp
   :commands company-lsp)
@@ -1191,6 +1192,7 @@ Clojure[fn:15] is a lisp over JVM. Emm, I like it.
   (use-package clj-refactor)
   (use-package clojure-snippets)
   (use-package clojure-mode-extra-font-locking)
+  (use-package lsp-mode)
   (eval-after-load 'company
     '(progn
        (delete 'company-capf company-backends)
@@ -1198,8 +1200,13 @@ Clojure[fn:15] is a lisp over JVM. Emm, I like it.
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'cider-mode)
+  (add-hook 'clojure-mode-hook #'lsp)
   (add-hook 'clojure-mode-hook #'clj-refactor-mode)
+  (add-hook 'clojurec-mode-hook #'cider-mode)
+  (add-hook 'clojurec-mode-hook #'lsp)
+  (add-hook 'clojurec-mode-hook #'clj-refactor-mode)
   (add-hook 'clojurescript-mode-hook #'cider-mode)
+  (add-hook 'clojurescript-mode-hook #'lsp)
   (add-hook 'clojurescript-mode-hook #'clj-refactor-mode)
   (add-to-list 'auto-mode-alist '("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode))
   (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
