@@ -1304,6 +1304,12 @@ in Clojure.
   (define-key clj-refactor-map "\C-cU" #'clojure-unwind-all)
   (add-to-list 'cljr-magic-require-namespaces '("s"  . "clojure.string")))
 #+end_src
+** Java
+
+#+begin_src emacs-lisp
+(use-package lsp-java)
+#+end_src
+
 ** Python
 
 Python development configuration is quite easy. =elpy= [fn:17] is used here:
@@ -1345,6 +1351,18 @@ pip install autopep8
 pip install yapf
 # install virtualenv for jedi
 pip install virtualenv
+#+end_src
+
+** Rust
+
+The easiest way to install rust is to run following script:
+
+#+begin_src shell
+curl https://sh.rustup.rs -sSf | sh
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package rustic)
 #+end_src
 
 ** Swift
