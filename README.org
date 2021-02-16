@@ -1362,7 +1362,12 @@ curl https://sh.rustup.rs -sSf | sh
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package rustic)
+(use-package rustic
+  :config
+  (add-hook 'rustic-mode-hook
+            (lambda ()
+	          (set (make-local-variable 'compile-command)
+		           "cargo run"))))
 #+end_src
 
 ** Swift
