@@ -1137,7 +1137,8 @@ lsp-mode aims to provide IDE-like experience.
 
 (use-package lsp-ui
   :commands lsp-ui-mode
-  :custom ((lsp-ui-doc-alignment 'window)))
+  :custom ((lsp-ui-doc-alignment 'window)
+           (lsp-ui-doc-max-width 80)))
 
 (use-package company-lsp
   :commands company-lsp)
