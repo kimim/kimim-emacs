@@ -1132,8 +1132,11 @@ lsp-mode aims to provide IDE-like experience.
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :commands lsp
-  :config
-  (add-hook 'prog-mode-hook #'lsp))
+  :custom ((lsp-headerline-breadcrumb-icons-enable nil))
+  :hook ((clojure-mode . lsp)
+         (c-mode . lsp)
+         (c++-mode . lsp)
+         (rustic-mode . lsp)))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
@@ -1240,7 +1243,7 @@ in Clojure.
   :config
   (setq nrepl-use-ssh-fallback-for-remote-hosts t)
   (setq nrepl-sync-request-timeout 100)
-  (setq cider-interactive-eval-output-destination 'output-buffer)
+  ;;(setq cider-interactive-eval-output-destination 'output-buffer)
   (defun nrepl--ssh-tunnel-command (ssh dir port)
     "Command string to open SSH tunnel to the host associated with DIR's PORT."
     (with-parsed-tramp-file-name dir v
