@@ -1136,6 +1136,7 @@ lsp-mode aims to provide IDE-like experience.
   :hook ((clojure-mode . lsp)
          (c-mode . lsp)
          (c++-mode . lsp)
+         (go-mode . lsp)
          (rustic-mode . lsp)))
 
 (use-package lsp-ui
