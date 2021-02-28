@@ -1486,8 +1486,13 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   ("C-c l" . org-store-link)
   ("C-c  ！" . org-time-stamp-inactive)
   ("C-c  。" . org-time-stamp)
+  ("M-." . org-open-at-point)
+  ("M-*" . org-mark-ring-last-goto)
   :config
-  ;; (org-roam-mode t)
+  (use-package org-roam)
+  (org-roam-mode t)
+  (use-package company)
+  (setq company-minimum-prefix-length 2)
   ;; (org-download-enable)
   (setq org-support-shift-select t)
   ;; no empty line after collapsed
@@ -1667,7 +1672,7 @@ sudo apt install python3-pygments
     '(("frame" "single") ("fontsize" "\\small")))
 
     (setq org-latex-pdf-process
-          `(,(let ((ref (concat kimim/path-ref "references.bib")))
+          `(,(let ((ref (file-truename (concat kimim/path-ref "references.bib"))))
                (if (file-exists-p ref)
                    (concat "cp -f \"" ref "\" .")
                  ""))
@@ -2436,21 +2441,88 @@ apt-cyg install sqlite3
 (use-package org-roam
   :ensure t
   :custom
-  (org-roam-directory kimim/path-notes)
-  (org-roam-file-extensions '("txt" "org"))
-  (org-roam-capture-templates
-   (quote
-    (("d" "default" plain
-      (function org-roam-capture--get-point)
-      "%?" :file-name "%<%Y_%m%d>_${slug}"
-      :head "#+TITLE: ${title}\n\n" :unnarrowed t))))
+  ((org-roam-directory kimim/path-notes)
+   (org-roam-db-location (file-truename
+                          (concat user-emacs-directory
+                                  "org-roam.db")))
+   (org-roam-buffer-window-parameters
+    '((no-delete-other-windows . t)))
+   (org-roam-link-auto-replace nil)
+   (org-roam-file-extensions '("txt" "org"))
+   (org-roam-db-update-method 'immediate)
+   (org-roam-capture-templates
+    (quote
+     (("d" "default" plain
+       (function org-roam-capture--get-point)
+       "%?" :file-name "%(concat (kimim/genfile-timestamp) \"${slug}\")"
+       :head "#+TITLE: ${title}\n\n" :unnarrowed t)))))
   :bind (:map org-roam-mode-map
-         (("C-c n l" . org-roam)
-          ("C-c n f" . org-roam-find-file)
-          ("C-c n g" . org-roam-graph))
-         :map org-mode-map
-         (("C-c n i" . org-roam-insert)
-          ("C-c n I" . org-roam-insert-immediate))))
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert)
+               ("C-c n r" . org-roam-insert-roam)
+               ("C-c n I" . org-roam-insert-immediate)))
+  :config
+  (defun org-roam-insert-roam (&optional lowercase completions filter-fn description link-type)
+    "Find an Org-roam file, and insert a the roam link to it at point.
+Return selected file if it exists.
+If LOWERCASE is non-nil, downcase the link description.
+LINK-TYPE is the type of link to be created. It defaults to \"roam\".
+COMPLETIONS is a list of completions to be used instead of
+`org-roam--get-title-path-completions`.
+FILTER-FN is the name of a function to apply on the candidates
+which takes as its argument an alist of path-completions.
+If DESCRIPTION is provided, use this as the link label.  See
+`org-roam--get-title-path-completions' for details."
+    (interactive "P")
+    (unless org-roam-mode (org-roam-mode))
+    ;; Deactivate the mark on quit since `atomic-change-group' prevents it
+    (unwind-protect
+        ;; Group functions together to avoid inconsistent state on quit
+        (atomic-change-group
+          (let* (region-text
+                 beg end
+                 (link-type "roam")
+                 (_ (when (region-active-p)
+                      (setq beg (set-marker (make-marker) (region-beginning)))
+                      (setq end (set-marker (make-marker) (region-end)))
+                      (setq region-text (org-link-display-format (buffer-substring-no-properties beg end)))))
+                 (completions (--> (or completions
+                                       (org-roam--get-title-path-completions))
+                                   (if filter-fn
+                                       (funcall filter-fn it)
+                                     it)))
+                 (title-with-tags (org-roam-completion--completing-read "Title: " completions
+                                                                        :initial-input region-text))
+                 (res (cdr (assoc title-with-tags completions)))
+                 (title (or (plist-get res :title)
+                            title-with-tags))
+                 (target-file-path (plist-get res :path))
+                 (description (or description region-text title))
+                 (description (if lowercase
+                                  (downcase description)
+                                description)))
+            (cond ((and target-file-path
+                        (file-exists-p target-file-path))
+                   (when region-text
+                     (delete-region beg end)
+                     (set-marker beg nil)
+                     (set-marker end nil))
+                   (insert (concat "[[roam:" title "]]")))
+                  (t
+                   (let ((org-roam-capture--info `((title . ,title-with-tags)
+                                                   (slug . ,(funcall org-roam-title-to-slug-function title-with-tags))))
+                         (org-roam-capture--context 'title))
+                     (setq org-roam-capture-additional-template-props (list :region (org-roam-shield-region beg end)
+                                                                            :insert-at (point-marker)
+                                                                            :link-type link-type
+                                                                            :link-description description
+                                                                            :finalize 'insert-link))
+                     (org-roam-capture--capture))))
+            res))
+      (deactivate-mark))))
 #+end_src
 
 ** zetteldeft
