@@ -259,11 +259,11 @@ Then append exec-path to PATH:
 (set-selection-coding-system 'utf-8)
 (set-file-name-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
+(set-clipboard-coding-system 'utf-8)
 (cond
  ((member system-type '(windows-nt cygwin))
-  (set-clipboard-coding-system 'utf-16le))
- ((eq system-type 'gnu/linux)
-  (set-clipboard-coding-system 'utf-8)))
+  (set-clipboard-coding-system 'utf-16le)
+  (set-file-name-coding-system 'gb18030)))
 #+end_src
 
 ** global key map
@@ -2465,6 +2465,8 @@ apt-cyg install sqlite3
                ("C-c n r" . org-roam-insert-roam)
                ("C-c n I" . org-roam-insert-immediate)))
   :config
+  (use-package org-roam-server)
+  (require 'org-roam-protocol)
   (defun org-roam-insert-roam (&optional lowercase completions filter-fn description link-type)
     "Find an Org-roam file, and insert a the roam link to it at point.
 Return selected file if it exists.
