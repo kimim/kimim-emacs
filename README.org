@@ -355,6 +355,15 @@ Display time and (line, column) numbers in mode line.
 
 * Color Theme
 
+Use =rainbow-mode= to edit colorful color string and symbol.
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :defer 1
+  :config
+  (rainbow-mode t))
+#+end_src
+
 #+begin_src emacs-lisp
 (setq font-lock-maximum-decoration t)
 (setq font-lock-global-modes '(not shell-mode text-mode))

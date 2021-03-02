@@ -102,6 +102,7 @@
             (org-hide :foreground ,kimim-night-bg)
             (org-table :foreground "light blue")
             (org-footnote :foreground "magenta2" :underline t)
+            (org-roam-link :foreground "orange" :underline t)
             (gnus-summary-cancelled :foreground "lightblue")
             (gnus-header-subject :foreground "blue" :bold t)
             (ido-subdir :weight bold)

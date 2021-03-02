@@ -101,6 +101,7 @@
             (org-warning :foreground "dark orchid" :weight bold)
             (org-table :foreground "blue1")
             (org-footnote :foreground "purple" :underline t)
+            (org-roam-link :foreground "brown" :underline t)
             (gnus-summary-cancelled :foreground "lightblue")
             (gnus-header-subject :foreground "blue" :bold t)
             (ido-subdir :weight bold)
@@ -112,7 +113,7 @@
             (hl-line :background "azure")
             ;; defaults
             (show-paren-match :background "turquoise")
-            (isearch :background "magenta3" :foreground "lightskyblue1")
+            (isearch :background "magenta3" :foreground "LightSkyBlue1")
             (link :foreground "RoyalBlue3" :underline t)
             ;; other packages
             (helm-locate-finish :foreground ,kimim-light-const)
