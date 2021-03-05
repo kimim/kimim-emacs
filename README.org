@@ -244,6 +244,29 @@ Then append exec-path to PATH:
          (getenv "PATH")))
 #+end_src
 
+For Windows/MSYS64, we need to modify =executable-find= to locate
+shell scripts:
+
+#+begin_src emacs-lisp
+(defun executable-find (command &optional remote)
+  "Search for COMMAND in `exec-path' and return the absolute file name.
+Return nil if COMMAND is not found anywhere in `exec-path'.  If
+REMOTE is non-nil, search on the remote host indicated by
+`default-directory' instead."
+  (if (and remote (file-remote-p default-directory))
+      (let ((res (locate-file
+	          command
+	          (mapcar
+	           (lambda (x) (concat (file-remote-p default-directory) x))
+	           (exec-path))
+	          exec-suffixes 'file-executable-p)))
+        (when (stringp res) (file-local-name res)))
+    ;; Use 1 rather than file-executable-p to better match the
+    ;; behavior of call-process.
+    (let ((default-directory (file-name-quote default-directory 'top)))
+      (locate-file command exec-path exec-suffixes))))
+#+end_src
+
 ** Language
 
 #+begin_src emacs-lisp
@@ -1053,7 +1076,8 @@ Sort candidates using completion history.
 #+begin_src emacs-lisp
 (use-package ggtags
   :bind (("C-c f" . ggtags-find-file)
-         ("M-." . ggtags-find-tag-dwim))
+         ("M-." . ggtags-find-tag-dwim)
+         ("M-*" . pop-tag-mark))
   :config
   (setq ggtags-global-ignore-case t)
   (setq ggtags-sort-by-nearness t))
@@ -2885,7 +2909,6 @@ from system PATH, so you should set these to system PATH.
 (bind-key "M-n" 'next-error)
 (bind-key "M-p" 'previous-error)
 ;;(define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
-(bind-key "M-*" 'pop-tag-mark)
 
 (bind-key "C-c C-/" 'comment-or-uncomment-region)
 (bind-key "RET" 'newline-and-indent)
