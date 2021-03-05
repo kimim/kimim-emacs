@@ -263,8 +263,7 @@ Then append exec-path to PATH:
 (set-clipboard-coding-system 'utf-8)
 (cond
  ((member system-type '(windows-nt cygwin))
-  (set-clipboard-coding-system 'utf-16le)
-  (set-file-name-coding-system 'gb18030)))
+  (set-clipboard-coding-system 'utf-16le)))
 #+end_src
 
 ** global key map
