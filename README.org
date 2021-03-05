@@ -273,7 +273,8 @@ REMOTE is non-nil, search on the remote host indicated by
 (setenv "LANG" "en_US.UTF-8")
 (setenv "LC_ALL" "en_US.UTF-8")
 ;; remove svn log LC_TYPE not defined warning.
-(setenv "LC_CTYPE" "en_US")
+(setenv "LC_CTYPE" "en_US.UTF-8")
+(setenv "LC_TIME" "en_US.UTF-8")
 (set-locale-environment "en_US.UTF-8")
 (set-language-environment 'English)
 (prefer-coding-system 'utf-8)
@@ -285,8 +286,7 @@ REMOTE is non-nil, search on the remote host indicated by
 (set-clipboard-coding-system 'utf-8)
 (cond
  ((member system-type '(windows-nt cygwin))
-  (set-clipboard-coding-system 'utf-16le)
-  (set-file-name-coding-system 'gb18030)))
+  (set-clipboard-coding-system 'utf-16le)))
 #+end_src
 
 ** global key map
@@ -2488,7 +2488,7 @@ apt-cyg install sqlite3
      (("d" "default" plain
        (function org-roam-capture--get-point)
        "%?" :file-name "%(concat (kimim/genfile-timestamp) \"${slug}\")"
-       :head "#+TITLE: ${title}\n\n" :unnarrowed t)))))
+       :head "#+TITLE: ${title}\n#+ROAM_ALIAS:\n#+ROAM_TAGS:\n\n" :unnarrowed t)))))
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
