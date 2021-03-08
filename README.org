@@ -17,9 +17,11 @@ First of all, you need to get =emacs= and install in your machine.
 
 ** Windows/Cygwin
 
-Cygwin project[fn:3] is required for this configuration in Windows, which is a
-large collection of GNU and Open Source tools provide functionality similar to a
-Linux distribution on Windows.
+On Windows platform, we have two options: 1) Cygwin Emacs, 2) MSYS2
+Emacs.
+
+Cygwin project[fn:3] is a large collection of GNU and Open Source tools provide
+functionality similar to a Linux distribution on Windows.
 
 You can find Cygwin setup here: https://cygwin.com/setup-x86_64.exe , please
 download and install it in your machine, for example, at =C:\cygwin64=. Then you
@@ -46,8 +48,8 @@ to the server daemon. You can get a running =emacs= very quick.
 
 ** Windows/MSYS2
 
-Install msys2[fn:5], for example, to =C:\msys64=, then open
-=C:\msys64\mingw64.exe=, and run:
+The other option is to install msys2[fn:5], for example, to =C:\msys64=, then
+open =C:\msys64\mingw64.exe=, and run:
 
 #+begin_src shell
 pacman -S git mingw-w64-x86_64-emacs
