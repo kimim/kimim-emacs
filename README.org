@@ -17,8 +17,7 @@ First of all, you need to get =emacs= and install in your machine.
 
 ** Windows/Cygwin
 
-On Windows platform, we have two options: 1) Cygwin Emacs, 2) MSYS2
-Emacs.
+On Windows platform, we have three options: 1) Cygwin, 2) MSYS2, 3) WSL2.
 
 Cygwin project[fn:3] is a large collection of GNU and Open Source tools provide
 functionality similar to a Linux distribution on Windows.
@@ -55,6 +54,13 @@ open =C:\msys64\mingw64.exe=, and run:
 pacman -S git mingw-w64-x86_64-emacs
 #+end_src
 
+** Windows/WSL2
+
+Nowadays, Windows is embracing Linux tightly. You can try =emacs= on Windows
+subsystem for Linux version 2. You can get Ubuntu Linux from Windows App
+Store. And Manjaro Linux for WSL2[fn:7] from
+https://github.com/sileshn/ManjaroWSL/releases
+
 ** macOS
 
 For Apple macOS, most UNIX tools are installed already. You can use
@@ -82,13 +88,6 @@ It is also very quick to add emacs in ArchLinux/Manjaro:
 #+begin_src shell
 pacman -S emacs
 #+end_src
-
-** WSL2
-
-Nowadays, Windows is embracing Linux tightly. You can try =emacs= on Windows
-subsystem for Linux version 2. You can get Ubuntu Linux from Windows App
-Store. And Manjaro Linux for WSL2[fn:7] from
-https://github.com/sileshn/ManjaroWSL/releases
 
 * Preparation
 ** Install fonts
