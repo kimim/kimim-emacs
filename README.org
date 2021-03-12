@@ -2093,6 +2093,7 @@ This function is called by `org-babel-execute-src-block'."
                "OPEN" "WAIT" "CLOSE"
                "ABORT" "SOMEDAY" "REPEAT")
               nil nil))
+           (org-agenda-include-diary t)
            (org-agenda-span 2)
            (org-agenda-skip-scheduled-if-done t)
            (org-agenda-skip-deadline-if-done t)
