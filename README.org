@@ -58,13 +58,13 @@ pacman -S git mingw-w64-x86_64-emacs
 
 Nowadays, Windows is embracing Linux tightly. You can try =emacs= on Windows
 subsystem for Linux version 2. You can get Ubuntu Linux from Windows App
-Store. And Manjaro Linux for WSL2[fn:7] from
+Store. And Manjaro Linux for WSL2[fn:6] from
 https://github.com/sileshn/ManjaroWSL/releases
 
 ** macOS
 
 For Apple macOS, most UNIX tools are installed already. You can use
-homebrew [fn:6] to install additional application if it is missing.
+homebrew [fn:7] to install additional application if it is missing.
 
 #+begin_src shell
 /bin/bash -c \
@@ -1163,6 +1163,14 @@ parentheis. We define some keys for it:
 
 lsp-mode aims to provide IDE-like experience.
 
+If you got error: =Symbol’s function definition is void: -compose=, make sure
+that dash version higher than 2.18 is installed[fn:15].
+
+#+begin_src emacs-lisp
+(use-package dash
+  :ensure t)
+#+end_src
+
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :commands lsp
@@ -1171,7 +1179,9 @@ lsp-mode aims to provide IDE-like experience.
          (c-mode . lsp)
          (c++-mode . lsp)
          (go-mode . lsp)
-         (rustic-mode . lsp)))
+         (rustic-mode . lsp))
+  :config
+  (use-package dash))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
@@ -1217,7 +1227,7 @@ lsp-mode aims to provide IDE-like experience.
 
 ** Clojure
 
-Clojure[fn:15] is a lisp over JVM. Emm, I like it.
+Clojure[fn:16] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
@@ -1270,7 +1280,7 @@ npm install -g clj-kondo
 
 *** Cider
 
-Cider[fn:16] extends Emacs with support for interactive programming
+Cider[fn:17] extends Emacs with support for interactive programming
 in Clojure.
 
 #+begin_src emacs-lisp
@@ -1351,7 +1361,7 @@ in Clojure.
 
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:17] is used here:
+Python development configuration is quite easy. =elpy= [fn:18] is used here:
 
 #+begin_src emacs-lisp
   (use-package elpy
@@ -1451,7 +1461,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:18]
+=ahk-mode= developed by Rich Alesi[fn:19]
 
 #+begin_src emacs-lisp
   (use-package ahk-mode
@@ -1602,7 +1612,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
 #+end_src
 
-Polymode [fn:19] is a framework for multiple major modes (MMM) inside a single
+Polymode [fn:20] is a framework for multiple major modes (MMM) inside a single
 Emacs buffer. It is comfortable to enable it during literating program.
 
 #+begin_src emacs-lisp
@@ -2246,7 +2256,7 @@ New link to use everything to locate a file with unique ID:
 =C-x l= keychord can store deft links in deft mode, but cannot fetch the link
 from deft note. Below defines a function to fetch a deft style link, which can
 be used to paste directly in other org files, such as work journal. Buffer file
-name handling function can be found from emacs manual[fn:20].
+name handling function can be found from emacs manual[fn:21].
 
 #+begin_src emacs-lisp
   (use-package org
@@ -2462,8 +2472,8 @@ name handling function can be found from emacs manual[fn:20].
 
 ** Org-roam
 
-Org-roam implements =zettelkasten= method [fn:21] used by famous German socialogist
-Niklas Luhmann[fn:22].
+Org-roam implements =zettelkasten= method [fn:22] used by famous German socialogist
+Niklas Luhmann[fn:23].
 
 First you should install =sqlite3=, which is used to index the links:
 
@@ -2959,9 +2969,9 @@ from system PATH, so you should set these to system PATH.
 
 [fn:5] https://www.msys2.org/
 
-[fn:6] http://brew.sh/
+[fn:6] http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows
 
-[fn:7] http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows
+[fn:7] http://brew.sh/
 
 [fn:8] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
 
@@ -2977,18 +2987,20 @@ from system PATH, so you should set these to system PATH.
 
 [fn:14] https://github.com/Fuco1/smartparens
 
-[fn:15] https://clojure.org/
+[fn:15] https://github.com/emacs-lsp/lsp-mode/issues/2622
 
-[fn:16] https://cider.mx/
+[fn:16] https://clojure.org/
 
-[fn:17] https://github.com/jorgenschaefer/elpy
+[fn:17] https://cider.mx/
 
-[fn:18] https://github.com/ralesi/ahk-mode
+[fn:18] https://github.com/jorgenschaefer/elpy
 
-[fn:19] https://polymode.github.io/
+[fn:19] https://github.com/ralesi/ahk-mode
 
-[fn:20] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+[fn:20] https://polymode.github.io/
 
-[fn:21] https://zettelkasten.de/
+[fn:21] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
 
-[fn:22] https://en.wikipedia.org/wiki/Niklas_Luhmann
+[fn:22] https://zettelkasten.de/
+
+[fn:23] https://en.wikipedia.org/wiki/Niklas_Luhmann
