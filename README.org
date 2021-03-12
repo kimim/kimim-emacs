@@ -702,7 +702,8 @@ frequency report by =M-x keyfreq-show=.
 (add-hook 'text-mode-hook
           (lambda ()
             (when (derived-mode-p 'org-mode 'markdown-mode 'text-mode)
-              (visual-line-mode))))
+              (visual-line-mode)
+              (setq line-spacing 0.4))))
 (setq-default indent-tabs-mode nil)
 
 (setq uniquify-buffer-name-style 'forward)
