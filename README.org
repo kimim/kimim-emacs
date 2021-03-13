@@ -2869,7 +2869,7 @@ should install postscript in cygwin.
   (setq elfeed-feeds
         '(("http://kimi.im/atom.xml" blog)
           ("www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
-          ;; from https://www.foxnews.com/about/rss
+          ;; from https://www.foxnews.com/story/foxnews-com-rss-feeds
           ("http://feeds.foxnews.com/foxnews/world" EN)
           ("http://feeds.foxnews.com/foxnews/scitech" EN Tech)
           ;; from https://www.lefigaro.fr/rss
