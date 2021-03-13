@@ -2849,6 +2849,8 @@ should install postscript in cygwin.
 #+begin_src emacs-lisp
 (use-package elfeed
   :commands (elfeed)
+  :custom ((elfeed-curl-timeout 100)
+           (browse-url-browser-function 'browse-url-default-browser))
   :bind (:map elfeed-search-mode-map
               ("<SPC>" . scroll-up-command)
               ("<backspace>" . scroll-down-command)
@@ -2858,19 +2860,28 @@ should install postscript in cygwin.
   ;; open feed link with eww
   (use-package org)
   (require 'gnus-art)
-  (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
-  (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
+  ;;(setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
   (advice-add 'elfeed-show-entry :after
               (lambda (entry)
+                (setq line-spacing 0.4)
                 (article-fill-long-lines)))
 
   (setq elfeed-feeds
-        '(
-          ("https://www.theguardian.com/world/china/rss" CN)
-          ("http://www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
-          ("https://www.lemonde.fr/rss/une.xml" FR une)
-          ("http://kimi.im/atom.xml" blog))))
+        '(("http://kimi.im/atom.xml" blog)
+          ("www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
+          ;; from https://www.foxnews.com/about/rss
+          ("http://feeds.foxnews.com/foxnews/world" EN)
+          ("http://feeds.foxnews.com/foxnews/scitech" EN Tech)
+          ;; from https://www.lefigaro.fr/rss
+          ("https://www.lefigaro.fr/rss/figaro_secteur_high-tech.xml" FR Hightech)
+          ("https://www.lefigaro.fr/rss/figaro_management.xml" FR Management)
+          ;; from https://www.zeit.de/hilfe/hilfe#rss
+          ("http://newsfeed.zeit.de/wissen/index" DE Wissen)
+          ("http://newsfeed.zeit.de/kultur/index" DE Kultur))))
 #+end_src
+
+#+RESULTS:
+: article-fill-long-lines
 
 * kimim utils
 
