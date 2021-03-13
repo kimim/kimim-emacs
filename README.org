@@ -2880,9 +2880,6 @@ should install postscript in cygwin.
           ("http://newsfeed.zeit.de/kultur/index" DE Kultur))))
 #+end_src
 
-#+RESULTS:
-: article-fill-long-lines
-
 * kimim utils
 
 In Windows environment, =kimim/xterm= and =kimim/dc= will look up the program
