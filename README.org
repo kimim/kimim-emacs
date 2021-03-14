@@ -1525,7 +1525,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package org
   :bind
-  ("C-c a" . org-agenda)
   ("C-c b" . org-iswitchb)
   ("C-c c" . org-capture)
   ("C-c l" . org-store-link)
@@ -2074,9 +2073,10 @@ This function is called by `org-babel-execute-src-block'."
 ** org as GTD system
 
 #+begin_src emacs-lisp
-(use-package org
+(use-package org-agenda
+  :ensure nil
   :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
-  :bind (:map org-mode-map
+  :bind (("C-c a" . org-agenda)
          :map org-agenda-mode-map
          ("C-c C-k" . org-agenda-kill-files)
          ("<C-left>"  . org-agenda-do-date-earlier)
@@ -2125,10 +2125,9 @@ This function is called by `org-babel-execute-src-block'."
               ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
                "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
               ("h" "Habit"   entry (file+headline "global.org"   "Habit")
-               "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
-           (org-refile-files
-            (file-expand-wildcards (concat kimim/path-org "*.org"))))
+               "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n"))))
   :config
+  (use-package org)
   (require 'org-agenda)
   (add-hook 'kill-emacs-hook
             (lambda ()
@@ -2163,7 +2162,8 @@ This function is called by `org-babel-execute-src-block'."
               ;;(drag-stuff-mode -1)
               ))
 
-
+  (setq org-refile-files
+            (file-expand-wildcards (concat kimim/path-org "*.org")))
 
   (setq org-refile-targets
         '(;; refile to maxlevel 2 of current file
@@ -2281,6 +2281,7 @@ name handling function can be found from emacs manual[fn:21].
 
 #+begin_src emacs-lisp
   (use-package org
+    :ensure nil
     :commands (jekyll)
     :config
     ;; file in jekyll base will also be uploaded to github
@@ -2511,6 +2512,7 @@ apt-cyg install sqlite3
                ("C-c n r" . org-roam-insert-roam)
                ("C-c n I" . org-roam-insert-immediate)))
   :config
+  (require 'kimim)
   (use-package org-roam-server)
   (require 'org-roam-protocol)
   (defun org-roam-insert-roam (&optional lowercase completions filter-fn description link-type)
