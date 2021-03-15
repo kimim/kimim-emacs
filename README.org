@@ -1526,7 +1526,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 (use-package org
   :bind
   ("C-c b" . org-iswitchb)
-  ("C-c c" . org-capture)
   ("C-c l" . org-store-link)
   ("C-c  ！" . org-time-stamp-inactive)
   ("C-c  。" . org-time-stamp)
@@ -2077,6 +2076,7 @@ This function is called by `org-babel-execute-src-block'."
   :ensure nil
   :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
   :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
          :map org-agenda-mode-map
          ("C-c C-k" . org-agenda-kill-files)
          ("<C-left>"  . org-agenda-do-date-earlier)
