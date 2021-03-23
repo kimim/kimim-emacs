@@ -17,9 +17,10 @@ First of all, you need to get =emacs= and install in your machine.
 
 ** Windows/Cygwin
 
-Cygwin project[fn:3] is required for this configuration in Windows, which is a
-large collection of GNU and Open Source tools provide functionality similar to a
-Linux distribution on Windows.
+On Windows platform, we have three options: 1) Cygwin, 2) MSYS2, 3) WSL2.
+
+Cygwin project[fn:3] is a large collection of GNU and Open Source tools provide
+functionality similar to a Linux distribution on Windows.
 
 You can find Cygwin setup here: https://cygwin.com/setup-x86_64.exe , please
 download and install it in your machine, for example, at =C:\cygwin64=. Then you
@@ -46,17 +47,24 @@ to the server daemon. You can get a running =emacs= very quick.
 
 ** Windows/MSYS2
 
-Install msys2[fn:5], for example, to =C:\msys64=, then open
-=C:\msys64\mingw64.exe=, and run:
+The other option is to install msys2[fn:5], for example, to =C:\msys64=, then
+open =C:\msys64\mingw64.exe=, and run:
 
 #+begin_src shell
 pacman -S git mingw-w64-x86_64-emacs
 #+end_src
 
+** Windows/WSL2
+
+Nowadays, Windows is embracing Linux tightly. You can try =emacs= on Windows
+subsystem for Linux version 2. You can get Ubuntu Linux from Windows App
+Store. And Manjaro Linux for WSL2[fn:6] from
+https://github.com/sileshn/ManjaroWSL/releases
+
 ** macOS
 
 For Apple macOS, most UNIX tools are installed already. You can use
-homebrew [fn:6] to install additional application if it is missing.
+homebrew [fn:7] to install additional application if it is missing.
 
 #+begin_src shell
 /bin/bash -c \
@@ -80,13 +88,6 @@ It is also very quick to add emacs in ArchLinux/Manjaro:
 #+begin_src shell
 pacman -S emacs
 #+end_src
-
-** WSL2
-
-Nowadays, Windows is embracing Linux tightly. You can try =emacs= on Windows
-subsystem for Linux version 2. You can get Ubuntu Linux from Windows App
-Store. And Manjaro Linux for WSL2[fn:7] from
-https://github.com/sileshn/ManjaroWSL/releases
 
 * Preparation
 ** Install fonts
@@ -244,13 +245,37 @@ Then append exec-path to PATH:
          (getenv "PATH")))
 #+end_src
 
+For Windows/MSYS64, we need to modify =executable-find= to locate
+shell scripts:
+
+#+begin_src emacs-lisp
+(defun executable-find (command &optional remote)
+  "Search for COMMAND in `exec-path' and return the absolute file name.
+Return nil if COMMAND is not found anywhere in `exec-path'.  If
+REMOTE is non-nil, search on the remote host indicated by
+`default-directory' instead."
+  (if (and remote (file-remote-p default-directory))
+      (let ((res (locate-file
+	          command
+	          (mapcar
+	           (lambda (x) (concat (file-remote-p default-directory) x))
+	           (exec-path))
+	          exec-suffixes 'file-executable-p)))
+        (when (stringp res) (file-local-name res)))
+    ;; Use 1 rather than file-executable-p to better match the
+    ;; behavior of call-process.
+    (let ((default-directory (file-name-quote default-directory 'top)))
+      (locate-file command exec-path exec-suffixes))))
+#+end_src
+
 ** Language
 
 #+begin_src emacs-lisp
 (setenv "LANG" "en_US.UTF-8")
 (setenv "LC_ALL" "en_US.UTF-8")
 ;; remove svn log LC_TYPE not defined warning.
-(setenv "LC_CTYPE" "en_US")
+(setenv "LC_CTYPE" "en_US.UTF-8")
+(setenv "LC_TIME" "en_US.UTF-8")
 (set-locale-environment "en_US.UTF-8")
 (set-language-environment 'English)
 (prefer-coding-system 'utf-8)
@@ -259,11 +284,10 @@ Then append exec-path to PATH:
 (set-selection-coding-system 'utf-8)
 (set-file-name-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
+(set-clipboard-coding-system 'utf-8)
 (cond
  ((member system-type '(windows-nt cygwin))
-  (set-clipboard-coding-system 'utf-16le))
- ((eq system-type 'gnu/linux)
-  (set-clipboard-coding-system 'utf-8)))
+  (set-clipboard-coding-system 'utf-16le)))
 #+end_src
 
 ** global key map
@@ -354,6 +378,15 @@ Display time and (line, column) numbers in mode line.
 #+end_src
 
 * Color Theme
+
+Use =rainbow-mode= to edit colorful color string and symbol.
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :defer 1
+  :config
+  (rainbow-mode t))
+#+end_src
 
 #+begin_src emacs-lisp
 (setq font-lock-maximum-decoration t)
@@ -669,7 +702,8 @@ frequency report by =M-x keyfreq-show=.
 (add-hook 'text-mode-hook
           (lambda ()
             (when (derived-mode-p 'org-mode 'markdown-mode 'text-mode)
-              (visual-line-mode))))
+              (visual-line-mode)
+              (setq line-spacing 0.4))))
 (setq-default indent-tabs-mode nil)
 
 (setq uniquify-buffer-name-style 'forward)
@@ -1044,7 +1078,8 @@ Sort candidates using completion history.
 #+begin_src emacs-lisp
 (use-package ggtags
   :bind (("C-c f" . ggtags-find-file)
-         ("M-." . ggtags-find-tag-dwim))
+         ("M-." . ggtags-find-tag-dwim)
+         ("M-*" . pop-tag-mark))
   :config
   (setq ggtags-global-ignore-case t)
   (setq ggtags-sort-by-nearness t))
@@ -1129,15 +1164,30 @@ parentheis. We define some keys for it:
 
 lsp-mode aims to provide IDE-like experience.
 
+If you got error: =Symbol’s function definition is void: -compose=, make sure
+that dash version higher than 2.18 is installed[fn:15].
+
+#+begin_src emacs-lisp
+(use-package dash
+  :ensure t)
+#+end_src
+
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :commands lsp
+  :custom ((lsp-headerline-breadcrumb-icons-enable nil))
+  :hook ((clojure-mode . lsp)
+         (c-mode . lsp)
+         (c++-mode . lsp)
+         (go-mode . lsp)
+         (rustic-mode . lsp))
   :config
-  (add-hook 'prog-mode-hook #'lsp))
+  (use-package dash))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
-  :custom ((lsp-ui-doc-alignment 'window)))
+  :custom ((lsp-ui-doc-alignment 'window)
+           (lsp-ui-doc-max-width 80)))
 
 (use-package company-lsp
   :commands company-lsp)
@@ -1178,7 +1228,7 @@ lsp-mode aims to provide IDE-like experience.
 
 ** Clojure
 
-Clojure[fn:15] is a lisp over JVM. Emm, I like it.
+Clojure[fn:16] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
@@ -1231,7 +1281,7 @@ npm install -g clj-kondo
 
 *** Cider
 
-Cider[fn:16] extends Emacs with support for interactive programming
+Cider[fn:17] extends Emacs with support for interactive programming
 in Clojure.
 
 #+begin_src emacs-lisp
@@ -1239,7 +1289,7 @@ in Clojure.
   :config
   (setq nrepl-use-ssh-fallback-for-remote-hosts t)
   (setq nrepl-sync-request-timeout 100)
-  (setq cider-interactive-eval-output-destination 'output-buffer)
+  ;;(setq cider-interactive-eval-output-destination 'output-buffer)
   (defun nrepl--ssh-tunnel-command (ssh dir port)
     "Command string to open SSH tunnel to the host associated with DIR's PORT."
     (with-parsed-tramp-file-name dir v
@@ -1312,7 +1362,7 @@ in Clojure.
 
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:17] is used here:
+Python development configuration is quite easy. =elpy= [fn:18] is used here:
 
 #+begin_src emacs-lisp
   (use-package elpy
@@ -1362,7 +1412,12 @@ curl https://sh.rustup.rs -sSf | sh
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package rustic)
+(use-package rustic
+  :config
+  (add-hook 'rustic-mode-hook
+            (lambda ()
+	          (set (make-local-variable 'compile-command)
+		           "cargo run"))))
 #+end_src
 
 ** Swift
@@ -1407,7 +1462,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:18]
+=ahk-mode= developed by Rich Alesi[fn:19]
 
 #+begin_src emacs-lisp
   (use-package ahk-mode
@@ -1470,14 +1525,17 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package org
   :bind
-  ("C-c a" . org-agenda)
   ("C-c b" . org-iswitchb)
-  ("C-c c" . org-capture)
   ("C-c l" . org-store-link)
   ("C-c  ！" . org-time-stamp-inactive)
   ("C-c  。" . org-time-stamp)
+  ("M-." . org-open-at-point)
+  ("M-*" . org-mark-ring-last-goto)
   :config
-  ;; (org-roam-mode t)
+  (use-package org-roam)
+  (org-roam-mode t)
+  (use-package company)
+  (setq company-minimum-prefix-length 2)
   ;; (org-download-enable)
   (setq org-support-shift-select t)
   ;; no empty line after collapsed
@@ -1553,7 +1611,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
 #+end_src
 
-Polymode [fn:19] is a framework for multiple major modes (MMM) inside a single
+Polymode [fn:20] is a framework for multiple major modes (MMM) inside a single
 Emacs buffer. It is comfortable to enable it during literating program.
 
 #+begin_src emacs-lisp
@@ -1657,7 +1715,7 @@ sudo apt install python3-pygments
     '(("frame" "single") ("fontsize" "\\small")))
 
     (setq org-latex-pdf-process
-          `(,(let ((ref (concat kimim/path-ref "references.bib")))
+          `(,(let ((ref (file-truename (concat kimim/path-ref "references.bib"))))
                (if (file-exists-p ref)
                    (concat "cp -f \"" ref "\" .")
                  ""))
@@ -2014,9 +2072,11 @@ This function is called by `org-babel-execute-src-block'."
 ** org as GTD system
 
 #+begin_src emacs-lisp
-(use-package org
+(use-package org-agenda
+  :ensure nil
   :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
-  :bind (:map org-mode-map
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
          :map org-agenda-mode-map
          ("C-c C-k" . org-agenda-kill-files)
          ("<C-left>"  . org-agenda-do-date-earlier)
@@ -2033,6 +2093,7 @@ This function is called by `org-babel-execute-src-block'."
                "OPEN" "WAIT" "CLOSE"
                "ABORT" "SOMEDAY" "REPEAT")
               nil nil))
+           (org-agenda-include-diary t)
            (org-agenda-span 2)
            (org-agenda-skip-scheduled-if-done t)
            (org-agenda-skip-deadline-if-done t)
@@ -2064,10 +2125,9 @@ This function is called by `org-babel-execute-src-block'."
               ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
                "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
               ("h" "Habit"   entry (file+headline "global.org"   "Habit")
-               "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
-           (org-refile-files
-            (file-expand-wildcards (concat kimim/path-org "*.org"))))
+               "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n"))))
   :config
+  (use-package org)
   (require 'org-agenda)
   (add-hook 'kill-emacs-hook
             (lambda ()
@@ -2102,7 +2162,8 @@ This function is called by `org-babel-execute-src-block'."
               ;;(drag-stuff-mode -1)
               ))
 
-
+  (setq org-refile-files
+            (file-expand-wildcards (concat kimim/path-org "*.org")))
 
   (setq org-refile-targets
         '(;; refile to maxlevel 2 of current file
@@ -2197,7 +2258,7 @@ New link to use everything to locate a file with unique ID:
 =C-x l= keychord can store deft links in deft mode, but cannot fetch the link
 from deft note. Below defines a function to fetch a deft style link, which can
 be used to paste directly in other org files, such as work journal. Buffer file
-name handling function can be found from emacs manual[fn:20].
+name handling function can be found from emacs manual[fn:21].
 
 #+begin_src emacs-lisp
   (use-package org
@@ -2220,6 +2281,7 @@ name handling function can be found from emacs manual[fn:20].
 
 #+begin_src emacs-lisp
   (use-package org
+    :ensure nil
     :commands (jekyll)
     :config
     ;; file in jekyll base will also be uploaded to github
@@ -2413,8 +2475,8 @@ name handling function can be found from emacs manual[fn:20].
 
 ** Org-roam
 
-Org-roam implements =zettelkasten= method [fn:21] used by famous German socialogist
-Niklas Luhmann[fn:22].
+Org-roam implements =zettelkasten= method [fn:22] used by famous German socialogist
+Niklas Luhmann[fn:23].
 
 First you should install =sqlite3=, which is used to index the links:
 
@@ -2426,21 +2488,91 @@ apt-cyg install sqlite3
 (use-package org-roam
   :ensure t
   :custom
-  (org-roam-directory kimim/path-notes)
-  (org-roam-file-extensions '("txt" "org"))
-  (org-roam-capture-templates
-   (quote
-    (("d" "default" plain
-      (function org-roam-capture--get-point)
-      "%?" :file-name "%<%Y_%m%d>_${slug}"
-      :head "#+TITLE: ${title}\n\n" :unnarrowed t))))
+  ((org-roam-directory kimim/path-notes)
+   (org-roam-db-location (file-truename
+                          (concat user-emacs-directory
+                                  "org-roam.db")))
+   (org-roam-buffer-window-parameters
+    '((no-delete-other-windows . t)))
+   (org-roam-link-auto-replace nil)
+   (org-roam-file-extensions '("txt" "org"))
+   (org-roam-db-update-method 'immediate)
+   (org-roam-capture-templates
+    (quote
+     (("d" "default" plain
+       (function org-roam-capture--get-point)
+       "%?" :file-name "%(concat (kimim/genfile-timestamp) \"${slug}\")"
+       :head "#+TITLE: ${title}\n#+ROAM_ALIAS:\n#+ROAM_TAGS:\n\n" :unnarrowed t)))))
   :bind (:map org-roam-mode-map
-         (("C-c n l" . org-roam)
-          ("C-c n f" . org-roam-find-file)
-          ("C-c n g" . org-roam-graph))
-         :map org-mode-map
-         (("C-c n i" . org-roam-insert)
-          ("C-c n I" . org-roam-insert-immediate))))
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert)
+               ("C-c n r" . org-roam-insert-roam)
+               ("C-c n I" . org-roam-insert-immediate)))
+  :config
+  (require 'kimim)
+  (use-package org-roam-server)
+  (require 'org-roam-protocol)
+  (defun org-roam-insert-roam (&optional lowercase completions filter-fn description link-type)
+    "Find an Org-roam file, and insert a the roam link to it at point.
+Return selected file if it exists.
+If LOWERCASE is non-nil, downcase the link description.
+LINK-TYPE is the type of link to be created. It defaults to \"roam\".
+COMPLETIONS is a list of completions to be used instead of
+`org-roam--get-title-path-completions`.
+FILTER-FN is the name of a function to apply on the candidates
+which takes as its argument an alist of path-completions.
+If DESCRIPTION is provided, use this as the link label.  See
+`org-roam--get-title-path-completions' for details."
+    (interactive "P")
+    (unless org-roam-mode (org-roam-mode))
+    ;; Deactivate the mark on quit since `atomic-change-group' prevents it
+    (unwind-protect
+        ;; Group functions together to avoid inconsistent state on quit
+        (atomic-change-group
+          (let* (region-text
+                 beg end
+                 (link-type "roam")
+                 (_ (when (region-active-p)
+                      (setq beg (set-marker (make-marker) (region-beginning)))
+                      (setq end (set-marker (make-marker) (region-end)))
+                      (setq region-text (org-link-display-format (buffer-substring-no-properties beg end)))))
+                 (completions (--> (or completions
+                                       (org-roam--get-title-path-completions))
+                                   (if filter-fn
+                                       (funcall filter-fn it)
+                                     it)))
+                 (title-with-tags (org-roam-completion--completing-read "Title: " completions
+                                                                        :initial-input region-text))
+                 (res (cdr (assoc title-with-tags completions)))
+                 (title (or (plist-get res :title)
+                            title-with-tags))
+                 (target-file-path (plist-get res :path))
+                 (description (or description region-text title))
+                 (description (if lowercase
+                                  (downcase description)
+                                description)))
+            (cond ((and target-file-path
+                        (file-exists-p target-file-path))
+                   (when region-text
+                     (delete-region beg end)
+                     (set-marker beg nil)
+                     (set-marker end nil))
+                   (insert (concat "[[roam:" title "]]")))
+                  (t
+                   (let ((org-roam-capture--info `((title . ,title-with-tags)
+                                                   (slug . ,(funcall org-roam-title-to-slug-function title-with-tags))))
+                         (org-roam-capture--context 'title))
+                     (setq org-roam-capture-additional-template-props (list :region (org-roam-shield-region beg end)
+                                                                            :insert-at (point-marker)
+                                                                            :link-type link-type
+                                                                            :link-description description
+                                                                            :finalize 'insert-link))
+                     (org-roam-capture--capture))))
+            res))
+      (deactivate-mark))))
 #+end_src
 
 ** zetteldeft
@@ -2719,6 +2851,8 @@ should install postscript in cygwin.
 #+begin_src emacs-lisp
 (use-package elfeed
   :commands (elfeed)
+  :custom ((elfeed-curl-timeout 100)
+           (browse-url-browser-function 'browse-url-default-browser))
   :bind (:map elfeed-search-mode-map
               ("<SPC>" . scroll-up-command)
               ("<backspace>" . scroll-down-command)
@@ -2728,18 +2862,24 @@ should install postscript in cygwin.
   ;; open feed link with eww
   (use-package org)
   (require 'gnus-art)
-  (setq browse-url-browser-function 'browse-url-default-browser);;eww-browse-url)
-  (setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
+  ;;(setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
   (advice-add 'elfeed-show-entry :after
               (lambda (entry)
+                (setq line-spacing 0.4)
                 (article-fill-long-lines)))
 
   (setq elfeed-feeds
-        '(
-          ("https://www.theguardian.com/world/china/rss" CN)
-          ("http://www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
-          ("https://www.lemonde.fr/rss/une.xml" FR une)
-          ("http://kimi.im/atom.xml" blog))))
+        '(("http://kimi.im/atom.xml" blog)
+          ("www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
+          ;; from https://www.foxnews.com/story/foxnews-com-rss-feeds
+          ("http://feeds.foxnews.com/foxnews/world" EN)
+          ("http://feeds.foxnews.com/foxnews/scitech" EN Tech)
+          ;; from https://www.lefigaro.fr/rss
+          ("https://www.lefigaro.fr/rss/figaro_secteur_high-tech.xml" FR Hightech)
+          ("https://www.lefigaro.fr/rss/figaro_management.xml" FR Management)
+          ;; from https://www.zeit.de/hilfe/hilfe#rss
+          ("http://newsfeed.zeit.de/wissen/index" DE Wissen)
+          ("http://newsfeed.zeit.de/kultur/index" DE Kultur))))
 #+end_src
 
 * kimim utils
@@ -2792,14 +2932,13 @@ from system PATH, so you should set these to system PATH.
 (bind-key "M-n" 'next-error)
 (bind-key "M-p" 'previous-error)
 ;;(define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
-(bind-key "M-*" 'pop-tag-mark)
 
 (bind-key "C-c C-/" 'comment-or-uncomment-region)
 (bind-key "RET" 'newline-and-indent)
 ;;(define-key global-map (kbd "<M-S-mouse-1>") 'pop-tag-mark)
 ;; key bindings
 (when (eq system-type 'darwin) ;; mac specific settings
-  (setq mac-option-modifier 'meta)
+  (setq mac-option-modifier 'super)
   (setq mac-command-modifier 'meta)
   ;; sets fn-delete to be right-delete
   (global-set-key [kp-delete] 'delete-char))
@@ -2842,9 +2981,9 @@ from system PATH, so you should set these to system PATH.
 
 [fn:5] https://www.msys2.org/
 
-[fn:6] http://brew.sh/
+[fn:6] http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows
 
-[fn:7] http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows
+[fn:7] http://brew.sh/
 
 [fn:8] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
 
@@ -2860,18 +2999,20 @@ from system PATH, so you should set these to system PATH.
 
 [fn:14] https://github.com/Fuco1/smartparens
 
-[fn:15] https://clojure.org/
+[fn:15] https://github.com/emacs-lsp/lsp-mode/issues/2622
 
-[fn:16] https://cider.mx/
+[fn:16] https://clojure.org/
 
-[fn:17] https://github.com/jorgenschaefer/elpy
+[fn:17] https://cider.mx/
 
-[fn:18] https://github.com/ralesi/ahk-mode
+[fn:18] https://github.com/jorgenschaefer/elpy
 
-[fn:19] https://polymode.github.io/
+[fn:19] https://github.com/ralesi/ahk-mode
 
-[fn:20] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+[fn:20] https://polymode.github.io/
 
-[fn:21] https://zettelkasten.de/
+[fn:21] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
 
-[fn:22] https://en.wikipedia.org/wiki/Niklas_Luhmann
+[fn:22] https://zettelkasten.de/
+
+[fn:23] https://en.wikipedia.org/wiki/Niklas_Luhmann
