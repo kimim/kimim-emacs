@@ -2503,14 +2503,14 @@ apt-cyg install sqlite3
        (function org-roam-capture--get-point)
        "%?" :file-name "%(concat (kimim/genfile-timestamp) \"${slug}\")"
        :head "#+TITLE: ${title}\n#+ROAM_ALIAS:\n#+ROAM_TAGS:\n\n" :unnarrowed t)))))
-  :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-graph))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert)
-               ("C-c n r" . org-roam-insert-roam)
-               ("C-c n I" . org-roam-insert-immediate)))
+  :bind (("C-c n f" . org-roam-find-file)
+         :map org-roam-mode-map
+         (("C-c n l" . org-roam)
+          ("C-c n g" . org-roam-graph))
+         :map org-mode-map
+         (("C-c n i" . org-roam-insert)
+          ("C-c n r" . org-roam-insert-roam)
+          ("C-c n I" . org-roam-insert-immediate)))
   :config
   (require 'kimim)
   (use-package org-roam-server)
@@ -2541,9 +2541,9 @@ If DESCRIPTION is provided, use this as the link label.  See
                       (setq region-text (org-link-display-format (buffer-substring-no-properties beg end)))))
                  (completions (--> (or completions
                                        (org-roam--get-title-path-completions))
-                                   (if filter-fn
-                                       (funcall filter-fn it)
-                                     it)))
+                                (if filter-fn
+                                    (funcall filter-fn it)
+                                  it)))
                  (title-with-tags (org-roam-completion--completing-read "Title: " completions
                                                                         :initial-input region-text))
                  (res (cdr (assoc title-with-tags completions)))
