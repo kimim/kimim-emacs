@@ -2799,7 +2799,7 @@ from system PATH, so you should set these to system PATH.
 ;;(define-key global-map (kbd "<M-S-mouse-1>") 'pop-tag-mark)
 ;; key bindings
 (when (eq system-type 'darwin) ;; mac specific settings
-  (setq mac-option-modifier 'super)
+  (setq mac-option-modifier 'meta)
   (setq mac-command-modifier 'meta)
   ;; sets fn-delete to be right-delete
   (global-set-key [kp-delete] 'delete-char))
