@@ -2087,7 +2087,31 @@ This function is called by `org-babel-execute-src-block'."
          ("<S-right>" . (lambda ()
                           (interactive)
                           (org-agenda-todo 'right))))
-  :custom ((org-stuck-projects
+  :custom ((org-directory kimim/path-org)
+           (org-agenda-files
+            (file-expand-wildcards (concat kimim/path-org "*.org")))
+           (org-tags-exclude-from-inheritance '("project" "category"))
+           (org-log-done t)
+           (org-todo-repeat-to-state "REPEAT")
+           (org-deadline-warning-days 2)
+           (org-todo-keywords
+            '(
+              ;; for tasks
+              (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
+              ;; for risks, actions, problems
+              (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
+              (sequence "|" "SOMEDAY(m)")
+              (sequence "|" "ABORT(a@/!)")
+              (sequence "REPEAT(r)" "|")))
+           (org-tag-alist
+            '(("@office" . ?o) ("@home" . ?h)
+              ("team" . ?t) ("leader" . ?l) ("boss" . ?b)
+              ("risk" . ?k) ("sync" . ?s) ("followup" . ?f)
+              ("reading" . ?r) ("writing" . ?w)
+              ("project" . ?p) ("category" . ?c)
+              ("habit" . ?H)
+              ("next" . ?n)))
+           (org-stuck-projects
             '("+LEVEL>=2-category-habit-info"
               ("TODO" "SCHED"  "DONE"
                "OPEN" "WAIT" "CLOSE"
@@ -2133,26 +2157,6 @@ This function is called by `org-babel-execute-src-block'."
             (lambda ()
               (org-clock-out nil t nil)
               (org-save-all-org-buffers)))
-  (setq org-todo-keywords
-        '(
-          ;; for tasks
-          (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
-          ;; for risks, actions, problems
-          (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
-          (sequence "|" "SOMEDAY(m)")
-          (sequence "|" "ABORT(a@/!)")
-          (sequence "REPEAT(r)" "|")))
-
-  (setq org-tag-alist
-        '(("@office" . ?o) ("@home" . ?h)
-          ("team" . ?t) ("leader" . ?l) ("boss" . ?b)
-          ("risk" . ?k) ("sync" . ?s) ("followup" . ?f)
-          ("reading" . ?r) ("writing" . ?w)
-          ("project" . ?p) ("category" . ?c)
-          ("habit" . ?H)
-          ("next" . ?n)))
-
-  (setq org-tags-exclude-from-inheritance '("project" "category"))
 
   (diminish 'auto-fill-function)
 
@@ -2188,20 +2192,9 @@ This function is called by `org-babel-execute-src-block'."
         (org-todo "WAIT")
       (org-todo "SCHED")))
 
-  (setq org-log-done t)
-  (setq org-todo-repeat-to-state "REPEAT")
-
-  ;; settings for org-agenda-view
-
-  (setq org-deadline-warning-days 2)
   (add-hook 'org-agenda-after-show-hook 'org-narrow-to-subtree)
 
-  (setq org-directory kimim/path-org)
-
-
   (use-package ivy) ; use ivy to complete refile files
-  (setq org-agenda-files
-        (file-expand-wildcards (concat kimim/path-org "*.org")))
   (defun org-agenda-kill-files ()
     (interactive)
     (org-agenda-kill-all-agenda-buffers)
