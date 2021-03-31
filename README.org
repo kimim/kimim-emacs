@@ -611,6 +611,19 @@ scroll slowly with touchpad.
 #+end_src
 
 
+** guru mode
+
+=guru-mode= warns you when you type arrow keys, home or end. This could help you
+to establish the habit of efficiently using emacs keybinding.
+
+#+begin_src emacs-lisp
+(use-package guru-mode
+  :ensure t
+  :defer 1
+  :config
+  (guru-global-mode +1))
+#+end_src
+
 ** Key Frequency
 
 We will use =keyfreq= to record the frequency of the key typing, and get a
@@ -2000,73 +2013,23 @@ sudo apt install python3-pygments
 
 That's fun to draw UML with =ob-plantuml= inside =orgmode=:
 
-1. install =graphviz= in =cygwin= setup tool
-2. download =plantuml.jar= from https://plantuml.com/download, and put it to
-   =(concat kimim/path-kimikit "plantuml/plantuml.jar")=
+For Windows Cygwin, install =graphviz= in =cygwin= setup tool
+
+For macOS, install =graphviz= with homebrew:
+#+begin_src shell
+brew install graphviz
+#+end_src
+
+Download =plantuml.jar= from https://plantuml.com/download, and put it to
+"~/kimikit/plantuml/plantuml.jar"
 
 #+begin_src emacs-lisp
 (use-package plantuml-mode
+  :custom ((plantuml-default-exec-mode 'jar)
+           (org-plantuml-jar-path (expand-file-name (concat kimim/path-kimikit "plantuml/plantuml.jar"))))
   :config
-  (setq plantuml-default-exec-mode 'jar))
-
-(use-package ob-plantuml
-  :ensure org
-  :config
-  (use-package plantuml-mode)
-  (require 'ob-plantuml)
-  ;;(setenv "GRAPHVIZ_DOT" (concat kimim/path-root "usr/bin/dot"))
-  (setq org-plantuml-jar-path (concat kimim/path-kimikit "plantuml/plantuml.jar"))
-  (defun org-babel-execute:plantuml (body params)
-    "Execute a block of plantuml code with org-babel.
-This function is called by `org-babel-execute-src-block'."
-    (let* ((out-file (or (cdr (assq :file params))
-                         (error "PlantUML requires a \":file\" header argument")))
-           (cmdline (cdr (assq :cmdline params)))
-           (in-file (org-babel-temp-file "plantuml-"))
-           (java (or (cdr (assq :java params)) ""))
-           (full-body (org-babel-plantuml-make-body body params))
-           (cmd (if (string= "" org-plantuml-jar-path)
-                    (error "`org-plantuml-jar-path' is not set")
-                  (concat "java " java " -jar "
-                          (if (eq system-type 'cygwin)
-                              ;; fix cygwin path setting
-                              (concat "`cygpath -wp "
-                                      (shell-quote-argument
-                                       (expand-file-name org-plantuml-jar-path))
-                                      " ` ")
-                            org-plantuml-jar-path)
-                          " -charset UTF-8 "
-                          (if (string= (file-name-extension out-file) "png")
-                              " -tpng" "")
-                          (if (string= (file-name-extension out-file) "svg")
-                              " -tsvg" "")
-                          (if (string= (file-name-extension out-file) "eps")
-                              " -teps" "")
-                          (if (string= (file-name-extension out-file) "pdf")
-                              " -tpdf" "")
-                          (if (string= (file-name-extension out-file) "tex")
-                              " -tlatex" "")
-                          (if (string= (file-name-extension out-file) "vdx")
-                              " -tvdx" "")
-                          (if (string= (file-name-extension out-file) "xmi")
-                              " -txmi" "")
-                          (if (string= (file-name-extension out-file) "scxml")
-                              " -tscxml" "")
-                          (if (string= (file-name-extension out-file) "html")
-                              " -thtml" "")
-                          (if (string= (file-name-extension out-file) "txt")
-                              " -ttxt" "")
-                          (if (string= (file-name-extension out-file) "utxt")
-                              " -utxt" "")
-                          " -p " cmdline " < "
-                          (org-babel-process-file-name in-file)
-                          " > "
-                          (org-babel-process-file-name out-file)))))
-      (unless (file-exists-p org-plantuml-jar-path)
-        (error "Could not find plantuml.jar at %s" org-plantuml-jar-path))
-      (with-temp-file in-file (insert full-body))
-      (message "%s" cmd) (org-babel-eval cmd "")
-      nil)))
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
 #+end_src
 
 ** org as GTD system
