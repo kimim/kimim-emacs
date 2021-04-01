@@ -1526,13 +1526,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 * Orgmode
 
-** orgalist
-
-#+begin_src emacs-lisp
-  (use-package orgalist
-    :commands (orgalist-mode))
-#+end_src
-
 ** org general setting
 
 #+begin_src emacs-lisp
@@ -1549,13 +1542,9 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (org-roam-mode t)
   (use-package company)
   (setq company-minimum-prefix-length 2)
-
+ (use-package org-appear)
   (setq org-hide-emphasis-markers t)
-  (use-package org-appear)
-  (add-hook 'org-mode-hook 'org-appear-mode)
-  (setq org-appear-autolinks t)
-
-  ;; (org-download-enable)
+ ;; (org-download-enable)
   (setq org-support-shift-select t)
   ;; no empty line after collapsed
   (setq org-cycle-separator-lines 0)
@@ -1565,6 +1554,24 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
       (setq org-startup-indented t)
     (setq org-startup-indented nil))
   (setq org-image-actual-width 600))
+#+end_src
+
+** org-appear
+
+#+begin_src emacs-lisp
+(use-package org-appear
+  :ensure t
+  :custom ((org-appear-autolinks t))
+  :config
+  (add-hook 'org-mode-hook 'org-appear-mode))
+
+#+end_src
+
+** orgalist
+
+#+begin_src emacs-lisp
+  (use-package orgalist
+    :commands (orgalist-mode))
 #+end_src
 
 ** org for writing
