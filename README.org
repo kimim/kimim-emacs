@@ -1549,6 +1549,12 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (org-roam-mode t)
   (use-package company)
   (setq company-minimum-prefix-length 2)
+
+  (setq org-hide-emphasis-markers t)
+  (use-package org-appear)
+  (add-hook 'org-mode-hook 'org-appear-mode)
+  (setq org-appear-autolinks t)
+
   ;; (org-download-enable)
   (setq org-support-shift-select t)
   ;; no empty line after collapsed
