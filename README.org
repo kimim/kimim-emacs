@@ -1539,11 +1539,11 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   ("M-*" . org-mark-ring-last-goto)
   :config
   (use-package org-roam)
-  (org-roam-mode t)
   (use-package company)
   (setq company-minimum-prefix-length 2)
- (use-package org-appear)
+  (use-package org-appear)
   (setq org-hide-emphasis-markers t)
+  (org-appear-mode t)
  ;; (org-download-enable)
   (setq org-support-shift-select t)
   ;; no empty line after collapsed
@@ -2482,6 +2482,7 @@ apt-cyg install sqlite3
           ("C-c n I" . org-roam-insert-immediate)))
   :config
   (require 'kimim)
+  (org-roam-mode t)
   (use-package org-roam-server)
   (require 'org-roam-protocol)
   (defun org-roam-insert-roam (&optional lowercase completions filter-fn description link-type)
