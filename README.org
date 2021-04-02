@@ -8,7 +8,7 @@
 * Introduction
 
 This Emacs configuration file is written by literate programming method.[fn:1]
-The =emacs-lisp= code is extracted from this =orgmode=[fn:2] file, and then
+The =emacs-lisp= code is extracted from this =orgmode= [fn:2] file, and then
 compiled to binary =elc= file for fast loading in the future.
 
 * Installation
@@ -1641,8 +1641,8 @@ Polymode [fn:20] is a framework for multiple major modes (MMM) inside a single
 Emacs buffer. It is comfortable to enable it during literating program.
 
 #+begin_src emacs-lisp
-(use-package poly-org
-  :ensure t)
+;;(use-package poly-org
+;;  :ensure t)
 #+end_src
 
 ** org exporting
@@ -2039,7 +2039,9 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
 #+begin_src emacs-lisp
 (use-package plantuml-mode
   :custom ((plantuml-default-exec-mode 'jar)
-           (org-plantuml-jar-path (expand-file-name (concat kimim/path-kimikit "plantuml/plantuml.jar"))))
+           (org-plantuml-jar-path
+            (expand-file-name
+             (concat kimim/path-kimikit "plantuml/plantuml.jar"))))
   :config
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
@@ -2508,14 +2510,16 @@ If DESCRIPTION is provided, use this as the link label.  See
                  (_ (when (region-active-p)
                       (setq beg (set-marker (make-marker) (region-beginning)))
                       (setq end (set-marker (make-marker) (region-end)))
-                      (setq region-text (org-link-display-format (buffer-substring-no-properties beg end)))))
+                      (setq region-text (org-link-display-format
+                                         (buffer-substring-no-properties beg end)))))
                  (completions (--> (or completions
                                        (org-roam--get-title-path-completions))
                                 (if filter-fn
                                     (funcall filter-fn it)
                                   it)))
-                 (title-with-tags (org-roam-completion--completing-read "Title: " completions
-                                                                        :initial-input region-text))
+                 (title-with-tags (org-roam-completion--completing-read
+                                   "Title: " completions
+                                   :initial-input region-text))
                  (res (cdr (assoc title-with-tags completions)))
                  (title (or (plist-get res :title)
                             title-with-tags))
@@ -2532,14 +2536,17 @@ If DESCRIPTION is provided, use this as the link label.  See
                      (set-marker end nil))
                    (insert (concat "[[roam:" title "]]")))
                   (t
-                   (let ((org-roam-capture--info `((title . ,title-with-tags)
-                                                   (slug . ,(funcall org-roam-title-to-slug-function title-with-tags))))
+                   (let ((org-roam-capture--info
+                          `((title . ,title-with-tags)
+                            (slug . ,(funcall org-roam-title-to-slug-function
+                                              title-with-tags))))
                          (org-roam-capture--context 'title))
-                     (setq org-roam-capture-additional-template-props (list :region (org-roam-shield-region beg end)
-                                                                            :insert-at (point-marker)
-                                                                            :link-type link-type
-                                                                            :link-description description
-                                                                            :finalize 'insert-link))
+                     (setq org-roam-capture-additional-template-props
+                           (list :region (org-roam-shield-region beg end)
+                                 :insert-at (point-marker)
+                                 :link-type link-type
+                                 :link-description description
+                                 :finalize 'insert-link))
                      (org-roam-capture--capture))))
             res))
       (deactivate-mark))))
