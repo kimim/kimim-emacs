@@ -193,16 +193,18 @@ calculated with original default font height and width: =frame-char-height= and
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
       (set-frame-font "YaheiInconsolata-16")))
     ;; top, left ... must be integer
-    (add-to-list 'default-frame-alist
-                 (cons 'top  (/ (x-display-pixel-height) 10)))
-    (add-to-list 'default-frame-alist
-                 (cons 'left (/ (x-display-pixel-width) 10)))
-    (add-to-list 'default-frame-alist
-                 (cons 'height (/ (* 4 (x-display-pixel-height))
-                                  (* 5 (frame-char-height)))))
-    (add-to-list 'default-frame-alist
-                 (cons 'width (/ (* 4 (x-display-pixel-width))
-                                 (* 5 (frame-char-width)))))))
+    (let ((width (fourth (car (car (display-monitor-attributes-list)))))
+          (height (fifth (car (car (display-monitor-attributes-list))))))
+      (add-to-list 'default-frame-alist
+                   (cons 'top  (/ height 10)))
+      (add-to-list 'default-frame-alist
+                   (cons 'left (/ width 10)))
+      (add-to-list 'default-frame-alist
+                   (cons 'height (/ (* 4 height)
+                                    (* 5 (frame-char-height)))))
+      (add-to-list 'default-frame-alist
+                   (cons 'width (/ (* 4 width)
+                                   (* 5 (frame-char-width))))))))
 
 (kimim/frame-and-font)
 #+end_src
