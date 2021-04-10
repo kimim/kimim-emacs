@@ -1692,11 +1692,13 @@ For MacOS:
 brew cask install mactex-no-gui
 #+end_src
 
-For Windows, download and install CTEX from http://www.ctex.org
-
-#+begin_src shell
-apt-cyg install texlive-collection-xetex texlive-collection-latex texlive-collection-fontsrecommended
-#+end_src
+For Windows, there are three options:
+1. download and install CTEX from http://www.ctex.org
+2. install texlive-collection in cygwin
+   #+begin_src shell
+   apt-cyg install texlive-collection-xetex texlive-collection-latex texlive-collection-fontsrecommended
+   #+end_src
+3. download and install texlive from http://tug.org/texlive/acquire-netinstall.html
 
 For Linux:
 
@@ -1708,7 +1710,8 @@ cd install-tl-20200908/
 sudo ./install-tl
 #+end_src
 
-Then for all the OS platforms, use =tlmgr= to install user level tex packages:
+Then for all the OS platforms, use =tlmgr= to install user level tex
+packages (notes that, in windows, you may need to run =tlmgr.bat=):
 
 #+begin_src shell
 tlmgr init-usertree
