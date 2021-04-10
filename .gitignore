@@ -7,6 +7,9 @@ README.html
 README.odt
 README.bbl
 README.pyg
+README.aux
+README.log
+README.out
 references.bib
 references.back*
 _minted-*
