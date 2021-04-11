@@ -809,13 +809,11 @@ region. That's amazing.
   :config
   (require 'dired-x)
   (use-package dired-narrow)
-  (use-package dired-collapse)
   (add-hook 'dired-mode-hook
             (lambda ()
               (turn-on-gnus-dired-mode)
               ;; Set dired-x buffer-local variables here.  For example:
               (dired-omit-mode 1)
-              (dired-collapse-mode 1)
               (setq dired-omit-localp t)
               (setq dired-omit-files
                     (concat "|NTUSER\\|ntuser\\"
@@ -860,12 +858,6 @@ region. That's amazing.
     (interactive "p")
     (if (= 3 (line-number-at-pos))
         (goto-char (point-max)))))
-#+end_src
-
-** dired-collapse
-
-#+begin_src emacs-lisp
-(use-package dired-collapse)
 #+end_src
 
 ** dired-narrow

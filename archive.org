@@ -453,3 +453,11 @@ functions, but also provides many handy features of its own.
     (if (eq system-type 'darwin)
         (setq sr-listing-switches "-Avhlgo")))
 #+end_src
+** dired-collapse
+
+It will be difficult to mark the parent directory. Thus let's disable this
+extention now.
+
+#+begin_src emacs-lisp
+(use-package dired-collapse)
+#+end_src
