@@ -1721,63 +1721,65 @@ sudo apt install python3-pygments
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package ox-latex
-    :ensure org
-    :bind ("<C-f7>" . org-latex-export-to-pdf)
-    :commands (org-latex-publish-to-pdf)
-    :config
-    (require 'ox-latex)
-    (setq org-latex-listings 'minted)
-    (setq org-latex-minted-options
-    '(("frame" "single") ("fontsize" "\\small")))
+(use-package ox-latex
+  :ensure org
+  :bind ("<C-f7>" . org-latex-export-to-pdf)
+  :commands (org-latex-publish-to-pdf)
+  :config
+  (require 'ox-latex)
+  (setq org-latex-listings 'minted)
+  (setq org-latex-minted-options
+        '(("frame" "single") ("fontsize" "\\small")))
 
-    (setq org-latex-pdf-process
-          `(,(let ((ref (file-truename (concat kimim/path-ref "references.bib"))))
-               (if (file-exists-p ref)
-                   (concat "cp -f \"" ref "\" .")
-                 ""))
-            "xelatex -shell-escape %f"
-            "bibtex %b"
-            "xelatex -shell-escape %f"
-            "xelatex -shell-escape %f"
-            "mv -f references.bib references.back.bib"))
+  (setq org-latex-pdf-process
+        `(
+          ;; ,(let ((ref (file-truename (concat kimim/path-ref "references.bib"))))
+          ;;    (if (file-exists-p ref)
+          ;;        (concat "cp -f \"" ref "\" .")
+          ;;      ""))
+          "xelatex -shell-escape %f"
+          "bibtex %b"
+          "xelatex -shell-escape %f"
+          "xelatex -shell-escape %f"
+          ;;"mv -f references.bib references.back.bib"
+          ))
 
     ;;; Nicolas Goaziou, http://article.gmane.org/gmane.emacs.orgmode/67692
-    (defun org-latex-ignore-heading-filter-headline (headline backend info)
-      "Strip headline from HEADLINE. Ignore BACKEND and INFO."
-      (when (and (org-export-derived-backend-p backend 'latex)
-                 (string-match "\\`.*ignoreheading.*\n" headline))
-        (replace-match "" nil nil headline)))
-    (add-to-list 'org-export-filter-headline-functions
-                 'org-latex-ignore-heading-filter-headline)
+  (defun org-latex-ignore-heading-filter-headline (headline backend info)
+    "Strip headline from HEADLINE. Ignore BACKEND and INFO."
+    (when (and (org-export-derived-backend-p backend 'latex)
+               (string-match "\\`.*ignoreheading.*\n" headline))
+      (replace-match "" nil nil headline)))
+  (add-to-list 'org-export-filter-headline-functions
+               'org-latex-ignore-heading-filter-headline)
 
-    ;; most of the time, I do not need table of contents
-    (setq org-latex-toc-command nil)
-    ;; https://www.tuicool.com/articles/ZnAnym
-    ;; remove error: ! LaTeX Error: Command \nobreakspace unavailable in encoding T1.
-    ;; add: \DeclareRobustCommand\nobreakspace{\leavevmode\nobreak\ }
-    ;; put long latex classes in a separate file
-    (require 'latex-classes)
-    (setq org-latex-classes kimim/latex-classes)
+  ;; most of the time, I do not need table of contents
+  (setq org-latex-toc-command nil)
+  ;; https://www.tuicool.com/articles/ZnAnym
+  ;; remove error: ! LaTeX Error: Command \nobreakspace unavailable in encoding T1.
+  ;; add: \DeclareRobustCommand\nobreakspace{\leavevmode\nobreak\ }
+  ;; put long latex classes in a separate file
+  (require 'latex-classes)
+  (setq org-latex-classes kimim/latex-classes)
 
-    (setq org-latex-default-class "article")
-    ;; remove fontenc, and AUTO in front of inputenc,
-    ;; then francais can be processed
-    (setq org-latex-default-packages-alist
-          (quote
-           (("" "inputenc" t ("pdflatex"))
-            ("" "minted" t nil)
-            ("" "amsfonts" t nil)
-            ("" "graphicx" t nil)
-            ("" "grffile" t nil)
-            ("" "longtable" nil nil)
-            ("" "wrapfig" nil nil)
-            ("" "rotating" nil nil)
-            ("normalem" "ulem" t nil)
-            ("" "amsmath" t nil)
-            ("" "textcomp" t nil)
-            ("" "lettrine" t nil)
-            ("" "capt-of" nil nil)))))
+  (setq org-latex-default-class "article")
+  ;; remove fontenc, and AUTO in front of inputenc,
+  ;; then francais can be processed
+  (setq org-latex-default-packages-alist
+        (quote
+         (("" "inputenc" t ("pdflatex"))
+          ("" "minted" t nil)
+          ("" "amsfonts" t nil)
+          ("" "graphicx" t nil)
+          ("" "grffile" t nil)
+          ("" "longtable" nil nil)
+          ("" "wrapfig" nil nil)
+          ("" "rotating" nil nil)
+          ("normalem" "ulem" t nil)
+          ("" "amsmath" t nil)
+          ("" "textcomp" t nil)
+          ("" "lettrine" t nil)
+          ("" "capt-of" nil nil)))))
 #+end_src
 
 *** org to html page
