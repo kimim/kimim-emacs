@@ -7,9 +7,9 @@
 
 * Introduction
 
-This Emacs configuration file is written by literate programming method.[fn:1]
-The =emacs-lisp= code is extracted from this =orgmode= [fn:2] file, and then
-compiled to binary =elc= file for fast loading in the future.
+This Emacs configuration file is written by literate programming method[fn:1].
+The =emacs-lisp= code is extracted from this =orgmode=[fn:2] file, and then compiled
+to binary =elc= file for fast loading in the future.
 
 * Installation
 
@@ -35,8 +35,8 @@ You can find Cygwin setup here: https://cygwin.com/setup-x86_64.exe , download
 and install it in your machine, for example, at =C:\cygwin64=. Then you can use
 =mintty.exe= to work with =bash=.
 
-In order to make life easier, we will use =apt-cyg= [fn:4] to install =emacs=
-and other tools. Let's download =apt-cyg= and install =emacs= and =git=:
+In order to make life easier, we will use =apt-cyg=[fn:4] to install =emacs= and
+other tools. Let's download =apt-cyg= and install =emacs= and =git=:
 
 #+begin_src shell
 curl https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg \
@@ -45,14 +45,23 @@ chmod +x /usr/local/bin/apt-cyg
 apt-cyg install emacs-w32 git
 #+end_src
 
-Then start =emacs= from cygwin terminal, and right click the =emacs= icon to pin
-it to taskbar, then click the property of this icon to add
-=C:\cygwin64\bin\run.exe emacs-w32= in the target field. This way will hide the
-black terminal.
+Then start =emacs= from cygwin terminal, and right click the =emacs= icon to pin it
+to taskbar, then click the property of this icon to add bellow to the target
+field. This way will hide the black terminal.
+
+#+begin_src shell
+C:\cygwin64\bin\run.exe emacs-w32
+#+end_src
 
 You can also add =emacs --daemon= in your scheduled task, and change the target
-field as =C:\cygwin64\bin\run.exe emacsclient -c=. This will attach the client
-to the server daemon. You can get a running =emacs= very quick.
+field as:
+
+#+begin_src shell
+C:\cygwin64\bin\run.exe emacsclient -c
+#+end_src
+
+This will attach the client to the server daemon. You can get a running =emacs=
+very quick.
 
 ** Windows/WSL2
 
@@ -64,7 +73,7 @@ https://github.com/sileshn/ManjaroWSL/releases
 ** macOS
 
 For Apple macOS, most UNIX tools are installed already. You can use
-homebrew [fn:7] to install additional application if it is missing.
+homebrew[fn:7] to install additional application if it is missing.
 
 #+begin_src shell
 /bin/bash -c \
@@ -107,8 +116,8 @@ For Linux, you could just move all above font files to
 
 ** Get emacs config
 
-You can follow below shell commands to prepare the =emacs= configuration files
-and folders:
+You can follow below shell commands to prepare the =emacs= configuration files and
+folders:
 
 #+begin_src shell
 # backup existing emacs config
