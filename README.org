@@ -200,7 +200,7 @@ calculated with original default font height and width: =frame-char-height= and
       (set-fontset-font
        "fontset-default"
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
-      (set-frame-font "YaheiInconsolata-16")))
+      (set-frame-font "YaheiInconsolata-18")))
     ;; top, left ... must be integer
     (let ((width (fourth (car (car (display-monitor-attributes-list)))))
           (height (fifth (car (car (display-monitor-attributes-list))))))
