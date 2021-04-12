@@ -1560,7 +1560,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :custom ((org-appear-autolinks t))
   :config
   (add-hook 'org-mode-hook 'org-appear-mode))
-
 #+end_src
 
 ** orgalist
@@ -1597,41 +1596,43 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package org
-    :config
-    (use-package org-download)
-    (use-package pangu-spacing)
-    (setq org-hide-leading-stars t)
-    (setq org-footnote-auto-adjust t)
-    (setq org-footnote-define-inline nil)
-    (define-key org-mode-map (kbd "C-c C-x h") (lambda ()
-                                                 (interactive)
-                                                 (insert "^{()}")
-                                                 (backward-char 2)))
-    (define-key org-mode-map (kbd "C-c C-x l") (lambda ()
-                                                 (interactive)
-                                                 (insert "_{}")
-                                                 (backward-char 1))))
+(use-package org
+  :config
+  (use-package org-download)
+  (use-package pangu-spacing)
+  (setq org-num-skip-footnotes t)
+  (add-hook 'org-mode-hook 'org-num-mode)
+  (setq org-hide-leading-stars t)
+  (setq org-footnote-auto-adjust t)
+  (setq org-footnote-define-inline nil)
+  (define-key org-mode-map (kbd "C-c C-x h") (lambda ()
+                                               (interactive)
+                                               (insert "^{()}")
+                                               (backward-char 2)))
+  (define-key org-mode-map (kbd "C-c C-x l") (lambda ()
+                                               (interactive)
+                                               (insert "_{}")
+                                               (backward-char 1))))
 #+end_src
 
 ** org with source code
 
 #+begin_src emacs-lisp
-  (use-package org
-    :config
-    ;;(use-package poly-org)
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((C . t)
-       (clojure . t)
-       (shell . t)
-       (python . t)))
-    (setq org-src-window-setup 'current-window)
-    (setq org-src-fontify-natively t)
-    (setq org-src-preserve-indentation t)
-    (setq org-edit-src-content-indentation 0)
-    (setq org-confirm-babel-evaluate nil)
-    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
+(use-package org
+  :config
+  ;;(use-package poly-org)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((C . t)
+     (clojure . t)
+     (shell . t)
+     (python . t)))
+  (setq org-src-window-setup 'current-window)
+  (setq org-src-fontify-natively t)
+  (setq org-src-preserve-indentation t)
+  (setq org-edit-src-content-indentation 0)
+  (setq org-confirm-babel-evaluate nil)
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
 #+end_src
 
 Polymode [fn:20] is a framework for multiple major modes (MMM) inside a single
