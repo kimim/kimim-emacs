@@ -2244,11 +2244,21 @@ name handling function can be found from emacs manual[fn:21].
 Org-roam implements =zettelkasten= method [fn:22] used by famous German socialogist
 Niklas Luhmann[fn:23].
 
-First you should install =sqlite3=, which is used to index the links:
+First you should install =sqlite3=, which is used to index the links.
+
+Windows/MSYS2:
+
+#+begin_src shell
+pacman -S mingw-w64-x86_64-sqlite3
+#+end_src
+
+Windows/Cygwin:
 
 #+begin_src shell
 apt-cyg install sqlite3
 #+end_src
+
+sqlite3 is shipped in macOS by default.
 
 #+begin_src emacs-lisp
 (use-package org-roam
