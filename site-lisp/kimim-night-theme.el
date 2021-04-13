@@ -107,7 +107,7 @@
             (ido-subdir :weight bold)
             (mode-line :foreground "white" :background "RoyalBlue4" :box nil :height 0.85)
             (mode-line-inactive :foreground "light blue" :background "#101d3c" :box nil :height 0.85)
-            (mode-line-buffer-id :foreground "light blue" :background "RoyalBlue4" :box nil :weight bold)
+            (mode-line-buffer-id :foreground "light blue" :box nil :weight bold)
             (which-func :foreground ,kimim-night-builtin)
             (minibuffer-prompt :foreground "light blue")
             (hl-line :background "gray12")
