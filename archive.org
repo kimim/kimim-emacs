@@ -461,3 +461,37 @@ extention now.
 #+begin_src emacs-lisp
 (use-package dired-collapse)
 #+end_src
+** selectrum
+
+#+begin_src emacs-lisp
+(use-package selectrum-prescient
+  :config
+  (selectrum-prescient-mode +1)
+  (prescient-persist-mode +1))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package marginalia
+  :bind (:map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+
+  ;; The :init configuration is always executed (Not lazy!)
+  :init
+  (marginalia-mode)
+
+  ;; When using Selectrum, ensure that Selectrum is refreshed when cycling annotations.
+  (advice-add #'marginalia-cycle :after
+              (lambda () (when (bound-and-true-p selectrum-mode) (selectrum-exhibit)))))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package selectrum
+  :defer 1
+  :config
+  (selectrum-mode +1)
+  (use-package selectrum-prescient)
+  (selectrum-prescient-mode +1)
+  (prescient-persist-mode +1)
+  (use-package marginalia)
+  (marginalia-mode +1))
+#+end_src

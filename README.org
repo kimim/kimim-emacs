@@ -202,8 +202,8 @@ calculated with original default font height and width: =frame-char-height= and
        'unicode-bmp (font-spec :family "YaheiInconsolata"))
       (set-frame-font "YaheiInconsolata-18")))
     ;; top, left ... must be integer
-    (let ((width (fourth (car (car (display-monitor-attributes-list)))))
-          (height (fifth (car (car (display-monitor-attributes-list))))))
+    (let ((width (nth 3 (car (car (display-monitor-attributes-list)))))
+          (height (nth 4 (car (car (display-monitor-attributes-list))))))
       (add-to-list 'default-frame-alist
                    (cons 'top  (/ height 10)))
       (add-to-list 'default-frame-alist
@@ -347,7 +347,9 @@ and defers loading of the module until they are used.
 (setq use-package-verbose t)
 #+end_src
 
-* Title and Header
+* Frame Title
+
+Customize the frame title to display "Emacs" + buffer file name.
 
 #+begin_src emacs-lisp
 (setq frame-title-format
@@ -355,16 +357,6 @@ and defers loading of the module until they are used.
         (:eval (if (buffer-file-name)
                    (abbreviate-file-name (buffer-file-name))
                  "%b"))))
-
-(use-package path-headerline-mode
-  :commands (path-headerline-mode)
-  :config
-  ;; only display headerline for real files
-  (defun kimim/ph--display-header (orig-fun &rest args)
-    (if (buffer-file-name)
-        (apply orig-fun args)
-      (setq header-line-format nil)))
-  (advice-add 'ph--display-header :around #'kimim/ph--display-header))
 #+end_src
 
 * Mode Line
@@ -604,42 +596,6 @@ scroll slowly with touchpad.
   (ivy-mode 1))
 #+end_src
 
-** COMMENT selectrum
-
-#+begin_src emacs-lisp
-(use-package selectrum-prescient
-  :config
-  (selectrum-prescient-mode +1)
-  (prescient-persist-mode +1))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package marginalia
-  :bind (:map minibuffer-local-map
-         ("M-A" . marginalia-cycle))
-
-  ;; The :init configuration is always executed (Not lazy!)
-  :init
-  (marginalia-mode)
-
-  ;; When using Selectrum, ensure that Selectrum is refreshed when cycling annotations.
-  (advice-add #'marginalia-cycle :after
-              (lambda () (when (bound-and-true-p selectrum-mode) (selectrum-exhibit)))))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package selectrum
-  :defer 1
-  :config
-  (selectrum-mode +1)
-  (use-package selectrum-prescient)
-  (selectrum-prescient-mode +1)
-  (prescient-persist-mode +1)
-  (use-package marginalia)
-  (marginalia-mode +1))
-#+end_src
-
-
 ** guru mode
 
 =guru-mode= warns you when you type arrow keys, home or end. This could help you
@@ -667,8 +623,8 @@ frequency report by =M-x keyfreq-show=.
 #+end_src
 
 * Editing
-
 ** Input Method
+
 #+begin_src emacs-lisp
 (use-package rime
   :bind ("C-;" . toggle-input-method)
