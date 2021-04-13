@@ -106,7 +106,8 @@
 (defvar en-article
   '("article"
     "\\documentclass{article}
-\\usepackage[UTF8]{ctex}
+\\usepackage{xeCJK}
+\\usepackage{amsmath,amssymb,amsfonts}
 \\usepackage{geometry}
 \\usepackage{titlesec}
 \\usepackage{enumitem}
