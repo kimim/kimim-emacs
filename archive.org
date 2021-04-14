@@ -495,3 +495,13 @@ extention now.
   (use-package marginalia)
   (marginalia-mode +1))
 #+end_src
+
+** package
+
+original elpa's:
+#+begin_src emacs-lisp
+(setq package-archives
+      '(;;("gnu" . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("org" . "https://orgmode.org/elpa/")))
+#+end_src
