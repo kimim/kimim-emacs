@@ -1834,9 +1834,9 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
 #+begin_src emacs-lisp
 (use-package plantuml-mode
   :custom ((plantuml-default-exec-mode 'jar)
-           (org-plantuml-jar-path
-            (expand-file-name
-             (concat kimim/path-kimikit "plantuml/plantuml.jar"))))
+           (plantuml-jar-path (expand-file-name
+                               (concat kimim/path-kimikit "plantuml/plantuml.jar")))
+           (org-plantuml-jar-path plantuml-jar-path))
   :config
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
