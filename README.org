@@ -2263,6 +2263,8 @@ sqlite3 is shipped in macOS by default.
 #+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
+  :hook
+  (after-init . org-roam-mode)
   :custom
   ((org-roam-directory kimim/path-notes)
    (org-roam-db-location (file-truename
@@ -2289,9 +2291,6 @@ sqlite3 is shipped in macOS by default.
           ("C-c n I" . org-roam-insert-immediate)))
   :config
   (require 'kimim)
-  (org-roam-mode t)
-  (use-package org-roam-server)
-  (require 'org-roam-protocol)
   (defun org-roam-insert-roam (&optional lowercase completions filter-fn description link-type)
     "Find an Org-roam file, and insert a the roam link to it at point.
 Return selected file if it exists.
