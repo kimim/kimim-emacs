@@ -325,9 +325,11 @@ When you use the =:commands= keyword, it creates autoloads for those commands
 and defers loading of the module until they are used.
 
 #+begin_src emacs-lisp
+;; temporary disable signature check
+(setq package-check-signature nil)
 (setq package-user-dir "~/.emacs.d/elpa")
 (setq package-archives
-      '(;;("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+      '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
         ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
 (mapc
@@ -2263,8 +2265,6 @@ sqlite3 is shipped in macOS by default.
 #+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
-  :hook
-  (after-init . org-roam-mode)
   :custom
   ((org-roam-directory kimim/path-notes)
    (org-roam-db-location (file-truename
@@ -2290,6 +2290,7 @@ sqlite3 is shipped in macOS by default.
           ("C-c n r" . org-roam-insert-roam)
           ("C-c n I" . org-roam-insert-immediate)))
   :config
+  (org-roam-mode 1)
   (require 'kimim)
   (defun org-roam-insert-roam (&optional lowercase completions filter-fn description link-type)
     "Find an Org-roam file, and insert a the roam link to it at point.
