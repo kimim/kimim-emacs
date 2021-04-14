@@ -1493,7 +1493,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (use-package org-roam)
   (use-package company)
   (setq company-minimum-prefix-length 2)
-  (use-package org-appear)
   (setq org-hide-emphasis-markers t)
   (org-appear-mode t)
  ;; (org-download-enable)
@@ -1512,6 +1511,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
 (use-package org-appear
+  :commands (org-appear-mode)
   :ensure t
   :custom ((org-appear-autolinks t))
   :config
