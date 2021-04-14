@@ -2290,7 +2290,6 @@ sqlite3 is shipped in macOS by default.
           ("C-c n r" . org-roam-insert-roam)
           ("C-c n I" . org-roam-insert-immediate)))
   :config
-  (org-roam-mode 1)
   (require 'kimim)
   (defun org-roam-insert-roam (&optional lowercase completions filter-fn description link-type)
     "Find an Org-roam file, and insert a the roam link to it at point.
