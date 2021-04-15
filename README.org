@@ -1149,7 +1149,8 @@ parentheis. We define some keys for it:
 
 #+begin_src emacs-lisp
 (use-package flycheck
-  :commands (global-flycheck-mode))
+  :commands (global-flycheck-mode)
+  :custom ((flycheck-global-modes '(not org-mode))))
 #+end_src
 
 ** lsp mode
