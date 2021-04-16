@@ -770,6 +770,7 @@ region. That's amazing.
    :map dired-mode-map
    ("<left>" . dired-up-directory)
    ("<right>" . dired-find-file)
+   ("b" . dired-up-directory)
    ("o" . kimim/open-in-external-app)
    ("M-n" . dired-narrow)
    ("M-c" . compose-attach-marked-files))
@@ -1169,6 +1170,10 @@ that dash version higher than 2.18 is installed[fn:15].
 (use-package lsp-mode
   :commands lsp
   :custom ((lsp-headerline-breadcrumb-icons-enable nil))
+  :bind (:map
+         lsp-mode-map
+         ("C-x ." . lsp-find-definition)
+         ("C-x ," . pop-tag-mark))
   :hook ((clojure-mode . lsp)
          (c-mode . lsp)
          (c++-mode . lsp)
@@ -1486,12 +1491,14 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package org
   :bind
-  ("C-c b" . org-iswitchb)
-  ("C-c l" . org-store-link)
-  ("C-c  ！" . org-time-stamp-inactive)
-  ("C-c  。" . org-time-stamp)
-  ("M-." . org-open-at-point)
-  ("M-*" . org-mark-ring-last-goto)
+  (:map
+   org-mode-map
+   ("C-c b" . org-iswitchb)
+   ("C-c l" . org-store-link)
+   ("C-c  ！" . org-time-stamp-inactive)
+   ("C-c  。" . org-time-stamp)
+   ("M-." . org-open-at-point)
+   ("M-*" . org-mark-ring-last-goto))
   :config
   (use-package org-roam)
   (use-package company)
