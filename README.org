@@ -141,76 +141,6 @@ Let's tell =emacs=, if the pathes are not set, report error:
 
 Then you can execute =emacs= to bootstrap itself.
 
-* Emacs Frame
-
-Set look & feel before all other settings.
-
-** Menu Bar and Tool Bar
-
-Don't display menu-bar, tool-bar, tooltip and scroll-bar. Because sometimes,
-they may catch your attention. But you cannot hide menu bar in macOS desktop
-environment, because the system preserves menu bar for every applications.
-
-#+begin_src emacs-lisp
-(defun kimim/menu-and-bar ()
-  (cond
-   (window-system
-    ;; Enable copy and paste in Win32
-    (setq select-enable-clipboard t)
-    (menu-bar-mode 0)
-    (tool-bar-mode -1)
-    (tooltip-mode -1)
-    (scroll-bar-mode -1))
-   ((eq window-system nil)
-    (menu-bar-mode 0))))
-
-(kimim/menu-and-bar)
-#+end_src
-
-** Font and Frame Size
-
-Set default font and frame size for both window system. You should
-=set-default-font= first, otherwise, the frame height and width will be
-calculated with original default font height and width: =frame-char-height= and
-=frame-char-width=.
-
-#+begin_src emacs-lisp
-(use-package cnfonts)
-#+end_src
-
-#+begin_src emacs-lisp
-(defun kimim/frame-and-font ()
-  (when window-system
-    ;; (cond
-    ;;  ((< (display-pixel-width) 2560)
-    ;;   (set-fontset-font
-    ;;    "fontset-default"
-    ;;    'unicode-bmp (font-spec :family "YaheiInconsolata"))
-    ;;   (set-frame-font "YaheiInconsolata-14"))
-    ;;  ((>= (display-pixel-width) 2560)
-    ;;   (set-fontset-font
-    ;;    "fontset-default"
-    ;;    'unicode-bmp (font-spec :family "YaheiInconsolata"))
-    ;;   (set-frame-font "YaheiInconsolata-18")))
-    (use-package cnfonts)
-    (cnfonts-enable)
-    ;; top, left ... must be integer
-    (let ((width (nth 3 (car (car (display-monitor-attributes-list)))))
-          (height (nth 4 (car (car (display-monitor-attributes-list))))))
-      (add-to-list 'default-frame-alist
-                   (cons 'top  (/ height 10)))
-      (add-to-list 'default-frame-alist
-                   (cons 'left (/ width 10)))
-      (add-to-list 'default-frame-alist
-                   (cons 'height (/ (* 4 height)
-                                    (* 5 (frame-char-height)))))
-      (add-to-list 'default-frame-alist
-                   (cons 'width (/ (* 4 width)
-                                   (* 5 (frame-char-width))))))))
-
-(kimim/frame-and-font)
-#+end_src
-
 * Environment
 
 ** PATH, exec-path and Info
@@ -340,6 +270,76 @@ and defers loading of the module until they are used.
 (setq use-package-always-ensure t)
 (setq use-package-always-defer t)
 (setq use-package-verbose t)
+#+end_src
+
+* Emacs Frame
+
+Set look & feel before all other settings.
+
+** Menu Bar and Tool Bar
+
+Don't display menu-bar, tool-bar, tooltip and scroll-bar. Because sometimes,
+they may catch your attention. But you cannot hide menu bar in macOS desktop
+environment, because the system preserves menu bar for every applications.
+
+#+begin_src emacs-lisp
+(defun kimim/menu-and-bar ()
+  (cond
+   (window-system
+    ;; Enable copy and paste in Win32
+    (setq select-enable-clipboard t)
+    (menu-bar-mode 0)
+    (tool-bar-mode -1)
+    (tooltip-mode -1)
+    (scroll-bar-mode -1))
+   ((eq window-system nil)
+    (menu-bar-mode 0))))
+
+(kimim/menu-and-bar)
+#+end_src
+
+** Font and Frame Size
+
+Set default font and frame size for both window system. You should
+=set-default-font= first, otherwise, the frame height and width will be
+calculated with original default font height and width: =frame-char-height= and
+=frame-char-width=.
+
+#+begin_src emacs-lisp
+(use-package cnfonts)
+#+end_src
+
+#+begin_src emacs-lisp
+(defun kimim/frame-and-font ()
+  (when window-system
+    ;; (cond
+    ;;  ((< (display-pixel-width) 2560)
+    ;;   (set-fontset-font
+    ;;    "fontset-default"
+    ;;    'unicode-bmp (font-spec :family "YaheiInconsolata"))
+    ;;   (set-frame-font "YaheiInconsolata-14"))
+    ;;  ((>= (display-pixel-width) 2560)
+    ;;   (set-fontset-font
+    ;;    "fontset-default"
+    ;;    'unicode-bmp (font-spec :family "YaheiInconsolata"))
+    ;;   (set-frame-font "YaheiInconsolata-18")))
+    (use-package cnfonts)
+    (cnfonts-enable)
+    ;; top, left ... must be integer
+    (let ((width (nth 3 (car (car (display-monitor-attributes-list)))))
+          (height (nth 4 (car (car (display-monitor-attributes-list))))))
+      (add-to-list 'default-frame-alist
+                   (cons 'top  (/ height 10)))
+      (add-to-list 'default-frame-alist
+                   (cons 'left (/ width 10)))
+      (add-to-list 'default-frame-alist
+                   (cons 'height (/ (* 4 height)
+                                    (* 5 (frame-char-height)))))
+      (add-to-list 'default-frame-alist
+                   (cons 'width (/ (* 4 width)
+                                   (* 5 (frame-char-width))))))))
+
+(kimim/frame-and-font)
 #+end_src
 
 * Frame Title
