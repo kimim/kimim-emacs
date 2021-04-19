@@ -100,19 +100,6 @@ pacman -S emacs
 #+end_src
 
 * Preparation
-** Install fonts
-
-Because Incosolata font is really great for programming, and Microsoft Yahei is
-nice font to view Chinese characters, you'd better download and install these
-fonts from:
-
-- https://fonts.google.com/specimen/Inconsolata
-- https://github.com/loseblue/yaheiInconsolata.ttf
-
-For Windows and macOS, you can view and install fonts with font viewer.
-
-For Linux, you could just move all above font files to
-=/usr/local/share/fonts/=.
 
 ** Get emacs config
 
@@ -335,9 +322,9 @@ and defers loading of the module until they are used.
 (setq package-check-signature nil)
 (setq package-user-dir "~/.emacs.d/elpa")
 (setq package-archives
-      '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-        ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-        ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
+      '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("org" . "https://orgmode.org/elpa/")))
 (mapc
  (lambda (package)
    (unless (package-installed-p package)
