@@ -1153,7 +1153,8 @@ that dash version higher than 2.18 is installed[fn:15].
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :commands lsp
-  :custom ((lsp-headerline-breadcrumb-icons-enable nil))
+  :custom ((lsp-headerline-breadcrumb-icons-enable nil)
+           (lsp-headerline-breadcrumb-enable nil))
   :bind (:map
          lsp-mode-map
          ("C-x ." . lsp-find-definition)
