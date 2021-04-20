@@ -524,3 +524,19 @@ original elpa's:
         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
         ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
 #+end_src
+
+** Tagging
+
+#+begin_src emacs-lisp
+(use-package ggtags
+  :bind (("C-c f" . ggtags-find-file))
+         ;;("M-." . ggtags-find-tag-dwim)
+         ;;("M-*" . pop-tag-mark))
+  :config
+  ;; (use-package ggtags)
+  ;; (add-hook 'c-mode-hook 'ggtags-mode)
+  ;; (add-hook 'c++-mode-hook 'ggtags-mode)
+
+  (setq ggtags-global-ignore-case t)
+  (setq ggtags-sort-by-nearness t))
+#+end_src

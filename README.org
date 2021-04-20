@@ -994,18 +994,6 @@ Sort candidates using completion history.
   (bind-key "C-<f11>" 'compile)
 #+end_src
 
-** Tagging
-
-#+begin_src emacs-lisp
-(use-package ggtags
-  :bind (("C-c f" . ggtags-find-file)
-         ("M-." . ggtags-find-tag-dwim)
-         ("M-*" . pop-tag-mark))
-  :config
-  (setq ggtags-global-ignore-case t)
-  (setq ggtags-sort-by-nearness t))
-#+end_src
-
 ** Version Control
 
 #+begin_src emacs-lisp
@@ -1131,10 +1119,6 @@ that dash version higher than 2.18 is installed[fn:15].
               c-toggle-syntactic-indentation)
   :config
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
-  (use-package ggtags)
-  (add-hook 'c-mode-hook 'ggtags-mode)
-  (add-hook 'c++-mode-hook 'ggtags-mode)
-
   (add-hook 'c-mode-common-hook
             (lambda ()
               ;;(c-set-style "gnu")
