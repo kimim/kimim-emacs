@@ -488,6 +488,7 @@ Automatically highlight current symbol where the cursor is inside.
 #+end_src
 
 * Help
+
 ** Info
 
 #+begin_src emacs-lisp
@@ -689,7 +690,6 @@ frequency report by =M-x keyfreq-show=.
 
 (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
 
-(setq ispell-program-name "aspell")
 (diminish 'visual-line-mode)
 (add-hook 'text-mode-hook
           (lambda ()
@@ -961,8 +961,6 @@ English word list fetch from https://github.com/dwyl/english-words
     (setq company-idle-delay 0)
     (setq company-minimum-prefix-length 1)
     ;; macOS will use system dict file directly
-    (cond ((eq system-type 'windows-nt)
-           (setq ispell-alternate-dictionary "~/.emacs.d/dict/words3.txt")))
     (eval-after-load 'company
       '(add-to-list 'company-backends 'company-ispell)))
 #+end_src
@@ -2390,6 +2388,16 @@ support more functions from =org-ref=:
 #+end_src
 
 * Dictionary
+** ispell
+
+#+begin_src emacs-lisp
+(use-package ispell
+  :custom (ispell-program-name "aspell")
+  :config
+      (cond ((eq system-type 'windows-nt)
+             (setq ispell-alternate-dictionary "~/.emacs.d/dict/words3.txt"))))
+#+end_src
+
 ** Youdao dictionary
 
 Search dictionary with Ctrl+F3 by youdao dictionary.
