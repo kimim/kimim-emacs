@@ -758,6 +758,9 @@ region. That's amazing.
 #+begin_src emacs-lisp
 (use-package dired
   :ensure nil
+  :defines (dired-omit-localp
+            dired-omit-files)
+  :functions dired-omit-mode
   :bind
   (("C-x C-j" . dired-jump)
    :map dired-mode-map
@@ -831,24 +834,10 @@ region. That's amazing.
 
 #+begin_src emacs-lisp
 (use-package ibuffer
-  :functions (ibuffer-current-buffer
-              kill-buffer-and-its-windows)
   :bind (("C-x C-b" . ibuffer-other-window)
          :map ibuffer-mode-map
          ("<right>" . ibuffer-visit-buffer))
   :config
-  (defun ibuffer-visit-buffer-other-window (&optional noselect)
-    "Visit the buffer on this line in another window."
-    (interactive)
-    (let ((buf (ibuffer-current-buffer t)))
-      (bury-buffer (current-buffer))
-      (if noselect
-          (let ((curwin (selected-window)))
-            (pop-to-buffer buf)
-            (select-window curwin))
-        (switch-to-buffer-other-window buf)
-        (kill-buffer-and-its-windows "*Ibuffer*")
-        )))
   ;; Use human readable Size column instead of original one
   (define-ibuffer-column size-h
     (:name "Size" :inline t)
@@ -932,15 +921,16 @@ out of the box.
 =imenu= is used to navigate the function definitions in current buffer.
 
 #+begin_src emacs-lisp
-  (use-package imenu
-    :bind ("C-c C-i" . imenu)
-    :config
-    (advice-add 'imenu-default-goto-function
-                :around
-                #'kimim/imenu-default-goto-function-advice))
+(use-package imenu
+  :functions kimim/imenu-default-goto-function-advice
+  :bind ("C-c C-i" . imenu)
+  :config
+  (advice-add 'imenu-default-goto-function
+              :around
+              #'kimim/imenu-default-goto-function-advice))
 
-  (use-package imenu-anywhere
-    :bind ("C-c i" . imenu-anywhere))
+(use-package imenu-anywhere
+  :bind ("C-c i" . imenu-anywhere))
 #+end_src
 
 * auto-complete
@@ -1328,6 +1318,7 @@ Python development configuration is quite easy. =elpy= [fn:18] is used here:
 
   (use-package python
     :ensure nil
+    :defines elpy-rpc-backend
     :mode ("\\.py\\'" . python-mode)
     :interpreter ("python" . python-mode)
     :config
@@ -1436,32 +1427,36 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 * Calendar
 
 #+begin_src emacs-lisp
-  (if (not (boundp 'kimim/file-diary))
-      (defvar kimim/file-diary (concat kimim/path-sync-emacs "diary")))
+(when (not (boundp 'kimim/file-diary))
+  (defvar kimim/file-diary (concat kimim/path-sync-emacs "diary"))
   (if (not (file-exists-p kimim/file-diary))
-      (write-region "" nil kimim/file-diary))
-  (setq diary-file kimim/file-diary)
-  (setq calendar-latitude +30.16)
-  (setq calendar-longitude +120.12)
-  (setq calendar-location-name "Hangzhou")
-  (setq calendar-remove-frame-by-deleting t)
-  (setq calendar-week-start-day 1)
-  (setq holiday-christian-holidays nil)
-  (setq holiday-hebrew-holidays nil)
-  (setq holiday-islamic-holidays nil)
-  (setq holiday-solar-holidays nil)
-  (setq holiday-bahai-holidays nil)
-  (setq holiday-general-holidays
-        '((holiday-fixed 1 1 "元旦")
-          (holiday-float 5 0 2 "父親節")
-          (holiday-float 6 0 3 "母親節")))
-  (setq calendar-mark-diary-entries-flag t)
-  (setq calendar-mark-holidays-flag nil)
-  (setq calendar-view-holidays-initially-flag nil)
-  (setq chinese-calendar-celestial-stem
-        ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
-  (setq chinese-calendar-terrestrial-branch
-        ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
+      (write-region "" nil kimim/file-diary)))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package calendar
+  :custom ((diary-file kimim/file-diary)
+           (calendar-latitude +30.16)
+           (calendar-longitude +120.12)
+           (calendar-location-name "Hangzhou")
+           (calendar-remove-frame-by-deleting t)
+           (calendar-week-start-day 1)
+           (calendar-mark-holidays-flag t)
+           (holiday-christian-holidays nil)
+           (holiday-hebrew-holidays nil)
+           (holiday-islamic-holidays nil)
+           (holiday-solar-holidays nil)
+           (holiday-bahai-holidays nil)
+           (holiday-general-holidays
+            '((holiday-fixed 1 1 "元旦")
+              (holiday-float 5 0 2 "父親節")
+              (holiday-float 6 0 3 "母親節")))
+           (calendar-mark-diary-entries-flag t)
+           (calendar-view-holidays-initially-flag nil)
+           (calendar-chinese-celestial-stem
+            ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
+           (calendar-chinese-terrestrial-branch
+            ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])))
 #+end_src
 
 * Orgmode
@@ -1521,6 +1516,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 (use-package org-download
   :commands (org-download-enable)
   :custom ((org-download-heading nil))
+  :functions kimim/org-download-annotate
   :config
   (setq org-download-timestamp "")
   (setq-default org-download-image-dir "./images")
@@ -1543,10 +1539,10 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
 (use-package org
+  :custom ((org-num-skip-footnotes t))
   :config
   (use-package org-download)
   (use-package pangu-spacing)
-  (setq org-num-skip-footnotes t)
   (add-hook 'org-mode-hook 'org-num-mode)
   (setq org-hide-leading-stars t)
   (setq org-footnote-auto-adjust t)
@@ -1680,6 +1676,7 @@ sudo apt install python3-pygments
 (use-package ox-latex
   :ensure org
   :functions org-export-derived-backend-p
+  :defines kimim/latex-classes
   :bind ("<C-f7>" . org-latex-export-to-pdf)
   :commands (org-latex-publish-to-pdf)
   :config
@@ -2172,6 +2169,8 @@ name handling function can be found from emacs manual[fn:21].
   (("C-x d" . deft-find-file)
    ("C-x C-d" . deft))
   :custom ((deft-text-mode 'org-mode))
+  :functions (kimim/deft-open-file-advice
+              kimim/deft-new-file-named-advice)
   :config
   (use-package ivy)
   (setq deft-extensions '("txt" "org" "md"))
@@ -2473,16 +2472,15 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 ** EBDB - a replacement for BBDB, as contact management
 
 #+begin_src emacs-lisp
-  (use-package ebdb
-    :commands (ebdb ebdb-mail-aliases)
-    :config
-    (setq ebdb-sources (concat kimim/path-sync-emacs "ebdb"))
-    ;; do not pop *EBDB-Gnus* window
-    (setq ebdb-mua-pop-up nil)
-    (require 'ebdb-gnus)
-    (require 'ebdb-message)
-    (require 'ebdb-org)
-    (add-hook 'message-setup-hook 'ebdb-mail-aliases))
+(use-package ebdb
+  :commands (ebdb ebdb-mail-aliases)
+  :custom ((ebdb-mua-pop-up nil))
+  :config
+  (setq ebdb-sources (concat kimim/path-sync-emacs "ebdb"))
+  (require 'ebdb-gnus)
+  (require 'ebdb-message)
+  (require 'ebdb-org)
+  (add-hook 'message-setup-hook 'ebdb-mail-aliases))
 #+end_src
 
 ** erc
