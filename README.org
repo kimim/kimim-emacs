@@ -1942,17 +1942,14 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
               ;;(drag-stuff-mode -1)
               ))
 
-  (setq org-refile-files
-            (file-expand-wildcards (concat kimim/path-org "*.org")))
-
   (setq org-refile-targets
         '(;; refile to maxlevel 2 of current file
           (nil . (:maxlevel . 1))
-          ;; refile to maxlevel 1 of org-refile-files
-          (org-refile-files :maxlevel . 1)
-          ;; refile to item with 'project' tag in org-refile-files
-          (org-refile-files :tag . "project")
-          (org-refile-files :tag . "category")))
+          ;; refile to maxlevel 1 of org-agenda-files
+          (org-agenda-files :maxlevel . 1)
+          ;; refile to item with 'project' tag in org-agenda-files
+          (org-agenda-files :tag . "project")
+          (org-agenda-files :tag . "category")))
 
   (defadvice org-schedule (after add-todo activate)
     (if (or (string= "OPEN" (org-get-todo-state))
