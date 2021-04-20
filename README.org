@@ -392,8 +392,7 @@ parentheses, brackets, and braces according to their depth.
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :defer 3
-  :config
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  :hook prog-mode-hook)
 #+end_src
 
 Toggle Font-Lock mode in all buffers.
@@ -752,85 +751,12 @@ region. That's amazing.
   (global-set-key (kbd "C-c C->") 'mc/mark-all-dwim))
 #+end_src
 
-* File Management
-** dired
-
-#+begin_src emacs-lisp
-(use-package dired
-  :ensure nil
-  :bind
-  (("C-x C-j" . dired-jump)
-   :map dired-mode-map
-   ("<left>" . dired-up-directory)
-   ("<right>" . dired-find-file)
-   ("b" . dired-up-directory)
-   ("o" . kimim/open-in-external-app)
-   ("M-n" . dired-narrow)
-   ("M-c" . compose-attach-marked-files))
-  :config
-  (require 'dired-x)
-  (use-package dired-narrow)
-  (add-hook 'dired-mode-hook
-            (lambda ()
-              (turn-on-gnus-dired-mode)
-              ;; Set dired-x buffer-local variables here.  For example:
-              (dired-omit-mode 1)
-              (setq dired-omit-localp t)
-              (setq dired-omit-files
-                    (concat "|NTUSER\\|ntuser\\"
-                            "|Cookies\\|AppData\\"
-                            "|Contacts\\|Links\\"
-                            "|Intel\\|NetHood\\"
-                            "|PrintHood\\|Recent\\"
-                            "|Start\\|SendTo\\"
-                            "|^\\.DS_Store\\"
-                            "|qms-bmh"))))
-  (setq dired-listing-switches "-AGvhlgo")
-  (if (eq system-type 'darwin)
-      (setq dired-listing-switches "-Avhlgo"))
-
-  (setq dired-recursive-copies t)
-  (setq dired-recursive-deletes t)
-
-  (defun compose-attach-marked-files ()
-    "Compose mail and attach all the marked files from a dired buffer."
-    (interactive)
-    (let ((files (dired-get-marked-files))
-          (file-names (dired-copy-filename-as-kill)))
-      (compose-mail nil (concat "Attachments: " file-names) nil t)
-      (dolist (file files)
-        (if (file-regular-p file)
-            (mml-attach-file file
-                             (mm-default-file-encoding file)
-                             nil "attachment")
-          (message "skipping non-regular file %s" file)))))
-
-  (defadvice dired-next-line (after dired-next-line-advice (arg) activate)
-    "Move down lines then position at filename, advice"
-    (interactive "p")
-    (if (eobp)
-        (progn
-          (goto-char (point-min))
-          (forward-line 2)
-          (dired-move-to-filename))))
-
-  (defadvice dired-previous-line (before dired-previous-line-advice (arg) activate)
-    "Move up lines then position at filename, advice"
-    (interactive "p")
-    (if (= 3 (line-number-at-pos))
-        (goto-char (point-max)))))
-#+end_src
-
-** dired-narrow
-
-#+begin_src emacs-lisp
-(use-package dired-narrow)
-#+end_src
-
-** ibuffer
+* Buffers
 
 #+begin_src emacs-lisp
 (use-package ibuffer
+  :functions (ibuffer-current-buffer
+              kill-buffer-and-its-windows)
   :bind (("C-x C-b" . ibuffer-other-window)
          :map ibuffer-mode-map
          ("<right>" . ibuffer-visit-buffer))
@@ -847,7 +773,6 @@ region. That's amazing.
         (switch-to-buffer-other-window buf)
         (kill-buffer-and-its-windows "*Ibuffer*")
         )))
-
   ;; Use human readable Size column instead of original one
   (define-ibuffer-column size-h
     (:name "Size" :inline t)
@@ -867,6 +792,14 @@ region. That's amazing.
                 (mode 14 14 :left :elide)
                 " "
                 filename-and-process))))
+#+end_src
+
+* File Management
+** dired
+
+#+begin_src emacs-lisp
+(use-package dired
+  :ensure nil)
 #+end_src
 
 * Navigation
@@ -1017,6 +950,7 @@ English word list fetch from https://github.com/dwyl/english-words
     :bind ("C-\\" . company-try-hard))
 
   (use-package company
+    :functions company-complete-common-or-cycle
     :bind (:map company-active-map
                 ("C-n" . (lambda () (interactive) (company-complete-common-or-cycle 1)))
                 ("C-p" . (lambda () (interactive) (company-complete-common-or-cycle -1))))
@@ -1191,6 +1125,9 @@ that dash version higher than 2.18 is installed[fn:15].
 #+begin_src emacs-lisp
 (use-package cc-mode
   :ensure nil
+  :functions (c-toggle-auto-newline
+              c-toggle-auto-hungry-state
+              c-toggle-syntactic-indentation)
   :config
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
   (use-package ggtags)
@@ -1692,6 +1629,7 @@ sudo apt install python3-pygments
 #+begin_src emacs-lisp
 (use-package ox-latex
   :ensure org
+  :functions org-export-derived-backend-p
   :bind ("<C-f7>" . org-latex-export-to-pdf)
   :commands (org-latex-publish-to-pdf)
   :config
@@ -1850,6 +1788,8 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
 #+begin_src emacs-lisp
 (use-package org-agenda
   :ensure nil
+  :functions (org-agenda-kill-all-agenda-buffers
+              org-agenda-todo)
   :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
@@ -1983,6 +1923,7 @@ New link to use everything to locate a file with unique ID:
 
 #+begin_src emacs-lisp
   (use-package org
+    :functions org-match-open
     :config
     (org-link-set-parameters "match"
                              :follow #'org-match-open)
@@ -2000,6 +1941,7 @@ New link to use everything to locate a file with unique ID:
 
 #+begin_src emacs-lisp
   (use-package org
+    :functions org-onenote-open
     :config
     (org-link-set-parameters "onenote"
                              :follow #'org-onenote-open)
@@ -2048,6 +1990,9 @@ name handling function can be found from emacs manual[fn:21].
 #+begin_src emacs-lisp
   (use-package org
     :ensure nil
+    :functions (jekyll-get-category
+                jekyll-tag
+                jekyll-header)
     :commands (jekyll)
     :config
     ;; file in jekyll base will also be uploaded to github
@@ -2263,6 +2208,10 @@ sqlite3 is shipped in macOS by default.
 #+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
+  :functions (org-roam--get-title-path-completions
+              org-roam-completion--completing-read
+              org-roam-shield-region
+              org-roam-capture--capture)
   :custom
   ((org-roam-directory kimim/path-notes)
    (org-roam-db-location (file-truename
@@ -2481,6 +2430,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+begin_src emacs-lisp
   ;; erc settings
   (use-package erc
+    :functions erc-autojoin-enable
     :commands (erc)
     :custom ((erc-autojoin-channels-alist
               '(("irc.freenode.net" "#emacs"))))
@@ -2536,6 +2486,8 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+begin_src emacs-lisp
 (use-package mu4e
   :ensure nil
+  :functions (mu4e-compose-reply
+              mu4e~view-quit-buffer)
   :custom ((mu4e-compose-reply-recipients 'sender)
            (mu4e-compose-signature-auto-include nil))
   :commands (mu4e mu4e-compose-new)
