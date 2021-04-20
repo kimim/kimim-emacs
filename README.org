@@ -946,23 +946,26 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
 English word list fetch from https://github.com/dwyl/english-words
 
 #+begin_src emacs-lisp
-  (use-package company-try-hard
-    :bind ("C-\\" . company-try-hard))
+(use-package company-try-hard
+  :bind ("C-\\" . company-try-hard))
 
-  (use-package company
-    :functions company-complete-common-or-cycle
-    :bind (:map company-active-map
-                ("C-n" . (lambda () (interactive) (company-complete-common-or-cycle 1)))
-                ("C-p" . (lambda () (interactive) (company-complete-common-or-cycle -1))))
-    :diminish company-mode
-    :commands (global-company-mode)
-    :config
-    (use-package company-dict)
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 1)
-    ;; macOS will use system dict file directly
-    (eval-after-load 'company
-      '(add-to-list 'company-backends 'company-ispell)))
+(use-package company
+  :functions company-complete-common-or-cycle
+  :bind (:map company-active-map
+              ("C-n" . (lambda () (interactive) (company-complete-common-or-cycle 1)))
+              ("C-p" . (lambda () (interactive) (company-complete-common-or-cycle -1))))
+  :diminish company-mode
+  :commands (global-company-mode)
+  :config
+  (use-package company-dict)
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1)
+  ;; macOS will use system dict file directly
+  (global-company-mode t)
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-elisp))
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-ispell)))
 #+end_src
 
 ** company statistics
@@ -1352,10 +1355,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :mode ("\\.el\\'" . emacs-lisp-mode)
   :config
   (define-derived-mode lisp-interaction-mode emacs-lisp-mode "λ")
-  (global-company-mode t)
-  (global-flycheck-mode t)
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-elisp))
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
               (smartparens-mode))))
