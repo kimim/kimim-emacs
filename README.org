@@ -751,7 +751,83 @@ region. That's amazing.
   (global-set-key (kbd "C-c C->") 'mc/mark-all-dwim))
 #+end_src
 
-* Buffers
+
+* File Management
+** dired
+
+#+begin_src emacs-lisp
+(use-package dired
+  :ensure nil
+  :bind
+  (("C-x C-j" . dired-jump)
+   :map dired-mode-map
+   ("<left>" . dired-up-directory)
+   ("<right>" . dired-find-file)
+   ("b" . dired-up-directory)
+   ("o" . kimim/open-in-external-app)
+   ("M-n" . dired-narrow)
+   ("M-c" . compose-attach-marked-files))
+  :config
+  (require 'dired-x)
+  (use-package dired-narrow)
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (turn-on-gnus-dired-mode)
+              ;; Set dired-x buffer-local variables here.  For example:
+              (dired-omit-mode 1)
+              (setq dired-omit-localp t)
+              (setq dired-omit-files
+                    (concat "|NTUSER\\|ntuser\\"
+                            "|Cookies\\|AppData\\"
+                            "|Contacts\\|Links\\"
+                            "|Intel\\|NetHood\\"
+                            "|PrintHood\\|Recent\\"
+                            "|Start\\|SendTo\\"
+                            "|^\\.DS_Store\\"
+                            "|qms-bmh"))))
+  (setq dired-listing-switches "-AGvhlgo")
+  (if (eq system-type 'darwin)
+      (setq dired-listing-switches "-Avhlgo"))
+
+  (setq dired-recursive-copies t)
+  (setq dired-recursive-deletes t)
+
+  (defun compose-attach-marked-files ()
+    "Compose mail and attach all the marked files from a dired buffer."
+    (interactive)
+    (let ((files (dired-get-marked-files))
+          (file-names (dired-copy-filename-as-kill)))
+      (compose-mail nil (concat "Attachments: " file-names) nil t)
+      (dolist (file files)
+        (if (file-regular-p file)
+            (mml-attach-file file
+                             (mm-default-file-encoding file)
+                             nil "attachment")
+          (message "skipping non-regular file %s" file)))))
+
+  (defadvice dired-next-line (after dired-next-line-advice (arg) activate)
+    "Move down lines then position at filename, advice"
+    (interactive "p")
+    (if (eobp)
+        (progn
+          (goto-char (point-min))
+          (forward-line 2)
+          (dired-move-to-filename))))
+
+  (defadvice dired-previous-line (before dired-previous-line-advice (arg) activate)
+    "Move up lines then position at filename, advice"
+    (interactive "p")
+    (if (= 3 (line-number-at-pos))
+        (goto-char (point-max)))))
+#+end_src
+
+** dired-narrow
+
+#+begin_src emacs-lisp
+(use-package dired-narrow)
+#+end_src
+
+** ibuffer
 
 #+begin_src emacs-lisp
 (use-package ibuffer
@@ -792,14 +868,6 @@ region. That's amazing.
                 (mode 14 14 :left :elide)
                 " "
                 filename-and-process))))
-#+end_src
-
-* File Management
-** dired
-
-#+begin_src emacs-lisp
-(use-package dired
-  :ensure nil)
 #+end_src
 
 * Navigation
