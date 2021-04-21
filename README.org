@@ -1148,14 +1148,19 @@ that dash version higher than 2.18 is installed[fn:15].
   :bind (:map
          lsp-mode-map
          ("C-x ." . lsp-find-definition)
-         ("C-x ," . pop-tag-mark))
+         ("C-x ," . pop-tag-mark)
+         ("C-." . kimim/lsp-find-definition-other-window))
   :hook ((clojure-mode . lsp)
          (c-mode . lsp)
          (c++-mode . lsp)
          (go-mode . lsp)
          (rustic-mode . lsp))
   :config
-  (use-package dash))
+  (use-package dash)
+  (defun kimim/lsp-find-definition-other-window ()
+    (interactive)
+    (lsp-find-definition :display-action 'window)
+    (other-window 1)))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
