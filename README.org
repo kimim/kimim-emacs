@@ -1718,6 +1718,7 @@ sudo apt install python3-pygments
   ;; remove error: ! LaTeX Error: Command \nobreakspace unavailable in encoding T1.
   ;; add: \DeclareRobustCommand\nobreakspace{\leavevmode\nobreak\ }
   ;; put long latex classes in a separate file
+  (use-package org-ref) ;; latex-classes need default bib file
   (require 'latex-classes)
   (setq org-latex-classes kimim/latex-classes)
 
@@ -2384,18 +2385,16 @@ Markdown is widely used as plain text file format.
 (use-package org-ref
   :after org
   :functions (-flatten f-join)
+  :custom ((reftex-default-bibliography `(,(concat kimim/path-ref "references.bib")))
+           (org-ref-default-bibliography `(,(concat kimim/path-ref "references.bib")))
+           (bibtex-completion-bibliography (concat kimim/path-ref "references.bib"))
+           (org-ref-pdf-directory kimim/path-ref)
+           (bibtex-completion-library-path org-ref-pdf-directory)
+           (org-ref-bibliography-notes (concat kimim/path-notes "org-ref-notes.txt"))
+           (bibtex-completion-notes-path org-ref-bibliography-notes)
+           (org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename))
   :demand t
   :config
-  (setq reftex-default-bibliography ())
-  (add-to-list 'reftex-default-bibliography (concat kimim/path-ref "references.bib"))
-  (setq org-ref-bibliography-notes (concat kimim/path-notes "org-ref-notes.txt")
-        org-ref-pdf-directory kimim/path-ref)
-  (setq org-ref-default-bibliography ())
-  (add-to-list 'org-ref-default-bibliography (concat kimim/path-ref "references.bib"))
-  (setq bibtex-completion-bibliography (concat kimim/path-ref "references.bib")
-        bibtex-completion-library-path org-ref-pdf-directory
-        bibtex-completion-notes-path org-ref-bibliography-notes)
-
   ;; open pdf with system pdf viewer
   (setq bibtex-completion-pdf-open-function
         (lambda (fpath)
@@ -2424,9 +2423,7 @@ Markdown is widely used as plain text file format.
            ((> (length pdfs) 1)
             (completing-read "Choose: " pdfs))))
       ;; No org-ref-pdf-directory defined so return just a file name.
-      (format "%s.pdf" key)))
-
-  (setq org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename))
+      (format "%s.pdf" key))))
 #+end_src
 
 There is a built-in =bibtex-mode= to manage references. We can extend it to
