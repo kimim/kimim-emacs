@@ -1258,6 +1258,7 @@ in Clojure.
 
 #+begin_src emacs-lisp
 (use-package cider
+  :functions tramp-dissect-file-name
   :config
   (setq nrepl-use-ssh-fallback-for-remote-hosts t)
   (setq nrepl-sync-request-timeout 100)
@@ -1675,7 +1676,6 @@ sudo apt install python3-pygments
 #+begin_src emacs-lisp
 (use-package ox-latex
   :ensure org
-  :functions org-export-derived-backend-p
   :defines kimim/latex-classes
   :bind ("<C-f7>" . org-latex-export-to-pdf)
   :commands (org-latex-publish-to-pdf)
@@ -1699,13 +1699,13 @@ sudo apt install python3-pygments
           ))
 
     ;;; Nicolas Goaziou, http://article.gmane.org/gmane.emacs.orgmode/67692
-  (defun org-latex-ignore-heading-filter-headline (headline backend info)
-    "Strip headline from HEADLINE. Ignore BACKEND and INFO."
-    (when (and (org-export-derived-backend-p backend 'latex)
-               (string-match "\\`.*ignoreheading.*\n" headline))
-      (replace-match "" nil nil headline)))
-  (add-to-list 'org-export-filter-headline-functions
-               'org-latex-ignore-heading-filter-headline)
+  ;; (defun org-latex-ignore-heading-filter-headline (headline backend info)
+  ;;   "Strip headline from HEADLINE. Ignore BACKEND and INFO."
+  ;;   (when (and (org-export-derived-backend-p backend 'latex)
+  ;;              (string-match "\\`.*ignoreheading.*\n" headline))
+  ;;     (replace-match "" nil nil headline)))
+  ;; (add-to-list 'org-export-filter-headline-functions
+  ;;              'org-latex-ignore-heading-filter-headline)
 
   ;; most of the time, I do not need table of contents
   (setq org-latex-toc-command nil)
@@ -1833,10 +1833,10 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
 ** org as GTD system
 
 #+begin_src emacs-lisp
-(use-package org-agenda
-  :ensure nil
+(use-package org
   :functions (org-agenda-kill-all-agenda-buffers
               org-agenda-todo)
+  :defines org-agenda-mode-map
   :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
@@ -1914,7 +1914,6 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
               ("h" "Habit"   entry (file+headline "global.org"   "Habit")
                "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n"))))
   :config
-  (use-package org)
   (require 'org-agenda)
   (add-hook 'kill-emacs-hook
             (lambda ()
@@ -2170,7 +2169,8 @@ name handling function can be found from emacs manual[fn:21].
    ("C-x C-d" . deft))
   :custom ((deft-text-mode 'org-mode))
   :functions (kimim/deft-open-file-advice
-              kimim/deft-new-file-named-advice)
+              kimim/deft-new-file-named-advice
+              kimim/genfile-timestamp)
   :config
   (use-package ivy)
   (setq deft-extensions '("txt" "org" "md"))
@@ -2376,51 +2376,52 @@ Markdown is widely used as plain text file format.
 * Reference management
 
 #+begin_src emacs-lisp
-  (use-package org-ref
-    :after org
-    :demand t
-    :config
-    (setq reftex-default-bibliography ())
-    (add-to-list 'reftex-default-bibliography (concat kimim/path-ref "references.bib"))
-    (setq org-ref-bibliography-notes (concat kimim/path-notes "org-ref-notes.txt")
-          org-ref-pdf-directory kimim/path-ref)
-    (setq org-ref-default-bibliography ())
-    (add-to-list 'org-ref-default-bibliography (concat kimim/path-ref "references.bib"))
-    (setq bibtex-completion-bibliography (concat kimim/path-ref "references.bib")
-          bibtex-completion-library-path org-ref-pdf-directory
-          bibtex-completion-notes-path org-ref-bibliography-notes)
+(use-package org-ref
+  :after org
+  :functions (-flatten f-join)
+  :demand t
+  :config
+  (setq reftex-default-bibliography ())
+  (add-to-list 'reftex-default-bibliography (concat kimim/path-ref "references.bib"))
+  (setq org-ref-bibliography-notes (concat kimim/path-notes "org-ref-notes.txt")
+        org-ref-pdf-directory kimim/path-ref)
+  (setq org-ref-default-bibliography ())
+  (add-to-list 'org-ref-default-bibliography (concat kimim/path-ref "references.bib"))
+  (setq bibtex-completion-bibliography (concat kimim/path-ref "references.bib")
+        bibtex-completion-library-path org-ref-pdf-directory
+        bibtex-completion-notes-path org-ref-bibliography-notes)
 
-    ;; open pdf with system pdf viewer
-    (setq bibtex-completion-pdf-open-function
-          (lambda (fpath)
-            (kimim/open-in-external-app fpath)))
+  ;; open pdf with system pdf viewer
+  (setq bibtex-completion-pdf-open-function
+        (lambda (fpath)
+          (kimim/open-in-external-app fpath)))
 
-    (defun kimim/org-ref-get-pdf-filename (key)
-      "Return the pdf filename associated with a bibtex KEY.
+  (defun kimim/org-ref-get-pdf-filename (key)
+    "Return the pdf filename associated with a bibtex KEY.
   This searches recursively for the pattern KEY*.pdf. If one result
   is found it is returned, but if multiple results are found,
   e.g. there are related files to the KEY you are prompted for
   which one you want."
-      (if org-ref-pdf-directory
-          (let ((pdfs
-                 (-flatten
-                  (--map (file-expand-wildcards
-                          (f-join it (format "%s*.pdf" key)))
-                         (-flatten
-                          (append (list org-ref-pdf-directory)
-                                  (directory-files-recursively
-                                   org-ref-pdf-directory "" t)))))))
-            (cond
-             ((= 0 (length pdfs))
-              (expand-file-name (format "%s.pdf" key) org-ref-pdf-directory))
-             ((= 1 (length pdfs))
-              (car pdfs))
-             ((> (length pdfs) 1)
-              (completing-read "Choose: " pdfs))))
-        ;; No org-ref-pdf-directory defined so return just a file name.
-        (format "%s.pdf" key)))
+    (if org-ref-pdf-directory
+        (let ((pdfs
+               (-flatten
+                (--map (file-expand-wildcards
+                        (f-join it (format "%s*.pdf" key)))
+                       (-flatten
+                        (append (list org-ref-pdf-directory)
+                                (directory-files-recursively
+                                 org-ref-pdf-directory "" t)))))))
+          (cond
+           ((= 0 (length pdfs))
+            (expand-file-name (format "%s.pdf" key) org-ref-pdf-directory))
+           ((= 1 (length pdfs))
+            (car pdfs))
+           ((> (length pdfs) 1)
+            (completing-read "Choose: " pdfs))))
+      ;; No org-ref-pdf-directory defined so return just a file name.
+      (format "%s.pdf" key)))
 
-    (setq org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename))
+  (setq org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename))
 #+end_src
 
 There is a built-in =bibtex-mode= to manage references. We can extend it to
@@ -2546,6 +2547,22 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   :ensure nil
   :functions (mu4e-compose-reply
               mu4e~view-quit-buffer)
+  :defines (mu4e-html2text-command
+            mu4e-mu-binary
+            mu4e-get-mail-command
+            mu4e-update-interval
+            mu4e-hide-index-messages
+            mu4e-use-fancy-chars
+            mu4e-view-show-images
+            mu4e-view-fields
+            mu4e-headers-fields
+            mu4e-compose-cite-function
+            mu4e-compose-reply-recipients
+            mu4e-headers-mode-map
+            mu4e-compose-mode-map
+            mu4e-view-mode-map
+            shr-color-visible-luminance-min
+            shr-color-visible-distance-min)
   :custom ((mu4e-compose-reply-recipients 'sender)
            (mu4e-compose-signature-auto-include nil))
   :commands (mu4e mu4e-compose-new)
@@ -2680,6 +2697,8 @@ from system PATH, so you should set these to system PATH.
   (use-package kimim
     :ensure nil
     :commands (kimim/mail-setup)
+    :defines (mac-option-modifier
+              mac-command-modifier)
     :bind
     (("C-x m m" . kimim/mail-new-empty)
      ("C-x m y" . kimim/mail-attach-files)
@@ -2687,75 +2706,60 @@ from system PATH, so you should set these to system PATH.
      ("S-<f9>" . kimim/cmd)
      ("C-c r" . kimim/rename-file-and-buffer)
      ("C-x m o" . kimim/open-in-external-app)
-     ("C-c d" . kimim/lookinsight))
-    :load-path "~/kimim-emacs/site-lisp/")
-#+end_src
-
-* Key Binding
-
-#+begin_src emacs-lisp
-(bind-key "<f1>" 'delete-other-windows)
-(bind-key "C-<f1>" 'nuke-other-buffers)
-(bind-key "M-<f1>" (lambda()
-                     (interactive)
-                     (switch-to-buffer "*scratch*") (nuke-other-buffers)))
-(bind-key "<f2>" 'other-window)
-(bind-key "<f5>" (lambda ()
-                   (interactive)
-                   (switch-to-buffer "*scratch*") (delete-other-windows)))
-;;(bind-key "<f7>" 'kimim/toggle-highlight-tap)
-;;(bind-key "<f8>" (lambda ()
-;;                   (interactive) (list-charset-chars 'ascii)))
-(bind-key "<f7>" 'bury-buffer)
-(bind-key "<f8>" 'unbury-buffer)
-;; (bind-key "M-<SPC>" (lambda () (interactive)
-;;                       (insert ?_)))
-(bind-key "C-h" 'delete-backward-char)
-(bind-key "M-h" 'backward-kill-word)
-(bind-key "M-?" 'mark-paragraph)
-(bind-key "C-x k" 'kill-this-buffer)
-(bind-key "C-x C-v" 'view-file-other-window)
-(bind-key "C-c C-o" 'occur)
-(bind-key "C-z" 'set-mark-command)
-(bind-key "M-o" 'other-window)
-(bind-key "M-n" 'next-error)
-(bind-key "M-p" 'previous-error)
-;;(define-key hs-minor-mode-map "\C-c/" 'hs-toggle-hiding)
-
-(bind-key "C-c C-/" 'comment-or-uncomment-region)
-(bind-key "RET" 'newline-and-indent)
-;;(define-key global-map (kbd "<M-S-mouse-1>") 'pop-tag-mark)
-;; key bindings
-(when (eq system-type 'darwin) ;; mac specific settings
-  (setq mac-option-modifier 'meta)
-  (setq mac-command-modifier 'meta)
-  ;; sets fn-delete to be right-delete
-  (global-set-key [kp-delete] 'delete-char))
-
-(bind-key "C-x m h" 'help)
-(bind-key "C-x m c" 'calculator)
-(bind-key "C-x m n" 'compose-mail)
-(bind-key "C-x m s" '(lambda ()
-                       (interactive)
-                       (set-frame-font
-                        (concat "Inconsolata-" (read-string "Enter font size: ")) t)))
-(bind-key "C-x m ." 'unbury-buffer)
-(bind-key "C-x m ," 'bury-buffer)
-(bind-key "C-x m  。" 'unbury-buffer)
-(bind-key "C-x m  ，" 'bury-buffer)
-(bind-key "C-x ," 'bury-buffer)
-(bind-key "C-x ." 'unbury-buffer)
-(bind-key "C-x  ，" 'bury-buffer)
-(bind-key "C-x  。" 'unbury-buffer)
-(bind-key "C-x  ‘" 'hippie-expand)
-(bind-key "C-x  ’" 'hippie-expand)
-(bind-key "C-x M-s" 'eshell)
-(bind-key "C-+" 'text-scale-increase)
-(bind-key "C--" 'text-scale-decrease)
-(bind-key "C-=" 'text-scale-adjust)
-(bind-key "C-0" '(lambda ()
-                   (interactive)
-                   (text-scale-increase 0)))
+     ("C-c d" . kimim/lookinsight)
+     ("<f1>" . delete-other-window)
+     ("C-<f1>" . nuke-other-buffers)
+     ("M-<f1>" . kimim/switch-to-scratch-and-nuke-others)
+     ("<f2>" . other-window)
+     ("<f5>" . kimim/switch-to-scratch-buffer)
+     ("<f7>" . bury-buffer)
+     ("<f8>" . unbury-buffer)
+     ("C-h" . delete-backward-char)
+     ("M-h" . backward-kill-word)
+     ("M-?" . mark-paragraph)
+     ("C-x k" . kill-this-buffer)
+     ("C-x C-v" . view-file-other-window)
+     ("C-c C-o" . occur)
+     ("C-z" . set-mark-command)
+     ("M-o" . other-window)
+     ("M-n" . next-error)
+     ("M-p" . previous-error)
+     ("C-c C-/" . comment-or-uncomment-region)
+     ("RET" . newline-and-indent)
+     ("C-x m h" . help)
+     ("C-x m n" . compose-mail)
+     ("C-x m ." . unbury-buffer)
+     ("C-x m ," . bury-buffer)
+     ("C-x m  。" . unbury-buffer)
+     ("C-x m  ，" . bury-buffer)
+     ( "C-x ," . bury-buffer)
+     ("C-x ." . unbury-buffer)
+     ("C-x  ，" . bury-buffer)
+     ("C-x  。" . unbury-buffer)
+     ("C-x  ‘" . hippie-expand)
+     ("C-x  ’" . hippie-expand)
+     ("C-x M-s" . eshell)
+     ("C-+" . text-scale-increase)
+     ("C--" . text-scale-decrease)
+     ("C-=" . text-scale-adjust)
+     ("C-0" . kimim/restore-text-scale))
+    :load-path "~/kimim-emacs/site-lisp/"
+    :config
+    (when (eq system-type 'darwin) ;; mac specific settings
+      (setq mac-option-modifier 'meta)
+      (setq mac-command-modifier 'meta)
+      ;; sets fn-delete to be right-delete
+      (global-set-key [kp-delete] 'delete-char))
+    (defun kimim/switch-to-scratch-and-nuke-others ()
+      (interactive)
+      (switch-to-buffer "*scratch*") (nuke-other-buffers))
+    (defun kimim/switch-to-scratch-buffer ()
+      (interactive)
+      (switch-to-buffer "*scratch*")
+      (delete-other-windows))
+    (defun kimim/restore-text-scale ()
+      (interactive)
+      (text-scale-increase 0)))
 #+end_src
 
 * Footnotes
