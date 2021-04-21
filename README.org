@@ -372,7 +372,8 @@ Display time and (line, column) numbers in mode line.
   :defer 3
   :config
   (line-number-mode 1)
-  (column-number-mode 1))
+  (column-number-mode 1)
+  (toggle-word-wrap -1))
 #+end_src
 
 * Color Theme
@@ -651,7 +652,6 @@ frequency report by =M-x keyfreq-show=.
                            (frame-char-width)
                            2.3))))
   (setq-default fill-column 80))
-(toggle-word-wrap -1)
 (use-package drag-stuff
   :diminish drag-stuff-mode
   :config
