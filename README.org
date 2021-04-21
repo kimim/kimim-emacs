@@ -2709,7 +2709,7 @@ from system PATH, so you should set these to system PATH.
      ("C-c r" . kimim/rename-file-and-buffer)
      ("C-x m o" . kimim/open-in-external-app)
      ("C-c d" . kimim/lookinsight)
-     ("<f1>" . delete-other-window)
+     ("<f1>" . delete-other-windows)
      ("C-<f1>" . nuke-other-buffers)
      ("M-<f1>" . kimim/switch-to-scratch-and-nuke-others)
      ("<f2>" . other-window)
