@@ -1685,6 +1685,7 @@ sudo apt install python3-pygments
   :defines kimim/latex-classes
   :bind ("<C-f7>" . org-latex-export-to-pdf)
   :commands (org-latex-publish-to-pdf)
+  :custom ((org-latex-image-default-width "\\maxwidth{.9\\linewidth}"))
   :config
   (require 'ox-latex)
   (setq org-latex-listings 'minted)

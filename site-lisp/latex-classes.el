@@ -103,6 +103,8 @@
     ("\\paragraph{%s}" . "\\paragraph*{%s}")
     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
+;; maxwidth macro comes from:
+;; https://tex.stackexchange.com/questions/86350/includegraphics-maximum-width
 (defvar en-article
   '("article"
     "\\documentclass{article}
@@ -113,6 +115,10 @@
 \\usepackage{enumitem}
 \\usepackage{fancyhdr, lastpage}
 \\usepackage{hyperref}
+\\usepackage{graphicx}
+\\makeatletter
+\\def\\maxwidth#1{\\ifdim\\Gin@nat@width>#1 #1\\else\\Gin@nat@width\\fi}
+\\makeatother
 \\hypersetup{hidelinks}
 \\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
 \\fancypagestyle{plain}{
