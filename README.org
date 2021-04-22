@@ -1479,7 +1479,8 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
    ("C-c  ！" . org-time-stamp-inactive)
    ("C-c  。" . org-time-stamp)
    ("M-." . org-open-at-point)
-   ("M-*" . org-mark-ring-last-goto))
+   ("M-*" . org-mark-ring-last-goto)
+   ("M-h" . nil))
   :config
   (use-package org-roam)
   (use-package company)
@@ -1830,7 +1831,9 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
   :custom ((plantuml-default-exec-mode 'jar)
            (plantuml-jar-path (expand-file-name
                                (concat kimim/path-kimikit "plantuml/plantuml.jar")))
-           (org-plantuml-jar-path plantuml-jar-path))
+           (org-plantuml-jar-path plantuml-jar-path)
+           (plantuml-executable-args "-headless -charset UTF-8")
+           (org-plantuml-executable-args plantuml-executable-args))
   :config
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
