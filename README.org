@@ -1936,7 +1936,7 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
             (lambda ()
               ;;(auto-fill-mode)
               ;;(drag-stuff-mode -1)
-              ))
+              (org-toggle-pretty-entities)))
 
   (setq org-refile-targets
         '(;; refile to maxlevel 2 of current file
