@@ -753,6 +753,14 @@ region. That's amazing.
 
 
 * File Management
+** delete files
+
+To avoid accidentally delete files, let emacs move the deleted file to trash.
+
+#+begin_src emacs-lisp
+(setq delete-by-moving-to-trash t)
+#+end_src
+
 ** dired
 
 #+begin_src emacs-lisp
