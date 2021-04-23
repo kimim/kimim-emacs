@@ -777,11 +777,14 @@ functions, but also provides many handy features of its own.
          ("b" . sr-dired-prev-subdir)
          ("<left>" . sr-dired-prev-subdir)
          ("<right>" . sr-advertised-find-file))
-  :custom ((sr-cursor-follows-mouse nil))
+  :custom ((sr-cursor-follows-mouse nil)
+           (sr-windows-default-ratio 80)
+           (sr-listing-switches "-AGhlgo --group-directories-first")
+           (sr-attributes-display-mask '(nil t nil nil nil nil t t))
+           (sr-show-file-attributes nil))
   :config
-  (setq sr-listing-switches "-AGvhlo --group-directories-first")
   (if (eq system-type 'darwin)
-      (setq sr-listing-switches "-Avhlgo")))
+      (setq sr-listing-switches "-Ahlgo")))
 #+end_src
 
 
@@ -793,7 +796,7 @@ functions, but also provides many handy features of its own.
   :defines (dired-omit-localp
             dired-omit-files)
   :functions dired-omit-mode
-  :custom ((dired-listing-switches "-AGvhlgo"))
+  :custom ((dired-listing-switches "-AGhlgo --group-directories-first"))
   :bind
   (("C-x C-j" . dired-jump)
    :map dired-mode-map
