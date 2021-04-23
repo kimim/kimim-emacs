@@ -49,14 +49,14 @@ Then start =emacs= from cygwin terminal, and right click the =emacs= icon to pin
 to taskbar, then click the property of this icon to add bellow to the target
 field. This way will hide the black terminal.
 
-#+begin_src shell
+#+begin_src bat
 C:\cygwin64\bin\run.exe emacs-w32
 #+end_src
 
 You can also add =emacs --daemon= in your scheduled task, and change the target
 field as:
 
-#+begin_src shell
+#+begin_src bat
 C:\cygwin64\bin\run.exe emacsclient -c
 #+end_src
 
