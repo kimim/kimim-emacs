@@ -1186,17 +1186,14 @@ that dash version higher than 2.18 is installed[fn:15].
 #+begin_src emacs-lisp
 (use-package cc-mode
   :ensure nil
-  :functions (c-toggle-auto-newline
-              c-toggle-auto-hungry-state
-              c-toggle-syntactic-indentation)
   :config
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
   (add-hook 'c-mode-common-hook
             (lambda ()
               ;;(c-set-style "gnu")
-              (c-toggle-auto-newline 0)
-              (c-toggle-auto-hungry-state 0)
-              (c-toggle-syntactic-indentation 1)
+              ;;(c-toggle-auto-newline 0)
+              ;;(c-toggle-auto-hungry-state 0)
+              ;;(c-toggle-syntactic-indentation 1)
               ;;(highlight-indentation-mode 1)
               (which-function-mode 1)
               (local-set-key "\C-co" 'ff-find-other-file)
