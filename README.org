@@ -772,9 +772,12 @@ functions, but also provides many handy features of its own.
 (use-package sunrise-commander
   :bind (("<f10>" . sunrise)
          :map sr-mode-map
-         ("o" . kimim/open-in-external-app)
+         ("<f2>" . nil)
+         ("o" . sr-browse-file)
+         ("b" . sr-dired-prev-subdir)
          ("<left>" . sr-dired-prev-subdir)
          ("<right>" . sr-advertised-find-file))
+  :custom ((sr-cursor-follows-mouse nil))
   :config
   (setq sr-listing-switches "-AGvhlo --group-directories-first")
   (if (eq system-type 'darwin)
