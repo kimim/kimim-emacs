@@ -254,7 +254,8 @@ and defers loading of the module until they are used.
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
-        ("org" . "https://orgmode.org/elpa/")))
+        ("org" . "https://orgmode.org/elpa/")
+        ("sunrise" . "https://mirrors.sjtug.sjtu.edu.cn/emacs-elpa/sunrise-commander/")))
 (mapc
  (lambda (package)
    (unless (package-installed-p package)
@@ -761,6 +762,26 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
 (setq delete-by-moving-to-trash t)
 #+end_src
 
+** sunrise commander
+
+The Sunrise Commmander is a powerful and versatile double-pane file manager for
+GNU Emacs. It's built atop of Dired and takes advantage of most of its
+functions, but also provides many handy features of its own.
+
+#+begin_src emacs-lisp
+(use-package sunrise-commander
+  :bind (("<f10>" . sunrise)
+         :map sr-mode-map
+         ("o" . kimim/open-in-external-app)
+         ("<left>" . sr-dired-prev-subdir)
+         ("<right>" . sr-advertised-find-file))
+  :config
+  (setq sr-listing-switches "-AGvhlo --group-directories-first")
+  (if (eq system-type 'darwin)
+      (setq sr-listing-switches "-Avhlgo")))
+#+end_src
+
+
 ** dired
 
 #+begin_src emacs-lisp
@@ -769,6 +790,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
   :defines (dired-omit-localp
             dired-omit-files)
   :functions dired-omit-mode
+  :custom ((dired-listing-switches "-AGvhlgo"))
   :bind
   (("C-x C-j" . dired-jump)
    :map dired-mode-map
@@ -796,7 +818,6 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
                             "|Start\\|SendTo\\"
                             "|^\\.DS_Store\\"
                             "|qms-bmh"))))
-  (setq dired-listing-switches "-AGvhlgo")
   (if (eq system-type 'darwin)
       (setq dired-listing-switches "-Avhlgo"))
 

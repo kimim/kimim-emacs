@@ -448,24 +448,7 @@ Install the project...
                   (make-local-variable
                    'pangu-spacing-real-insert-separtor) t))))
 #+end_src
-** sunrise commander
 
-The Sunrise Commmander is a powerful and versatile double-pane file manager for
-GNU Emacs. It's built atop of Dired and takes advantage of most of its
-functions, but also provides many handy features of its own.
-
-#+begin_src emacs-lisp
-  (use-package sunrise-commander
-    :bind (("<f10>" . sunrise)
-           :map sr-mode-map
-           ("o" . kimim/open-in-external-app)
-           ("<left>" . sr-dired-prev-subdir)
-           ("<right>" . sr-advertised-find-file))
-    :config
-    (setq sr-listing-switches "-Avhlgo --group-directories-first")
-    (if (eq system-type 'darwin)
-        (setq sr-listing-switches "-Avhlgo")))
-#+end_src
 ** dired-collapse
 
 It will be difficult to mark the parent directory. Thus let's disable this
