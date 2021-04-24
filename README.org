@@ -779,10 +779,11 @@ functions, but also provides many handy features of its own.
          ("<right>" . sr-advertised-find-file))
   :custom ((sr-cursor-follows-mouse nil)
            (sr-windows-default-ratio 80)
-           (sr-listing-switches "-AGvhlgo --group-directories-first")
-           (sr-attributes-display-mask '(nil t nil nil nil nil t t))
+           (sr-listing-switches "-AGhlgov")
+           (sr-attributes-display-mask '(nil nil nil t t t))
            (sr-show-file-attributes nil))
   :config
+  (setq ls-lisp-dirs-first t)
   (if (eq system-type 'darwin)
       (setq sr-listing-switches "-Ahlgo")))
 #+end_src
