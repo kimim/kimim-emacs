@@ -19,7 +19,7 @@ First of all, you need to get =emacs= and install in your machine.
 
 On Windows platform, we have three options: 1) MSYS2, 2) Cygwin, 3) WSL2.
 
-With msys2[fn:5] installed in =C:\msys64=, you can open =C:\msys64\mingw64.exe=, and
+With msys2[fn:3] installed in =C:\msys64=, you can open =C:\msys64\mingw64.exe=, and
 run following script to install Emacs:
 
 #+begin_src shell
@@ -28,14 +28,14 @@ pacman -S git mingw-w64-x86_64-emacs
 
 ** Windows/Cygwin
 
-Cygwin project[fn:3] is a large collection of GNU and Open Source tools provide
+Cygwin project[fn:4] is a large collection of GNU and Open Source tools provide
 functionality similar to a Linux distribution on Windows.
 
 You can find Cygwin setup here: https://cygwin.com/setup-x86_64.exe , download
 and install it in your machine, for example, at =C:\cygwin64=. Then you can use
 =mintty.exe= to work with =bash=.
 
-In order to make life easier, we will use =apt-cyg=[fn:4] to install =emacs= and
+In order to make life easier, we will use =apt-cyg=[fn:5] to install =emacs= and
 other tools. Let's download =apt-cyg= and install =emacs= and =git=:
 
 #+begin_src shell
@@ -768,6 +768,8 @@ The Sunrise Commmander is a powerful and versatile double-pane file manager for
 GNU Emacs. It's built atop of Dired and takes advantage of most of its
 functions, but also provides many handy features of its own.
 
+To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:11]
+
 #+begin_src emacs-lisp
 (use-package sunrise-commander
   :bind (("<f10>" . sunrise)
@@ -932,7 +934,7 @@ functions, but also provides many handy features of its own.
 
 ** ag: the silver searcher
 
-=ag= [fn:11] is really a very fast grep tool, and =ag.el= [fn:12] provide the
+=ag= [fn:12] is really a very fast grep tool, and =ag.el= [fn:13] provide the
 Emacs interface to =ag=:
 
 #+begin_src emacs-lisp
@@ -1101,7 +1103,7 @@ Following error will reported when using magit to commit changes:
 server-ensure-safe-dir: The directory ‘~/.emacs.d/server’ is unsafe
 #+END_QUOTE
 
-The solution is to change the owner of =~/.emacs.d/server= [fn:13]
+The solution is to change the owner of =~/.emacs.d/server= [fn:14]
 
 #+BEGIN_QUOTE
 Click R-mouse on ~/.emacs.d/server and select “Properties” (last item in
@@ -1113,7 +1115,7 @@ this directory as secure because you are the owner.
 
 ** Parenthesis
 
-~smartparens-mode~[fn:14] is a general purpose mode for dealing with
+~smartparens-mode~[fn:15] is a general purpose mode for dealing with
 parentheis. We define some keys for it:
 
 #+begin_src emacs-lisp
@@ -1169,7 +1171,7 @@ parentheis. We define some keys for it:
 lsp-mode aims to provide IDE-like experience.
 
 If you got error: =Symbol’s function definition is void: -compose=, make sure
-that dash version higher than 2.18 is installed[fn:15].
+that dash version higher than 2.18 is installed[fn:16].
 
 #+begin_src emacs-lisp
 (use-package dash
@@ -1238,7 +1240,7 @@ that dash version higher than 2.18 is installed[fn:15].
 
 ** Clojure
 
-Clojure[fn:16] is a lisp over JVM. Emm, I like it.
+Clojure[fn:17] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
@@ -1291,7 +1293,7 @@ npm install -g clj-kondo
 
 *** Cider
 
-Cider[fn:17] extends Emacs with support for interactive programming
+Cider[fn:18] extends Emacs with support for interactive programming
 in Clojure.
 
 #+begin_src emacs-lisp
@@ -1348,7 +1350,7 @@ in Clojure.
 
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:18] is used here:
+Python development configuration is quite easy. =elpy= [fn:19] is used here:
 
 #+begin_src emacs-lisp
   (use-package elpy
@@ -1445,7 +1447,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:19]
+=ahk-mode= developed by Rich Alesi[fn:20]
 
 #+begin_src emacs-lisp
   (use-package ahk-mode
@@ -1617,7 +1619,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
 #+end_src
 
-Polymode [fn:20] is a framework for multiple major modes (MMM) inside a single
+Polymode [fn:21] is a framework for multiple major modes (MMM) inside a single
 Emacs buffer. It is comfortable to enable it during literating program.
 
 #+begin_src emacs-lisp
@@ -2055,7 +2057,7 @@ New link to use everything to locate a file with unique ID:
 =C-x l= keychord can store deft links in deft mode, but cannot fetch the link
 from deft note. Below defines a function to fetch a deft style link, which can
 be used to paste directly in other org files, such as work journal. Buffer file
-name handling function can be found from emacs manual[fn:21].
+name handling function can be found from emacs manual[fn:22].
 
 #+begin_src emacs-lisp
   (use-package org
@@ -2278,8 +2280,8 @@ name handling function can be found from emacs manual[fn:21].
 
 ** Org-roam
 
-Org-roam implements =zettelkasten= method [fn:22] used by famous German socialogist
-Niklas Luhmann[fn:23].
+Org-roam implements =zettelkasten= method [fn:23] used by famous German socialogist
+Niklas Luhmann[fn:24].
 
 First you should install =sqlite3=, which is used to index the links.
 
@@ -2807,11 +2809,11 @@ from system PATH, so you should set these to system PATH.
 
 [fn:2] https://orgmode.org/
 
-[fn:3] http://cygwin.com/
+[fn:3] https://www.msys2.org/
 
-[fn:4] https://github.com/transcode-open/apt-cyg
+[fn:4] http://cygwin.com/
 
-[fn:5] https://www.msys2.org/
+[fn:5] https://github.com/transcode-open/apt-cyg
 
 [fn:6] http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows
 
@@ -2823,28 +2825,30 @@ from system PATH, so you should set these to system PATH.
 
 [fn:10] https://github.com/kuanyui/tldr.el
 
-[fn:11] https://github.com/ggreer/the_silver_searcher#installation
+[fn:11] https://emacs.stackexchange.com/questions/22283/dired-group-directories-and-symlinks-to-directories-first
 
-[fn:12] https://github.com/Wilfred/ag.el
+[fn:12] https://github.com/ggreer/the_silver_searcher#installation
 
-[fn:13] https://github.com/syl20bnr/spacemacs/issues/381
+[fn:13] https://github.com/Wilfred/ag.el
 
-[fn:14] https://github.com/Fuco1/smartparens
+[fn:14] https://github.com/syl20bnr/spacemacs/issues/381
 
-[fn:15] https://github.com/emacs-lsp/lsp-mode/issues/2622
+[fn:15] https://github.com/Fuco1/smartparens
 
-[fn:16] https://clojure.org/
+[fn:16] https://github.com/emacs-lsp/lsp-mode/issues/2622
 
-[fn:17] https://cider.mx/
+[fn:17] https://clojure.org/
 
-[fn:18] https://github.com/jorgenschaefer/elpy
+[fn:18] https://cider.mx/
 
-[fn:19] https://github.com/ralesi/ahk-mode
+[fn:19] https://github.com/jorgenschaefer/elpy
 
-[fn:20] https://polymode.github.io/
+[fn:20] https://github.com/ralesi/ahk-mode
 
-[fn:21] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+[fn:21] https://polymode.github.io/
 
-[fn:22] https://zettelkasten.de/
+[fn:22] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
 
-[fn:23] https://en.wikipedia.org/wiki/Niklas_Luhmann
+[fn:23] https://zettelkasten.de/
+
+[fn:24] https://en.wikipedia.org/wiki/Niklas_Luhmann
