@@ -157,7 +157,9 @@
             (mu4e-header-highlight-face :background "gray20")
             (mu4e-replied-face :foreground "deep sky blue")
             (mu4e-forwarded-face :foreground "turquoise")
-            (mu4e-unread-face :foreground "light green")))))
+            (mu4e-unread-face :foreground "light green")
+            (sr-active-path-face :background ,kimim-night-bg :foreground "gold")
+            (sr-passive-path-face :background ,kimim-night-bg :foreground "light blue")))))
 
 ;;(custom-theme-set-variables
 ;; 'kimim-night

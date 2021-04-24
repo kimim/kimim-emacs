@@ -158,7 +158,9 @@
             (mu4e-replied-face :foreground "dark green")
             (mu4e-forwarded-face :foreground "dark orange")
             (mu4e-unread-face :foreground "blue" :bold t)
-            (message-cited-text-1 :foreground "blue")))))
+            (message-cited-text-1 :foreground "blue")
+            (sr-active-path-face :background ,kimim-light-bg :foreground "deep pink")
+            (sr-passive-path-face :background ,kimim-light-bg :foreground "blue")))))
 
 (custom-theme-set-variables
  'kimim-light
