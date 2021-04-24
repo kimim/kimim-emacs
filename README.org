@@ -1937,8 +1937,6 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
               ;; all task should be done or doing
               ("d" todo "TODO|SCHED|OPEN|WAIT"
                ((org-agenda-sorting-strategy '(priority-down))))
-              ("b" tags "boss/-ABORT-CLOSE-DONE"
-               ((org-agenda-sorting-strategy  '(priority-down))))
               ("f" todo "SOMEDAY"
                ((org-agenda-sorting-strategy '(priority-down))))
               ("h" tags "habit/-ABORT-CLOSE"
