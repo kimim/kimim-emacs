@@ -1778,54 +1778,22 @@ sudo apt install python3-pygments
 *** org to html page
 
 #+begin_src emacs-lisp
-  (use-package ox-html
-    :ensure org
-    :commands (org-html-publish-to-html)
-    :config
-    (setq org-html-validation-link nil)
-    (defadvice org-html-paragraph (before fsh-org-html-paragraph-advice
-                                          (paragraph contents info) activate)
-      "Join consecutive Chinese lines into a single long line without
+(use-package ox-html
+  :ensure org
+  :commands (org-html-publish-to-html)
+  :config
+  (setq org-html-validation-link nil)
+  (defadvice org-html-paragraph (before fsh-org-html-paragraph-advice
+                                        (paragraph contents info) activate)
+    "Join consecutive Chinese lines into a single long line without
   unwanted space when exporting org-mode to html."
-      (let ((fixed-contents)
-            (orig-contents (ad-get-arg 1))
-            (reg-han "[[:multibyte:]]"))
-        (setq fixed-contents (replace-regexp-in-string
-                              (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
-                              "\\1\\2" orig-contents))
-        (ad-set-arg 1 fixed-contents)
-        ))
-
-    (defun org-babel-result-to-file (result &optional description)
-      "Convert RESULT into an `org-mode' link with optional DESCRIPTION.
-  If the `default-directory' is different from the containing
-  file's directory then expand relative links."
-      (when (stringp result)
-        (if (string= "svg" (file-name-extension result))
-            (progn
-              (with-temp-buffer
-                (if (file-exists-p (concat result ".html"))
-                    (delete-file (concat result ".html")))
-                (rename-file result (concat result ".html"))
-                (insert-file-contents (concat result ".html"))
-                (message (concat result ".html"))
-                (format "#+BEGIN_HTML
-  <div style=\"text-align: center;\">
-  %s
-  </div>
-  ,#+END_HTML"
-                        (buffer-string)
-                        )))
-          (progn
-            (format "[[file:%s]%s]"
-                    (if (and default-directory
-                             buffer-file-name
-                             (not (string= (expand-file-name default-directory)
-                                           (expand-file-name
-                                            (file-name-directory buffer-file-name)))))
-                        (expand-file-name result default-directory)
-                      result)
-                    (if description (concat "[" description "]") "")))))))
+    (let ((fixed-contents)
+          (orig-contents (ad-get-arg 1))
+          (reg-han "[[:multibyte:]]"))
+      (setq fixed-contents (replace-regexp-in-string
+                            (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
+                            "\\1\\2" orig-contents))
+      (ad-set-arg 1 fixed-contents))))
 #+end_src
 
 ** org to html slide
