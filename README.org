@@ -1538,6 +1538,8 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :ensure t
   :custom ((org-appear-autolinks t))
   :config
+  (setq org-appeaar-elements
+        '(bold italic underline strike-through verbatim code))
   (add-hook 'org-mode-hook 'org-appear-mode))
 #+end_src
 
