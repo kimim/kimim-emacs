@@ -1536,11 +1536,8 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 (use-package org-appear
   :commands (org-appear-mode)
   :ensure t
-  :custom ((org-appear-autolinks t))
-  :config
-  (setq org-appeaar-elements
-        '(bold italic underline strike-through verbatim code))
-  (add-hook 'org-mode-hook 'org-appear-mode))
+  :custom ((org-appear-autolinks nil))
+  :hook org-mode-hook)
 #+end_src
 
 ** orgalist
