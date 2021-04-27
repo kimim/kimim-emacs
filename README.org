@@ -1625,13 +1625,13 @@ For Windows, there are three options:
 1. download and install CTEX from http://www.ctex.org
 2. install texlive-collection in cygwin
    #+begin_src shell
-   apt-cyg install texlive-collection-xetex texlive-collection-latex texlive-collection-fontsrecommended
+apt-cyg install texlive-collection-xetex    \
+        texlive-collection-latex            \
+        texlive-collection-fontsrecommended
    #+end_src
-3. download and install texlive from http://tug.org/texlive/acquire-netinstall.html
+3. download and install texlive from [[http://tug.org/texlive/acquire-netinstall.html][tug.org]]
 
-For Linux:
-
-Download texlive install pacakge from: http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+For Linux, download texlive install pacakge from [[http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz][ctan.org]]
 
 #+begin_src shell
 tar zxvf install-tl-unx.tar.gz
@@ -1644,13 +1644,13 @@ packages (notes that, in windows, you may need to run =tlmgr.bat=):
 
 #+begin_src shell
 tlmgr init-usertree
-tlmgr --usermode install ctex titlesec enumitem ms fontspec abstract \
-                         zhnumber fandol lastpage pdftexcmds infwarerr \
-                         minted fvextra etoolbox fancyvrb upquote \
-                         lineno catchfile xstring framed float \
-                         grffile wrapfig ulem lettrine minifp \
-                         capt-of xcolor svg koma-script trimspaces \
-                         titling layaureo parskip extsizes pgf \
+tlmgr --usermode install ctex titlesec enumitem ms fontspec abstract    \
+                         zhnumber fandol lastpage pdftexcmds infwarerr  \
+                         minted fvextra etoolbox fancyvrb upquote       \
+                         lineno catchfile xstring framed float          \
+                         grffile wrapfig ulem lettrine minifp           \
+                         capt-of xcolor svg koma-script trimspaces      \
+                         titling layaureo parskip extsizes pgf          \
                          moderncv microtype
 fmtutil-sys --all
 #+end_src
@@ -1709,7 +1709,7 @@ sudo apt install python3-pygments
           ;;"mv -f references.bib references.back.bib"
           ))
 
-    ;;; Nicolas Goaziou, http://article.gmane.org/gmane.emacs.orgmode/67692
+  ;;;;; Nicolas Goaziou, http://article.gmane.org/gmane.emacs.orgmode/67692
   ;; (defun org-latex-ignore-heading-filter-headline (headline backend info)
   ;;   "Strip headline from HEADLINE. Ignore BACKEND and INFO."
   ;;   (when (and (org-export-derived-backend-p backend 'latex)
