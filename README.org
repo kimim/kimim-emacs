@@ -1801,6 +1801,11 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
 
 #+begin_src emacs-lisp
 (use-package plantuml-mode
+  :defines (org-plantuml-exec-mode
+            org-plantuml-executable-path
+            org-plantuml-executable-args
+            org-plantuml-jar-path)
+  :functions (org-babel-plantuml-make-body)
   :custom
   (plantuml-default-exec-mode 'jar)
   (plantuml-jar-path (expand-file-name
