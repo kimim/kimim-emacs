@@ -47,7 +47,8 @@
       (kimim-theme-string "#2A00FF")
       (kimim-theme-blue-3 "#758BC6")
       (kimim-theme-region "PaperBlue")
-      (kimim-theme-shadow "grey20"))
+      (kimim-theme-shadow "grey20")
+      (kimim-theme-highlight "lemon chiffon"))
   (apply 'custom-theme-set-faces 'kimim-paper
          (mapcar
           (lambda (x) `(,(car x) ((,class ,(cdr x)))))
@@ -109,7 +110,7 @@
             (mode-line-buffer-id :foreground "blue4" :box nil :weight bold)
             (which-func :foreground ,kimim-theme-builtin)
             (minibuffer-prompt :foreground "medium blue")
-            (hl-line :background "lemon chiffon")
+            (hl-line :background ,kimim-theme-highlight)
             ;; defaults
             (show-paren-match :background "turquoise")
             (isearch :background "magenta3" :foreground "lightskyblue1")
@@ -135,7 +136,7 @@
             (powerline-inactive2 :background "grey40" :foreground "white" :inherit mode-line-inactive)
             ;; (magit-tag :background "LemonChiffon1" :foreground "goldenrod4")
             ;; (magit-section-heading :inherit header-line)
-            (magit-section-highlight :weight bold :background "azure")
+            (magit-section-highlight :weight bold :background ,kimim-theme-highlight)
             ;; (magit-diff-context :foreground "grey20")
             ;; (magit-diff-context-highlight :weight bold :foreground "grey20")
             ;; (magit-diff-added :inherit diff-added)
