@@ -738,6 +738,7 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
 (use-package sunrise-commander
   :bind (("<f10>" . sunrise)
          :map sr-mode-map
+         ("D" . dired-do-delete)
          ("<f2>" . nil)
          ("o" . sr-browse-file)
          ("b" . sr-dired-prev-subdir)
@@ -1809,7 +1810,68 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
   (org-plantuml-executable-args plantuml-executable-args)
   :config
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
+  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+
+  ;; redefine org-babel-execute:plantuml support different export file extension
+  ;; for different backend.
+  (defun org-babel-execute:plantuml (body params)
+  "Execute a block of plantuml code with org-babel.
+This function is called by `org-babel-execute-src-block'."
+  (let*
+      ((cmdline (cdr (assq :cmdline params)))
+	   (in-file (org-babel-temp-file "plantuml-"))
+       (export-ext (cond
+                    ((eq 'latex org-export-current-backend) "eps")
+                    ((eq 'html org-export-current-backend) "svg")
+                    (t "svg")))
+       (out-file-base (or (cdr (assq :file params))
+                          (concat "images/" (file-name-base in-file))))
+       (out-file (if (file-name-extension out-file-base)
+                     out-file-base
+                   (concat out-file-base "." export-ext)))
+       (_ (message (concat "out file " out-file-base out-file)))
+       (temp (setf (alist-get :file params) out-file))
+	   (java (or (cdr (assq :java params)) ""))
+	   (executable (cond ((eq org-plantuml-exec-mode 'plantuml) org-plantuml-executable-path)
+			             (t "java")))
+	   (executable-args (cond ((eq org-plantuml-exec-mode 'plantuml) org-plantuml-executable-args)
+				              ((string= "" org-plantuml-jar-path)
+				               (error "`org-plantuml-jar-path' is not set"))
+				              ((not (file-exists-p org-plantuml-jar-path))
+				               (error "Could not find plantuml.jar at %s" org-plantuml-jar-path))
+				              (t (list java
+					                   "-jar"
+					                   (shell-quote-argument (expand-file-name org-plantuml-jar-path))
+                                       org-plantuml-executable-args))))
+	   (full-body (org-babel-plantuml-make-body body params))
+	   (cmd (mapconcat #'identity
+			           (append
+			            (list executable)
+			            executable-args
+			            (pcase (file-name-extension out-file)
+			              ("png" '("-tpng"))
+			              ("svg" '("-tsvg"))
+			              ("eps" '("-teps"))
+			              ("pdf" '("-tpdf"))
+			              ("tex" '("-tlatex"))
+			              ("vdx" '("-tvdx"))
+			              ("xmi" '("-txmi"))
+			              ("scxml" '("-tscxml"))
+			              ("html" '("-thtml"))
+			              ("txt" '("-ttxt"))
+			              ("utxt" '("-utxt")))
+			            (list
+			             "-p"
+			             cmdline
+			             "<"
+			             (org-babel-process-file-name in-file)
+			             ">"
+			             (org-babel-process-file-name out-file)))
+			           " ")))
+    (with-temp-file in-file (insert full-body))
+    (message "%s" cmd) (org-babel-eval cmd "")
+    nil))
+  )
 #+end_src
 
 ** org as GTD system
