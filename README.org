@@ -362,9 +362,10 @@ Display time and (line, column) numbers in mode line.
 #+begin_src emacs-lisp
 (use-package time
   :defer 1
-  :custom ((display-time-24hr-format t)
-           (display-time-day-and-date t)
-           (display-time-interval 10))
+  :custom
+  (display-time-24hr-format t)
+  (display-time-day-and-date t)
+  (display-time-interval 10)
   :config
   (display-time-mode t))
 
@@ -423,10 +424,10 @@ Highlight current line in window systems.
 
 #+begin_src emacs-lisp
 (use-package hl-line
+  :if window-system
   :defer 5
   :config
-  (if window-system
-      (global-hl-line-mode 1)))
+  (global-hl-line-mode 1))
 #+end_src
 
 Automatically highlight current symbol where the cursor is inside.
@@ -437,42 +438,6 @@ Automatically highlight current symbol where the cursor is inside.
   :bind ("C-x m e" . ahs-edit-mode)
   :config
   (global-auto-highlight-symbol-mode t))
-#+end_src
-
-* Dealing with Unicode fonts
-
-#+begin_src emacs-lisp
-;; (use-package unicode-fonts
-;;   :defer 3
-;;   :config
-;;   (defun unicode-fonts-setup-advice ()
-;;     (if window-system
-;;         (set-fontset-font
-;;          "fontset-default"
-;;          'cjk-misc (font-spec :family "YaheiInconsolata"))))
-;;   (advice-add 'unicode-fonts-setup :after 'unicode-fonts-setup-advice)
-;;   (defun kimim/add-font (group font)
-;;     (let ((font-list (assoc group unicode-fonts-block-font-mapping)))
-;;       (setf (cadr font-list) (cons font (cadr font-list)))))
-;;   (seq-map (lambda (group) (kimim/add-font group "YaheiInconsolata"))
-;;            '("Bopomofo" "Bopomofo Extended" "CJK Compatibility" "CJK Compatibility Forms"
-;;              "CJK Compatibility Ideographs" "CJK Compatibility Ideographs Supplement"
-;;              "CJK Radicals Supplement" "CJK Strokes" "CJK Symbols and Punctuation"
-;;              "CJK Unified Ideographs" "CJK Unified Ideographs Extension A"
-;;              "CJK Unified Ideographs Extension B" "CJK Unified Ideographs Extension C"
-;;              "CJK Unified Ideographs Extension D" "CJK Unified Ideographs Extension E"
-;;              "Enclosed Ideographic Supplement" "Halfwidth and Fullwidth Forms"
-;;              "Hangul Compatibility Jamo" "Hangul Jamo" "Hangul Jamo Extended-A"
-;;              "Hangul Jamo Extended-B" "Hangul Syllables" "Ideographic Description Characters"
-;;              "IPA Extensions" "Mathematical Alphanumeric Symbols"))
-;;   (seq-map (lambda (group) (kimim/add-font group "Consolas"))
-;;            '("Combining Diacritical Marks" "Combining Half Marks" "Cyrillic"
-;;              "Cyrillic Supplement" "Greek Extended" "Greek and Coptic" "Phonetic Extensions"
-;;              "Phonetic Extensions Supplement" "Superscripts and Subscripts"))
-;;   (add-to-list 'unicode-fonts-block-font-mapping
-;;                '("Spacing Modifier Letters"
-;;                  ("Consolas" "Monaco" "YaheiInconsolata")))
-;;   (unicode-fonts-setup))
 #+end_src
 
 * Other Visual Element
@@ -545,7 +510,7 @@ client.
 scroll slowly with touchpad.
 
 #+begin_src emacs-lisp
-  (setq mouse-wheel-scroll-amount '(0.01))
+(setq mouse-wheel-scroll-amount '(0.01))
 #+end_src
 
 ** Command
@@ -555,8 +520,7 @@ scroll slowly with touchpad.
 (use-package which-key
   :defer 3
   :diminish which-key-mode
-  :custom (;; use minibuffer as the popup type, otherwise conflict in ecb mode
-           (which-key-popup-type 'minibuffer))
+  :custom (which-key-popup-type 'minibuffer)
   :config
   (which-key-mode 1))
 
@@ -613,10 +577,10 @@ frequency report by =M-x keyfreq-show=.
 
 #+begin_src emacs-lisp
 (use-package keyfreq
+  :custom (keyfreq-file "~/.emacs.d/emacs.keyfreq")
   :config
-  (keyfreq-mode)
-  (keyfreq-autosave-mode)
-  (setq keyfreq-file "~/.emacs.d/emacs.keyfreq"))
+  (keyfreq-mode +1)
+  (keyfreq-autosave-mode +1))
 #+end_src
 
 * Editing
@@ -632,10 +596,10 @@ frequency report by =M-x keyfreq-show=.
   (rime-show-candidate 'posframe)
   (rime-posframe-properties
    (list :font "YaheiInconsolata-18"
-        :internal-border-width 14))
-:config
-(when (eq (window-system) 'mac)
-  (setq rime-librime-root "~/.emacs.d/librime/dist")))
+         :internal-border-width 14))
+  :config
+  (when (eq (window-system) 'mac)
+    (setq rime-librime-root "~/.emacs.d/librime/dist")))
 #+end_src
 
 ** General
@@ -779,12 +743,13 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
          ("b" . sr-dired-prev-subdir)
          ("<left>" . sr-dired-prev-subdir)
          ("<right>" . sr-advertised-find-file))
-  :custom ((sr-cursor-follows-mouse nil)
-           (sr-windows-default-ratio 80)
-           (sr-listing-switches "-AGhlgov")
-           (sr-attributes-display-mask '(nil nil nil t t t))
-           (sr-show-file-attributes nil)
-           (ls-lisp-dirs-first t))
+  :custom
+  (sr-cursor-follows-mouse nil)
+  (sr-windows-default-ratio 80)
+  (sr-listing-switches "-AGhlgov")
+  (sr-attributes-display-mask '(nil nil nil t t t))
+  (sr-show-file-attributes nil)
+  (ls-lisp-dirs-first t)
   :config
   (if (eq system-type 'darwin)
       (setq sr-listing-switches "-Ahlgo")))
@@ -799,9 +764,10 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
   :defines (dired-omit-localp
             dired-omit-files)
   :functions dired-omit-mode
-  :custom ((dired-listing-switches "-AGvhlgo")
-           (dired-recursive-copies t)
-           (dired-recursive-deletes t))
+  :custom
+  (dired-listing-switches "-AGvhlgo")
+  (dired-recursive-copies t)
+  (dired-recursive-deletes t)
   :bind
   (("C-x C-j" . dired-jump)
    :map dired-mode-map
@@ -874,15 +840,16 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
   :bind (("C-x C-b" . ibuffer-other-window)
          :map ibuffer-mode-map
          ("<right>" . ibuffer-visit-buffer))
-  :custom ((ibuffer-formats
-            '((mark modified read-only " "
-                    (name 32 32 :left :elide)
-                    " "
-                    (size-h 9 -1 :right)
-                    " "
-                    (mode 14 14 :left :elide)
-                    " "
-                    filename-and-process))))
+  :custom
+  (ibuffer-formats
+   '((mark modified read-only " "
+           (name 32 32 :left :elide)
+           " "
+           (size-h 9 -1 :right)
+           " "
+           (mode 14 14 :left :elide)
+           " "
+           filename-and-process)))
   :config
   ;; Use human readable Size column instead of original one
   (define-ibuffer-column size-h
@@ -898,8 +865,9 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
 
 #+begin_src emacs-lisp
 (use-package bookmark
-  :custom ((bookmark-default-file "~/.emacs.d/emacs.bmk")
-           (bookmark-save-flag 1)))
+  :custom
+  (bookmark-default-file "~/.emacs.d/emacs.bmk")
+  (bookmark-save-flag 1))
 
 (use-package bm
   :bind (("C-x m t" . bm-toggle)
@@ -915,7 +883,8 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
 (use-package ace-window
   :bind
   ("C-\"" . ace-window)
-  :custom ((aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))))
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 #+end_src
 
 * Search and Finding
@@ -1159,7 +1128,8 @@ parentheis. We define some keys for it:
 #+begin_src emacs-lisp
 (use-package flycheck
   :commands (global-flycheck-mode)
-  :custom ((flycheck-global-modes '(not org-mode))))
+  :custom
+  (flycheck-global-modes '(not org-mode)))
 #+end_src
 
 ** lsp mode
@@ -1177,8 +1147,9 @@ that dash version higher than 2.18 is installed[fn:16].
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :commands lsp
-  :custom ((lsp-headerline-breadcrumb-icons-enable nil)
-           (lsp-headerline-breadcrumb-enable nil))
+  :custom
+  (lsp-headerline-breadcrumb-icons-enable nil)
+  (lsp-headerline-breadcrumb-enable nil)
   :bind (:map
          lsp-mode-map
          ("C-x ." . lsp-find-definition)
@@ -1198,8 +1169,9 @@ that dash version higher than 2.18 is installed[fn:16].
 
 (use-package lsp-ui
   :commands lsp-ui-mode
-  :custom ((lsp-ui-doc-alignment 'window)
-           (lsp-ui-doc-max-width 80)))
+  :custom
+  (lsp-ui-doc-alignment 'window)
+  (lsp-ui-doc-max-width 80))
 
 (use-package company-lsp
   :commands company-lsp)
@@ -1472,28 +1444,29 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
 (use-package calendar
-  :custom ((diary-file kimim/file-diary)
-           (calendar-latitude +30.16)
-           (calendar-longitude +120.12)
-           (calendar-location-name "Hangzhou")
-           (calendar-remove-frame-by-deleting t)
-           (calendar-week-start-day 1)
-           (calendar-mark-holidays-flag t)
-           (holiday-christian-holidays nil)
-           (holiday-hebrew-holidays nil)
-           (holiday-islamic-holidays nil)
-           (holiday-solar-holidays nil)
-           (holiday-bahai-holidays nil)
-           (holiday-general-holidays
-            '((holiday-fixed 1 1 "元旦")
-              (holiday-float 5 0 2 "父親節")
-              (holiday-float 6 0 3 "母親節")))
-           (calendar-mark-diary-entries-flag t)
-           (calendar-view-holidays-initially-flag nil)
-           (calendar-chinese-celestial-stem
-            ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
-           (calendar-chinese-terrestrial-branch
-            ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])))
+  :custom
+  (diary-file kimim/file-diary)
+  (calendar-latitude +30.16)
+  (calendar-longitude +120.12)
+  (calendar-location-name "Hangzhou")
+  (calendar-remove-frame-by-deleting t)
+  (calendar-week-start-day 1)
+  (calendar-mark-holidays-flag t)
+  (holiday-christian-holidays nil)
+  (holiday-hebrew-holidays nil)
+  (holiday-islamic-holidays nil)
+  (holiday-solar-holidays nil)
+  (holiday-bahai-holidays nil)
+  (holiday-general-holidays
+   '((holiday-fixed 1 1 "元旦")
+     (holiday-float 5 0 2 "父親節")
+     (holiday-float 6 0 3 "母親節")))
+  (calendar-mark-diary-entries-flag t)
+  (calendar-view-holidays-initially-flag nil)
+  (calendar-chinese-celestial-stem
+   ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
+  (calendar-chinese-terrestrial-branch
+   ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"]))
 #+end_src
 
 * Orgmode
@@ -1536,7 +1509,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 (use-package org-appear
   :commands (org-appear-mode)
   :ensure t
-  :custom ((org-appear-autolinks nil))
+  :custom (org-appear-autolinks nil)
   :hook org-mode-hook)
 #+end_src
 
@@ -1552,7 +1525,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package org-download
   :commands (org-download-enable)
-  :custom ((org-download-heading nil))
+  :custom (org-download-heading nil)
   :functions kimim/org-download-annotate
   :config
   (setq org-download-timestamp "")
@@ -1576,7 +1549,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
 (use-package org
-  :custom ((org-num-skip-footnotes t))
+  :custom (org-num-skip-footnotes t)
   :config
   (use-package org-download)
   (use-package pangu-spacing)
@@ -1629,13 +1602,12 @@ When exporting, do not export with author and date.
 #+begin_src emacs-lisp
 (use-package org
   :bind ("C-c C-'" . org-insert-structure-template)
-  :custom ((org-export-allow-BIND t)
-           (org-export-html-validation-link nil)
-           ( org-export-with-sub-superscripts '{})
-           (org-export-with-author nil)
-           (org-export-with-date nil)
-           ;;(setq org-export-creator-string "")
-           ))
+  :custom
+  (org-export-allow-BIND t)
+  (org-export-html-validation-link nil)
+  (org-export-with-sub-superscripts '{})
+  (org-export-with-author nil)
+  (org-export-with-date nil))
 #+end_src
 
 *** org to pdf
@@ -1715,7 +1687,8 @@ sudo apt install python3-pygments
   :defines kimim/latex-classes
   :bind ("<C-f7>" . org-latex-export-to-pdf)
   :commands (org-latex-publish-to-pdf)
-  :custom ((org-latex-image-default-width "\\maxwidth{.9\\linewidth}"))
+  :custom
+  (org-latex-image-default-width "\\maxwidth{.9\\linewidth}")
   :config
   (require 'ox-latex)
   (setq org-latex-listings 'minted)
@@ -1827,12 +1800,13 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
 
 #+begin_src emacs-lisp
 (use-package plantuml-mode
-  :custom ((plantuml-default-exec-mode 'jar)
-           (plantuml-jar-path (expand-file-name
-                               (concat kimim/path-kimikit "plantuml/plantuml.jar")))
-           (org-plantuml-jar-path plantuml-jar-path)
-           (plantuml-executable-args "-headless -charset UTF-8")
-           (org-plantuml-executable-args plantuml-executable-args))
+  :custom
+  (plantuml-default-exec-mode 'jar)
+  (plantuml-jar-path (expand-file-name
+                      (concat kimim/path-kimikit "plantuml/plantuml.jar")))
+  (org-plantuml-jar-path plantuml-jar-path)
+  (plantuml-executable-args "-headless -charset UTF-8")
+  (org-plantuml-executable-args plantuml-executable-args)
   :config
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
@@ -1858,67 +1832,68 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
          ("<S-right>" . (lambda ()
                           (interactive)
                           (org-agenda-todo 'right))))
-  :custom ((org-directory kimim/path-org)
-           (org-agenda-files
-            (file-expand-wildcards (concat kimim/path-org "*.org")))
-           (org-tags-exclude-from-inheritance '("project" "category"))
-           (org-log-done t)
-           (org-todo-repeat-to-state "REPEAT")
-           (org-deadline-warning-days 2)
-           (org-todo-keywords
-            '(
-              ;; for tasks
-              (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
-              ;; for risks, actions, problems
-              (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
-              (sequence "|" "SOMEDAY(m)")
-              (sequence "|" "ABORT(a@/!)")
-              (sequence "REPEAT(r)" "|")))
-           (org-tag-alist
-            '(("@office" . ?o) ("@home" . ?h)
-              ("team" . ?t) ("leader" . ?l) ("boss" . ?b)
-              ("risk" . ?k) ("sync" . ?s) ("followup" . ?f)
-              ("reading" . ?r) ("writing" . ?w)
-              ("project" . ?p) ("category" . ?c)
-              ("habit" . ?H)
-              ("next" . ?n)))
-           (org-stuck-projects
-            '("+LEVEL>=2-category-habit-info"
-              ("TODO" "SCHED"  "DONE"
-               "OPEN" "WAIT" "CLOSE"
-               "ABORT" "SOMEDAY" "REPEAT")
-              nil nil))
-           (org-agenda-include-diary t)
-           (org-agenda-span 2)
-           (org-agenda-skip-scheduled-if-done t)
-           (org-agenda-skip-deadline-if-done t)
-           (org-agenda-custom-commands
-            '(("t" todo "TODO|OPEN"
-               ((org-agenda-sorting-strategy '(priority-down))))
-              ("w" todo "SCHED|WAIT"
-               ((org-agenda-sorting-strategy '(priority-down))))
-              ;; all task should be done or doing
-              ("d" todo "TODO|SCHED|OPEN|WAIT"
-               ((org-agenda-sorting-strategy '(priority-down))))
-              ("f" todo "SOMEDAY"
-               ((org-agenda-sorting-strategy '(priority-down))))
-              ("h" tags "habit/-ABORT-CLOSE"
-               ((org-agenda-sorting-strategy '(todo-state-down))))
-              ("c" tags "clock"
-               ((org-agenda-sorting-strategy '(priority-down))))))
-           (org-capture-templates
-            '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
-               "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-              ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
-               "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-              ("s" "SCHED Task"    entry (file+headline "capture.org" "Inbox")
-               "* SCHED %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-              ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
-               "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-              ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
-               "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-              ("h" "Habit"   entry (file+headline "global.org"   "Habit")
-               "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n"))))
+  :custom
+  (org-directory kimim/path-org)
+  (org-agenda-files
+   (file-expand-wildcards (concat kimim/path-org "*.org")))
+  (org-tags-exclude-from-inheritance '("project" "category"))
+  (org-log-done t)
+  (org-todo-repeat-to-state "REPEAT")
+  (org-deadline-warning-days 2)
+  (org-todo-keywords
+   '(
+     ;; for tasks
+     (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
+     ;; for risks, actions, problems
+     (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
+     (sequence "|" "SOMEDAY(m)")
+     (sequence "|" "ABORT(a@/!)")
+     (sequence "REPEAT(r)" "|")))
+  (org-tag-alist
+   '(("@office" . ?o) ("@home" . ?h)
+     ("team" . ?t) ("leader" . ?l) ("boss" . ?b)
+     ("risk" . ?k) ("sync" . ?s) ("followup" . ?f)
+     ("reading" . ?r) ("writing" . ?w)
+     ("project" . ?p) ("category" . ?c)
+     ("habit" . ?H)
+     ("next" . ?n)))
+  (org-stuck-projects
+   '("+LEVEL>=2-category-habit-info"
+     ("TODO" "SCHED"  "DONE"
+      "OPEN" "WAIT" "CLOSE"
+      "ABORT" "SOMEDAY" "REPEAT")
+     nil nil))
+  (org-agenda-include-diary t)
+  (org-agenda-span 2)
+  (org-agenda-skip-scheduled-if-done t)
+  (org-agenda-skip-deadline-if-done t)
+  (org-agenda-custom-commands
+   '(("t" todo "TODO|OPEN"
+      ((org-agenda-sorting-strategy '(priority-down))))
+     ("w" todo "SCHED|WAIT"
+      ((org-agenda-sorting-strategy '(priority-down))))
+     ;; all task should be done or doing
+     ("d" todo "TODO|SCHED|OPEN|WAIT"
+      ((org-agenda-sorting-strategy '(priority-down))))
+     ("f" todo "SOMEDAY"
+      ((org-agenda-sorting-strategy '(priority-down))))
+     ("h" tags "habit/-ABORT-CLOSE"
+      ((org-agenda-sorting-strategy '(todo-state-down))))
+     ("c" tags "clock"
+      ((org-agenda-sorting-strategy '(priority-down))))))
+  (org-capture-templates
+   '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
+      "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
+      "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("s" "SCHED Task"    entry (file+headline "capture.org" "Inbox")
+      "* SCHED %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
+      "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
+      "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("h" "Habit"   entry (file+headline "global.org"   "Habit")
+      "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
   :config
   (require 'org-agenda)
   (add-hook 'kill-emacs-hook
@@ -2173,7 +2148,7 @@ name handling function can be found from emacs manual[fn:22].
   :bind
   (("C-x d" . deft-find-file)
    ("C-x C-d" . deft))
-  :custom ((deft-text-mode 'org-mode))
+  :custom (deft-text-mode 'org-mode)
   :functions (kimim/deft-open-file-advice
               kimim/deft-new-file-named-advice
               kimim/genfile-timestamp)
@@ -2385,14 +2360,15 @@ Markdown is widely used as plain text file format.
 (use-package org-ref
   :after org
   :functions (-flatten f-join)
-  :custom ((reftex-default-bibliography `(,(concat kimim/path-ref "references.bib")))
-           (org-ref-default-bibliography `(,(concat kimim/path-ref "references.bib")))
-           (bibtex-completion-bibliography (concat kimim/path-ref "references.bib"))
-           (org-ref-pdf-directory kimim/path-ref)
-           (bibtex-completion-library-path org-ref-pdf-directory)
-           (org-ref-bibliography-notes (concat kimim/path-notes "org-ref-notes.txt"))
-           (bibtex-completion-notes-path org-ref-bibliography-notes)
-           (org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename))
+  :custom
+  (reftex-default-bibliography `(,(concat kimim/path-ref "references.bib")))
+  (org-ref-default-bibliography `(,(concat kimim/path-ref "references.bib")))
+  (bibtex-completion-bibliography (concat kimim/path-ref "references.bib"))
+  (org-ref-pdf-directory kimim/path-ref)
+  (bibtex-completion-library-path org-ref-pdf-directory)
+  (org-ref-bibliography-notes (concat kimim/path-notes "org-ref-notes.txt"))
+  (bibtex-completion-notes-path org-ref-bibliography-notes)
+  (org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename)
   :demand t
   :config
   ;; open pdf with system pdf viewer
@@ -2477,7 +2453,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+begin_src emacs-lisp
 (use-package ebdb
   :commands (ebdb ebdb-mail-aliases)
-  :custom ((ebdb-mua-pop-up nil))
+  :custom (ebdb-mua-pop-up nil)
   :config
   (setq ebdb-sources (concat kimim/path-sync-emacs "ebdb"))
   (require 'ebdb-gnus)
@@ -2489,18 +2465,20 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 ** erc
 
 #+begin_src emacs-lisp
-  ;; erc settings
-  (use-package erc
-    :functions erc-autojoin-enable
-    :commands (erc)
-    :custom ((erc-autojoin-channels-alist
-              '(("irc.freenode.net" "#emacs"))))
-    :config
-    (require 'erc-join)
-    (erc-autojoin-mode 1)
-    (erc-autojoin-enable)
-    (setq erc-default-server "irc.freenode.net")
-    (setq erc-hide-list '("JOIN" "PART" "QUIT")))
+;; erc settings
+(use-package erc
+  :functions erc-autojoin-enable
+  :commands (erc)
+  :custom
+  (erc-autojoin-channels-alist
+   '(("irc.freenode.net" "#emacs")))
+  (erc-hide-list '("JOIN" "PART" "QUIT"))
+  :config
+  (require 'erc-join)
+  (erc-autojoin-mode 1)
+  (erc-autojoin-enable)
+  (setq erc-default-server "irc.freenode.net")
+  (setq ))
 #+end_src
 
 ** GNUS dired
@@ -2530,10 +2508,11 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+begin_src emacs-lisp
 (use-package sendmail
   :ensure nil
-  :custom ((mail-user-agent 'sendmail-user-agent)
-           (mail-signature nil)
-           (mail-self-blind t)
-           (mail-signature-file (concat kimim/path-sync-emacs "signature.txt"))))
+  :custom
+  (mail-user-agent 'sendmail-user-agent)
+  (mail-signature nil)
+  (mail-self-blind t)
+  (mail-signature-file (concat kimim/path-sync-emacs "signature.txt")))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2565,8 +2544,9 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
             mu4e-view-mode-map
             shr-color-visible-luminance-min
             shr-color-visible-distance-min)
-  :custom ((mu4e-compose-reply-recipients 'sender)
-           (mu4e-compose-signature-auto-include nil))
+  :custom
+  (mu4e-compose-reply-recipients 'sender)
+  (mu4e-compose-signature-auto-include nil)
   :commands (mu4e mu4e-compose-new)
   :bind (
          :map mu4e-headers-mode-map
@@ -2649,9 +2629,10 @@ should install postscript in cygwin.
 
 #+begin_src emacs-lisp
 (use-package doc-view
-  :custom ((doc-view-continuous t)
-           (doc-view-image-width 500)
-           (doc-view-resolution 300)))
+  :custom
+  (doc-view-continuous t)
+  (doc-view-image-width 500)
+  (doc-view-resolution 300))
 #+end_src
 
 * Reading News
@@ -2659,11 +2640,24 @@ should install postscript in cygwin.
 #+begin_src emacs-lisp
 (use-package elfeed
   :commands (elfeed)
-  :custom ((elfeed-curl-timeout 100)
-           (browse-url-browser-function 'browse-url-default-browser))
+  :custom
+  (elfeed-curl-timeout 100)
+  (browse-url-browser-function 'browse-url-default-browser)
+  (elfeed-feeds
+   '(("http://kimi.im/atom.xml" blog)
+     ("www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
+     ;; from https://www.foxnews.com/story/foxnews-com-rss-feeds
+     ("http://feeds.foxnews.com/foxnews/world" EN)
+     ("http://feeds.foxnews.com/foxnews/scitech" EN Tech)
+     ;; from https://www.lefigaro.fr/rss
+     ("https://www.lefigaro.fr/rss/figaro_secteur_high-tech.xml" FR Hightech)
+     ("https://www.lefigaro.fr/rss/figaro_management.xml" FR Management)
+     ;; from https://www.zeit.de/hilfe/hilfe#rss
+     ("http://newsfeed.zeit.de/wissen/index" DE Wissen)
+     ("http://newsfeed.zeit.de/kultur/index" DE Kultur)))
   :bind (:map elfeed-search-mode-map
-              ("<SPC>" . scroll-up-command)
-              ("<backspace>" . scroll-down-command)
+         ("<SPC>" . scroll-up-command)
+         ("<backspace>" . scroll-down-command)
          :map elfeed-show-mode-map
          ("M-q" . article-fill-long-lines))
   :config
@@ -2674,20 +2668,7 @@ should install postscript in cygwin.
   (advice-add 'elfeed-show-entry :after
               (lambda (entry)
                 (setq line-spacing 0.4)
-                (article-fill-long-lines)))
-
-  (setq elfeed-feeds
-        '(("http://kimi.im/atom.xml" blog)
-          ("www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
-          ;; from https://www.foxnews.com/story/foxnews-com-rss-feeds
-          ("http://feeds.foxnews.com/foxnews/world" EN)
-          ("http://feeds.foxnews.com/foxnews/scitech" EN Tech)
-          ;; from https://www.lefigaro.fr/rss
-          ("https://www.lefigaro.fr/rss/figaro_secteur_high-tech.xml" FR Hightech)
-          ("https://www.lefigaro.fr/rss/figaro_management.xml" FR Management)
-          ;; from https://www.zeit.de/hilfe/hilfe#rss
-          ("http://newsfeed.zeit.de/wissen/index" DE Wissen)
-          ("http://newsfeed.zeit.de/kultur/index" DE Kultur))))
+                (article-fill-long-lines))))
 #+end_src
 
 * kimim utils
