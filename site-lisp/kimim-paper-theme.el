@@ -97,7 +97,7 @@
             (org-level-6 :slant italic :foreground "#EA6300")
             (org-level-7 :slant italic :foreground "#2EAE2C")
             (org-level-8 :slant italic :foreground "#FD8008")
-            (org-hide :foregroud ,kimim-theme-bg)
+            (org-hide :foreground ,kimim-theme-bg)
             (org-block-begin-line :foreground ,kimim-theme-const)
             (org-block-end-line :foreground ,kimim-theme-const)
             (org-scheduled-previously :foreground ,kimim-theme-comment)

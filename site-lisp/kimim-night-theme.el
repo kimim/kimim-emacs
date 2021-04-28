@@ -103,7 +103,6 @@
             (org-scheduled-previously :foreground ,kimim-theme-comment)
             (org-todo :foreground "orange" :weight bold)
             (org-warning :foreground "orange red" :weight bold)
-            (org-hide :foreground ,kimim-theme-bg)
             (org-table :foreground "light blue")
             (org-footnote :foreground "magenta2" :underline t)
             (gnus-summary-cancelled :foreground "lightblue")
