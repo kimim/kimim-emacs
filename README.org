@@ -1606,7 +1606,7 @@ When exporting, do not export with author and date.
   :custom
   (org-export-allow-BIND t)
   (org-export-html-validation-link nil)
-  (org-export-with-sub-superscripts '{})
+  ;;(org-export-with-sub-superscripts '{})
   (org-export-with-author nil)
   (org-export-with-date nil))
 #+end_src
