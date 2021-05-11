@@ -252,9 +252,9 @@ and defers loading of the module until they are used.
 (setq package-check-signature nil)
 (setq package-user-dir "~/.emacs.d/elpa")
 (setq package-archives
-      '(("gnu" . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")
-        ("org" . "https://orgmode.org/elpa/")
+      '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+        ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+        ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
         ("sunrise" . "https://mirrors.sjtug.sjtu.edu.cn/emacs-elpa/sunrise-commander/")))
 (mapc
  (lambda (package)
