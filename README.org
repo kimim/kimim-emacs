@@ -1496,8 +1496,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (setq org-support-shift-select t)
   ;; no empty line after collapsed
   (setq org-cycle-separator-lines 0)
-  (setq org-src-fontify-natively t)
-  (setq org-src-preserve-indentation t)
   (if window-system
       (setq org-startup-indented t)
     (setq org-startup-indented nil))
@@ -1606,7 +1604,7 @@ When exporting, do not export with author and date.
   :custom
   (org-export-allow-BIND t)
   (org-export-html-validation-link nil)
-  (org-export-with-sub-superscripts '{})
+  ;;(org-export-with-sub-superscripts '{})
   (org-export-with-author nil)
   (org-export-with-date nil))
 #+end_src
@@ -1970,11 +1968,12 @@ This function is called by `org-babel-execute-src-block'."
 
   (diminish 'auto-fill-function)
 
-  (add-hook 'org-mode-hook
-            (lambda ()
-              ;;(auto-fill-mode)
-              ;;(drag-stuff-mode -1)
-              (org-toggle-pretty-entities)))
+  ;; (add-hook 'org-mode-hook
+  ;;           (lambda ()
+  ;;             ;;(auto-fill-mode)
+  ;;             ;;(drag-stuff-mode -1)
+  ;;             ;;(org-toggle-pretty-entities) ;; source code!
+  ;;             ))
 
   (setq org-refile-targets
         '(;; refile to maxlevel 2 of current file
@@ -2502,7 +2501,6 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+begin_src emacs-lisp
   (use-package youdao-dictionary
     :bind (
-           ("<f12>" . youdao-dictionary-def-copied)
            ("C-<f3>" . youdao-dictionary-search-at-point+)
            :map youdao-dictionary-mode-map
            ("<mouse-3>" . youdao-dictionary-def-copied)
