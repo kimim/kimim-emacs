@@ -49,7 +49,7 @@
       (kimim-theme-region "light steel blue")
       (kimim-theme-shadow "grey20")
       (kimim-theme-highlight "lemon chiffon")
-      (kimim-theme-modeline-bg "gainsboro"))
+      (kimim-theme-modeline-bg "#e4dcc8"))
   (apply 'custom-theme-set-faces 'kimim-paper
          (mapcar
           (lambda (x) `(,(car x) ((,class ,(cdr x)))))
