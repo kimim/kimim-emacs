@@ -48,7 +48,7 @@
       (kimim-theme-blue-3 "#758BC6")
       (kimim-theme-region "light steel blue")
       (kimim-theme-shadow "grey20")
-      (kimim-theme-highlight "lemon chiffon")
+      (kimim-theme-highlight "#e4dcc8")
       (kimim-theme-modeline-bg "#e4dcc8"))
   (apply 'custom-theme-set-faces 'kimim-paper
          (mapcar
