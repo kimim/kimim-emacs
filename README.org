@@ -2325,8 +2325,9 @@ sqlite3 is shipped in macOS by default.
      (("d" "default" plain
        (function org-roam-capture--get-point)
        "%?" :file-name "%(concat (kimim/genfile-timestamp) \"${slug}\")"
-       :head "#+TITLE: ${title}\n#+ROAM_ALIAS:\n#+ROAM_TAGS:\n\n" :unnarrowed t)))))
+       :head "#+TITLE: ${title}\n#+ROAM_ALIAS:\n#+ROAM_TAGS:\n#+ROAM_KEY:\n\n" :unnarrowed t)))))
   :bind (("C-c n f" . org-roam-find-file)
+         ("C-c n c" . org-roam-capture)
          :map org-roam-mode-map
          (("C-c n l" . org-roam)
           ("C-c n g" . org-roam-graph))
