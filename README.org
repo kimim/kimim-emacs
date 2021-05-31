@@ -1487,6 +1487,10 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
    ("M-." . org-open-at-point)
    ("M-*" . org-mark-ring-last-goto)
    ("M-h" . nil))
+  :custom (org-modules '(org-habit
+                         ol-w3m ol-bbdb ol-bibtex
+                         ol-docview ol-gnus ol-info
+                         ol-irc ol-mhe ol-rmail ol-eww))
   :config
   (use-package org-roam)
   (use-package company)
