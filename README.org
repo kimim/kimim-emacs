@@ -348,11 +348,7 @@ calculated with original default font height and width: =frame-char-height= and
 Customize the frame title to display "Emacs" + buffer file name.
 
 #+begin_src emacs-lisp
-(setq frame-title-format
-      '("" invocation-name ": "
-        (:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name))
-                 "%b"))))
+(setq frame-title-format "GNU/Emacs - https://www.gnu.org/software/emacs")
 #+end_src
 
 * Mode Line
