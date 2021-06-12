@@ -465,4 +465,11 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
                                "\" disposition=attachment><#/part>\n")))
             (split-string file-list "\n" t)))))
 
+(defun kimim/toggle-path-header ()
+  "Toggle display path header"
+  (interactive)
+  (if header-line-format
+      (path-header-line-off)
+    (path-header-line-on)))
+
 (provide 'kimim)

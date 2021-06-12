@@ -2793,7 +2793,8 @@ from system PATH, so you should set these to system PATH.
      ("C-+" . text-scale-increase)
      ("C--" . text-scale-decrease)
      ("C-=" . text-scale-adjust)
-     ("C-0" . kimim/restore-text-scale))
+     ("C-0" . kimim/restore-text-scale)
+     ("C-x /" . kimim/toggle-path-header))
     :load-path "~/kimim-emacs/site-lisp/"
     :config
     (when (eq system-type 'darwin) ;; mac specific settings
