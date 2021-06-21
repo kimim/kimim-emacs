@@ -1623,6 +1623,7 @@ brew cask install mactex-no-gui
 #+end_src
 
 For Windows, there are three options:
+
 1. download and install CTEX from http://www.ctex.org
 2. install texlive-collection in cygwin
    #+begin_src shell
@@ -1655,6 +1656,10 @@ tlmgr --usermode install ctex titlesec enumitem ms fontspec abstract    \
                          moderncv microtype
 fmtutil-sys --all
 #+end_src
+
+Recently, I adopted to mainly use texlive on Windows. It works fine and provide
+a GUI tool to maintain packages: ~tlshell.exe~. You can use it to install and
+update latex packages.
 
 To export =org-mode= to PDF, with code style highlight, you need to install
 =python= and =pygments=. Because =pygmentize= from =pygments= is used to
