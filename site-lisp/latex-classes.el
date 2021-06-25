@@ -184,6 +184,14 @@
     "\\documentclass{ctexbeamer}"
     ("\\begin{frame}{%s}" "\\end{frame}" "\\begin{frame}{%s}" "\\end{frame}")))
 
+
+(defvar beamer-class
+ '("beamer"
+   "\\documentclass[presentation]{beamer}"
+   ("\\section{%s}" . "\\section*{%s}")
+   ("\\subsection{%s}" . "\\subsection*{%s}")
+   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
 (defvar kimim/latex-classes
       ;; use backquote ` to evaluate element before put to list
       `(
@@ -194,6 +202,7 @@
         ,en-article2c    ;; English article in two columns
         ,IEEEtrans       ;; IEEE transaction paper
         ,ctexbeamer      ;; Chinese beamer slides
+        ,beamer-class
         ))
 
 (provide 'latex-classes)

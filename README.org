@@ -1485,10 +1485,12 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
    ("M-." . org-open-at-point)
    ("M-*" . org-mark-ring-last-goto)
    ("M-h" . nil))
-  :custom (org-modules '(org-habit
-                         ol-w3m ol-bbdb ol-bibtex
-                         ol-docview ol-gnus ol-info
-                         ol-irc ol-mhe ol-rmail ol-eww))
+  :custom
+  (org-modules '(org-habit
+                 ol-w3m ol-bbdb ol-bibtex
+                 ol-docview ol-gnus ol-info
+                 ol-irc ol-mhe ol-rmail ol-eww))
+  (org-startup-folded 'showall)
   :config
   (use-package org-roam)
   (use-package company)
@@ -1695,9 +1697,12 @@ sudo apt install python3-pygments
   :bind ("<C-f7>" . org-latex-export-to-pdf)
   :commands (org-latex-publish-to-pdf)
   :custom
-  (org-latex-image-default-width "\\maxwidth{.9\\linewidth}")
+  (org-latex-image-default-height "0.8\\textheight")
+  (org-latex-image-default-width "0.8\\linewidth")
+  (org-startup-with-beamer-mode t)
   :config
   (require 'ox-latex)
+  (require 'ox-beamer)
   (setq org-latex-listings 'minted)
   (setq org-latex-minted-options
         '(("frame" "single") ("fontsize" "\\small")))
