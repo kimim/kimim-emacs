@@ -419,7 +419,7 @@ Use kimim-night as default theme.
   (load-theme 'kimim-light t))
 #+end_src
 
-* Highlight
+* COMMENT Highlight
 
 Highlight current line in window systems.
 
@@ -1752,6 +1752,7 @@ sudo apt install python3-pygments
           ("" "minted" t nil)
           ("" "amsfonts" t nil)
           ("" "graphicx" t nil)
+          ("" "svg" t nil)
           ("" "grffile" t nil)
           ("" "longtable" nil nil)
           ("" "wrapfig" nil nil)
