@@ -27,7 +27,7 @@ pacman -S git mingw-w64-x86_64-emacs
 #+end_src
 
 Since 2020, I use MSYS2 MingW64 Emacs for most of the time, Cygwin Emacs is not
-actively tested now.
+actively tested now, but Emacs should work in Cygwin environment smoothly.
 
 ** Windows/Cygwin
 
