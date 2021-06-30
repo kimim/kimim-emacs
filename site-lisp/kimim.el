@@ -472,4 +472,61 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
       (path-header-line-off)
     (path-header-line-on)))
 
+(defvar sumantrapdf-config
+  (concat kimim/path-kimikit "sumatrapdf/SumatraPDF-settings.txt"))
+
+(defun kimim/sumantrapdf-theme-night ()
+  "Change color theme in sumatrapdf, just modify the config file"
+  (interactive)
+  (find-file sumantrapdf-config)
+  (goto-char (point-min))
+  (replace-regexp "\\(MainWindowBackground = #\\).*" "\\1333333")
+  (goto-char (point-min))
+  (replace-regexp "\\(TextColor = #\\).*" "\\1eeeeee")
+  (goto-char (point-min))
+  (replace-regexp "\\(BackgroundColor = #\\).*" "\\1262626")
+  (save-buffer)
+  (kill-this-buffer))
+
+(defun kimim/sumantrapdf-theme-paper ()
+  "Change color theme in sumatrapdf, just modify the config file"
+  (interactive)
+  (find-file sumantrapdf-config)
+  (goto-char (point-min))
+  (replace-regexp "\\(MainWindowBackground = #\\).*" "\\1e4dcc8")
+  (goto-char (point-min))
+  (replace-regexp "\\(TextColor = #\\).*" "\\1000000")
+  (goto-char (point-min))
+  (replace-regexp "\\(BackgroundColor = #\\).*" "\\1f4ecd8")
+  (save-buffer)
+  (kill-this-buffer))
+
+(defun kimim/sumantrapdf-theme-light ()
+  "Change color theme in sumatrapdf, just modify the config file"
+  (interactive)
+  (find-file sumantrapdf-config)
+  (goto-char (point-min))
+  (replace-regexp "\\(MainWindowBackground = #\\).*" "\\1aaaaaa")
+  (goto-char (point-min))
+  (replace-regexp "\\(TextColor = #\\).*" "\\1000000")
+  (goto-char (point-min))
+  (replace-regexp "\\(BackgroundColor = #\\).*" "\\1f8f8f8")
+  (save-buffer)
+  (kill-this-buffer))
+
+(defun kimim/theme-night ()
+  (interactive)
+  (kimim/sumantrapdf-theme-night)
+  (load-theme 'kimim-night))
+
+(defun kimim/theme-light ()
+  (interactive)
+  (kimim/sumantrapdf-theme-light)
+  (load-theme 'kimim-light))
+
+(defun kimim/theme-paper ()
+  (interactive)
+  (kimim/sumantrapdf-theme-paper)
+  (load-theme 'kimim-paper))
+
 (provide 'kimim)

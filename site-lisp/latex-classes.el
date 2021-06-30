@@ -187,7 +187,7 @@
 
 (defvar beamer-class
  '("beamer"
-   "\\documentclass[presentation]{beamer}"
+   "\\documentclass[presentation, aspectratio=169]{beamer}"
    ("\\section{%s}" . "\\section*{%s}")
    ("\\subsection{%s}" . "\\subsection*{%s}")
    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))

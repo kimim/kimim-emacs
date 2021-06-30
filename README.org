@@ -353,7 +353,8 @@ Customize the frame title to display "Emacs" + buffer file name.
 #+begin_src emacs-lisp
 (setq frame-title-format
       '((:eval (buffer-name))
-        " - GNU/Emacs - https://www.gnu.org/software/emacs"))
+        ;;" - GNU/Emacs - https://www.gnu.org/software/emacs"
+        ))
 #+end_src
 
 * Mode Line
@@ -1752,7 +1753,7 @@ sudo apt install python3-pygments
           ("" "minted" t nil)
           ("" "amsfonts" t nil)
           ("" "graphicx" t nil)
-          ("" "svg" t nil)
+          ("inkscapeopt = -C" "svg" t nil)
           ("" "grffile" t nil)
           ("" "longtable" nil nil)
           ("" "wrapfig" nil nil)
