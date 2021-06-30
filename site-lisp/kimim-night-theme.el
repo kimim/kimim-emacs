@@ -89,6 +89,7 @@
             (font-lock-doxygen-face :foreground "SaddleBrown" :background "#f7f7f7")
             (org-code :foreground ,kimim-theme-builtin :weight bold)
             (org-verbatim :foreground ,kimim-theme-const)
+            (underline :foreground "orange" :underline t)
             (org-level-1 :weight bold :foreground "light blue")
             (org-level-2 :weight bold :foreground "cyan")
             (org-level-3 :weight bold :foreground "yellow")
