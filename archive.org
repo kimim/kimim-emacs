@@ -564,35 +564,35 @@ do not embed svg in file now.
 ** Dealing with Unicode fonts
 
 #+begin_src emacs-lisp
-;; (use-package unicode-fonts
-;;   :defer 3
-;;   :config
-;;   (defun unicode-fonts-setup-advice ()
-;;     (if window-system
-;;         (set-fontset-font
-;;          "fontset-default"
-;;          'cjk-misc (font-spec :family "YaheiInconsolata"))))
-;;   (advice-add 'unicode-fonts-setup :after 'unicode-fonts-setup-advice)
-;;   (defun kimim/add-font (group font)
-;;     (let ((font-list (assoc group unicode-fonts-block-font-mapping)))
-;;       (setf (cadr font-list) (cons font (cadr font-list)))))
-;;   (seq-map (lambda (group) (kimim/add-font group "YaheiInconsolata"))
-;;            '("Bopomofo" "Bopomofo Extended" "CJK Compatibility" "CJK Compatibility Forms"
-;;              "CJK Compatibility Ideographs" "CJK Compatibility Ideographs Supplement"
-;;              "CJK Radicals Supplement" "CJK Strokes" "CJK Symbols and Punctuation"
-;;              "CJK Unified Ideographs" "CJK Unified Ideographs Extension A"
-;;              "CJK Unified Ideographs Extension B" "CJK Unified Ideographs Extension C"
-;;              "CJK Unified Ideographs Extension D" "CJK Unified Ideographs Extension E"
-;;              "Enclosed Ideographic Supplement" "Halfwidth and Fullwidth Forms"
-;;              "Hangul Compatibility Jamo" "Hangul Jamo" "Hangul Jamo Extended-A"
-;;              "Hangul Jamo Extended-B" "Hangul Syllables" "Ideographic Description Characters"
-;;              "IPA Extensions" "Mathematical Alphanumeric Symbols"))
-;;   (seq-map (lambda (group) (kimim/add-font group "Consolas"))
-;;            '("Combining Diacritical Marks" "Combining Half Marks" "Cyrillic"
-;;              "Cyrillic Supplement" "Greek Extended" "Greek and Coptic" "Phonetic Extensions"
-;;              "Phonetic Extensions Supplement" "Superscripts and Subscripts"))
-;;   (add-to-list 'unicode-fonts-block-font-mapping
-;;                '("Spacing Modifier Letters"
-;;                  ("Consolas" "Monaco" "YaheiInconsolata")))
-;;   (unicode-fonts-setup))
+(use-package unicode-fonts
+  :defer 3
+  :config
+  (defun unicode-fonts-setup-advice ()
+    (if window-system
+        (set-fontset-font
+         "fontset-default"
+         'cjk-misc (font-spec :family "YaheiInconsolata"))))
+  (advice-add 'unicode-fonts-setup :after 'unicode-fonts-setup-advice)
+  (defun kimim/add-font (group font)
+    (let ((font-list (assoc group unicode-fonts-block-font-mapping)))
+      (setf (cadr font-list) (cons font (cadr font-list)))))
+  (seq-map (lambda (group) (kimim/add-font group "YaheiInconsolata"))
+           '("Bopomofo" "Bopomofo Extended" "CJK Compatibility" "CJK Compatibility Forms"
+             "CJK Compatibility Ideographs" "CJK Compatibility Ideographs Supplement"
+             "CJK Radicals Supplement" "CJK Strokes" "CJK Symbols and Punctuation"
+             "CJK Unified Ideographs" "CJK Unified Ideographs Extension A"
+             "CJK Unified Ideographs Extension B" "CJK Unified Ideographs Extension C"
+             "CJK Unified Ideographs Extension D" "CJK Unified Ideographs Extension E"
+             "Enclosed Ideographic Supplement" "Halfwidth and Fullwidth Forms"
+             "Hangul Compatibility Jamo" "Hangul Jamo" "Hangul Jamo Extended-A"
+             "Hangul Jamo Extended-B" "Hangul Syllables" "Ideographic Description Characters"
+             "IPA Extensions" "Mathematical Alphanumeric Symbols"))
+  (seq-map (lambda (group) (kimim/add-font group "Consolas"))
+           '("Combining Diacritical Marks" "Combining Half Marks" "Cyrillic"
+             "Cyrillic Supplement" "Greek Extended" "Greek and Coptic" "Phonetic Extensions"
+             "Phonetic Extensions Supplement" "Superscripts and Subscripts"))
+  (add-to-list 'unicode-fonts-block-font-mapping
+               '("Spacing Modifier Letters"
+                 ("Consolas" "Monaco" "YaheiInconsolata")))
+  (unicode-fonts-setup))
 #+end_src
