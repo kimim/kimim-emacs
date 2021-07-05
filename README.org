@@ -482,6 +482,16 @@ client.
 (use-package tldr)
 #+end_src
 
+* Encryption
+
+#+begin_src emacs-lisp
+(use-package epa
+  :ensure nil
+  :custom
+  (epa-pinentry-mode 'loopback)
+  (epa-file-cache-passphrase-for-symmetric-encryption t))
+#+end_src
+
 * Controlling
 ** Window and Frame
 
@@ -772,6 +782,7 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
   (dired-listing-switches "-AGvhlgo")
   (dired-recursive-copies t)
   (dired-recursive-deletes t)
+  (ls-lisp-dirs-first t)
   :bind
   (("C-x C-j" . dired-jump)
    :map dired-mode-map
@@ -1154,6 +1165,7 @@ that dash version higher than 2.18 is installed[fn:16].
   :custom
   (lsp-headerline-breadcrumb-icons-enable nil)
   (lsp-headerline-breadcrumb-enable nil)
+  (lsp-modeline-code-action-fallback-icon "★")
   :bind (:map
          lsp-mode-map
          ("C-x ." . lsp-find-definition)
@@ -2701,73 +2713,73 @@ In Windows environment, =kimim/xterm= and =kimim/dc= will look up the program
 from system PATH, so you should set these to system PATH.
 
 #+begin_src emacs-lisp
-  (use-package kimim
-    :ensure nil
-    :commands (kimim/mail-setup)
-    :defines (mac-option-modifier
-              mac-command-modifier)
-    :bind
-    (("C-x m m" . kimim/mail-new-empty)
-     ("C-x m y" . kimim/mail-attach-files)
-     ("<f9>" . kimim/xterm)
-     ("S-<f9>" . kimim/cmd)
-     ("C-c r" . kimim/rename-file-and-buffer)
-     ("C-x m o" . kimim/open-in-external-app)
-     ("C-c d" . kimim/lookinsight)
-     ("<f1>" . delete-other-windows)
-     ("C-<f1>" . nuke-other-buffers)
-     ("M-<f1>" . kimim/switch-to-scratch-and-nuke-others)
-     ("<f2>" . other-window)
-     ("<f5>" . kimim/switch-to-scratch-buffer)
-     ("<f7>" . bury-buffer)
-     ("<f8>" . unbury-buffer)
-     ("C-h" . delete-backward-char)
-     ("M-h" . backward-kill-word)
-     ("M-?" . mark-paragraph)
-     ("C-x k" . kill-this-buffer)
-     ("C-x C-v" . view-file-other-window)
-     ("C-c C-o" . occur)
-     ("C-z" . set-mark-command)
-     ("M-o" . other-window)
-     ("M-n" . next-error)
-     ("M-p" . previous-error)
-     ("C-c C-/" . comment-or-uncomment-region)
-     ("RET" . newline-and-indent)
-     ("C-x m h" . help)
-     ("C-x m n" . compose-mail)
-     ("C-x m ." . unbury-buffer)
-     ("C-x m ," . bury-buffer)
-     ("C-x m  。" . unbury-buffer)
-     ("C-x m  ，" . bury-buffer)
-     ( "C-x ," . bury-buffer)
-     ("C-x ." . unbury-buffer)
-     ("C-x  ，" . bury-buffer)
-     ("C-x  。" . unbury-buffer)
-     ("C-x  ‘" . hippie-expand)
-     ("C-x  ’" . hippie-expand)
-     ("C-x M-s" . eshell)
-     ("C-+" . text-scale-increase)
-     ("C--" . text-scale-decrease)
-     ("C-=" . text-scale-adjust)
-     ("C-0" . kimim/restore-text-scale)
-     ("C-x /" . kimim/toggle-path-header))
-    :load-path "~/kimim-emacs/site-lisp/"
-    :config
-    (when (eq system-type 'darwin) ;; mac specific settings
-      (setq mac-option-modifier 'meta)
-      (setq mac-command-modifier 'meta)
-      ;; sets fn-delete to be right-delete
-      (global-set-key [kp-delete] 'delete-char))
-    (defun kimim/switch-to-scratch-and-nuke-others ()
-      (interactive)
-      (switch-to-buffer "*scratch*") (nuke-other-buffers))
-    (defun kimim/switch-to-scratch-buffer ()
-      (interactive)
-      (switch-to-buffer "*scratch*")
-      (delete-other-windows))
-    (defun kimim/restore-text-scale ()
-      (interactive)
-      (text-scale-increase 0)))
+(use-package kimim
+  :ensure nil
+  :commands (kimim/mail-setup)
+  :defines (mac-option-modifier
+            mac-command-modifier)
+  :bind
+  (("C-x m m" . kimim/mail-new-empty)
+   ("C-x m y" . kimim/mail-attach-files)
+   ("<f9>" . kimim/xterm)
+   ("S-<f9>" . kimim/cmd)
+   ("C-c r" . kimim/rename-file-and-buffer)
+   ("C-x m o" . kimim/open-in-external-app)
+   ("C-c d" . kimim/lookinsight)
+   ("<f1>" . delete-other-windows)
+   ("C-<f1>" . nuke-other-buffers)
+   ("M-<f1>" . kimim/switch-to-scratch-and-nuke-others)
+   ("<f2>" . other-window)
+   ("<f5>" . kimim/switch-to-scratch-buffer)
+   ("<f7>" . bury-buffer)
+   ("<f8>" . unbury-buffer)
+   ("C-h" . delete-backward-char)
+   ("M-h" . backward-kill-word)
+   ("M-?" . mark-paragraph)
+   ("C-x k" . kill-current-buffer)
+   ("C-x C-v" . view-file-other-window)
+   ("C-c C-o" . occur)
+   ("C-z" . set-mark-command)
+   ("M-o" . other-window)
+   ("M-n" . next-error)
+   ("M-p" . previous-error)
+   ("C-c C-/" . comment-or-uncomment-region)
+   ("RET" . newline-and-indent)
+   ("C-x m h" . help)
+   ("C-x m n" . compose-mail)
+   ("C-x m ." . unbury-buffer)
+   ("C-x m ," . bury-buffer)
+   ("C-x m  。" . unbury-buffer)
+   ("C-x m  ，" . bury-buffer)
+   ( "C-x ," . bury-buffer)
+   ("C-x ." . unbury-buffer)
+   ("C-x  ，" . bury-buffer)
+   ("C-x  。" . unbury-buffer)
+   ("C-x  ‘" . hippie-expand)
+   ("C-x  ’" . hippie-expand)
+   ("C-x M-s" . eshell)
+   ("C-+" . text-scale-increase)
+   ("C--" . text-scale-decrease)
+   ("C-=" . text-scale-adjust)
+   ("C-0" . kimim/restore-text-scale)
+   ("C-x /" . kimim/toggle-path-header))
+  :load-path "~/kimim-emacs/site-lisp/"
+  :config
+  (when (eq system-type 'darwin) ;; mac specific settings
+    (setq mac-option-modifier 'meta)
+    (setq mac-command-modifier 'meta)
+    ;; sets fn-delete to be right-delete
+    (global-set-key [kp-delete] 'delete-char))
+  (defun kimim/switch-to-scratch-and-nuke-others ()
+    (interactive)
+    (switch-to-buffer "*scratch*") (nuke-other-buffers))
+  (defun kimim/switch-to-scratch-buffer ()
+    (interactive)
+    (switch-to-buffer "*scratch*")
+    (delete-other-windows))
+  (defun kimim/restore-text-scale ()
+    (interactive)
+    (text-scale-increase 0)))
 #+end_src
 
 * Footnotes
