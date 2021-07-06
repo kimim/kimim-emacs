@@ -181,13 +181,19 @@
 
 (defvar ctexbeamer
   '("ctexbeamer"
-    "\\documentclass{ctexbeamer}"
+    "\\documentclass{ctexbeamer}
+\\setlength{\\baselineskip}{20pt}
+\\setlength{\\parskip}{5pt}
+"
     ("\\begin{frame}{%s}" "\\end{frame}" "\\begin{frame}{%s}" "\\end{frame}")))
 
 
 (defvar beamer-class
  '("beamer"
-   "\\documentclass[presentation, aspectratio=169]{beamer}"
+   "\\documentclass[presentation, aspectratio=169]{beamer}
+\\setlength{\\baselineskip}{20pt}
+\\setlength{\\parskip}{5pt}
+"
    ("\\section{%s}" . "\\section*{%s}")
    ("\\subsection{%s}" . "\\subsection*{%s}")
    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))

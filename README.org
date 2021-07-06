@@ -753,7 +753,7 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
          :map sr-mode-map
          ("D" . dired-do-delete)
          ("<f2>" . nil)
-         ("o" . sr-browse-file)
+         ("o" . kimim/open-in-external-app)
          ("b" . sr-dired-prev-subdir)
          ("<left>" . sr-dired-prev-subdir)
          ("<right>" . sr-advertised-find-file))
