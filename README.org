@@ -795,21 +795,25 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
   :config
   (require 'dired-x)
   (use-package dired-narrow)
+  (use-package dired-filter)
   (add-hook 'dired-mode-hook
             (lambda ()
               (turn-on-gnus-dired-mode)
               ;; Set dired-x buffer-local variables here.  For example:
               (dired-omit-mode 1)
+              (dired-filter-mode 1)
+              (hl-line-mode 1)
               (setq dired-omit-localp t)
               (setq dired-omit-files
-                    (concat "|NTUSER\\|ntuser\\"
-                            "|Cookies\\|AppData\\"
-                            "|Contacts\\|Links\\"
-                            "|Intel\\|NetHood\\"
-                            "|PrintHood\\|Recent\\"
-                            "|Start\\|SendTo\\"
-                            "|^\\.DS_Store\\"
-                            "|qms-bmh"))))
+                    (concat "|desktop.ini"
+                            "\\|NTUSER\\|ntuser"
+                            "\\|Cookies\\|AppData"
+                            "\\|Contacts\\|Links"
+                            "\\|Intel\\|NetHood"
+                            "\\|PrintHood\\|Recent"
+                            "\\|Start\\|SendTo"
+                            "\\|^\\.DS_Store"
+                            "\\|qms-bmh"))))
   (if (eq system-type 'darwin)
       (setq dired-listing-switches "-Avhlgo"))
 
@@ -882,7 +886,8 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
 (use-package bookmark
   :custom
   (bookmark-default-file "~/.emacs.d/emacs.bmk")
-  (bookmark-save-flag 1))
+  (bookmark-save-flag 1)
+  (bookmark-fontify nil))
 
 (use-package bm
   :bind (("C-x m t" . bm-toggle)
@@ -2182,8 +2187,7 @@ name handling function can be found from emacs manual[fn:22].
 #+begin_src emacs-lisp
 (use-package deft
   :bind
-  (("C-x d" . deft-find-file)
-   ("C-x C-d" . deft))
+  ("C-x d" . deft-find-file)
   :custom (deft-text-mode 'org-mode)
   :functions (kimim/deft-open-file-advice
               kimim/deft-new-file-named-advice
