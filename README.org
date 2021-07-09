@@ -791,7 +791,8 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
    ("b" . dired-up-directory)
    ("o" . kimim/open-in-external-app)
    ("M-n" . dired-narrow)
-   ("M-c" . compose-attach-marked-files))
+   ("M-c" . compose-attach-marked-files)
+   ("C-q" . kill-dired-buffers))
   :config
   (require 'dired-x)
   (use-package dired-narrow)
@@ -1515,10 +1516,11 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :config
   (use-package org-roam)
   (use-package company)
+  (use-package org-superstar)
+  (add-hook 'org-mode-hook  (lambda () (org-superstar-mode 1)))
   (setq company-minimum-prefix-length 2)
   (setq org-hide-emphasis-markers t)
   (org-appear-mode t)
- ;; (org-download-enable)
   (setq org-support-shift-select t)
   ;; no empty line after collapsed
   (setq org-cycle-separator-lines 0)
@@ -1536,6 +1538,16 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :ensure t
   :custom (org-appear-autolinks nil)
   :hook org-mode-hook)
+#+end_src
+
+** org-superstar
+
+#+begin_src emacs-lisp
+(use-package org-superstar
+  :ensure t
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list '(9673 9675 9679 9632)))
 #+end_src
 
 ** orgalist
