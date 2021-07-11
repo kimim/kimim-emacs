@@ -2004,54 +2004,6 @@ headers when adding notes"
         (org-show-context 'agenda)
         (org-add-note))))
 
-(defun org-agenda-todo (&optional arg)
-  "Cycle TODO state of line at point, also in Org file.
-This changes the line at point, all other lines in the agenda referring to
-the same tree node, and the headline of the tree node in the Org file."
-  (interactive "P")
-  (org-agenda-check-no-diary)
-  (org-agenda-maybe-loop
-   #'org-agenda-todo arg nil nil
-   (let* ((col (current-column))
-	  (marker (or (org-get-at-bol 'org-marker)
-		      (org-agenda-error)))
-	  (buffer (marker-buffer marker))
-	  (pos (marker-position marker))
-	  (hdmarker (org-get-at-bol 'org-hd-marker))
-	  (todayp (org-agenda-today-p (org-get-at-bol 'day)))
-	  (inhibit-read-only t)
-	  org-loop-over-headlines-in-active-region
-	  org-agenda-headline-snapshot-before-repeat newhead just-one)
-     (org-with-remote-undo buffer
-       (with-current-buffer buffer
-	 ;;(widen)
-     (org-narrow-to-subtree) ;; change from widen to org-narrow-to-subtree
-	 (goto-char pos)
-	 (org-show-context 'agenda)
-	 (let ((current-prefix-arg arg))
-	   (call-interactively 'org-todo))
-	 (and (bolp) (forward-char 1))
-	 (setq newhead (org-get-heading))
-	 (when (and (bound-and-true-p
-		     org-agenda-headline-snapshot-before-repeat)
-		    (not (equal org-agenda-headline-snapshot-before-repeat
-				newhead))
-		    todayp)
-	   (setq newhead org-agenda-headline-snapshot-before-repeat
-		 just-one t))
-	 (save-excursion
-	   (org-back-to-heading)
-	   (move-marker org-last-heading-marker (point))))
-       (beginning-of-line 1)
-       (save-window-excursion
-	 (org-agenda-change-all-lines newhead hdmarker 'fixface just-one))
-       (when (bound-and-true-p org-clock-out-when-done)
-	 (string-match (concat "^" (regexp-opt org-done-keywords-for-agenda))
-		       newhead)
-	 (org-agenda-unmark-clocking-task))
-       (org-move-to-column col)
-       (org-agenda-mark-clocking-task)))))
-
   (use-package ivy) ; use ivy to complete refile files
   (defun org-agenda-kill-files ()
     (interactive)
