@@ -1517,7 +1517,9 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (use-package org-roam)
   (use-package company)
   (use-package org-superstar)
-  (add-hook 'org-mode-hook  (lambda () (org-superstar-mode 1)))
+  (add-hook 'org-mode-hook  (lambda ()
+                              (org-superstar-mode 1)
+                              (electric-indent-mode -1)))
   (setq company-minimum-prefix-length 2)
   (setq org-hide-emphasis-markers t)
   (org-appear-mode t)
@@ -1547,7 +1549,10 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :ensure t
   :custom
   (org-superstar-remove-leading-stars t)
-  (org-superstar-headline-bullets-list '(9673 9675 9679 9632)))
+  (org-superstar-headline-bullets-list
+   '(9673 9675 9679 9632))
+  (org-superstar-item-bullet-alist
+   '((42 . 9679) (43 . 9830) (45 . 9644))))
 #+end_src
 
 ** orgalist
@@ -1754,6 +1759,14 @@ sudo apt install python3-pygments
           ;;"mv -f references.bib references.back.bib"
           ))
 
+  (defun ref-headline-removal (backend)
+    "Remove reference headline with tag: ref"
+    (org-map-entries
+     (lambda ()
+       (when (member "ref" org-scanner-tags)
+         (delete-region (point) (line-beginning-position 2))))))
+  (add-hook 'org-export-before-parsing-hook 'ref-headline-removal)
+
   ;;;;; Nicolas Goaziou, http://article.gmane.org/gmane.emacs.orgmode/67692
   ;; (defun org-latex-ignore-heading-filter-headline (headline backend info)
   ;;   "Strip headline from HEADLINE. Ignore BACKEND and INFO."
@@ -1903,12 +1916,11 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
      (sequence "REPEAT(r)" "|")))
   (org-tag-alist
    '(("@office" . ?o) ("@home" . ?h)
-     ("team" . ?t) ("leader" . ?l) ("boss" . ?b)
-     ("risk" . ?k) ("sync" . ?s) ("followup" . ?f)
+     ("team" . ?t) ("leader" . ?l)
+     ("risk" . ?k)
      ("reading" . ?r) ("writing" . ?w)
      ("project" . ?p) ("category" . ?c)
-     ("habit" . ?H)
-     ("next" . ?n)))
+     ("habit" . ?H)))
   (org-stuck-projects
    '("+LEVEL>=2-category-habit-info"
      ("TODO" "SCHED"  "DONE"
@@ -1954,13 +1966,6 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
               (org-save-all-org-buffers)))
 
   (diminish 'auto-fill-function)
-
-  ;; (add-hook 'org-mode-hook
-  ;;           (lambda ()
-  ;;             ;;(auto-fill-mode)
-  ;;             ;;(drag-stuff-mode -1)
-  ;;             ;;(org-toggle-pretty-entities) ;; source code!
-  ;;             ))
 
   (setq org-refile-targets
         '(;; refile to maxlevel 2 of current file
