@@ -783,6 +783,7 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
   (dired-recursive-copies t)
   (dired-recursive-deletes t)
   (ls-lisp-dirs-first t)
+  (dired-create-destination-dirs 'ask)
   :bind
   (("C-x C-j" . dired-jump)
    :map dired-mode-map
