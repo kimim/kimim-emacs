@@ -1748,15 +1748,11 @@ sudo apt install python3-pygments
                '(plantuml "text"))
   (setq org-latex-pdf-process
         `(
-          ;; ,(let ((ref (file-truename (concat kimim/path-ref "references.bib"))))
-          ;;    (if (file-exists-p ref)
-          ;;        (concat "cp -f \"" ref "\" .")
-          ;;      ""))
-          "xelatex -shell-escape %f"
-          "bibtex %b"
-          "xelatex -shell-escape %f"
-          "xelatex -shell-escape %f"
-          ;;"mv -f references.bib references.back.bib"
+          ;; "xelatex -shell-escape %f"
+          ;; "bibtex %b"
+          ;; "xelatex -shell-escape %f"
+          ;; "xelatex -shell-escape %f"
+          "latexmk -xelatex -shell-escape %f" ;; for bibtex and biber use
           ))
 
   (defun ref-headline-removal (backend)
@@ -1804,7 +1800,12 @@ sudo apt install python3-pygments
           ("" "amsmath" t nil)
           ("" "textcomp" t nil)
           ("" "lettrine" t nil)
-          ("" "capt-of" nil nil)))))
+          ("" "capt-of" nil nil)
+          ("citestyle=numeric, bibstyle=numeric, hyperref=true,
+backref=true,maxcitenames=3,url=true,backend=biber,natbib=true"
+            biblatex t nil))))
+  (setq org-latex-packages-alist
+        '("\\addbibresource{../references.bib}")))
 #+end_src
 
 *** org to html page
@@ -2435,6 +2436,9 @@ Markdown is widely used as plain text file format.
 (use-package org-ref
   :after org
   :functions (-flatten f-join)
+  :bind (:map org-mode-map
+              ("C-x m p" . org-ref-open-pdf-at-point)
+              ("C-x m d" . kimim/org-ref-open-pdf-in-dired))
   :custom
   (reftex-default-bibliography `(,(concat kimim/path-ref "references.bib")))
   (org-ref-default-bibliography `(,(concat kimim/path-ref "references.bib")))
@@ -2446,10 +2450,32 @@ Markdown is widely used as plain text file format.
   (org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename)
   :demand t
   :config
+  (defun kimim/org-ref-open-pdf-in-dired ()
+  "Open the pdf for bibtex key under point if it exists."
+  (interactive)
+  (let* ((results (org-ref-get-bibtex-key-and-file))
+         (key (car results))
+         (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+    (if (file-exists-p pdf-file)
+        (dired-jump nil pdf-file)
+      (message "no pdf found for %s" key))))
+
+  (defun kimim/org-ref-open-bibtex-in-dired ()
+    "Open dired buffer of pdf for a bibtex entry, if it exists."
+    (interactive)
+    (save-excursion
+      (bibtex-beginning-of-entry)
+      (let* ((bibtex-expand-strings t)
+             (entry (bibtex-parse-entry t))
+             (key (reftex-get-bib-field "=key=" entry))
+             (pdf (funcall org-ref-get-pdf-filename-function key)))
+        (if (file-exists-p pdf)
+            (dired-jump nil (directory-file-name pdf))
+          (ding)))))
   ;; open pdf with system pdf viewer
-  (setq bibtex-completion-pdf-open-function
-        (lambda (fpath)
-          (kimim/open-in-external-app fpath)))
+  ;;(setq bibtex-completion-pdf-open-function
+  ;;      (lambda (fpath)
+  ;;        (kimim/open-in-external-app fpath)))
 
   (defun kimim/org-ref-get-pdf-filename (key)
     "Return the pdf filename associated with a bibtex KEY.
@@ -2481,15 +2507,16 @@ There is a built-in =bibtex-mode= to manage references. We can extend it to
 support more functions from =org-ref=:
 
 #+begin_src emacs-lisp
-  (use-package bibtex
-    :after org
-    :demand t
-    :ensure nil
-    :bind (:map bibtex-mode-map
-                ("C-x m p" . org-ref-open-bibtex-pdf)
-                ("C-c C-z" . org-ref-open-bibtex-notes))
-    :config
-    (use-package org-ref))
+(use-package bibtex
+  :after org
+  :demand t
+  :ensure nil
+  :bind (:map bibtex-mode-map
+         ("C-x m p" . org-ref-open-bibtex-pdf)
+         ("C-x m d" . kimim/org-ref-open-bibtex-in-dired)
+         ("C-c C-z" . org-ref-open-bibtex-notes))
+  :config
+  (use-package org-ref))
 #+end_src
 
 * Dictionary

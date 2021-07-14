@@ -1,3 +1,69 @@
+;; maxwidth macro comes from:
+;; https://tex.stackexchange.com/questions/86350/includegraphics-maximum-width
+(defvar en-article ;; this is the default latex class
+  '("article"
+    "\\documentclass{article}
+\\usepackage{xeCJK}
+\\usepackage{amsmath,amssymb,amsfonts}
+\\usepackage{geometry}
+\\usepackage{titlesec}
+\\usepackage{enumitem}
+\\usepackage{fancyhdr, lastpage}
+\\usepackage{hyperref}
+\\usepackage{graphicx}
+\\makeatletter
+\\def\\maxwidth#1{\\ifdim\\Gin@nat@width>#1 #1\\else\\Gin@nat@width\\fi}
+\\makeatother
+\\hypersetup{hidelinks}
+\\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
+\\fancypagestyle{plain}{
+    \\fancyhf{}
+    \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
+    \\renewcommand{\\headrulewidth}{0pt}
+}
+\\pagestyle{plain}
+\\setlength{\\parindent}{0em}
+\\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
+\\geometry{a4paper,scale=0.8}
+\\geometry{a4paper,left=2.5cm,right=2.5cm,top=3cm,bottom=3cm}
+\\setlength{\\baselineskip}{20pt}
+\\setlength{\\parskip}{5pt}"
+    ("\\section{%s}" . "\\section*{%s}")
+    ("\\subsection{%s}" . "\\subsection*{%s}")
+    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+    ("\\paragraph{%s}" . "\\paragraph*{%s}")
+    ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(defvar en-article2c
+  '("article2c"
+    "\\documentclass[twocolumn]{article}
+\\usepackage{xeCJK}
+\\usepackage{amsmath,amssymb,amsfonts}
+\\usepackage{geometry}
+\\usepackage{titlesec}
+\\usepackage{enumitem}
+\\usepackage{fancyhdr, lastpage}
+\\fancypagestyle{plain}{
+    \\fancyhf{}
+    \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
+    \\renewcommand{\\headrulewidth}{0pt}
+}
+\\usepackage{hyperref}
+\\hypersetup{hidelinks}
+\\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
+\\pagestyle{plain}
+\\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
+\\geometry{a4paper,scale=0.8}
+\\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm}
+\\setlength{\\baselineskip}{20pt}
+\\setlength{\\parskip}{5pt}"
+       ("\\section{%s}" . "\\section*{%s}")
+       ("\\subsection{%s}" . "\\subsection*{%s}")
+       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+
 (defvar biz-report
   '("biz-report"
     "\\documentclass[15pt]{ctexart}
@@ -103,69 +169,6 @@
     ("\\paragraph{%s}" . "\\paragraph*{%s}")
     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-;; maxwidth macro comes from:
-;; https://tex.stackexchange.com/questions/86350/includegraphics-maximum-width
-(defvar en-article
-  '("article"
-    "\\documentclass{article}
-\\usepackage{xeCJK}
-\\usepackage{amsmath,amssymb,amsfonts}
-\\usepackage{geometry}
-\\usepackage{titlesec}
-\\usepackage{enumitem}
-\\usepackage{fancyhdr, lastpage}
-\\usepackage{hyperref}
-\\usepackage{graphicx}
-\\makeatletter
-\\def\\maxwidth#1{\\ifdim\\Gin@nat@width>#1 #1\\else\\Gin@nat@width\\fi}
-\\makeatother
-\\hypersetup{hidelinks}
-\\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
-\\fancypagestyle{plain}{
-    \\fancyhf{}
-    \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
-    \\renewcommand{\\headrulewidth}{0pt}
-}
-\\pagestyle{plain}
-\\setlength{\\parindent}{0em}
-\\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
-\\geometry{a4paper,scale=0.8}
-\\geometry{a4paper,left=2.5cm,right=2.5cm,top=3cm,bottom=3cm}
-\\setlength{\\baselineskip}{20pt}
-\\setlength{\\parskip}{5pt}"
-    ("\\section{%s}" . "\\section*{%s}")
-    ("\\subsection{%s}" . "\\subsection*{%s}")
-    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-    ("\\paragraph{%s}" . "\\paragraph*{%s}")
-    ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-(defvar en-article2c
-  '("article2c"
-    "\\documentclass[twocolumn]{article}
-\\usepackage[UTF8]{ctex}
-\\usepackage{geometry}
-\\usepackage{titlesec}
-\\usepackage{enumitem}
-\\usepackage{fancyhdr, lastpage}
-\\fancypagestyle{plain}{
-    \\fancyhf{}
-    \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
-    \\renewcommand{\\headrulewidth}{0pt}
-}
-\\usepackage{hyperref}
-\\hypersetup{hidelinks}
-\\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
-\\pagestyle{plain}
-\\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
-\\geometry{a4paper,scale=0.8}
-\\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm}
-\\setlength{\\baselineskip}{20pt}
-\\setlength{\\parskip}{5pt}"
-       ("\\section{%s}" . "\\section*{%s}")
-       ("\\subsection{%s}" . "\\subsection*{%s}")
-       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 (defvar IEEEtrans
   '("IEEEtran"
