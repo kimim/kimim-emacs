@@ -7,7 +7,7 @@
 
 * Introduction
 
-This Emacs configuration file is written by literate programming method[fn:1].
+This Emacs configuration file is written with literate programming method[fn:1].
 The =emacs-lisp= code is extracted from this =orgmode=[fn:2] file, and then compiled
 to binary =elc= file for fast loading in the future.
 
@@ -146,7 +146,7 @@ Then you can execute =emacs= to bootstrap itself.
 
 * Environment
 
-** PATH, exec-path and Info
+** PATH and exec-path
 
 Environment variable =PATH= is the the searching path of executables by the
 shell running in Emacs while =exec-path= is the search path of Emacs itself. So
@@ -420,7 +420,7 @@ Use kimim-night as default theme.
   (load-theme 'kimim-light t))
 #+end_src
 
-* COMMENT Highlight
+* Highlight
 
 Highlight current line in window systems.
 
@@ -429,7 +429,7 @@ Highlight current line in window systems.
   :if window-system
   :defer 5
   :config
-  (global-hl-line-mode 1))
+  (global-hl-line-mode -1))
 #+end_src
 
 Automatically highlight current symbol where the cursor is inside.
@@ -1520,6 +1520,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (use-package org-superstar)
   (add-hook 'org-mode-hook  (lambda ()
                               (org-superstar-mode 1)
+                              (org-indent-mode 1)
                               (electric-indent-mode -1)))
   (setq company-minimum-prefix-length 2)
   (setq org-hide-emphasis-markers t)
@@ -2102,7 +2103,7 @@ name handling function can be found from emacs manual[fn:22].
     ;; file in jekyll base will also be uploaded to github
     (defvar path-jekyll-base "~/kimi.im/_notes/_posts")
     ;; in order to sync draft with cloud sync driver
-    (defvar path-jekyll-draft (concat kimim/path-sync "kimim/_draft/"))
+    (defvar path-jekyll-draft (concat kimim/path-sync-emacs "kimim/_draft/"))
     ;; file in jekyll base will also be uploaded to github
 
     (setq org-publish-project-alist
