@@ -1793,7 +1793,7 @@ sudo apt install python3-pygments
           ("" "minted" t nil)
           ("" "amsfonts" t nil)
           ("" "graphicx" t nil)
-          ("inkscapeopt = -C" "svg" t nil)
+          ("inkscapeopt = -C --export-ignore-filters, inkscapelatex=false" "svg" t nil)
           ("" "grffile" t nil)
           ("" "longtable" nil nil)
           ("" "wrapfig" nil nil)
