@@ -529,4 +529,8 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
   (kimim/sumantrapdf-theme-paper)
   (load-theme 'kimim-paper))
 
+(defun kimim/org-roam-migrate-buffer ()
+  (interactive)
+  (org-roam-migrate-v1-to-v2))
+
 (provide 'kimim)

@@ -59,6 +59,7 @@
             (mode-line :foreground ,kimim-theme-fg :background ,kimim-theme-modeline-bg :box nil :height 0.85)
             (mode-line-inactive :foreground "light steel blue" :background ,kimim-theme-modeline-bg :box nil :height 0.85)
             (mode-line-buffer-id :foreground ,kimim-theme-fg :box nil :weight bold)
+            (header-line :background ,kimim-theme-modeline-bg :inherit mode-line)
             (shadow :foreground ,kimim-theme-shadow)
             (success :foreground ,kimim-theme-error)
             (error :foreground ,kimim-theme-error :weight bold)
