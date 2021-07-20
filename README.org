@@ -2315,10 +2315,7 @@ sqlite3 is shipped in macOS by default.
 #+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
-  :functions (org-roam--get-title-path-completions
-              org-roam-completion--completing-read
-              org-roam-shield-region
-              org-roam-capture--capture)
+  :defer 5
   :custom
   ((org-roam-directory kimim/path-notes)
    (org-roam-db-location (file-truename
@@ -2330,85 +2327,22 @@ sqlite3 is shipped in macOS by default.
    (org-roam-file-extensions '("txt" "org"))
    (org-roam-db-update-method 'immediate)
    (org-roam-capture-templates
-    (quote
-     (("d" "default" plain
-       (function org-roam-capture--get-point)
-       "%?" :file-name "%(concat (kimim/genfile-timestamp) \"${slug}\")"
-       :head "#+TITLE: ${title}\n#+ROAM_ALIAS:\n#+ROAM_TAGS:\n#+ROAM_KEY:\n\n" :unnarrowed t)))))
-  :bind (("C-c n f" . org-roam-find-file)
+    '(("d" "default" plain "%?"
+       :if-new (file+head "%(concat (kimim/genfile-timestamp) \"${slug}.txt\")"
+                          "#+TITLE: ${title}\n")
+       :unnarrowed t))))
+  :bind (("C-c n f" . org-roam-node-find)
          ("C-c n c" . org-roam-capture)
+         ("C-c n r" . org-roam-node-random)
          :map org-roam-mode-map
          (("C-c n l" . org-roam)
           ("C-c n g" . org-roam-graph))
          :map org-mode-map
-         (("C-c n i" . org-roam-insert)
-          ("C-c n r" . org-roam-insert-roam)
-          ("C-c n I" . org-roam-insert-immediate)))
+         (("C-c n i" . org-roam-node-insert)))
   :config
   (require 'kimim)
-  (defun org-roam-insert-roam (&optional lowercase completions filter-fn description link-type)
-    "Find an Org-roam file, and insert a the roam link to it at point.
-Return selected file if it exists.
-If LOWERCASE is non-nil, downcase the link description.
-LINK-TYPE is the type of link to be created. It defaults to \"roam\".
-COMPLETIONS is a list of completions to be used instead of
-`org-roam--get-title-path-completions`.
-FILTER-FN is the name of a function to apply on the candidates
-which takes as its argument an alist of path-completions.
-If DESCRIPTION is provided, use this as the link label.  See
-`org-roam--get-title-path-completions' for details."
-    (interactive "P")
-    (unless org-roam-mode (org-roam-mode))
-    ;; Deactivate the mark on quit since `atomic-change-group' prevents it
-    (unwind-protect
-        ;; Group functions together to avoid inconsistent state on quit
-        (atomic-change-group
-          (let* (region-text
-                 beg end
-                 (link-type "roam")
-                 (_ (when (region-active-p)
-                      (setq beg (set-marker (make-marker) (region-beginning)))
-                      (setq end (set-marker (make-marker) (region-end)))
-                      (setq region-text (org-link-display-format
-                                         (buffer-substring-no-properties beg end)))))
-                 (completions (--> (or completions
-                                       (org-roam--get-title-path-completions))
-                                (if filter-fn
-                                    (funcall filter-fn it)
-                                  it)))
-                 (title-with-tags (org-roam-completion--completing-read
-                                   "Title: " completions
-                                   :initial-input region-text))
-                 (res (cdr (assoc title-with-tags completions)))
-                 (title (or (plist-get res :title)
-                            title-with-tags))
-                 (target-file-path (plist-get res :path))
-                 (description (or description region-text title))
-                 (description (if lowercase
-                                  (downcase description)
-                                description)))
-            (cond ((and target-file-path
-                        (file-exists-p target-file-path))
-                   (when region-text
-                     (delete-region beg end)
-                     (set-marker beg nil)
-                     (set-marker end nil))
-                   (insert (concat "[[roam:" title "]]")))
-                  (t
-                   (let ((org-roam-capture--info
-                          `((title . ,title-with-tags)
-                            (slug . ,(funcall org-roam-title-to-slug-function
-                                              title-with-tags))))
-                         (org-roam-capture--context 'title))
-                     (setq org-roam-capture-additional-template-props
-                           (list :region (org-roam-shield-region beg end)
-                                 :insert-at (point-marker)
-                                 :link-type link-type
-                                 :link-description description
-                                 :finalize 'insert-link))
-                     (org-roam-capture--capture))))
-            res))
-      (deactivate-mark))))
+  (org-roam-setup)
+  (setq org-roam-v2-ack t))
 #+end_src
 
 ** zetteldeft
