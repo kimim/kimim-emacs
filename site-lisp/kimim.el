@@ -533,4 +533,20 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
   (interactive)
   (org-roam-migrate-v1-to-v2))
 
+(defun kimim/shake-mouse ()
+  "shake mouse to remove yodao translation window"
+  (interactive)
+  (let ((x (* (frame-char-width) (or (car (cdr (mouse-position)))
+                                     (- (frame-width) 36))))
+        (y (* (frame-char-height) (or (cdr (cdr (mouse-position)))
+                                      0))))
+    (set-mouse-pixel-position (selected-frame) (- x 100) y)
+    (run-with-timer 0.5 nil
+                    (lambda (x y)
+                      (set-mouse-pixel-position (selected-frame) x y))
+                    x y)))
+
+(advice-add 'recenter-top-bottom
+            :after #'kimim/shake-mouse)
+
 (provide 'kimim)
