@@ -374,6 +374,12 @@ Display time and (line, column) numbers in mode line.
 (use-package simple
   :ensure nil
   :defer 3
+  :bind
+  ;; cycling from one space, zero space and original space
+  ("M-SPC" . cycle-spacing)
+  :custom
+  ;; put pastebin content to kill ring before kill others
+  (save-interprogram-paste-before-kill t)
   :config
   (line-number-mode 1)
   (column-number-mode 1)
@@ -409,13 +415,16 @@ Toggle Font-Lock mode in all buffers.
 (global-font-lock-mode 1)
 #+end_src
 
-Use kimim-night as default theme.
+Use kimim-light as default theme.
 
 #+begin_src emacs-lisp
-(use-package kimim-night-theme
+(use-package custom
   :ensure nil
   :defer 0
-  :load-path "~/kimim-emacs/site-lisp/"
+  :custom (;; do not warning when load new theme
+           (custom-safe-themes t)
+           ;; add my theme files to custom theme directory
+           (custom-theme-directory "~/kimim-emacs/site-lisp/"))
   :config
   (load-theme 'kimim-light t))
 #+end_src
@@ -454,6 +463,8 @@ Automatically highlight current symbol where the cursor is inside.
 (setq blink-cursor-blinks 3)
 (blink-cursor-mode 1)
 (tooltip-mode -1)
+;; mark highlight in other windows also
+(setq highlight-nonselected-windows t)
 #+end_src
 
 * Help
@@ -519,9 +530,11 @@ client.
               (kimim/frame-and-font))))
 #+end_src
 
-scroll slowly with touchpad.
+preserve the point in screen during scrolling looks nice(see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Scrolling.html][scrolling]]). scroll
+slowly with touchpad, thus we adjust the scroll amount.
 
 #+begin_src emacs-lisp
+(setq scroll-preserve-screen-position t)
 (setq mouse-wheel-scroll-amount '(0.01))
 #+end_src
 
@@ -994,13 +1007,9 @@ out of the box.
   (use-package yasnippet
     :defer 10
     :config
-    (require 'yasnippet)
     (add-to-list
      'yas-snippet-dirs (concat kimim/path-sync-emacs "snippets"))
     (yas-global-mode 1)
-    (use-package company)
-    (eval-after-load 'company
-      '(add-to-list  'company-backends 'company-yasnippet t))
     (use-package warnings)
     (setq warning-suppress-types '((yasnippet backquote-change))))
 #+end_src
@@ -1015,13 +1024,10 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
 ** company dict
 
 #+begin_src emacs-lisp
-  (use-package company-dict
-    :config
-    ;; Where to look for dictionary files
-    (setq company-dict-dir (concat kimim/path-sync-emacs "dict"))
-    ;; Optional: if you want it available everywhere
-    (eval-after-load 'company
-      '(add-to-list 'company-backends 'company-dict)))
+(use-package company-dict
+  :config
+  ;; Where to look for dictionary files
+  (setq company-dict-dir (concat kimim/path-sync-emacs "dict")))
 #+end_src
 
 ** company mode
@@ -1033,22 +1039,22 @@ English word list fetch from https://github.com/dwyl/english-words
   :bind ("C-\\" . company-try-hard))
 
 (use-package company
+  :defer 0
   :functions company-complete-common-or-cycle
   :bind (:map company-active-map
-              ("C-n" . (lambda () (interactive) (company-complete-common-or-cycle 1)))
-              ("C-p" . (lambda () (interactive) (company-complete-common-or-cycle -1))))
+              ("C-n" . company--select-next-and-warn)
+              ("C-p" . company--select-previous-and-warn))
   :diminish company-mode
   :commands (global-company-mode)
   :config
-  (use-package company-dict)
+  (use-package ispell)
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 1)
   ;; macOS will use system dict file directly
   (global-company-mode t)
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-elisp))
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-ispell)))
+  (setq company-backends
+        (nconc '((:separate company-capf company-yasnippet) company-ispell)
+               company-backends)))
 #+end_src
 
 ** company statistics
@@ -1246,10 +1252,6 @@ Clojure[fn:17] is a lisp over JVM. Emm, I like it.
   (use-package clojure-snippets)
   (use-package clojure-mode-extra-font-locking)
   (use-package lsp-mode)
-  (eval-after-load 'company
-    '(progn
-       (delete 'company-capf company-backends)
-       (add-to-list 'company-backends 'company-capf)))
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'cider-mode)
@@ -1361,9 +1363,7 @@ Python development configuration is quite easy. =elpy= [fn:19] is used here:
 
   (use-package company-jedi
     :config
-    (setq elpy-rpc-backend "jedi")
-    (eval-after-load 'company
-      '(add-to-list 'company-backends 'company-jedi)))
+    (setq elpy-rpc-backend "jedi"))
 #+end_src
 
 Following =python= package is required according to =elpy= mannual:
@@ -1780,6 +1780,7 @@ sudo apt install python3-pygments
   ;; add: \DeclareRobustCommand\nobreakspace{\leavevmode\nobreak\ }
   ;; put long latex classes in a separate file
   (use-package org-ref) ;; latex-classes need default bib file
+  (add-to-list 'load-path "~/kimim-emacs/site-lisp")
   (require 'latex-classes)
   (setq org-latex-classes kimim/latex-classes)
 
@@ -2339,7 +2340,10 @@ sqlite3 is shipped in macOS by default.
          (("C-c n l" . org-roam)
           ("C-c n g" . org-roam-graph))
          :map org-mode-map
-         (("C-c n i" . org-roam-node-insert)))
+         (("C-c n i" . org-roam-node-insert)
+          ("C-c n t" . org-roam-tag-add)
+          ("C-c n a" . org-roam-alias-add)
+          ("C-c n g" . org-id-get-create)))
   :config
   (require 'kimim)
   (setq org-roam-v2-ack t)
@@ -2373,12 +2377,14 @@ Markdown is widely used as plain text file format.
 (use-package org-ref
   :after org
   :functions (-flatten f-join)
-  :bind (:map org-mode-map
-              ("C-x m p" . org-ref-open-pdf-at-point)
-              ("C-x m d" . kimim/org-ref-open-pdf-in-dired))
+  :bind (("C-'" . org-roam-node-random)
+         :map org-mode-map
+         ("C-'" . org-roam-node-random)
+         ("C-x m p" . org-ref-open-pdf-at-point)
+         ("C-x m d" . kimim/org-ref-open-pdf-in-dired))
   :custom
-  (reftex-default-bibliography `(,(concat kimim/path-ref "references.bib")))
-  (org-ref-default-bibliography `(,(concat kimim/path-ref "references.bib")))
+  (reftex-default-bibliography (concat kimim/path-ref "references.bib"))
+  (org-ref-default-bibliography (concat kimim/path-ref "references.bib"))
   (bibtex-completion-bibliography (concat kimim/path-ref "references.bib"))
   (org-ref-pdf-directory kimim/path-ref)
   (bibtex-completion-library-path org-ref-pdf-directory)
@@ -2388,14 +2394,14 @@ Markdown is widely used as plain text file format.
   :demand t
   :config
   (defun kimim/org-ref-open-pdf-in-dired ()
-  "Open the pdf for bibtex key under point if it exists."
-  (interactive)
-  (let* ((results (org-ref-get-bibtex-key-and-file))
-         (key (car results))
-         (pdf-file (funcall org-ref-get-pdf-filename-function key)))
-    (if (file-exists-p pdf-file)
-        (dired-jump nil pdf-file)
-      (message "no pdf found for %s" key))))
+    "Open the pdf for bibtex key under point if it exists."
+    (interactive)
+    (let* ((results (org-ref-get-bibtex-key-and-file))
+           (key (car results))
+           (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+      (if (file-exists-p pdf-file)
+          (dired-jump nil pdf-file)
+        (message "no pdf found for %s" key))))
 
   (defun kimim/org-ref-open-bibtex-in-dired ()
     "Open dired buffer of pdf for a bibtex entry, if it exists."
@@ -2414,33 +2420,33 @@ Markdown is widely used as plain text file format.
   ;;      (lambda (fpath)
   ;;        (kimim/open-in-external-app fpath)))
 
-(defun kimim/org-ref-get-pdf-filename (key)
-  "Return the pdf filename associated with a bibtex KEY.
+  (defun kimim/org-ref-get-pdf-filename (key)
+    "Return the pdf filename associated with a bibtex KEY.
   This searches recursively for the pattern KEY*.pdf. If one result
   is found it is returned, but if multiple results are found,
   e.g. there are related files to the KEY you are prompted for
   which one you want."
-  (if org-ref-pdf-directory
-      (let* ((pdf-dirs (if (listp org-ref-pdf-directory)
-                          org-ref-pdf-directory
-                        (list org-ref-pdf-directory)))
-            (pdfs
-             (-flatten
-              (--map (file-expand-wildcards
-                      (f-join it (format "%s*.pdf" key)))
-                     (-flatten
-                      (append pdf-dirs
-                              (--map (directory-files-recursively it "" t)
-                                     pdf-dirs)))))))
-        (cond
-         ((= 0 (length pdfs))
-          (expand-file-name (format "%s.pdf" key) org-ref-pdf-directory))
-         ((= 1 (length pdfs))
-          (car pdfs))
-         ((> (length pdfs) 1)
-          (completing-read "Choose: " pdfs))))
-    ;; No org-ref-pdf-directory defined so return just a file name.
-    (format "%s.pdf" key))))
+    (if org-ref-pdf-directory
+        (let* ((pdf-dirs (if (listp org-ref-pdf-directory)
+                             org-ref-pdf-directory
+                           (list org-ref-pdf-directory)))
+               (pdfs
+                (-flatten
+                 (--map (file-expand-wildcards
+                         (f-join it (format "%s*" key)))
+                        (-flatten
+                         (append pdf-dirs
+                                 (--map (directory-files-recursively it "" t)
+                                        pdf-dirs)))))))
+          (cond
+           ((= 0 (length pdfs))
+            (expand-file-name (format "%s.pdf" key) org-ref-pdf-directory))
+           ((= 1 (length pdfs))
+            (car pdfs))
+           ((> (length pdfs) 1)
+            (completing-read "Choose: " pdfs))))
+      ;; No org-ref-pdf-directory defined so return just a file name.
+      (format "%s.pdf" key))))
 #+end_src
 
 There is a built-in =bibtex-mode= to manage references. We can extend it to
@@ -2466,8 +2472,8 @@ support more functions from =org-ref=:
 (use-package ispell
   :custom (ispell-program-name "aspell")
   :config
-      (cond ((eq system-type 'windows-nt)
-             (setq ispell-alternate-dictionary "~/.emacs.d/dict/words3.txt"))))
+  (cond ((eq system-type 'windows-nt)
+         (setq ispell-alternate-dictionary "~/.emacs.d/dict/words.txt"))))
 #+end_src
 
 ** Youdao dictionary
@@ -2768,7 +2774,7 @@ from system PATH, so you should set these to system PATH.
    ("C-=" . text-scale-adjust)
    ("C-0" . kimim/restore-text-scale)
    ("C-x /" . kimim/toggle-path-header))
-  :load-path "~/kimim-emacs/site-lisp/"
+  :load-path "~/kimim-emacs/site-lisp"
   :config
   (when (eq system-type 'darwin) ;; mac specific settings
     (setq mac-option-modifier 'meta)

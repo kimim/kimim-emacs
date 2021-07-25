@@ -90,6 +90,12 @@
   (interactive)                 ; permit invocation in minibuffer
   (insert (format-time-string "%Y-%m-%d")))
 
+(defun today-pretty ()
+  "Insert string for today's date nicely formatted in American style,
+    e.g. 2000-10-12."
+  (interactive)                 ; permit invocation in minibuffer
+  (insert (format-time-string "%A, %b %d, %Y")))
+
 (defun toyear ()
   "Insert string for today's date nicely formatted in American style,
     e.g. 2000."

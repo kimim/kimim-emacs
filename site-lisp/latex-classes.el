@@ -193,10 +193,7 @@
 
 (defvar beamer-class
  '("beamer"
-   "\\documentclass[presentation, aspectratio=169]{beamer}
-\\setlength{\\baselineskip}{20pt}
-\\setlength{\\parskip}{5pt}
-"
+   "\\documentclass[presentation, aspectratio=169]{beamer}"
    ("\\section{%s}" . "\\section*{%s}")
    ("\\subsection{%s}" . "\\subsection*{%s}")
    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
