@@ -1153,21 +1153,14 @@ parentheis. We define some keys for it:
          ("C-M-<backspace>" . sp-backward-copy-sexp)
          ("C-M-w" . sp-copy-sexp))
   :config
-  (setq sp-pairs
-  '((t
-     .
-     ((:open "\\\\(" :close "\\\\)" :actions (insert wrap autoskip navigate))
-      (:open "\\{"   :close "\\}"   :actions (insert wrap autoskip navigate))
-      (:open "\\("   :close "\\)"   :actions (insert wrap autoskip navigate))
-      (:open "\\\""  :close "\\\""  :actions (insert wrap autoskip navigate))
-      (:open "\""    :close "\""
-       :actions (insert wrap autoskip navigate escape)
-       :unless (sp-in-string-quotes-p)
-       :post-handlers (sp-escape-wrapped-region sp-escape-quotes-after-insert))
-      (:open "("     :close ")"     :actions (insert wrap autoskip navigate))
-      (:open "["     :close "]"     :actions (insert wrap autoskip navigate))
-      (:open "{"     :close "}"     :actions (insert wrap autoskip navigate))
-      (:open "`"     :close "`"     :actions (insert wrap autoskip navigate)))))))
+  (sp-with-modes sp-lisp-modes
+    ;; disable ', it's the quote character!
+    (sp-local-pair "'" nil :actions nil)
+    ;; disable ', it's the backquote character!
+    (sp-local-pair "`" nil :actions nil)
+    ;; also only use the pseudo-quote inside strings where it
+    ;; serves as hyperlink.
+    (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p))))
 #+end_src
 
 ** Code folding
