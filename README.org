@@ -426,7 +426,7 @@ Use kimim-light as default theme.
            ;; add my theme files to custom theme directory
            (custom-theme-directory "~/kimim-emacs/site-lisp/"))
   :config
-  (load-theme 'kimim-light t))
+  (load-theme 'kimim-paper t))
 #+end_src
 
 * Highlight
@@ -807,6 +807,7 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
    ("<left>" . dired-up-directory)
    ("<right>" . dired-find-file)
    ("b" . dired-up-directory)
+   ("e" . dired-efap)
    ("o" . kimim/open-in-external-app)
    ("M-n" . dired-narrow)
    ("M-c" . compose-attach-marked-files)
@@ -815,6 +816,8 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
   (require 'dired-x)
   (use-package dired-narrow)
   (use-package dired-filter)
+  (use-package dired-recent)
+  (use-package dired-efap)
   (add-hook 'dired-mode-hook
             (lambda ()
               (turn-on-gnus-dired-mode)
@@ -863,6 +866,26 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
     (interactive "p")
     (if (= 3 (line-number-at-pos))
         (goto-char (point-max)))))
+#+end_src
+
+** dired-recent
+
+Keep a list of recently visited directories. Then we can quickly revisit them.
+
+#+begin_src emacs-lisp
+(use-package dired-recent
+  :config
+  (dired-recent-mode 1))
+#+end_src
+
+** dired-efap
+
+dired-efap, Edit file at point, can be used to rename file name at the point:
+
+#+begin_src emacs-lisp
+(use-package dired-efap
+  :config
+  (dired-efap-mode 1))
 #+end_src
 
 ** dired-narrow
