@@ -2248,7 +2248,7 @@ name handling function can be found from emacs manual[fn:22].
 #+end_src
 
 * Note Taking Tools
-** Deft
+** deft
 
 #+begin_src emacs-lisp
 (use-package deft
@@ -2320,7 +2320,7 @@ name handling function can be found from emacs manual[fn:22].
               :around #'kimim/deft-new-file-named-advice))
 #+end_src
 
-** Org-roam
+** org-roam
 
 Org-roam implements =zettelkasten= method [fn:23] used by famous German socialogist
 Niklas Luhmann[fn:24].
@@ -2375,6 +2375,17 @@ sqlite3 is shipped in macOS by default.
   (require 'kimim)
   (setq org-roam-v2-ack t)
   (org-roam-setup))
+#+end_src
+** org-roam-bibtex
+
+It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
+~org-ref~ is calling ~orb-org-ref-edit-note~ to edit ~org-roam~ note.
+
+#+begin_src emacs-lisp
+(use-package org-roam-bibtex
+  :after org-roam
+  :config
+  (use-package org-ref))
 #+end_src
 
 ** zetteldeft
