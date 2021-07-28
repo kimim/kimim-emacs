@@ -596,3 +596,26 @@ do not embed svg in file now.
                  ("Consolas" "Monaco" "YaheiInconsolata")))
   (unicode-fonts-setup))
 #+end_src
+
+** org link: deft
+
+=C-x l= keychord can store deft links in deft mode, but cannot fetch the link
+from deft note. Below defines a function to fetch a deft style link, which can
+be used to paste directly in other org files, such as work journal. Buffer file
+name handling function can be found from emacs manual[fn:22].
+
+#+begin_src emacs-lisp
+  (use-package org
+    :bind
+    (("C-x m d" . kimim/deft-store-link))
+    :config
+    (defun kimim/deft-store-link()
+      "get deft link of current note file."
+      (interactive)
+      (unless (buffer-file-name)
+        (error "No file for buffer %s" (buffer-name)))
+      (let ((msg (format "[[deft:%s]]"
+                         (file-name-nondirectory (buffer-name)))))
+        (kill-new msg)
+        (message msg))))
+#+end_src

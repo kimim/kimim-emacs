@@ -173,8 +173,9 @@
 (defun kimim/dc ()
   "Open file location in double commander"
   (interactive)
-  (w32-shell-execute
-   "open" "doublecmd" (concat "-L \"" (replace-regexp-in-string "/" "\\\\" default-directory) "\"")))
+  (let ((current-fold (replace-regexp-in-string "/" "\\\\" default-directory)))
+    (w32-shell-execute
+     "open" "doublecmd" (concat "-L \"" current-fold "\" -R \"" current-fold "\""))))
 
 (defun kill-dired-buffers()
   "Kill all dired buffers."
