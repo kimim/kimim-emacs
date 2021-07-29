@@ -10,6 +10,10 @@ README.pyg
 README.aux
 README.log
 README.out
+README.bcf
+README.fdb_latexmk
+README.fls
+README.xdv
 references.bib
 references.back*
 _minted-*

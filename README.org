@@ -329,9 +329,16 @@ calculated with original default font height and width: =frame-char-height= and
     ;;   (set-frame-font "YaheiInconsolata-18")))
     (use-package cnfonts)
     (cnfonts-enable)
+    (cnfonts-set-font-first-time)
     ;; top, left ... must be integer
     (let ((width (nth 3 (car (car (display-monitor-attributes-list)))))
-          (height (nth 4 (car (car (display-monitor-attributes-list))))))
+          (height (nth 4 (car (car (display-monitor-attributes-list)))))
+          (frame (selected-frame)))
+      (set-frame-position frame (/ width 10) (/ height 10))
+      (set-frame-height frame (/ (* 4 height)
+                                 (* 5 (frame-char-height))))
+      (set-frame-width frame (/ (* 4 width)
+                                (* 5 (frame-char-width))))
       (add-to-list 'default-frame-alist
                    (cons 'top  (/ height 10)))
       (add-to-list 'default-frame-alist

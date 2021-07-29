@@ -472,6 +472,7 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
                                "\" disposition=attachment><#/part>\n")))
             (split-string file-list "\n" t)))))
 
+
 (defun kimim/toggle-path-header ()
   "Toggle display path header"
   (interactive)
@@ -479,66 +480,52 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
       (path-header-line-off)
     (path-header-line-on)))
 
+
 (defvar sumantrapdf-config
   (concat kimim/path-kimikit "sumatrapdf/SumatraPDF-settings.txt"))
 
-(defun kimim/sumantrapdf-theme-night ()
+
+(defun kimim/sumantrapdf-theme (window-color)
   "Change color theme in sumatrapdf, just modify the config file"
   (interactive)
   (find-file sumantrapdf-config)
   (goto-char (point-min))
-  (replace-regexp "\\(MainWindowBackground = #\\).*" "\\1333333")
+  (replace-regexp "\\(MainWindowBackground = \\).*" (concat "\\1" window-color))
   (goto-char (point-min))
-  (replace-regexp "\\(TextColor = #\\).*" "\\1eeeeee")
+  (replace-regexp "\\(TextColor = \\).*"
+                  (concat "\\1" (face-attribute 'default :foreground)))
   (goto-char (point-min))
-  (replace-regexp "\\(BackgroundColor = #\\).*" "\\1262626")
+  (replace-regexp "\\(BackgroundColor = \\).*"
+                  (concat "\\1" (face-attribute 'default :background)))
   (save-buffer)
   (kill-this-buffer))
 
-(defun kimim/sumantrapdf-theme-paper ()
-  "Change color theme in sumatrapdf, just modify the config file"
-  (interactive)
-  (find-file sumantrapdf-config)
-  (goto-char (point-min))
-  (replace-regexp "\\(MainWindowBackground = #\\).*" "\\1e4dcc8")
-  (goto-char (point-min))
-  (replace-regexp "\\(TextColor = #\\).*" "\\1000000")
-  (goto-char (point-min))
-  (replace-regexp "\\(BackgroundColor = #\\).*" "\\1f4ecd8")
-  (save-buffer)
-  (kill-this-buffer))
-
-(defun kimim/sumantrapdf-theme-light ()
-  "Change color theme in sumatrapdf, just modify the config file"
-  (interactive)
-  (find-file sumantrapdf-config)
-  (goto-char (point-min))
-  (replace-regexp "\\(MainWindowBackground = #\\).*" "\\1aaaaaa")
-  (goto-char (point-min))
-  (replace-regexp "\\(TextColor = #\\).*" "\\1000000")
-  (goto-char (point-min))
-  (replace-regexp "\\(BackgroundColor = #\\).*" "\\1f8f8f8")
-  (save-buffer)
-  (kill-this-buffer))
 
 (defun kimim/theme-night ()
+  "Change emacs theme and sumatrapdf theme to night color"
   (interactive)
-  (kimim/sumantrapdf-theme-night)
+  (kimim/sumantrapdf-theme "#333333")
   (load-theme 'kimim-night))
 
+
 (defun kimim/theme-light ()
+  "Change emacs theme and sumatrapdf theme to light color"
   (interactive)
-  (kimim/sumantrapdf-theme-light)
+  (kimim/sumantrapdf-theme "#aaaaaa")
   (load-theme 'kimim-light))
 
+
 (defun kimim/theme-paper ()
+  "Change emacs theme and sumatrapdf theme to paper color"
   (interactive)
-  (kimim/sumantrapdf-theme-paper)
+  (kimim/sumantrapdf-theme "#e4dcc8")
   (load-theme 'kimim-paper))
+
 
 (defun kimim/org-roam-migrate-buffer ()
   (interactive)
   (org-roam-migrate-v1-to-v2))
+
 
 (defun kimim/shake-mouse ()
   "shake mouse to remove yodao translation window"
@@ -555,5 +542,29 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
 
 (advice-add 'recenter-top-bottom
             :after #'kimim/shake-mouse)
+
+
+(defun kimim/shrink-down ()
+  "Shrink window to the middle down part, leave space for reading
+documents."
+  (interactive)
+  (set-frame-height (selected-frame) 18)
+  (set-frame-position (selected-frame)
+                      (/ (nth 3 (car (car (display-monitor-attributes-list)))) 10)
+                      (* 6 (/ (nth 4 (car (car (display-monitor-attributes-list)))) 10))))
+
+
+(defun kimim/restore-frame ()
+  "Restore frame position and size to initial state."
+  (interactive)
+  (let ((width (nth 3 (car (car (display-monitor-attributes-list)))))
+        (height (nth 4 (car (car (display-monitor-attributes-list)))))
+        (frame (selected-frame)))
+    (set-frame-position frame (/ width 10) (/ height 10))
+    (set-frame-height frame (/ (* 4 height)
+                               (* 5 (frame-char-height))))
+    (set-frame-width frame (/ (* 4 width)
+                              (* 5 (frame-char-width))))))
+
 
 (provide 'kimim)
