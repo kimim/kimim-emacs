@@ -37,8 +37,8 @@
     "Color theme by kimim-night.")
 
 (let ((class '((class color) (min-colors 88)))
-      (kimim-theme-bg "gray15")
-      (kimim-theme-fg "white")
+      (kimim-theme-bg "#262626")
+      (kimim-theme-fg "#ffffff")
       (kimim-theme-const "cyan2")
       (kimim-theme-definition "deep sky blue")
       (kimim-theme-comment "medium sea green")

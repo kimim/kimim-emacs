@@ -500,26 +500,25 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
   (save-buffer)
   (kill-this-buffer))
 
-
 (defun kimim/theme-night ()
   "Change emacs theme and sumatrapdf theme to night color"
   (interactive)
-  (kimim/sumantrapdf-theme "#333333")
-  (load-theme 'kimim-night))
+  (load-theme 'kimim-night)
+  (kimim/sumantrapdf-theme "#333333"))
 
 
 (defun kimim/theme-light ()
   "Change emacs theme and sumatrapdf theme to light color"
   (interactive)
-  (kimim/sumantrapdf-theme "#aaaaaa")
-  (load-theme 'kimim-light))
+  (load-theme 'kimim-light)
+  (kimim/sumantrapdf-theme "#aaaaaa"))
 
 
 (defun kimim/theme-paper ()
   "Change emacs theme and sumatrapdf theme to paper color"
   (interactive)
-  (kimim/sumantrapdf-theme "#e4dcc8")
-  (load-theme 'kimim-paper))
+  (load-theme 'kimim-paper)
+  (kimim/sumantrapdf-theme "#e4dcc8"))
 
 
 (defun kimim/org-roam-migrate-buffer ()

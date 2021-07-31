@@ -619,3 +619,24 @@ name handling function can be found from emacs manual[fn:22].
         (kill-new msg)
         (message msg))))
 #+end_src
+
+** auto parenthesis
+
+#+begin_src emacs-lisp
+  ;; add pair parenthis and quote automatically
+  (use-package autopair
+    :diminish autopair-mode
+    :config
+    (autopair-global-mode -1))
+#+end_src
+
+** company dict
+
+complete with keyword and annotation. need special dict files for different mode.
+
+#+begin_src emacs-lisp
+(use-package company-dict
+  :config
+  ;; Where to look for dictionary files
+  (setq company-dict-dir (concat kimim/path-sync-emacs "dict")))
+#+end_src
