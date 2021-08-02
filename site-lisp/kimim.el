@@ -418,7 +418,7 @@
       (delete-trailing-whitespace)))
 
 
-(defun kimim/open-in-external-app (&optional file)
+(defun kimim/open-external (&optional file)
   "Open the current file or dired marked files in external app.
 The app is chosen from your OS's preference.
 copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html"

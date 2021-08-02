@@ -782,7 +782,7 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
          :map sr-mode-map
          ("D" . dired-do-delete)
          ("<f2>" . nil)
-         ("o" . kimim/open-in-external-app)
+         ("o" . kimim/open-external)
          ("b" . sr-dired-prev-subdir)
          ("<left>" . sr-dired-prev-subdir)
          ("<right>" . sr-advertised-find-file))
@@ -819,9 +819,7 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
    ("<right>" . dired-find-file)
    ("b" . dired-up-directory)
    ("e" . dired-efap)
-   ("c" . dired-do-copy)
-   ("r" . dired-do-rename)
-   ("o" . kimim/open-in-external-app)
+   ("o" . kimim/open-external)
    ("M-n" . dired-narrow)
    ("M-c" . compose-attach-marked-files)
    ("C-q" . kill-dired-buffers))
@@ -966,7 +964,10 @@ any window by triggering ~ace-window~ (~C-x m w~).
 
 (use-package ace-window
   :bind
-  ("C-x m w" . ace-window)
+  (("M-o" . ace-window)
+   ("C-x o" . ace-window)
+   ("C-x m w" . ace-swap-window)
+   ("C-x m x" . ace-delete-window))
   :custom
   (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 #+end_src
@@ -2362,7 +2363,7 @@ Markdown is widely used as plain text file format.
   ;; open pdf with system pdf viewer
   ;;(setq bibtex-completion-pdf-open-function
   ;;      (lambda (fpath)
-  ;;        (kimim/open-in-external-app fpath)))
+  ;;        (kimim/open-external fpath)))
 
   (defun kimim/org-ref-get-pdf-filename (key)
     "Return the pdf filename associated with a bibtex KEY.
@@ -2690,7 +2691,7 @@ from system PATH, so you should set these to system PATH.
    ("<f9>" . kimim/xterm)
    ("S-<f9>" . kimim/cmd)
    ("C-c r" . kimim/rename-file-and-buffer)
-   ("C-x m o" . kimim/open-in-external-app)
+   ("C-x m o" . kimim/open-external)
    ("C-x m d" . kimim/dc)
    ("C-c d" . kimim/lookinsight)
    ("<f1>" . delete-other-windows)
@@ -2707,7 +2708,6 @@ from system PATH, so you should set these to system PATH.
    ("C-x C-v" . view-file-other-window)
    ("C-c C-o" . occur)
    ("C-z" . set-mark-command)
-   ("M-o" . other-window)
    ("M-n" . next-error)
    ("M-p" . previous-error)
    ("C-c C-/" . comment-or-uncomment-region)
@@ -2718,7 +2718,7 @@ from system PATH, so you should set these to system PATH.
    ("C-x m ," . bury-buffer)
    ("C-x m  。" . unbury-buffer)
    ("C-x m  ，" . bury-buffer)
-   ( "C-x ," . bury-buffer)
+   ("C-x ," . bury-buffer)
    ("C-x ." . unbury-buffer)
    ("C-x  ，" . bury-buffer)
    ("C-x  。" . unbury-buffer)
