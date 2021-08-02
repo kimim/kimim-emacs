@@ -542,6 +542,12 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
 (advice-add 'recenter-top-bottom
             :after #'kimim/shake-mouse)
 
+(defun kimim/top-right-mouse ()
+  "Move mouse to top right corner"
+  (interactive)
+  (let ((x (* (frame-char-width) (- (frame-width) 36)))
+        (y 0))
+    (set-mouse-pixel-position (selected-frame) x y)))
 
 (defun kimim/shrink-down ()
   "Shrink window to the middle down part, leave space for reading
@@ -552,6 +558,14 @@ documents."
                       (/ (nth 3 (car (car (display-monitor-attributes-list)))) 10)
                       (* 6 (/ (nth 4 (car (car (display-monitor-attributes-list)))) 10))))
 
+(defun kimim/shrink-right ()
+  "Shrink window to the right part, leave space for reading
+documents."
+  (interactive)
+  (set-frame-width (selected-frame) (round (/ (frame-width) 2.1)))
+  (set-frame-position (selected-frame)
+                      (/ (* (nth 3 (car (car (display-monitor-attributes-list)))) 3) 5)
+                      (cdr (frame-position))))
 
 (defun kimim/restore-frame ()
   "Restore frame position and size to initial state."

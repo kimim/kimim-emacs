@@ -22,7 +22,7 @@ On Windows platform, we have three options: 1) MSYS2, 2) Cygwin, 3) WSL2.
 With msys2[fn:3] installed in =C:\msys64=, you can open =C:\msys64\mingw64.exe=, and
 run following command to install Emacs:
 
-`#+begin_src shell
+#+begin_src shell
 pacman -S git mingw-w64-x86_64-emacs
 #+end_src
 
@@ -819,6 +819,8 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
    ("<right>" . dired-find-file)
    ("b" . dired-up-directory)
    ("e" . dired-efap)
+   ("c" . dired-do-copy)
+   ("r" . dired-do-rename)
    ("o" . kimim/open-in-external-app)
    ("M-n" . dired-narrow)
    ("M-c" . compose-attach-marked-files)
@@ -1008,7 +1010,6 @@ out of the box.
 #+begin_src emacs-lisp
 (use-package imenu
   :functions kimim/imenu-default-goto-function-advice
-  :bind ("C-c C-i" . imenu)
   :config
   (advice-add 'imenu-default-goto-function
               :around
@@ -1092,18 +1093,20 @@ English word list fetch from https://github.com/dwyl/english-words
 Sort candidates using completion history.
 
 #+begin_src emacs-lisp
-  (use-package company-statistics
-    :config
-    (company-statistics-mode 1))
+(use-package company-statistics
+  :config
+  (company-statistics-mode 1))
 #+end_src
 
 * Programming General
 
 ** Project
 
+~project-find-file~ (~C-x p f~) can find files of current project, indicated by git
+or other version control information.
+
 #+begin_src emacs-lisp
-(use-package project
-  :bind (("C-x f" . project-find-file)))
+(use-package project)
 #+end_src
 
 ** Compiling
@@ -1115,9 +1118,12 @@ Sort candidates using completion history.
 
 ** Version Control
 
+Bind ~magit~ to ~C-x p m~ with the same prefix of ~project~, as they have strong
+relationship.
+
 #+begin_src emacs-lisp
 (use-package magit
-  :bind ("C-x m g" . magit-status))
+  :bind (("C-x p m" . magit)))
 #+end_src
 
 Following error will reported when using magit to commit changes:
@@ -1139,22 +1145,25 @@ this directory as secure because you are the owner.
 ** Parenthesis
 
 ~smartparens-mode~[fn:15] is a general purpose mode for dealing with
-parentheis. We define some keys for it:
+parenthesis. We define some keys for it:
 
 #+begin_src emacs-lisp
 (use-package smartparens
-  :bind (("C-<right>" . sp-forward-slurp-sexp)
+  :bind (:map
+         smartparens-mode-map
+         ("C-<right>" . sp-forward-slurp-sexp)
          ("C-<left>" . sp-forward-barf-sexp)
          ("M-<right>" . sp-backward-barf-sexp)
          ("M-<left>" . sp-backward-slurp-sexp)
-         ("C-k" . sp-kill-hybrid-sexp)
-         ("M-k" . sp-kill-sexp)
          ("M-<up>" . sp-splice-sexp-killing-backward)
          ("M-<down>" . sp-splice-sexp-killing-forward)
+         ("C-k" . sp-kill-hybrid-sexp)
+         ("M-k" . sp-kill-sexp)
          ("<backspace>" . sp-backward-delete-char)
          ("C-d" . sp-delete-char)
          ("C-M-<backspace>" . sp-backward-copy-sexp)
          ("C-M-w" . sp-copy-sexp))
+  :hook (prog-mode . smartparens-mode)
   :config
   (sp-with-modes sp-lisp-modes
     ;; disable ', it's the quote character!
@@ -1168,10 +1177,13 @@ parentheis. We define some keys for it:
 
 ** Code folding
 
+With ~yafolding-mode~, you can:
+- toggle the code folding with ~yafolding-toggle-element~ (~C-<return>~)
+- toggle global folding with ~yafolding-toggle-all~ (~C-M-<return>~)
+
 #+begin_src emacs-lisp
 (use-package yafolding
-  :bind (("C-c h" . yafolding-hide-element)
-         ("C-c s" . yafolding-show-element)))
+  :hook (prog-mode . yafolding-mode))
 #+end_src
 
 ** static code analysis
@@ -1185,7 +1197,7 @@ parentheis. We define some keys for it:
 
 ** lsp mode
 
-lsp-mode aims to provide IDE-like experience.
+~lsp-mode~ aims to provide IDE-like experience.
 
 If you got error: =Symbol’s function definition is void: -compose=, make sure
 that dash version higher than 2.18 is installed[fn:16].
@@ -1289,10 +1301,7 @@ Clojure[fn:17] is a lisp over JVM. Emm, I like it.
   (add-to-list 'auto-mode-alist '("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode))
   (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
   (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
-  (add-to-list 'auto-mode-alist '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
-  (add-hook 'clojure-mode-hook
-            (lambda ()
-              (smartparens-mode))))
+  (add-to-list 'auto-mode-alist '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode)))
 #+end_src
 
 *** clj-kondo
@@ -1339,7 +1348,6 @@ in Clojure.
   :ensure org
   :config
   (use-package clojure-mode)
-  (require 'ob-clojure)
   (use-package cider)
   (setq org-babel-clojure-backend 'cider))
 #+end_src
@@ -1358,6 +1366,7 @@ in Clojure.
   (define-key clj-refactor-map "\C-cU" #'clojure-unwind-all)
   (add-to-list 'cljr-magic-require-namespaces '("s"  . "clojure.string")))
 #+end_src
+
 ** Java
 
 #+begin_src emacs-lisp
@@ -1430,7 +1439,7 @@ curl https://sh.rustup.rs -sSf | sh
     :mode ("\\.swift\\'" . swift-mode))
 #+end_src
 
-** Go lang
+** Golang
 Open =.go= file with go-mode.
 #+begin_src emacs-lisp
   (use-package go-mode
@@ -1453,10 +1462,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :ensure nil
   :mode ("\\.el\\'" . emacs-lisp-mode)
   :config
-  (define-derived-mode lisp-interaction-mode emacs-lisp-mode "λ")
-  (add-hook 'emacs-lisp-mode-hook
-            (lambda ()
-              (smartparens-mode))))
+  (define-derived-mode lisp-interaction-mode emacs-lisp-mode "λ"))
 #+end_src
 
 ** AutoHotKey
@@ -1472,11 +1478,10 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
 (use-package yaml-mode
+  :mode ("\\.yml\\'" . yaml-mode)
   :bind (:map
          yaml-mode-map
-         ("\C-m" . newline-and-indent))
-  :config
-  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+         ("\C-m" . newline-and-indent)))
 #+end_src
 
 * Calendar
@@ -1539,16 +1544,8 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (org-export-with-sub-superscripts "{}")
   (org-startup-folded 'showall)
   :config
-  (use-package org-roam)
-  (use-package company)
-  (use-package org-superstar)
-  (add-hook 'org-mode-hook  (lambda ()
-                              (org-superstar-mode 1)
-                              (org-indent-mode 1)
-                              (electric-indent-mode -1)))
   (setq company-minimum-prefix-length 2)
   (setq org-hide-emphasis-markers t)
-  (org-appear-mode t)
   (setq org-support-shift-select t)
   ;; no empty line after collapsed
   (setq org-cycle-separator-lines 0)
@@ -1565,7 +1562,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :commands (org-appear-mode)
   :ensure t
   :custom (org-appear-autolinks nil)
-  :hook org-mode-hook)
+  :hook (org-mode . org-appear-mode))
 #+end_src
 
 ** org-superstar
@@ -1573,12 +1570,21 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package org-superstar
   :ensure t
+  :hook (org-mode . org-superstar-mode)
   :custom
   (org-superstar-remove-leading-stars t)
   (org-superstar-headline-bullets-list
    '(9673 9675 9679 9632))
   (org-superstar-item-bullet-alist
    '((42 . 9679) (43 . 9830) (45 . 9644))))
+#+end_src
+
+** org-indent
+
+#+begin_src emacs-lisp
+(use-package org-indent
+  :ensure nil
+  :hook (org-mode . org-indent-mode))
 #+end_src
 
 ** orgalist
@@ -1757,7 +1763,6 @@ sudo apt install python3-pygments
 (use-package ox-latex
   :ensure org
   :defines kimim/latex-classes
-  :bind ("<C-f7>" . org-latex-export-to-pdf)
   :commands (org-latex-publish-to-pdf)
   :custom
   (org-latex-image-default-height "0.8\\textheight")
@@ -1772,13 +1777,7 @@ sudo apt install python3-pygments
   (add-to-list 'org-latex-minted-langs
                '(plantuml "text"))
   (setq org-latex-pdf-process
-        `(
-          ;; "xelatex -shell-escape %f"
-          ;; "bibtex %b"
-          ;; "xelatex -shell-escape %f"
-          ;; "xelatex -shell-escape %f"
-          "latexmk -xelatex -shell-escape %f" ;; for bibtex and biber use
-          ))
+        `("latexmk -xelatex -shell-escape %f"))
 
   (defun ref-headline-removal (backend)
     "Remove reference headline with tag: ref"
@@ -1828,14 +1827,10 @@ sudo apt install python3-pygments
           ("" "lettrine" t nil)
           ("" "capt-of" nil nil)
           ("citestyle=numeric, bibstyle=numeric, hyperref=true,
-backref=true,maxcitenames=3,url=true,backend=biber,natbib=true"
-            biblatex t nil)
-          ;;("" "setspace" t nil)
-)))
+backref=true, maxcitenames=3, url=true,backend=biber, natbib=true"
+           biblatex t nil))))
   (setq org-latex-packages-alist
-        '("\\addbibresource{../references.bib}"
-          ;;"\\setstretch{1.3}"
-)))
+        '("\\addbibresource{../references.bib}")))
 #+end_src
 
 *** org to html page
@@ -2050,47 +2045,28 @@ headers when adding notes"
             org-agenda-files)))
 #+end_src
 
-** org link: match
-
-New link to use everything to locate a file with unique ID:
-
-#+begin_src emacs-lisp
-  (use-package org
-    :functions org-match-open
-    :config
-    (org-link-set-parameters "match"
-                             :follow #'org-match-open)
-
-    (defun org-match-open (path)
-      "Visit the match search on PATH.
-       PATH should be a topic that can be thrown at everything/?."
-      (w32-shell-execute
-       "open" "Everything" (concat "-search " path))))
-#+end_src
-
 ** org link: onenote
 
-New link to use everything to locate a file with unique ID:
+New link to use Office Onenote.
 
 #+begin_src emacs-lisp
-  (use-package org
-    :functions org-onenote-open
-    :config
-    (org-link-set-parameters "onenote"
-                             :follow #'org-onenote-open)
+(use-package org
+  :functions org-onenote-open
+  :config
+  (org-link-set-parameters "onenote"
+                           :follow #'org-onenote-open)
 
-    (defun org-onenote-open (path)
-      "Visit the match search on PATH.
-       PATH should be a topic that can be thrown at everything/?."
-      (cond
-       ((eq system-type 'windows-nt)
-        (progn
-          (w32-shell-execute
-           "open" (concat "onenote:" path))))
-        ((eq window-system 'ns)
-         (shell-command
-          (replace-regexp-in-string
-           "&" "\\\\&" (format "open onenote:%s" path)))))))
+  (defun org-onenote-open (path)
+    "Visit the onenote link"
+    (cond
+     ((eq system-type 'windows-nt)
+      (progn
+        (w32-shell-execute
+         "open" (concat "onenote:" path))))
+     ((eq window-system 'ns)
+      (shell-command
+       (replace-regexp-in-string
+        "&" "\\\\&" (format "open onenote:%s" path)))))))
 #+end_src
 
 ** org publish to jekyll
@@ -2138,7 +2114,7 @@ New link to use everything to locate a file with unique ID:
     (defun jekyll-post ()
       "Post current buffer to kimi.im"
       (interactive)
-      (load-theme 'kimim-light)
+      (load-theme 'kimim-light t)
       ;; get categories
       ;; get buffer file name
       (let ((category (jekyll-get-category))
@@ -2222,78 +2198,6 @@ New link to use everything to locate a file with unique ID:
 #+end_src
 
 * Note Taking Tools
-** deft
-
-#+begin_src emacs-lisp
-(use-package deft
-  :bind
-  ("C-x d" . deft-find-file)
-  :custom (deft-text-mode 'org-mode)
-  :functions (kimim/deft-open-file-advice
-              kimim/deft-new-file-named-advice
-              kimim/genfile-timestamp)
-  :config
-  (use-package ivy)
-  (setq deft-extensions '("txt" "org" "md"))
-  (setq deft-directory kimim/path-notes)
-  (setq deft-recursive t)
-  ;; disable auto save
-  (setq deft-auto-save-interval 0)
-  (setq deft-file-naming-rules '((noslash . "_")))
-  (setq deft-use-filter-string-for-filename t)
-  (setq deft-org-mode-title-prefix t)
-  (setq deft-use-filename-as-title nil)
-  (setq deft-strip-summary-regexp
-        (concat "\\("
-                "[\n\t]" ;; blank
-                "\\|^#\\+[[:upper:]_]+:.*$" ;; org-mode metadata
-                "\\|^#\\+[[:alnum:]_]+:.*$" ;; org-mode metadata
-                "\\)"))
-
-  ;;advise deft-open-file to replace spaces in file names with _
-  (require 'kimim)
-  (defun kimim/deft-open-file-advice (orig-fun &rest args)
-    (let (name title)
-      (setq name (pop args))
-      (if (file-exists-p name)
-          (progn
-            (push name args)
-            (apply orig-fun args))
-        (progn
-          (setq title (file-name-sans-extension
-                       (file-name-nondirectory name)))
-          (setq name (concat
-                      (file-name-directory name)
-                      (kimim/genfile-timestamp)
-                      (downcase
-                       (replace-regexp-in-string
-                        " " "_" (file-name-nondirectory name)))
-                      (if (not (file-name-extension name))
-                          ".txt")))
-          (push name args)
-          (apply orig-fun args)
-          (insert (concat "#+TITLE: " title "\n\n"))))))
-
-  (advice-add 'deft-open-file
-              :around #'kimim/deft-open-file-advice)
-
-  (defun kimim/deft-new-file-named-advice (orig-fun &rest args)
-    (let (name title)
-      (setq name (pop args))
-      (setq title name)
-      (setq name (concat
-                  (kimim/genfile-timestamp)
-                  (downcase
-                   (replace-regexp-in-string
-                    " " "_" name))))
-      (push name args)
-      (apply orig-fun args)
-      (insert (concat "#+TITLE: " title "\n\n"))))
-
-  (advice-add 'deft-new-file-named
-              :around #'kimim/deft-new-file-named-advice))
-#+end_src
-
 ** org-roam
 
 Org-roam implements =zettelkasten= method [fn:23] used by famous German socialogist
@@ -2350,6 +2254,7 @@ sqlite3 is shipped in macOS by default.
   (setq org-roam-v2-ack t)
   (org-roam-setup))
 #+end_src
+
 ** org-roam-bibtex
 
 It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
@@ -2361,6 +2266,32 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
   :config
   (use-package org-ref)
   (org-roam-bibtex-mode 1))
+#+end_src
+
+** deft
+
+#+begin_src emacs-lisp
+(use-package deft
+  :bind
+  ("C-x d" . deft-find-file)
+  :custom (deft-text-mode 'org-mode)
+  :config
+  (use-package ivy)
+  (setq deft-extensions '("txt" "org" "md"))
+  (setq deft-directory kimim/path-notes)
+  (setq deft-recursive t)
+  ;; disable auto save
+  (setq deft-auto-save-interval 0)
+  (setq deft-file-naming-rules '((noslash . "_")))
+  (setq deft-use-filter-string-for-filename t)
+  (setq deft-org-mode-title-prefix t)
+  (setq deft-use-filename-as-title nil)
+  (setq deft-strip-summary-regexp
+        (concat "\\("
+                "[\n\t]" ;; blank
+                "\\|^#\\+[[:upper:]_]+:.*$" ;; org-mode metadata
+                "\\|^#\\+[[:alnum:]_]+:.*$" ;; org-mode metadata
+                "\\)")))
 #+end_src
 
 ** zetteldeft
@@ -2470,12 +2401,14 @@ support more functions from =org-ref=:
   :after org
   :demand t
   :ensure nil
+  :hook (bibtex-mode . org-roam-bibtex-mode)
   :bind (:map bibtex-mode-map
          ("C-x m p" . org-ref-open-bibtex-pdf)
          ("C-x m d" . kimim/org-ref-open-bibtex-in-dired)
          ("C-c C-z" . org-ref-open-bibtex-notes))
   :config
-  (use-package org-ref))
+  (use-package org-ref)
+  (use-package org-roam-bibtex))
 #+end_src
 
 * Dictionary
@@ -2489,22 +2422,31 @@ support more functions from =org-ref=:
          (setq ispell-alternate-dictionary "~/.emacs.d/dict/words.txt"))))
 #+end_src
 
+** flyspell
+
+Check spell on the fly.
+
+#+begin_src emacs-lisp
+(use-package flyspell
+  :hook ((prog-mode . flyspell-prog-mode)
+         (text-mode . flyspell-mode)))
+#+end_src
+
 ** Youdao dictionary
 
 Search dictionary with Ctrl+F3 by youdao dictionary.
 
 #+begin_src emacs-lisp
-  (use-package youdao-dictionary
-    :bind (
-           ("C-<f3>" . youdao-dictionary-search-at-point+)
-           :map youdao-dictionary-mode-map
-           ("<mouse-3>" . youdao-dictionary-def-copied)
-           ("f" . youdao-dictionary-search-from-input))
-    :config
-    (defun youdao-dictionary-def-copied ()
-      (interactive)
-      (youdao-dictionary-search (gui-get-selection)))
-    )
+(use-package youdao-dictionary
+  :bind (
+         ("C-<f3>" . youdao-dictionary-search-at-point+)
+         :map youdao-dictionary-mode-map
+         ("<mouse-3>" . youdao-dictionary-def-copied)
+         ("f" . youdao-dictionary-search-from-input))
+  :config
+  (defun youdao-dictionary-def-copied ()
+    (interactive)
+    (youdao-dictionary-search (gui-get-selection))))
 #+end_src
 
 * Mail and Contacts
@@ -2544,23 +2486,23 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 ** GNUS dired
 
 #+begin_src emacs-lisp
-  (use-package gnus-dired
-    :ensure nil
-    :commands (turn-on-gnus-dired-mode)
-    :config
-    ;; make the `gnus-dired-mail-buffers' function also work on
-    ;; message-mode derived modes, such as mu4e-compose-mode
-    (defun gnus-dired-mail-buffers ()
-      "Return a list of active message buffers."
-      (let (buffers)
-        (save-current-buffer
-          (dolist (buffer (buffer-list t))
-            (set-buffer buffer)
-            (when (and (derived-mode-p 'message-mode)
-                       (null message-sent-message-via))
-              (push (buffer-name buffer) buffers))))
-        (nreverse buffers)))
-    (setq gnus-dired-mail-mode 'mu4e-user-agent))
+(use-package gnus-dired
+  :ensure nil
+  :commands (turn-on-gnus-dired-mode)
+  :config
+  ;; make the `gnus-dired-mail-buffers' function also work on
+  ;; message-mode derived modes, such as mu4e-compose-mode
+  (defun gnus-dired-mail-buffers ()
+    "Return a list of active message buffers."
+    (let (buffers)
+      (save-current-buffer
+        (dolist (buffer (buffer-list t))
+          (set-buffer buffer)
+          (when (and (derived-mode-p 'message-mode)
+                     (null message-sent-message-via))
+            (push (buffer-name buffer) buffers))))
+      (nreverse buffers)))
+  (setq gnus-dired-mail-mode 'mu4e-user-agent))
 #+end_src
 
 ** mu4e
@@ -2787,7 +2729,8 @@ from system PATH, so you should set these to system PATH.
    ("C--" . text-scale-decrease)
    ("C-=" . text-scale-adjust)
    ("C-0" . kimim/restore-text-scale)
-   ("C-x /" . kimim/toggle-path-header))
+   ("C-x /" . kimim/toggle-path-header)
+   ("C-x m 0" . kimim/top-right-mouse))
   :load-path "~/kimim-emacs/site-lisp"
   :config
   (when (eq system-type 'darwin) ;; mac specific settings

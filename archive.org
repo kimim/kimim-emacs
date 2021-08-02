@@ -1,3 +1,92 @@
+** deft
+
+#+begin_src emacs-lisp
+(use-package deft
+  :bind
+  ("C-x d" . deft-find-file)
+  :custom (deft-text-mode 'org-mode)
+  :functions (kimim/deft-open-file-advice
+              kimim/deft-new-file-named-advice
+              kimim/genfile-timestamp)
+  :config
+  (use-package ivy)
+  (setq deft-extensions '("txt" "org" "md"))
+  (setq deft-directory kimim/path-notes)
+  (setq deft-recursive t)
+  ;; disable auto save
+  (setq deft-auto-save-interval 0)
+  (setq deft-file-naming-rules '((noslash . "_")))
+  (setq deft-use-filter-string-for-filename t)
+  (setq deft-org-mode-title-prefix t)
+  (setq deft-use-filename-as-title nil)
+  (setq deft-strip-summary-regexp
+        (concat "\\("
+                "[\n\t]" ;; blank
+                "\\|^#\\+[[:upper:]_]+:.*$" ;; org-mode metadata
+                "\\|^#\\+[[:alnum:]_]+:.*$" ;; org-mode metadata
+                "\\)"))
+
+  ;;advise deft-open-file to replace spaces in file names with _
+  (require 'kimim)
+  (defun kimim/deft-open-file-advice (orig-fun &rest args)
+    (let (name title)
+      (setq name (pop args))
+      (if (file-exists-p name)
+          (progn
+            (push name args)
+            (apply orig-fun args))
+        (progn
+          (setq title (file-name-sans-extension
+                       (file-name-nondirectory name)))
+          (setq name (concat
+                      (file-name-directory name)
+                      (kimim/genfile-timestamp)
+                      (downcase
+                       (replace-regexp-in-string
+                        " " "_" (file-name-nondirectory name)))
+                      (if (not (file-name-extension name))
+                          ".txt")))
+          (push name args)
+          (apply orig-fun args)
+          (insert (concat "#+TITLE: " title "\n\n"))))))
+
+  (advice-add 'deft-open-file
+              :around #'kimim/deft-open-file-advice)
+
+  (defun kimim/deft-new-file-named-advice (orig-fun &rest args)
+    (let (name title)
+      (setq name (pop args))
+      (setq title name)
+      (setq name (concat
+                  (kimim/genfile-timestamp)
+                  (downcase
+                   (replace-regexp-in-string
+                    " " "_" name))))
+      (push name args)
+      (apply orig-fun args)
+      (insert (concat "#+TITLE: " title "\n\n"))))
+
+  (advice-add 'deft-new-file-named
+              :around #'kimim/deft-new-file-named-advice))
+#+end_src
+
+** org link: match
+
+New link to use everything to locate a file with unique ID:
+
+#+begin_src emacs-lisp
+  (use-package org
+    :functions org-match-open
+    :config
+    (org-link-set-parameters "match"
+                             :follow #'org-match-open)
+
+    (defun org-match-open (path)
+      "Visit the match search on PATH.
+       PATH should be a topic that can be thrown at everything/?."
+      (w32-shell-execute
+       "open" "Everything" (concat "-search " path))))
+#+end_src
 ** Install fonts
 
 Because Incosolata font is really great for programming, and Microsoft Yahei is
@@ -618,16 +707,6 @@ name handling function can be found from emacs manual[fn:22].
                          (file-name-nondirectory (buffer-name)))))
         (kill-new msg)
         (message msg))))
-#+end_src
-
-** auto parenthesis
-
-#+begin_src emacs-lisp
-  ;; add pair parenthis and quote automatically
-  (use-package autopair
-    :diminish autopair-mode
-    :config
-    (autopair-global-mode -1))
 #+end_src
 
 ** company dict
