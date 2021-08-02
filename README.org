@@ -463,7 +463,7 @@ Automatically highlight current symbol where the cursor is inside.
 (blink-cursor-mode 1)
 (tooltip-mode -1)
 ;; mark highlight in other windows also
-(setq highlight-nonselected-windows t)
+(setq highlight-nonselected-windows nil)
 ;; choose hi lock color automatically
 (setq hi-lock-auto-select-face t)
 #+end_src
@@ -715,13 +715,8 @@ frequency report by =M-x keyfreq-show=.
 (setq auto-mode-alist
       (append '(("\\.css\\'" . css-mode)
                 ("\\.S\\'" . asm-mode)
-                ("\\.md\\'" . markdown-mode)
-                ("\\.markdown\\'" . markdown-mode)
                 ("\\.svg\\'" . html-mode)
-                ("\\.pas\\'" . delphi-mode)
-                ("\\.txt\\'" . org-mode)
-                ("\\.org\\'" . org-mode)
-                )
+                ("\\.pas\\'" . delphi-mode))
               auto-mode-alist))
 
 (require 'saveplace)
@@ -1277,8 +1272,10 @@ Clojure[fn:17] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
-  :mode (("\\.clj\\'" . clojure-mode)
-         ("\\.cljs\\'" . clojurescript-mode))
+  :mode (("\\.cljs\\'" . clojurescript-mode)
+         ("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode)
+         ("\\.cljc\\'" . clojurec-mode)
+         ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
   :config
   (use-package cider)
   (use-package company)
@@ -1298,11 +1295,7 @@ Clojure[fn:17] is a lisp over JVM. Emm, I like it.
   (add-hook 'clojurec-mode-hook #'clj-refactor-mode)
   (add-hook 'clojurescript-mode-hook #'cider-mode)
   (add-hook 'clojurescript-mode-hook #'lsp)
-  (add-hook 'clojurescript-mode-hook #'clj-refactor-mode)
-  (add-to-list 'auto-mode-alist '("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode))
-  (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojurec-mode))
-  (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojurescript-mode))
-  (add-to-list 'auto-mode-alist '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode)))
+  (add-hook 'clojurescript-mode-hook #'clj-refactor-mode))
 #+end_src
 
 *** clj-kondo
@@ -1527,6 +1520,8 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
 (use-package org
+  :mode (("\\.txt\\'" . org-mode)
+         ("\\.org\\'" . org-mode))
   :bind
   (:map
    org-mode-map
@@ -1647,7 +1642,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package org
   :config
-  ;;(use-package poly-org)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((C . t)
@@ -1660,14 +1654,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (setq org-edit-src-content-indentation 0)
   (setq org-confirm-babel-evaluate nil)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
-#+end_src
-
-Polymode [fn:21] is a framework for multiple major modes (MMM) inside a single
-Emacs buffer. It is comfortable to enable it during literating program.
-
-#+begin_src emacs-lisp
-;;(use-package poly-org
-;;  :ensure t)
 #+end_src
 
 ** org exporting
@@ -2201,8 +2187,8 @@ New link to use Office Onenote.
 * Note Taking Tools
 ** org-roam
 
-Org-roam implements =zettelkasten= method [fn:23] used by famous German socialogist
-Niklas Luhmann[fn:24].
+Org-roam implements =zettelkasten= method [fn:21] used by famous German socialogist
+Niklas Luhmann[fn:22].
 
 First you should install =sqlite3=, which is used to index the links.
 
@@ -2311,6 +2297,8 @@ Markdown is widely used as plain text file format.
 
 #+begin_src emacs-lisp
   (use-package markdown-mode
+    :mode (("\\.md\\'" . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
     :bind(:map markdown-mode-map
                ("M-<up>" . markdown-move-subtree-up)
                ("M-<down>" . markdown-move-subtree-down)))
@@ -2792,10 +2780,8 @@ from system PATH, so you should set these to system PATH.
 
 [fn:20] https://github.com/ralesi/ahk-mode
 
-[fn:21] https://polymode.github.io/
+[fn:21] https://zettelkasten.de/
 
-[fn:22] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+[fn:22] https://en.wikipedia.org/wiki/Niklas_Luhmann
 
-[fn:23] https://zettelkasten.de/
-
-[fn:24] https://en.wikipedia.org/wiki/Niklas_Luhmann
+[fn:23] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html

@@ -1,3 +1,13 @@
+** poly-org
+
+Polymode [fn:21] is a framework for multiple major modes (MMM) inside a single
+Emacs buffer. It is comfortable to enable it during literating program.
+
+#+begin_src emacs-lisp
+;;(use-package poly-org
+;;  :ensure t)
+#+end_src
+
 ** deft
 
 #+begin_src emacs-lisp
