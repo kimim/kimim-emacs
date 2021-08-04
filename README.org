@@ -2327,6 +2327,33 @@ Markdown is widely used as plain text file format.
   (org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename)
   :demand t
   :config
+  (require 'ivy-bibtex)
+  (require 'org-ref-ivy-cite)
+  (setq org-ref-insert-link-function 'org-ref-insert-link
+	    org-ref-insert-cite-function 'kimim/org-ref-ivy-insert-cite-link
+	    org-ref-insert-label-function 'org-ref-ivy-insert-label-link
+	    org-ref-insert-ref-function 'org-ref-ivy-insert-ref-link
+	    org-ref-cite-onclick-function (lambda (_) (org-ref-cite-hydra/body)))
+  (defun kimim/org-ref-ivy-insert-cite-link (&optional arg)
+    "ivy function for interacting with bibtex.
+Uses `org-ref-find-bibliography' for bibtex sources, unless a
+prefix ARG is used, which uses `org-ref-default-bibliography'."
+    (interactive "P")
+    (bibtex-completion-init)
+    (let* ((candidates (bibtex-completion-candidates))
+           (key (bibtex-completion-key-at-point))
+           (preselect (and key
+                           (cl-position-if (lambda (cand)
+                                             (member (cons "=key=" key)
+                                                     (cdr cand)))
+                                           candidates))))
+      (ivy-read "BibTeX entries: "
+                candidates
+                :preselect preselect
+                :caller 'ivy-bibtex
+                :history 'ivy-bibtex-history
+                :action 'or-ivy-bibtex-insert-cite)))
+
   (defun kimim/org-ref-open-pdf-in-dired ()
     "Open the pdf for bibtex key under point if it exists."
     (interactive)
