@@ -802,7 +802,7 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
             dired-omit-files)
   :functions dired-omit-mode
   :custom
-  (dired-listing-switches "-AGvhlgo")
+  (dired-listing-switches "-AGhlgov")
   (dired-recursive-copies t)
   (dired-recursive-deletes t)
   (ls-lisp-dirs-first t)
@@ -1814,8 +1814,9 @@ sudo apt install python3-pygments
           ("" "lettrine" t nil)
           ("" "capt-of" nil nil)
           ("citestyle=numeric, bibstyle=numeric, hyperref=true,
-backref=true, maxcitenames=3, url=true,backend=biber, natbib=true"
-           biblatex t nil))))
+backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
+sorting=none"
+           "biblatex" t nil))))
   (setq org-latex-packages-alist
         '("\\addbibresource{../references.bib}")))
 #+end_src
@@ -2249,10 +2250,9 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
 
 #+begin_src emacs-lisp
 (use-package org-roam-bibtex
-  :after org-roam
+  :hook ((org-mode bibtex-mode) . org-roam-bibtex-mode)
   :config
-  (use-package org-ref)
-  (org-roam-bibtex-mode 1))
+  (use-package org-ref))
 #+end_src
 
 ** deft
@@ -2296,12 +2296,13 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
 Markdown is widely used as plain text file format.
 
 #+begin_src emacs-lisp
-  (use-package markdown-mode
-    :mode (("\\.md\\'" . markdown-mode)
-           ("\\.markdown\\'" . markdown-mode))
-    :bind(:map markdown-mode-map
-               ("M-<up>" . markdown-move-subtree-up)
-               ("M-<down>" . markdown-move-subtree-down)))
+(use-package markdown-mode
+  :mode (("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :bind(:map
+        markdown-mode-map
+        ("M-<up>" . markdown-move-subtree-up)
+        ("M-<down>" . markdown-move-subtree-down)))
 #+end_src
 
 * Reference management
@@ -2390,7 +2391,6 @@ support more functions from =org-ref=:
   :after org
   :demand t
   :ensure nil
-  :hook (bibtex-mode . org-roam-bibtex-mode)
   :bind (:map bibtex-mode-map
          ("C-x m p" . org-ref-open-bibtex-pdf)
          ("C-x m d" . kimim/org-ref-open-bibtex-in-dired)
@@ -2418,7 +2418,7 @@ Check spell on the fly.
 #+begin_src emacs-lisp
 (use-package flyspell
   :hook ((prog-mode . flyspell-prog-mode)
-         (text-mode . flyspell-mode)))
+         (org-mode . flyspell-mode)))
 #+end_src
 
 ** Youdao dictionary
