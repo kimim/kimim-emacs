@@ -2330,10 +2330,10 @@ Markdown is widely used as plain text file format.
   (require 'ivy-bibtex)
   (require 'org-ref-ivy-cite)
   (setq org-ref-insert-link-function 'org-ref-insert-link
-	    org-ref-insert-cite-function 'kimim/org-ref-ivy-insert-cite-link
-	    org-ref-insert-label-function 'org-ref-ivy-insert-label-link
-	    org-ref-insert-ref-function 'org-ref-ivy-insert-ref-link
-	    org-ref-cite-onclick-function (lambda (_) (org-ref-cite-hydra/body)))
+        org-ref-insert-cite-function 'kimim/org-ref-ivy-insert-cite-link
+        org-ref-insert-label-function 'org-ref-ivy-insert-label-link
+        org-ref-insert-ref-function 'org-ref-ivy-insert-ref-link
+        org-ref-cite-onclick-function (lambda (_) (org-ref-cite-hydra/body)))
   (defun kimim/org-ref-ivy-insert-cite-link (&optional arg)
     "ivy function for interacting with bibtex.
 Uses `org-ref-find-bibliography' for bibtex sources, unless a
