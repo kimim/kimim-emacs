@@ -975,10 +975,11 @@ any window by triggering ~ace-window~ (~C-x m w~).
 ** swiper replaces isearch
 
 #+begin_src emacs-lisp
-  (use-package swiper
-    :init (setq swiper-action-recenter t)
-    :bind
-    ("C-s" . swiper))
+(use-package swiper
+  :init (setq swiper-action-recenter t)
+  :bind
+  ("C-s" . swiper)
+  ("M-s ." . swiper-thing-at-point))
 #+end_src
 
 ** ag: the silver searcher
@@ -1017,6 +1018,14 @@ out of the box.
 
 (use-package imenu-anywhere
   :bind ("C-c i" . imenu-anywhere))
+#+end_src
+
+** search from web
+
+#+begin_src emacs-lisp
+(use-package eww
+  :custom
+  (eww-search-prefix "https://cn.bing.com/search?q="))
 #+end_src
 
 * auto-complete
