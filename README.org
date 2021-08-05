@@ -935,7 +935,11 @@ dired-efap, Edit file at point, can be used to rename file name at the point:
   :custom
   (bookmark-default-file "~/.emacs.d/emacs.bmk")
   (bookmark-save-flag 1)
-  (bookmark-fontify nil))
+  (bookmark-fontify nil)
+  :config
+  (add-hook 'bookmark-after-jump-hook
+            (lambda ()
+              (recenter 'top))))
 #+end_src
 
 ~bm~ is used to temporally toggle buffer local bookmarks with ~C-x m t~, then you
