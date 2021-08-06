@@ -316,13 +316,14 @@ calculated with original default font height and width: =frame-char-height= and
 
 #+begin_src emacs-lisp
 (defun kimim/frame-and-font ()
+  (interactive)
   (when window-system
     (use-package cnfonts)
     (cnfonts-enable)
     (cnfonts-set-font-first-time)
     ;; top, left ... must be integer
-    (let ((width (nth 3 (car (car (display-monitor-attributes-list)))))
-          (height (nth 4 (car (car (display-monitor-attributes-list)))))
+    (let ((width (nth 3 (caar (display-monitor-attributes-list))))
+          (height (nth 4 (caar (display-monitor-attributes-list))))
           (frame (selected-frame)))
       (set-frame-position frame (/ width 10) (/ height 10))
       (set-frame-height frame (/ (* 4 height)
@@ -1257,9 +1258,6 @@ that dash version higher than 2.18 is installed[fn:16].
   :custom
   (lsp-ui-doc-alignment 'window)
   (lsp-ui-doc-max-width 80))
-
-(use-package company-lsp
-  :commands company-lsp)
 #+end_src
 
 * Programming Language

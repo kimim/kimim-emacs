@@ -529,9 +529,9 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
 (defun kimim/shake-mouse ()
   "shake mouse to remove yodao translation window"
   (interactive)
-  (let ((x (* (frame-char-width) (or (car (cdr (mouse-position)))
+  (let ((x (* (frame-char-width) (or (cadr (mouse-position))
                                      (- (frame-width) 36))))
-        (y (* (frame-char-height) (or (cdr (cdr (mouse-position)))
+        (y (* (frame-char-height) (or (cddr (mouse-position))
                                       0))))
     (set-mouse-pixel-position (selected-frame) (- x 100) y)
     (run-with-timer 0.5 nil
@@ -555,29 +555,17 @@ documents."
   (interactive)
   (set-frame-height (selected-frame) 18)
   (set-frame-position (selected-frame)
-                      (/ (nth 3 (car (car (display-monitor-attributes-list)))) 10)
-                      (* 6 (/ (nth 4 (car (car (display-monitor-attributes-list)))) 10))))
+                      (/ (nth 3 (caar (display-monitor-attributes-list))) 10)
+                      (* 6 (/ (nth 4 (caar (display-monitor-attributes-list))) 10))))
 
 (defun kimim/shrink-right ()
   "Shrink window to the right part, leave space for reading
 documents."
   (interactive)
   (set-frame-width (selected-frame) (round (/ (frame-width) 2.1)))
-  (set-frame-position (selected-frame)
-                      (/ (* (nth 3 (car (car (display-monitor-attributes-list)))) 3) 5)
-                      (cdr (frame-position))))
-
-(defun kimim/restore-frame ()
-  "Restore frame position and size to initial state."
-  (interactive)
-  (let ((width (nth 3 (car (car (display-monitor-attributes-list)))))
-        (height (nth 4 (car (car (display-monitor-attributes-list)))))
-        (frame (selected-frame)))
-    (set-frame-position frame (/ width 10) (/ height 10))
-    (set-frame-height frame (/ (* 4 height)
-                               (* 5 (frame-char-height))))
-    (set-frame-width frame (/ (* 4 width)
-                              (* 5 (frame-char-width))))))
-
+  (set-frame-position
+   (selected-frame)
+   (/ (* (nth 3 (caar (display-monitor-attributes-list))) 3) 5)
+   (cdr (frame-position))))
 
 (provide 'kimim)
