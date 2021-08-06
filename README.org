@@ -2791,6 +2791,7 @@ from system PATH, so you should set these to system PATH.
    ("C-x m 0" . kimim/top-right-mouse))
   :load-path "~/kimim-emacs/site-lisp"
   :config
+  (unbind-key "C-x C-z")
   (when (eq system-type 'darwin) ;; mac specific settings
     (setq mac-option-modifier 'meta)
     (setq mac-command-modifier 'meta)
