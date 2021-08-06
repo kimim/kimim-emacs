@@ -310,7 +310,8 @@ calculated with original default font height and width: =frame-char-height= and
 =frame-char-width=.
 
 #+begin_src emacs-lisp
-(use-package cnfonts)
+(use-package cnfonts
+  :functions cnfonts-set-font-first-time)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -525,6 +526,10 @@ typing ~C-c <left>~.
 When type ~C-x m w~ it will create a new frame with the default frame
 configuration.
 
+The frame is inactive when emacsclientw connects to the daemon at the first
+time. So I add ~raise-frame~ in ~after-make-frame-functions~ to force emacs to bring
+the new frame to the front.
+
 #+begin_src emacs-lisp
 (use-package frame
   :ensure nil
@@ -535,7 +540,8 @@ configuration.
             (lambda (frame)
               (select-frame frame)
               (kimim/menu-and-bar)
-              (kimim/frame-and-font))))
+              (kimim/frame-and-font)
+              (raise-frame frame))))
 #+end_src
 
 preserve the point in screen during scrolling looks nice(see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Scrolling.html][scrolling]]). scroll
@@ -576,6 +582,9 @@ List recent used commands with ~smex~:
 #+begin_src emacs-lisp
 (use-package counsel
   :defer 1
+  :init
+  (use-package ivy)
+  (use-package smex)
   :bind
   (("M-x" . counsel-M-x)
    ("C-x C-f" . counsel-find-file)
@@ -595,8 +604,6 @@ List recent used commands with ~smex~:
    :map read-expression-map
    ("C-r" . counsel-minibuffer-history))
   :config
-  (use-package ivy)
-  (use-package smex)
   (add-hook 'counsel-grep-post-action-hook 'recenter)
   (ivy-mode 1))
 #+end_src
@@ -801,6 +808,11 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
   :defines (dired-omit-localp
             dired-omit-files)
   :functions dired-omit-mode
+  :init
+  (use-package dired-narrow)
+  (use-package dired-filter)
+  (use-package dired-recent)
+  (use-package dired-efap)
   :custom
   (dired-listing-switches "-AGhlgov")
   (dired-recursive-copies t)
@@ -820,10 +832,6 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
    ("C-q" . kill-dired-buffers))
   :config
   (require 'dired-x)
-  (use-package dired-narrow)
-  (use-package dired-filter)
-  (use-package dired-recent)
-  (use-package dired-efap)
   (add-hook 'dired-mode-hook
             (lambda ()
               (turn-on-gnus-dired-mode)
@@ -854,7 +862,7 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
       (dolist (file files)
         (if (file-regular-p file)
             (mml-attach-file file
-                             (mm-default-file-encoding file)
+                             (mm-default-file-type file)
                              nil "attachment")
           (message "skipping non-regular file %s" file)))))
 
@@ -988,11 +996,11 @@ any window by triggering ~ace-window~ (~C-x m w~).
 Emacs interface to =ag=:
 
 #+begin_src emacs-lisp
-  (use-package ag
-    :bind
-    ("C-x g" . ag-project)
-    :config
-    (setq ag-highlight-search t))
+(use-package ag
+  :bind
+  ("C-x g" . ag-project)
+  :config
+  (setq ag-highlight-search t))
 #+end_src
 
 ** pt: the platium searcher
@@ -1038,27 +1046,28 @@ out of the box.
 ** ivy-mode
 
 #+begin_src emacs-lisp
-  (use-package ivy
-    :diminish ivy-mode
-    :bind ("<f6>" . ivy-resume)
-    :config
-    (setq ivy-use-virtual-buffers t)
-    (setq ivy-count-format "(%d/%d) ")
-    (setq ivy-wrap nil)
-    (ivy-mode 1))
+(use-package ivy
+  :diminish ivy-mode
+  :bind ("<f6>" . ivy-resume)
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-wrap nil)
+  (ivy-mode 1))
 #+end_src
 
 ** yasnippet
 
 #+begin_src emacs-lisp
-  (use-package yasnippet
-    :defer 10
-    :config
-    (add-to-list
-     'yas-snippet-dirs (concat kimim/path-sync-emacs "snippets"))
-    (yas-global-mode 1)
-    (use-package warnings)
-    (setq warning-suppress-types '((yasnippet backquote-change))))
+(use-package yasnippet
+  :defer 10
+  :init
+  (use-package warnings)
+  :config
+  (add-to-list
+   'yas-snippet-dirs (concat kimim/path-sync-emacs "snippets"))
+  (yas-global-mode 1)
+  (setq warning-suppress-types '((yasnippet backquote-change))))
 #+end_src
 
 In order to remove following warning:
@@ -1078,6 +1087,8 @@ English word list fetch from https://github.com/dwyl/english-words
 
 (use-package company
   :defer 0
+  :init
+  (use-package ispell)
   :functions company-complete-common-or-cycle
   :bind (:map company-active-map
               ("C-n" . company--select-next-and-warn)
@@ -1086,7 +1097,6 @@ English word list fetch from https://github.com/dwyl/english-words
   :diminish company-mode
   :commands (global-company-mode)
   :config
-  (use-package ispell)
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 1)
   ;; macOS will use system dict file directly
@@ -1173,6 +1183,7 @@ parenthesis. We define some keys for it:
          ("C-M-<backspace>" . sp-backward-copy-sexp)
          ("C-M-w" . sp-copy-sexp))
   :hook (prog-mode . smartparens-mode)
+  :functions (sp-local-pair)
   :config
   (sp-with-modes sp-lisp-modes
     ;; disable ', it's the quote character!
@@ -1219,6 +1230,8 @@ that dash version higher than 2.18 is installed[fn:16].
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :commands lsp
+  :init
+  (use-package dash)
   :custom
   (lsp-headerline-breadcrumb-icons-enable nil)
   (lsp-headerline-breadcrumb-enable nil)
@@ -1234,7 +1247,6 @@ that dash version higher than 2.18 is installed[fn:16].
          (go-mode . lsp)
          (rustic-mode . lsp))
   :config
-  (use-package dash)
   (defun kimim/lsp-find-definition-other-window ()
     (interactive)
     (lsp-find-definition :display-action 'window)
@@ -1285,11 +1297,7 @@ Clojure[fn:17] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
-  :mode (("\\.cljs\\'" . clojurescript-mode)
-         ("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode)
-         ("\\.cljc\\'" . clojurec-mode)
-         ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
-  :config
+  :init
   (use-package cider)
   (use-package company)
   (use-package flycheck)
@@ -1298,6 +1306,11 @@ Clojure[fn:17] is a lisp over JVM. Emm, I like it.
   (use-package clojure-snippets)
   (use-package clojure-mode-extra-font-locking)
   (use-package lsp-mode)
+  :mode (("\\.cljs\\'" . clojurescript-mode)
+         ("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode)
+         ("\\.cljc\\'" . clojurec-mode)
+         ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
+  :config
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'cider-mode)
@@ -1353,9 +1366,10 @@ in Clojure.
 #+begin_src emacs-lisp
 (use-package ob-clojure
   :ensure org
-  :config
+  :init
   (use-package clojure-mode)
   (use-package cider)
+  :config
   (setq org-babel-clojure-backend 'cider))
 #+end_src
 
@@ -1632,10 +1646,11 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
 (use-package org
-  :custom (org-num-skip-footnotes t)
-  :config
+  :init
   (use-package org-download)
   (use-package pangu-spacing)
+  :custom (org-num-skip-footnotes t)
+  :config
 ;;  (add-hook 'org-mode-hook 'org-num-mode)
   (setq org-hide-leading-stars t)
   (setq org-footnote-auto-adjust t)
@@ -1762,6 +1777,8 @@ sudo apt install python3-pygments
 #+begin_src emacs-lisp
 (use-package ox-latex
   :ensure org
+  :init
+  (use-package org-ref) ;; latex-classes need default bib file
   :defines kimim/latex-classes
   :commands (org-latex-publish-to-pdf)
   :custom
@@ -1802,7 +1819,6 @@ sudo apt install python3-pygments
   ;; remove error: ! LaTeX Error: Command \nobreakspace unavailable in encoding T1.
   ;; add: \DeclareRobustCommand\nobreakspace{\leavevmode\nobreak\ }
   ;; put long latex classes in a separate file
-  (use-package org-ref) ;; latex-classes need default bib file
   (add-to-list 'load-path "~/kimim-emacs/site-lisp")
   (require 'latex-classes)
   (setq org-latex-classes kimim/latex-classes)
@@ -1859,9 +1875,10 @@ sorting=none"
 
 #+begin_src emacs-lisp
   (use-package org-re-reveal
+    :init
+    (use-package htmlize :ensure t)
     :bind ("C-x r v" . org-re-reveal-export-to-html-and-browse)
     :config
-    (use-package htmlize :ensure t)
     (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js@3.9.2/")
     (setq org-re-reveal-theme "none")
     (setq org-re-reveal-width 1000)
@@ -1908,8 +1925,12 @@ Download =plantuml.jar= from https://plantuml.com/download, and put it to
 
 #+begin_src emacs-lisp
 (use-package org
+  :init
+  (use-package ivy) ; use ivy to complete refile files
   :functions (org-agenda-kill-all-agenda-buffers
-              org-agenda-todo)
+              org-agenda-todo
+              org-agenda-error
+              org-agenda-check-no-diary)
   :defines org-agenda-mode-map
   :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
   :bind (("C-c a" . org-agenda)
@@ -2036,7 +2057,6 @@ headers when adding notes"
         (org-show-context 'agenda)
         (org-add-note))))
 
-  (use-package ivy) ; use ivy to complete refile files
   (defun org-agenda-kill-files ()
     (interactive)
     (org-agenda-kill-all-agenda-buffers)
@@ -2075,6 +2095,8 @@ New link to use Office Onenote.
 #+begin_src emacs-lisp
   (use-package org
     :ensure nil
+    :init
+    (use-package ivy)
     :functions (jekyll-get-category
                 jekyll-tag
                 jekyll-header)
@@ -2109,8 +2131,6 @@ New link to use Office Onenote.
              :recursive t
              :publishing-function org-publish-attachment)
             ("blog" :components ("org-blog-content" "org-blog-static"))))
-
-    (use-package ivy)
 
     (defun jekyll-post ()
       "Post current buffer to kimi.im"
@@ -2263,20 +2283,21 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
 
 #+begin_src emacs-lisp
 (use-package org-roam-bibtex
-  :hook ((org-mode bibtex-mode) . org-roam-bibtex-mode)
-  :config
-  (use-package org-ref))
+  :init
+  (use-package org-ref)
+  :hook ((org-mode bibtex-mode) . org-roam-bibtex-mode))
 #+end_src
 
 ** deft
 
 #+begin_src emacs-lisp
 (use-package deft
+  :init
+  (use-package ivy)
   :bind
   ("C-x d" . deft-find-file)
   :custom (deft-text-mode 'org-mode)
   :config
-  (use-package ivy)
   (setq deft-extensions '("txt" "org" "md"))
   (setq deft-directory kimim/path-notes)
   (setq deft-recursive t)
@@ -2323,7 +2344,14 @@ Markdown is widely used as plain text file format.
 #+begin_src emacs-lisp
 (use-package org-ref
   :after org
-  :functions (-flatten f-join)
+  :functions (-flatten
+              f-join
+              reftex-get-bib-field
+              org-ref-get-bibtex-key-and-file
+              bibtex-completion-key-at-point
+              bibtex-completion-candidates
+              bibtex-completion-init
+              org-ref-cite-hydra/body)
   :bind (("C-'" . org-roam-node-random)
          :map org-mode-map
          ("C-'" . org-roam-node-random)
@@ -2429,15 +2457,15 @@ support more functions from =org-ref=:
 #+begin_src emacs-lisp
 (use-package bibtex
   :after org
+  :init
+  (use-package org-ref)
+  (use-package org-roam-bibtex)
   :demand t
   :ensure nil
   :bind (:map bibtex-mode-map
          ("C-x m p" . org-ref-open-bibtex-pdf)
          ("C-x m d" . kimim/org-ref-open-bibtex-in-dired)
-         ("C-c C-z" . org-ref-open-bibtex-notes))
-  :config
-  (use-package org-ref)
-  (use-package org-roam-bibtex))
+         ("C-c C-z" . org-ref-open-bibtex-notes)))
 #+end_src
 
 * Dictionary
@@ -2557,6 +2585,8 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+begin_src emacs-lisp
 (use-package mu4e
   :ensure nil
+  :init
+  (use-package sendmail)
   :functions (mu4e-compose-reply
               mu4e~view-quit-buffer)
   :defines (mu4e-html2text-command
@@ -2608,7 +2638,6 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   (advice-add #'shr-colorize-region :around (defun shr-no-colourise-region (&rest ignore)))
 
   (require 'org-mu4e) ;; capture link
-  (use-package sendmail)
   (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
   (setq mu4e-mu-binary "/usr/local/bin/mu")
   ;; (cond ((eq system-type 'gnu/linux)
@@ -2670,6 +2699,8 @@ should install postscript in cygwin.
 
 #+begin_src emacs-lisp
 (use-package elfeed
+  :init
+  (use-package org)
   :commands (elfeed)
   :custom
   (elfeed-curl-timeout 100)
@@ -2693,7 +2724,6 @@ should install postscript in cygwin.
          ("M-q" . article-fill-long-lines))
   :config
   ;; open feed link with eww
-  (use-package org)
   (require 'gnus-art)
   ;;(setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
   (advice-add 'elfeed-show-entry :after

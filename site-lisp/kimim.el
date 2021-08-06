@@ -545,8 +545,8 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
 (defun kimim/top-right-mouse ()
   "Move mouse to top right corner"
   (interactive)
-  (let ((x (* (frame-char-width) (- (frame-width) 36)))
-        (y 0))
+  (let ((x (* (frame-char-width) (- (frame-width) 33)))
+        (y 7))
     (set-mouse-pixel-position (selected-frame) x y)))
 
 (defun kimim/shrink-down ()
