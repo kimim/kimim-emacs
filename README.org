@@ -1342,6 +1342,7 @@ in Clojure.
 #+begin_src emacs-lisp
 (use-package cider
   :functions tramp-dissect-file-name
+  :custom (cider-clojure-cli-command "clojure")
   :config
   (setq nrepl-use-ssh-fallback-for-remote-hosts t)
   (setq nrepl-sync-request-timeout 100)
@@ -1897,8 +1898,8 @@ For macOS, install =graphviz= with homebrew:
 brew install graphviz
 #+end_src
 
-Download =plantuml.jar= from https://plantuml.com/download, and put it to
-"~/kimikit/plantuml/plantuml.jar"
+Download =plantuml.jar= from https://plantuml.com/download, and put it to some
+place and assign ~plantuml-jar-path~ to there.
 
 #+begin_src emacs-lisp
 (use-package plantuml-mode
