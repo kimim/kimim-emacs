@@ -1342,10 +1342,10 @@ in Clojure.
 #+begin_src emacs-lisp
 (use-package cider
   :functions tramp-dissect-file-name
-  :custom (cider-clojure-cli-command "clojure")
+  :custom ((cider-clojure-cli-command "clojure")
+           (nrepl-use-ssh-fallback-for-remote-hosts t)
+           (nrepl-sync-request-timeout 100))
   :config
-  (setq nrepl-use-ssh-fallback-for-remote-hosts t)
-  (setq nrepl-sync-request-timeout 100)
   ;;(setq cider-interactive-eval-output-destination 'output-buffer)
   (defun nrepl--ssh-tunnel-command (ssh dir port)
     "Command string to open SSH tunnel to the host associated with DIR's PORT."
@@ -2351,10 +2351,7 @@ Markdown is widely used as plain text file format.
               bibtex-completion-candidates
               bibtex-completion-init
               org-ref-cite-hydra/body)
-  :bind (("C-'" . org-roam-node-random)
-         :map org-mode-map
-         ("C-'" . org-roam-node-random)
-         ("C-x m p" . org-ref-open-pdf-at-point)
+  :bind (("C-x m p" . kimim/org-ref-open-pdf)
          ("C-x m d" . kimim/org-ref-open-pdf-in-dired))
   :custom
   (reftex-default-bibliography (concat kimim/path-ref "references.bib"))
@@ -2393,16 +2390,6 @@ prefix ARG is used, which uses `org-ref-default-bibliography'."
                 :caller 'ivy-bibtex
                 :history 'ivy-bibtex-history
                 :action 'or-ivy-bibtex-insert-cite)))
-
-  (defun kimim/org-ref-open-pdf-in-dired ()
-    "Open the pdf for bibtex key under point if it exists."
-    (interactive)
-    (let* ((results (org-ref-get-bibtex-key-and-file))
-           (key (car results))
-           (pdf-file (funcall org-ref-get-pdf-filename-function key)))
-      (if (file-exists-p pdf-file)
-          (dired-jump nil pdf-file)
-        (message "no pdf found for %s" key))))
 
   (defun kimim/org-ref-open-bibtex-in-dired ()
     "Open dired buffer of pdf for a bibtex entry, if it exists."
@@ -2447,7 +2434,90 @@ prefix ARG is used, which uses `org-ref-default-bibliography'."
            ((> (length pdfs) 1)
             (completing-read "Choose: " pdfs))))
       ;; No org-ref-pdf-directory defined so return just a file name.
-      (format "%s.pdf" key))))
+      (format "%s.pdf" key)))
+
+  (defun kimim/org-ref-open-pdf-action (entry)
+  "Open the pdf for bibtex key under point if it exists."
+  (with-ivy-window
+    (let* ((key (cdr (assoc "=key=" entry)))
+           (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+      (if (file-exists-p pdf-file)
+          (org-open-file pdf-file)
+        (message "no pdf found for %s" key)))))
+
+  (defun kimim/org-ref-open-pdf (&optional arg)
+  "Open pdf for a bibtex entry, if it exists.
+assumes point is in
+the entry of interest in the bibfile.  but does not check that."
+  (interactive)
+  (bibtex-completion-init)
+  (let* ((candidates (bibtex-completion-candidates))
+         (key (bibtex-completion-key-at-point))
+         (preselect (and key
+                         (cl-position-if (lambda (cand)
+                                           (member (cons "=key=" key)
+                                                   (cdr cand)))
+                                         candidates))))
+    (ivy-read "BibTeX entries: "
+              candidates
+              :preselect preselect
+              :caller 'ivy-bibtex
+              :history 'ivy-bibtex-history
+              :action 'kimim/org-ref-open-pdf-action)))
+
+
+(defun org-ref-open-pdf-at-point ()
+  "Open the pdf for bibtex key under point if it exists."
+  (interactive)
+  (let* ((results (org-ref-get-bibtex-key-and-file))
+         (key (car results)))
+    (if (eq "" key)
+        (kimim/org-ref-open-pdf)
+      (let ((pdf-file (funcall org-ref-get-pdf-filename-function key)))
+        (if (file-exists-p pdf-file)
+            (org-open-file pdf-file)
+          (message "no pdf found for %s" key))))))
+
+(defun kimim/org-ref-open-pdf-in-dired-action (entry)
+  "Open the pdf dired for bibtex key under point if it exists."
+  (with-ivy-window
+    (let* ((key (cdr (assoc "=key=" entry)))
+           (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+      (if (file-exists-p pdf-file)
+          (dired-jump nil pdf-file)
+        (message "no pdf found for %s" key)))))
+
+  (defun kimim/org-ref-open-pdf-in-dired (&optional arg)
+  "Open pdf dired for a bibtex entry, if it exists.
+assumes point is in
+the entry of interest in the bibfile.  but does not check that."
+  (interactive)
+  (bibtex-completion-init)
+  (let* ((candidates (bibtex-completion-candidates))
+         (key (bibtex-completion-key-at-point))
+         (preselect (and key
+                         (cl-position-if (lambda (cand)
+                                           (member (cons "=key=" key)
+                                                   (cdr cand)))
+                                         candidates))))
+    (ivy-read "BibTeX entries: "
+              candidates
+              :preselect preselect
+              :caller 'ivy-bibtex
+              :history 'ivy-bibtex-history
+              :action 'kimim/org-ref-open-pdf-in-dired-action)))
+
+  (defun kimim/org-ref-open-pdf-in-dired ()
+    "Open the pdf dired for bibtex key under point if it exists."
+    (interactive)
+    (let* ((results (org-ref-get-bibtex-key-and-file))
+           (key (car results)))
+      (if (eq "" key)
+        (kimim/org-ref-open-pdf)
+      (let ((pdf-file (funcall org-ref-get-pdf-filename-function key)))
+        (if (file-exists-p pdf-file)
+            (dired-jump nil pdf-file)
+          (message "no pdf found for %s" key)))))))
 #+end_src
 
 There is a built-in =bibtex-mode= to manage references. We can extend it to
