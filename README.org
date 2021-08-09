@@ -8,8 +8,8 @@
 * Introduction
 
 This Emacs configuration file is written with literate programming method[fn:1].
-The =emacs-lisp= code is extracted from this =orgmode=[fn:2] file, and then compiled
-to binary =elc= file for fast loading in the future.
+The =emacs-lisp= code is extracted from this =orgmode= [fn:2] file, and then
+compiled to binary =elc= file for fast loading in the future.
 
 * Installation
 
@@ -2371,11 +2371,14 @@ Markdown is widely used as plain text file format.
         org-ref-insert-label-function 'org-ref-ivy-insert-label-link
         org-ref-insert-ref-function 'org-ref-ivy-insert-ref-link
         org-ref-cite-onclick-function (lambda (_) (org-ref-cite-hydra/body)))
+
   (defun kimim/org-ref-ivy-insert-cite-link (&optional arg)
-    "ivy function for interacting with bibtex.
-Uses `org-ref-find-bibliography' for bibtex sources, unless a
-prefix ARG is used, which uses `org-ref-default-bibliography'."
+    "insert cite link with help of `ivy-bibtext' and corresponding
+`ivy-bibtex-display-transformer'"
     (interactive "P")
+    (setq org-ref-bibtex-files (if arg
+				                   org-ref-default-bibliography
+			                     (org-ref-find-bibliography)))
     (bibtex-completion-init)
     (let* ((candidates (bibtex-completion-candidates))
            (key (bibtex-completion-key-at-point))
@@ -2384,7 +2387,7 @@ prefix ARG is used, which uses `org-ref-default-bibliography'."
                                              (member (cons "=key=" key)
                                                      (cdr cand)))
                                            candidates))))
-      (ivy-read "BibTeX entries: "
+      (ivy-read "Open: "
                 candidates
                 :preselect preselect
                 :caller 'ivy-bibtex
@@ -2464,7 +2467,6 @@ the entry of interest in the bibfile.  but does not check that."
               :caller 'ivy-bibtex
               :history 'ivy-bibtex-history
               :action 'kimim/org-ref-open-pdf-action)))
-
 
 (defun org-ref-open-pdf-at-point ()
   "Open the pdf for bibtex key under point if it exists."
