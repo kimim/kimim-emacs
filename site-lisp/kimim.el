@@ -553,19 +553,44 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
   "Shrink window to the middle down part, leave space for reading
 documents."
   (interactive)
+  (kimim/frame-and-font)
   (set-frame-height (selected-frame) 18)
-  (set-frame-position (selected-frame)
-                      (/ (nth 3 (caar (display-monitor-attributes-list))) 10)
-                      (* 6 (/ (nth 4 (caar (display-monitor-attributes-list))) 10))))
+  (set-frame-position
+   (selected-frame)
+   (/ (nth 3 (caar (display-monitor-attributes-list))) 10)
+   (* 6 (/ (nth 4 (caar (display-monitor-attributes-list))) 10))))
+
+(defun kimim/shrink-up ()
+  "Shrink window to the middle up part, leave space for reading
+documents."
+  (interactive)
+  (kimim/frame-and-font)
+  (set-frame-height (selected-frame) 18)
+  (set-frame-position
+   (selected-frame)
+   (/ (nth 3 (caar (display-monitor-attributes-list))) 10)
+   (* 1 (/ (nth 4 (caar (display-monitor-attributes-list))) 20))))
 
 (defun kimim/shrink-right ()
   "Shrink window to the right part, leave space for reading
 documents."
   (interactive)
+  (kimim/frame-and-font)
   (set-frame-width (selected-frame) (round (/ (frame-width) 2.1)))
   (set-frame-position
    (selected-frame)
    (/ (* (nth 3 (caar (display-monitor-attributes-list))) 3) 5)
+   (cdr (frame-position))))
+
+(defun kimim/shrink-left ()
+  "Shrink window to the left part, leave space for reading
+documents."
+  (interactive)
+  (kimim/frame-and-font)
+  (set-frame-width (selected-frame) (round (/ (frame-width) 2.1)))
+  (set-frame-position
+   (selected-frame)
+   (/ (nth 3 (caar (display-monitor-attributes-list))) 100)
    (cdr (frame-position))))
 
 (provide 'kimim)

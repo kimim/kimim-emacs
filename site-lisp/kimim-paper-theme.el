@@ -34,7 +34,7 @@
 ;;; Code:
 
 (deftheme kimim-paper
-    "Mimic Paper Color.")
+    "Mimic Paper Colour.")
 
 (let ((class '((class color) (min-colors 88)))
       (kimim-theme-bg "#f4ecd8")

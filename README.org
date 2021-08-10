@@ -2268,7 +2268,8 @@ sqlite3 is shipped in macOS by default.
          (("C-c n i" . org-roam-node-insert)
           ("C-c n t" . org-roam-tag-add)
           ("C-c n a" . org-roam-alias-add)
-          ("C-c n g" . org-id-get-create)))
+          ("C-c n g" . org-id-get-create)
+          ("C-c n b" . org-roam-buffer-toggle)))
   :config
   (require 'kimim)
   (setq org-roam-v2-ack t)
@@ -2472,7 +2473,9 @@ does not check that."
   "Open the pdf for bibtex key under point if it exists."
   (interactive)
   (let* ((results (and (eq major-mode 'org-mode)
-                       (org-ref-get-bibtex-key-and-file)))
+                       (condition-case nil
+                           (org-ref-get-bibtex-key-and-file)
+                         (error nil))))
          (key (car results)))
     (if (or (eq "" key) (null key))
         (kimim/org-ref-open-pdf)
@@ -2514,7 +2517,9 @@ does not check that."
     "Open the pdf dired for bibtex key under point if it exists."
     (interactive)
     (let* ((results (and (eq major-mode 'org-mode)
-                       (org-ref-get-bibtex-key-and-file)))
+                       (condition-case nil
+                           (org-ref-get-bibtex-key-and-file)
+                         (error nil))))
            (key (car results)))
       (if (or (eq "" key) (null key))
         (kimim/org-ref-open-pdf-in-dired)
@@ -2861,7 +2866,11 @@ from system PATH, so you should set these to system PATH.
    ("C-=" . text-scale-adjust)
    ("C-0" . kimim/restore-text-scale)
    ("C-x /" . kimim/toggle-path-header)
-   ("C-x m 0" . kimim/top-right-mouse))
+   ("C-x m 0" . kimim/frame-and-font)
+   ("C-x m SPC" . kimim/shrink-down)
+   ("C-x m ]" . kimim/shrink-right)
+   ("C-x m [" . kimim/shrink-left)
+   ("C-x m ^" . kimim/shrink-up))
   :load-path "~/kimim-emacs/site-lisp"
   :config
   (unbind-key "C-x C-z")
