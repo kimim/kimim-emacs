@@ -1950,6 +1950,7 @@ place and assign ~plantuml-jar-path~ to there.
    (file-expand-wildcards (concat kimim/path-org "*.org")))
   (org-tags-exclude-from-inheritance '("project" "category"))
   (org-log-done t)
+  (org-fontify-done-headline nil)
   (org-todo-repeat-to-state "REPEAT")
   (org-deadline-warning-days 2)
   (org-todo-keywords
