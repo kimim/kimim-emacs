@@ -2482,7 +2482,7 @@ does not check that."
       (let ((pdf-file (funcall org-ref-get-pdf-filename-function key)))
         (if (file-exists-p pdf-file)
             (org-open-file pdf-file)
-          (message "no pdf found for %s" key))))))
+          (kimim/org-ref-open-pdf))))))
 
 (defun kimim/org-ref-open-pdf-in-dired-action (entry)
   "Open the pdf dired for bibtex key under point if it exists."
@@ -2870,7 +2870,8 @@ from system PATH, so you should set these to system PATH.
    ("C-x m SPC" . kimim/shrink-down)
    ("C-x m ]" . kimim/shrink-right)
    ("C-x m [" . kimim/shrink-left)
-   ("C-x m ^" . kimim/shrink-up))
+   ("C-x m ^" . kimim/shrink-up)
+   ("C-x m '" . kimim/top-right-mouse))
   :load-path "~/kimim-emacs/site-lisp"
   :config
   (unbind-key "C-x C-z")
