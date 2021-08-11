@@ -618,6 +618,7 @@ to establish the habit of efficiently using emacs keybinding.
 (use-package guru-mode
   :ensure t
   :defer 1
+  :diminish guru-mode
   :config
   (guru-global-mode +1))
 #+end_src
@@ -655,6 +656,12 @@ frequency report by =M-x keyfreq-show=.
 #+end_src
 
 ** General
+
+#+begin_src emacs-lisp
+(use-package autorevert
+  :ensure nil
+  :diminish auto-revert-mode)
+#+end_src
 
 #+begin_src emacs-lisp
 (setq inhibit-eol-conversion nil)
@@ -1185,6 +1192,7 @@ parenthesis. We define some keys for it:
          ("C-M-w" . sp-copy-sexp))
   :hook (prog-mode . smartparens-mode)
   :functions (sp-local-pair)
+  :diminish smartparens-mode
   :config
   (sp-with-modes sp-lisp-modes
     ;; disable ', it's the quote character!
@@ -1606,7 +1614,8 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package org-indent
   :ensure nil
-  :hook (org-mode . org-indent-mode))
+  :hook (org-mode . org-indent-mode)
+  :diminish org-indent-mode)
 #+end_src
 
 ** orgalist
@@ -1780,6 +1789,7 @@ sudo apt install python3-pygments
   (use-package org-ref) ;; latex-classes need default bib file
   :defines kimim/latex-classes
   :commands (org-latex-publish-to-pdf)
+  :diminish org-beamer-mode
   :custom
   (org-latex-image-default-height "0.8\\textheight")
   (org-latex-image-default-width "0.8\\linewidth")
@@ -2284,9 +2294,10 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
 
 #+begin_src emacs-lisp
 (use-package org-roam-bibtex
-  :init
+    :init
   (use-package org-ref)
-  :hook ((org-mode bibtex-mode) . org-roam-bibtex-mode))
+  :hook ((org-mode bibtex-mode) . org-roam-bibtex-mode)
+  :diminish org-roam-bibtex-mode)
 #+end_src
 
 ** deft
@@ -2564,6 +2575,7 @@ Check spell on the fly.
 
 #+begin_src emacs-lisp
 (use-package flyspell
+  :diminish flyspell-mode
   :hook ((prog-mode . flyspell-prog-mode)
          (org-mode . flyspell-mode)))
 #+end_src
