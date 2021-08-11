@@ -389,9 +389,8 @@ Use =rainbow-mode= to edit colorful color string and symbol.
 
 #+begin_src emacs-lisp
 (use-package rainbow-mode
-  :defer 1
-  :config
-  (rainbow-mode t))
+  :hook prog-mode
+  :diminish rainbow-mode)
 #+end_src
 
 Rainbow-delimiters is a "rainbow parentheses"-like mode which highlights
@@ -1071,6 +1070,7 @@ out of the box.
   :defer 10
   :init
   (use-package warnings)
+  :diminish yas-minor-mode
   :config
   (add-to-list
    'yas-snippet-dirs (concat kimim/path-sync-emacs "snippets"))
@@ -1266,6 +1266,14 @@ that dash version higher than 2.18 is installed[fn:16].
   :custom
   (lsp-ui-doc-alignment 'window)
   (lsp-ui-doc-max-width 80))
+#+end_src
+
+** eldoc
+
+#+begin_src emacs-lisp
+(use-package eldoc
+  :hook prog-mode
+  :diminish eldoc-mode)
 #+end_src
 
 * Programming Language
@@ -1490,7 +1498,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :ensure nil
   :mode ("\\.el\\'" . emacs-lisp-mode)
   :config
-  (define-derived-mode lisp-interaction-mode emacs-lisp-mode "λ"))
+  (define-derived-mode lisp-interaction-mode emacs-lisp-mode "ᴧ"))
 #+end_src
 
 ** AutoHotKey
