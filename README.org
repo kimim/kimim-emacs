@@ -355,7 +355,7 @@ Customize the frame title to display buffer file name.
 
 * Mode Line
 
-Display time and (line, column) numbers in mode line.
+Display date and time, but do not display system load.
 
 #+begin_src emacs-lisp
 (use-package time
@@ -365,9 +365,14 @@ Display time and (line, column) numbers in mode line.
   (display-time-24hr-format t)
   (display-time-day-and-date t)
   (display-time-interval 10)
+  (display-time-default-load-average nil)
   :config
   (display-time-mode t))
+#+end_src
 
+Show (line, column) numbers in mode line:
+
+#+begin_src emacs-lisp
 (use-package simple
   :ensure nil
   :defer 3
