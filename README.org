@@ -2297,7 +2297,8 @@ sqlite3 is shipped in macOS by default.
   :config
   (require 'kimim)
   (setq org-roam-v2-ack t)
-  (org-roam-setup))
+  (org-roam-setup)
+  (advice-add 'org-roam-node-visit :after (lambda (&rest r) (recenter-top-bottom 'top))))
 #+end_src
 
 ** org-roam-bibtex

@@ -593,4 +593,18 @@ documents."
    (/ (nth 3 (caar (display-monitor-attributes-list))) 100)
    (cdr (frame-position))))
 
+
+(defun kimim/toggle-proxy ()
+  "Turn proxy on/off"
+  (interactive)
+  (if url-proxy-services
+      (progn
+        (setq url-proxy-services nil)
+        (message "proxy is off"))
+    (progn
+      (setq url-proxy-services '(("no_proxy" . "localhost")
+                                 ("http" . "127.0.0.1:1080")
+                                 ("https" . "127.0.0.1:1080")))
+      (message "proxy is on"))))
+
 (provide 'kimim)
