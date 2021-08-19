@@ -1106,7 +1106,10 @@ English word list fetch from https://github.com/dwyl/english-words
   :bind (:map company-active-map
               ("C-n" . company--select-next-and-warn)
               ("C-p" . company--select-previous-and-warn)
-              ("SPC" . company-abort))
+              ("SPC" . (lambda ()
+                         (interactive)
+                         (company-abort)
+                         (insert-char ?\x20))))
   :diminish company-mode
   :commands (global-company-mode)
   :config
