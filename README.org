@@ -470,8 +470,11 @@ Automatically highlight current symbol where the cursor is inside.
 (tooltip-mode -1)
 ;; mark highlight in other windows also
 (setq highlight-nonselected-windows nil)
-;; choose hi lock color automatically
-(setq hi-lock-auto-select-face t)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package hi-lock
+  :custom (hi-lock-auto-select-face t))
 #+end_src
 
 * Help
@@ -671,15 +674,14 @@ frequency report by =M-x keyfreq-show=.
 (setq inhibit-eol-conversion nil)
 ;; fill-column is a buffer-local variable
 ;; use setq-default to change it globally
-(setq-default fill-column 80)
 (if window-system
     (setq-default fill-column
-                  (min 80
+                  (min 70
                        (ceiling
                         (/ (x-display-pixel-width)
                            (frame-char-width)
                            2.3))))
-  (setq-default fill-column 80))
+  (setq-default fill-column 70))
 (use-package drag-stuff
   :diminish drag-stuff-mode
   :config
@@ -1102,7 +1104,8 @@ English word list fetch from https://github.com/dwyl/english-words
   :defer 0
   :init
   (use-package ispell)
-  :functions company-complete-common-or-cycle
+  :functions (company-complete-common-or-cycle
+              company-abort)
   :bind (:map company-active-map
               ("C-n" . company--select-next-and-warn)
               ("C-p" . company--select-previous-and-warn)
@@ -1199,7 +1202,6 @@ parenthesis. We define some keys for it:
          ("C-M-<backspace>" . sp-backward-copy-sexp)
          ("C-M-w" . sp-copy-sexp))
   :hook (prog-mode . smartparens-mode)
-  :functions (sp-local-pair)
   :diminish smartparens-mode
   :config
   (sp-with-modes sp-lisp-modes
@@ -1598,7 +1600,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   (if window-system
       (setq org-startup-indented t)
     (setq org-startup-indented nil))
-  (setq org-image-actual-width 600))
+  (setq org-image-actual-width 750))
 #+end_src
 
 ** org-appear
@@ -1810,6 +1812,7 @@ sudo apt install python3-pygments
   (org-latex-image-default-height "0.8\\textheight")
   (org-latex-image-default-width "0.8\\linewidth")
   (org-startup-with-beamer-mode t)
+  (org-beamer-frame-level 2)
   :config
   (require 'ox-latex)
   (require 'ox-beamer)
@@ -2303,7 +2306,7 @@ sqlite3 is shipped in macOS by default.
   (require 'kimim)
   (setq org-roam-v2-ack t)
   (org-roam-db-autosync-enable)
-  (advice-add 'org-roam-node-visit :after (lambda (&rest r) (recenter-top-bottom 'top))))
+  (advice-add 'org-roam-node-visit :after (lambda (&rest r) (reposition-window))))
 #+end_src
 
 ** org-roam-bibtex
@@ -2382,7 +2385,12 @@ Markdown is widely used as plain text file format.
               bibtex-completion-key-at-point
               bibtex-completion-candidates
               bibtex-completion-init
-              org-ref-cite-hydra/body)
+              org-ref-cite-hydra/body
+              org-ref-find-bibliography
+              ivy--get-window
+              kimim/org-ref-open-pdf
+              kimim/org-ref-open-pdf-in-dired
+              kimim/org-ref-open-notes)
   :bind (("C-x m p" . kimim/org-ref-open-pdf-at-point)
          ("C-x m P" . kimim/org-ref-open-pdf-in-dired-at-point)
          ("C-x m n" . kimim/org-ref-open-notes-at-point))
@@ -2870,7 +2878,9 @@ should install postscript in cygwin.
          ("<SPC>" . scroll-up-command)
          ("<backspace>" . scroll-down-command)
          :map elfeed-show-mode-map
-         ("M-q" . article-fill-long-lines))
+         ("M-q" . article-fill-long-lines)
+         ("j" . next-line)
+         ("k" . previous-line))
   :config
   ;; open feed link with eww
   (require 'gnus-art)
@@ -2940,6 +2950,8 @@ from system PATH, so you should set these to system PATH.
    ("C-x m SPC" . kimim/shrink-down)
    ("C-x m ]" . kimim/shrink-right)
    ("C-x m [" . kimim/shrink-left)
+   ("M-]" . kimim/shrink-right)
+   ("M-[" . kimim/shrink-left)
    ("C-x m ^" . kimim/shrink-up)
    ("C-x m '" . kimim/top-right-mouse))
   :load-path "~/kimim-emacs/site-lisp"
