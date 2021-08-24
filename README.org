@@ -1633,7 +1633,44 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 (use-package org-indent
   :ensure nil
   :hook (org-mode . org-indent-mode)
-  :diminish org-indent-mode)
+  :diminish org-indent-mode
+  :config
+  (defun org-indent--compute-prefixes ()
+    "Compute prefix strings for regular text and headlines."
+    (setq org-indent--heading-line-prefixes
+	      (make-vector org-indent--deepest-level nil))
+    (setq org-indent--inlinetask-line-prefixes
+	      (make-vector org-indent--deepest-level nil))
+    (setq org-indent--text-line-prefixes
+	      (make-vector org-indent--deepest-level nil))
+    (dotimes (n org-indent--deepest-level)
+      (let ((indentation (if (<= n 1) 0
+			               (* (1- org-indent-indentation-per-level)
+			                  (1- n)))))
+        ;; Headlines line prefixes.
+        (let ((heading-prefix (make-string indentation ?*)))
+	      (aset org-indent--heading-line-prefixes
+	            n
+	            (org-add-props heading-prefix nil 'face 'org-indent))
+	      ;; Inline tasks line prefixes
+	      (aset org-indent--inlinetask-line-prefixes
+	            n
+	            (cond ((<= n 1) "")
+		              ((bound-and-true-p org-inlinetask-show-first-star)
+		               (concat org-indent-inlinetask-first-star
+			                   (substring heading-prefix 1)))
+		              (t (org-add-props heading-prefix nil 'face 'org-indent)))))
+        ;; Text line prefixes.
+        (let ((remove-space (if (> n 0)
+                                (- n 1)
+                              0)))
+          (aset org-indent--text-line-prefixes
+	            n
+	            (org-add-props
+		            (concat (make-string (- (+ n indentation) remove-space) ?\s)
+			                (and (> n 0)
+			                     (char-to-string org-indent-boundary-char)))
+		            nil 'face 'org-indent)))))))
 #+end_src
 
 ** orgalist
@@ -2973,6 +3010,77 @@ from system PATH, so you should set these to system PATH.
     (interactive)
     (text-scale-increase 0)))
 #+end_src
+
+* Keybindings
+
+Finally, let's list the useful key bindings in a table.
+
+#+ATTR_LATEX: :environment longtable :align l|lp{3cm}r|l|l
+| Mode     | Keys    | Commands                     | Description               |
+|----------+---------+------------------------------+---------------------------|
+| Global   | C-x m 0 | kimim/top-right-mouse        | Move mouse to top right   |
+|          | C-x m c | ace-jump-mode                |                           |
+|          | C-x o   | ace-window                   |                           |
+|          | M-o     | ace-window                   |                           |
+|          | C-x m w | ace-swap-window              |                           |
+|          | C-x m x | ace-delete-window            |                           |
+|          | C-s     | swiper                       | search with swiper        |
+|          | C-s C-s | resume swiper search         |                           |
+|          | C-x 5 2 | make-frame                   | make a new frame          |
+|          | C-x 5 0 | delete-frame                 | delete current frame      |
+|          | C-x 5 1 | delete-other-frames          | only keep current frame   |
+|          | C-x 5 b | switch-to-buffer-other-frame |                           |
+|          | C-x 5 f | find-file-other-frame        |                           |
+|          | C-x 5 d | dired-other-frame            |                           |
+|          | C-x 5 o | other-frame                  |                           |
+| chars    | C-q M-a |                              | á                         |
+|          | C-q M-b |                              | â                         |
+|          | C-q M-c |                              | ã                         |
+|          | C-q M-d |                              | ä                         |
+|          | C-q M-e |                              | å                         |
+|          | C-q M-f |                              | æ                         |
+|          | C-q M-g |                              | ç                         |
+|          | C-q M-h |                              | è                         |
+|          | C-q M-i |                              | é                         |
+|          | C-q M-j |                              | ê                         |
+|          | C-q M-k |                              | ë                         |
+|          | C-q M-l |                              | ì                         |
+|          | C-q M-m |                              | í                         |
+|          | C-q M-n |                              | î                         |
+|          | C-q M-o |                              | ï                         |
+|          | C-q M-p |                              | ð                         |
+|          | C-q M-q |                              | ñ                         |
+|          | C-q M-r |                              | ò                         |
+|          | C-q M-s |                              | ó                         |
+|          | C-q M-t |                              | ô                         |
+|          | C-q M-u |                              | õ                         |
+|          | C-q M-v |                              | ö                         |
+|          | C-q M-w |                              | ÷                         |
+|          | C-q M-x |                              | ø                         |
+|          | C-q M-y |                              | ù                         |
+|          | C-q M-z |                              | ú                         |
+|          | C-q M-0 |                              | °                         |
+|          | C-q M-1 |                              | ±                         |
+|          | C-q M-2 |                              | ²                         |
+|          | C-q M-3 |                              | ³                         |
+|          | C-q M-4 |                              | ´                         |
+|          | C-q M-5 |                              | µ                         |
+|          | C-q M-6 |                              | ¶                         |
+|          | C-q M-7 |                              | ·                         |
+|          | C-q M-8 |                              | ¸                         |
+|          | C-q M-9 |                              | ¹                         |
+|          | C-q M-` |                              | à                         |
+|          | C-q M-- |                              | ­                         |
+|          | C-q M-+ |                              | ½                         |
+| flyspell | C-,     | flyspell-goto-next-error     |                           |
+|          | C-.     | flyspell-auto-correct-word   |                           |
+| dired    | R       | dired-do-rename              |                           |
+|          | C       | dired-do-copy                |                           |
+|          | o       | kimim/open-external          | Open file in external app |
+|          | b       | dired-up-directory           |                           |
+|          | e       | dired-efap                   | Edit file name            |
+|          | C-q     | kimim/kill-dired-buffers     |                           |
+|          | q       | quit-window                  |                           |
 
 * Footnotes
 
