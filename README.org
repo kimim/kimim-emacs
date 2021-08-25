@@ -775,6 +775,16 @@ region. That's amazing.
   ("C-c C->" . mc/mark-all-dwim))
 #+end_src
 
+** visual-fill-column
+
+Markdown file is not fill-column'ed, so let emacs visually
+fill-column.
+
+#+begin_src emacs-lisp
+(use-package visual-fill-column
+  :hook (markdown-mode . visual-fill-column-mode))
+#+end_src
+
 * File Management
 ** delete files
 
@@ -2404,6 +2414,7 @@ Markdown is widely used as plain text file format.
 (use-package markdown-mode
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
+  :custom (markdown-hide-markup t)
   :bind(:map
         markdown-mode-map
         ("M-<up>" . markdown-move-subtree-up)
