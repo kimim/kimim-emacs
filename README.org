@@ -1628,7 +1628,14 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package org-superstar
   :ensure t
-  :hook (org-mode . org-superstar-mode)
+  :hook ((org-mode . org-superstar-mode)
+         (org-mode . (lambda ()
+                       "Beautify Org Checkbox Symbol"
+                       (push '("[ ]" . "☐") prettify-symbols-alist)
+                       (push '("[X]" . "☑" ) prettify-symbols-alist)
+                       (push '("#+begin_src" . "«" ) prettify-symbols-alist)
+                       (push '("#+end_src" . "»" ) prettify-symbols-alist)
+                       (prettify-symbols-mode))))
   :custom
   (org-superstar-remove-leading-stars t)
   (org-superstar-headline-bullets-list

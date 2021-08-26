@@ -539,8 +539,8 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
                       (set-mouse-pixel-position (selected-frame) x y))
                     x y)))
 
-(advice-add 'recenter-top-bottom
-            :after #'kimim/shake-mouse)
+;; (advice-add 'recenter-top-bottom
+;;             :after #'kimim/shake-mouse)
 
 (defun kimim/top-right-mouse ()
   "Move mouse to top right corner"
