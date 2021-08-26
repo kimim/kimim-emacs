@@ -108,6 +108,7 @@
             (org-code :foreground ,kimim-theme-builtin :weight bold)
             (org-verbatim :foreground ,kimim-theme-const)
             (org-hide :foreground ,kimim-theme-bg)
+            (org-tag :foreground ,kimim-theme-builtin)
             (org-block-begin-line :foreground ,kimim-theme-const)
             (org-block-end-line :foreground ,kimim-theme-const)
             (org-scheduled-previously :foreground ,kimim-theme-comment)

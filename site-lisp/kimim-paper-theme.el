@@ -88,8 +88,6 @@
             (font-lock-variable-name-face :foreground ,kimim-theme-fg)
             (font-lock-warning-face :foreground ,kimim-theme-error)
             (font-lock-doxygen-face :foreground "SaddleBrown" :background "#f7f7f7")
-            (org-code :foreground ,kimim-theme-builtin :weight bold)
-            (org-verbatim :foreground ,kimim-theme-const)
             (underline :foreground "orange red" :underline t)
             (org-level-1 :weight bold :foreground "#00008b") ;; dark blue
             (org-level-2 :weight bold :foreground "#6a5acd") ;; slate blue
@@ -107,7 +105,10 @@
             (markdown-header-face-6 :inherit org-level-6)
             (markdown-header-face-7 :inherit org-level-7)
             (markdown-header-face-8 :inherit org-level-8)
+            (org-code :foreground ,kimim-theme-builtin :weight bold)
+            (org-verbatim :foreground ,kimim-theme-const)
             (org-hide :foreground ,kimim-theme-bg)
+            (org-tag :foreground ,kimim-theme-builtin)
             (org-block-begin-line :foreground ,kimim-theme-const)
             (org-block-end-line :foreground ,kimim-theme-const)
             (org-scheduled-previously :foreground ,kimim-theme-comment)
