@@ -1080,6 +1080,12 @@ out of the box.
   (ivy-mode 1))
 #+end_src
 
+** ivy-bibtex
+
+#+begin_src emacs-lisp
+(use-package ivy-bibtex)
+#+end_src
+
 ** yasnippet
 
 #+begin_src emacs-lisp
@@ -1144,6 +1150,10 @@ Sort candidates using completion history.
 (use-package company-statistics
   :config
   (company-statistics-mode 1))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package company-ebdb)
 #+end_src
 
 * Programming General
@@ -1294,6 +1304,12 @@ that dash version higher than 2.18 is installed[fn:16].
 (use-package eldoc
   :hook prog-mode
   :diminish eldoc-mode)
+#+end_src
+
+** cmake mode
+
+#+begin_src emacs-lisp
+(use-package cmake-mode)
 #+end_src
 
 * Programming Language
