@@ -2431,13 +2431,17 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
 
 * Markdown mode
 
-Markdown is widely used as plain text file format.
+Markdown is widely used as plain text file format. Pandoc [fn:23] can
+be used to convert markdown file to html and other formats. We can
+download the [[https://github.com/jgm/pandoc/releases/latest][latest version]] and put the binary file to system path,
+such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
 
 #+begin_src emacs-lisp
 (use-package markdown-mode
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :custom (markdown-hide-markup t)
+  :custom ((markdown-hide-markup t)
+           (markdown-command "pandoc"))
   :bind(:map
         markdown-mode-map
         ("M-<up>" . markdown-move-subtree-up)
@@ -3171,4 +3175,6 @@ Finally, let's list the useful key bindings in a table.
 
 [fn:22] https://en.wikipedia.org/wiki/Niklas_Luhmann
 
-[fn:23] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+[fn:23] https://pandoc.org/
+
+[fn:24] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
