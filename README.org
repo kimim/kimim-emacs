@@ -2757,9 +2757,11 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
                (key (car link-content))
                (link-str (cadr link-content))
                (link-uuid (cadr (split-string link-str "/"))))
-          (if (string= "ebdb" key)
-              (ebdb-record-name-string
-               (ebdb-gethash link-uuid 'uuid)))))))
+          (if desc
+              desc
+            (if (string= "ebdb" key)
+                (ebdb-record-name-string
+                 (ebdb-gethash link-uuid 'uuid))))))))
 #+end_src
 
 ** erc
