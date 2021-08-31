@@ -1787,12 +1787,11 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package org
   :config
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((C . t)
-     (clojure . t)
-     (shell . t)
-     (python . t)))
+  ;; (org-babel-do-load-languages
+  ;;  'org-babel-load-languages
+  ;;  '((C . t)
+  ;;    (clojure . t)
+  ;;    (shell . t)))
   (setq org-src-window-setup 'current-window)
   (setq org-src-fontify-natively t)
   (setq org-src-preserve-indentation t)
