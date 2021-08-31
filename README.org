@@ -733,12 +733,11 @@ frequency report by =M-x keyfreq-show=.
 
 (setq uniquify-buffer-name-style 'forward)
 (setq suggest-key-bindings 5)
-(setq auto-mode-alist
-      (append '(("\\.css\\'" . css-mode)
-                ("\\.S\\'" . asm-mode)
-                ("\\.svg\\'" . html-mode)
-                ("\\.pas\\'" . delphi-mode))
-              auto-mode-alist))
+
+(add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
+(add-to-list 'auto-mode-alist '("\\.S\\'" . asm-mode))
+(add-to-list 'auto-mode-alist '("\\.svg\\'" . html-mode))
+(add-to-list 'auto-mode-alist '("\\.pas\\'" . delphi-mode))
 
 (require 'saveplace)
 (setq-default save-place t)
@@ -1181,7 +1180,8 @@ relationship.
 
 #+begin_src emacs-lisp
 (use-package magit
-  :bind (("C-x p m" . magit)))
+  :bind (("C-x p m" . magit))
+  :custom (magit-log-show-refname-after-summary t))
 #+end_src
 
 Following error will reported when using magit to commit changes:
@@ -1309,7 +1309,12 @@ that dash version higher than 2.18 is installed[fn:16].
 ** cmake mode
 
 #+begin_src emacs-lisp
-(use-package cmake-mode)
+(use-package cmake-mode
+  :config
+  (delete '("CMakeLists\\.txt\\'" . cmake-mode) auto-mode-alist)
+  (setq auto-mode-alist
+        (append '(("CMakeLists\\.txt\\'" . cmake-mode))
+                auto-mode-alist)))
 #+end_src
 
 * Programming Language
