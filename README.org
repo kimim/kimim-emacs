@@ -643,6 +643,22 @@ frequency report by =M-x keyfreq-show=.
   (keyfreq-autosave-mode +1))
 #+end_src
 
+** eshell
+
+#+begin_src emacs-lisp
+(use-package company-shell
+  :commands company-shell)
+
+(use-package eshell
+  :config
+  (add-hook 'eshell-mode-hook
+   (lambda ()
+     (setq company-backends
+           '((company-shell company-capf company-yasnippet company-files)
+             company-dabbrev company-ebdb company-ispell
+             (company-dabbrev-code company-gtags company-etags company-keywords))))))
+#+end_src
+
 * Editing
 ** Input Method
 
