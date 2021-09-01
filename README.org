@@ -654,8 +654,8 @@ frequency report by =M-x keyfreq-show=.
   (add-hook 'eshell-mode-hook
    (lambda ()
      (setq company-backends
-           '((company-shell company-capf company-yasnippet company-files)
-             company-dabbrev company-ebdb company-ispell
+           '((company-shell company-files)
+             company-capf company-yasnippet company-dabbrev company-ebdb company-ispell
              (company-dabbrev-code company-gtags company-etags company-keywords))))))
 #+end_src
 
@@ -2755,7 +2755,8 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+begin_src emacs-lisp
 (use-package youdao-dictionary
   :bind (
-         ("C-<f3>" . youdao-dictionary-search-at-point+)
+         ("C-x m 1" . youdao-dictionary-search-at-point-posframe)
+         ("C-x m 2" . youdao-dictionary-search)
          :map youdao-dictionary-mode-map
          ("<mouse-3>" . youdao-dictionary-def-copied)
          ("f" . youdao-dictionary-search-from-input))
