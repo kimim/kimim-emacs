@@ -1342,6 +1342,8 @@ that dash version higher than 2.18 is installed[fn:16].
   :ensure nil
   :config
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
+  (add-to-list 'org-src-lang-modes '("C" . c))
+  (org-babel-do-load-languages 'org-babel-load-languages '((C . t)))
   (add-hook 'c-mode-common-hook
             (lambda ()
               ;;(c-set-style "gnu")
@@ -1382,6 +1384,8 @@ Clojure[fn:17] is a lisp over JVM. Emm, I like it.
          ("\\.cljc\\'" . clojurec-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
   :config
+  (add-to-list 'org-src-lang-modes '("clojure" . clojure))
+  (org-babel-do-load-languages 'org-babel-load-languages '((clojure . t)))
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'cider-mode)
@@ -1575,6 +1579,16 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :bind (:map
          yaml-mode-map
          ("\C-m" . newline-and-indent)))
+#+end_src
+
+** shell
+
+#+begin_src emacs-lisp
+(use-package shell
+  :config
+  (add-to-list 'org-src-lang-modes '("shell" . shell))
+  (org-babel-do-load-languages 'org-babel-load-languages '((shell . t))))
+
 #+end_src
 
 ** powershell
