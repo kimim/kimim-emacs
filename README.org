@@ -1577,6 +1577,13 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
          ("\C-m" . newline-and-indent)))
 #+end_src
 
+** powershell
+
+#+begin_src emacs-lisp
+(use-package powershell
+  :mode ("\\.ps1\\'" . powershell-mode))
+#+end_src
+
 * Calendar
 
 #+begin_src emacs-lisp
