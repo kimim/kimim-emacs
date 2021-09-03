@@ -1587,7 +1587,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :config
   (add-to-list 'org-src-lang-modes '("shell" . shell))
   (org-babel-do-load-languages 'org-babel-load-languages '((shell . t))))
-
 #+end_src
 
 ** powershell
@@ -1597,6 +1596,54 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :mode ("\\.ps1\\'" . powershell-mode))
 #+end_src
 
+
+
+* Draw diagram in code
+** PlantUML
+
+That's fun to draw UML with =ob-plantuml= inside =orgmode=:
+
+For Windows Cygwin, install =graphviz= in =cygwin= setup tool
+
+For macOS, install =graphviz= with homebrew:
+#+begin_src shell
+brew install graphviz
+#+end_src
+
+Download =plantuml.jar= from https://plantuml.com/download, and put it to some
+place and assign ~plantuml-jar-path~ to there.
+
+#+begin_src emacs-lisp
+(use-package plantuml-mode
+  :defines (org-plantuml-exec-mode
+            org-plantuml-executable-path
+            org-plantuml-executable-args
+            org-plantuml-jar-path)
+  :functions (org-babel-plantuml-make-body)
+  :custom
+  (plantuml-default-exec-mode 'jar)
+  (plantuml-jar-path (expand-file-name
+                      (concat kimim/path-kimikit "plantuml/plantuml.jar")))
+  (org-plantuml-jar-path plantuml-jar-path)
+  (plantuml-executable-args "-headless -charset UTF-8")
+  (org-plantuml-executable-args plantuml-executable-args)
+  :config
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
+#+end_src
+** ditaa
+
+#+begin_src emacs-lisp
+(use-package ob-ditaa
+  :ensure nil
+  :custom
+  (org-ditaa-jar-path
+        (expand-file-name
+         (concat kimim/path-kimikit "ditaa/ditaa.jar")))
+  :config
+  (add-to-list 'org-src-lang-modes '("ditaa" . artist))
+  (org-babel-do-load-languages 'org-babel-load-languages '((ditaa . t))))
+#+end_src
 * Calendar
 
 #+begin_src emacs-lisp
@@ -2019,39 +2066,6 @@ sudo apt install python3-pygments
     (setq org-re-reveal-transition "none")
     (setq org-re-reveal-hlevel 2)
     (setq org-re-reveal-extra-css "./kimim.css"))
-#+end_src
-
-** org with diagram
-
-That's fun to draw UML with =ob-plantuml= inside =orgmode=:
-
-For Windows Cygwin, install =graphviz= in =cygwin= setup tool
-
-For macOS, install =graphviz= with homebrew:
-#+begin_src shell
-brew install graphviz
-#+end_src
-
-Download =plantuml.jar= from https://plantuml.com/download, and put it to some
-place and assign ~plantuml-jar-path~ to there.
-
-#+begin_src emacs-lisp
-(use-package plantuml-mode
-  :defines (org-plantuml-exec-mode
-            org-plantuml-executable-path
-            org-plantuml-executable-args
-            org-plantuml-jar-path)
-  :functions (org-babel-plantuml-make-body)
-  :custom
-  (plantuml-default-exec-mode 'jar)
-  (plantuml-jar-path (expand-file-name
-                      (concat kimim/path-kimikit "plantuml/plantuml.jar")))
-  (org-plantuml-jar-path plantuml-jar-path)
-  (plantuml-executable-args "-headless -charset UTF-8")
-  (org-plantuml-executable-args plantuml-executable-args)
-  :config
-  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
 #+end_src
 
 ** org as GTD system
