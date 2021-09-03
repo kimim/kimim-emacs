@@ -1979,13 +1979,8 @@ sudo apt install python3-pygments
           ("" "amsmath" t nil)
           ("" "textcomp" t nil)
           ("" "lettrine" t nil)
-          ("" "capt-of" nil nil)
-          ("citestyle=numeric, bibstyle=numeric, hyperref=true,
-backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
-sorting=none"
-           "biblatex" t nil))))
-  (setq org-latex-packages-alist
-        '("\\addbibresource{../references.bib}")))
+          ("" "capt-of" nil nil))))
+  (setq org-latex-packages-alist nil))
 #+end_src
 
 *** org to html page

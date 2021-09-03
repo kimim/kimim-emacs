@@ -11,6 +11,10 @@
 \\usepackage{fancyhdr, lastpage}
 \\usepackage{hyperref}
 \\usepackage{graphicx}
+\\usepackage[citestyle=numeric, bibstyle=numeric, hyperref=true,
+backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
+sorting=none]{biblatex}
+\\addbibresource{../references.bib}
 \\makeatletter
 \\def\\maxwidth#1{\\ifdim\\Gin@nat@width>#1 #1\\else\\Gin@nat@width\\fi}
 \\makeatother
@@ -43,6 +47,10 @@
 \\usepackage{titlesec}
 \\usepackage{enumitem}
 \\usepackage{fancyhdr, lastpage}
+\\usepackage[citestyle=numeric, bibstyle=numeric, hyperref=true,
+backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
+sorting=none]{biblatex}
+\\addbibresource{../references.bib}
 \\fancypagestyle{plain}{
     \\fancyhf{}
     \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
@@ -83,6 +91,8 @@
 \\setlength{\\droptitle}{-60pt}
 \\usepackage{enumitem}
 \\usepackage{abstract}
+\\usepackage[backend=biber,style=gb7714-2015]{biblatex}
+\\addbibresource{../references.bib}
 \\renewcommand{\\abstractname}{摘要}
 \\renewcommand\\refname{参考文献}
 \\usepackage{fancyhdr, lastpage}
@@ -126,9 +136,15 @@
     \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
     \\renewcommand{\\headrulewidth}{0pt}
 }
+\\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
+backref=true, maxcitenames=3, url=true]{biblatex}
+\\addbibresource{../references.bib}
 \\usepackage{hyperref}
 \\hypersetup{hidelinks}
 \\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
+\\setCJKmainfont{微软雅黑} % sets the roman font
+\\setCJKsansfont{微软雅黑} % sets the sans font
+\\setCJKmonofont{Consolas} % otherwise FangSong is not found
 \\pagestyle{plain}
 \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
 \\geometry{a4paper,scale=0.8}
@@ -147,6 +163,9 @@
     "\\documentclass[a4paper,UTF8]{ctexbook}
 \\usepackage{enumitem}
 \\usepackage{abstract}
+\\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
+backref=true, maxcitenames=3, url=true]{biblatex}
+\\addbibresource{../references.bib}
 \\renewcommand{\\abstractname}{摘要}
 \\renewcommand\\refname{参考文献}
 \\usepackage{fancyhdr, lastpage}
@@ -182,16 +201,18 @@
 \\def\\BibTeX{{\\rm B\\kern-.05em{\\sc i\\kern-.025em b}\\kern-.08em
   T\\kern-.1667em\\lower.7ex\\hbox{E}\\kern-.125emX}}"))
 
-(defvar ctexbeamer
+(defvar cn-beamer
   '("ctexbeamer"
-    "\\documentclass{ctexbeamer}
+    "\\documentclass[presentation, aspectratio=169]{ctexbeamer}
+\\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
+backref=true, maxcitenames=3, url=true]{biblatex}
+\\addbibresource{../references.bib}
 \\setlength{\\baselineskip}{20pt}
-\\setlength{\\parskip}{5pt}
-"
+\\setlength{\\parskip}{5pt}"
     ("\\begin{frame}{%s}" "\\end{frame}" "\\begin{frame}{%s}" "\\end{frame}")))
 
 
-(defvar beamer-class
+(defvar en-beamer
  '("beamer"
    "\\documentclass[presentation, aspectratio=169]{beamer}"
    ("\\section{%s}" . "\\section*{%s}")
@@ -201,14 +222,14 @@
 (defvar kimim/latex-classes
       ;; use backquote ` to evaluate element before put to list
       `(
-        ,biz-report      ;; Business report format used in a private owned enterprice
         ,cn-article      ;; Chinese style article
         ,cn-book         ;; Chinese style book
+        ,cn-beamer      ;; Chinese beamer slides
         ,en-article      ;; English article
         ,en-article2c    ;; English article in two columns
+        ,en-beamer
+        ,biz-report      ;; Business report format used in a private owned enterprice
         ,IEEEtrans       ;; IEEE transaction paper
-        ,ctexbeamer      ;; Chinese beamer slides
-        ,beamer-class
         ))
 
 (provide 'latex-classes)
