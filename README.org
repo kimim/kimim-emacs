@@ -390,11 +390,14 @@ Show (line, column) numbers in mode line:
 
 * Color Theme
 
-Use =rainbow-mode= to edit colorful color string and symbol.
+Use =rainbow-mode= to edit colorful color string and symbol. In the
+beginning, I add ~:hook prog-mode~, that means to enable ~rainbow-mode~
+for all programming mode, but later, I find that ~#def~ part of ~#define~
+in C is changed to gray color. Then I remove the this hook. So I will
+turn on ~rainbow-mode~ manually, if I want to see the color.
 
 #+begin_src emacs-lisp
 (use-package rainbow-mode
-  :hook prog-mode
   :diminish rainbow-mode)
 #+end_src
 
