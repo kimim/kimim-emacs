@@ -1354,7 +1354,6 @@ that dash version higher than 2.18 is installed[fn:16].
   :ensure nil
   :config
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
-  (add-to-list 'org-src-lang-modes '("C" . c))
   (org-babel-do-load-languages 'org-babel-load-languages '((C . t)))
   (add-hook 'c-mode-common-hook
             (lambda ()
@@ -1395,7 +1394,6 @@ Clojure[fn:17] is a lisp over JVM. Emm, I like it.
          ("\\.cljc\\'" . clojurec-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
   :config
-  (add-to-list 'org-src-lang-modes '("clojure" . clojure))
   (org-babel-do-load-languages 'org-babel-load-languages '((clojure . t)))
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
@@ -1597,7 +1595,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package shell
   :config
-  (add-to-list 'org-src-lang-modes '("shell" . shell))
   (org-babel-do-load-languages 'org-babel-load-languages '((shell . t))))
 #+end_src
 
@@ -1636,11 +1633,20 @@ place and assign ~plantuml-jar-path~ to there.
   (plantuml-default-exec-mode 'jar)
   (plantuml-jar-path (expand-file-name
                       (concat kimim/path-kimikit "plantuml/plantuml.jar")))
-  (org-plantuml-jar-path plantuml-jar-path)
   (plantuml-executable-args "-headless -charset UTF-8")
+  :config
+  (require 'plantuml-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package ob-plantuml
+  :ensure nil
+  :init
+  (use-package plantuml-mode)
+  :custom
+  (org-plantuml-jar-path plantuml-jar-path)
   (org-plantuml-executable-args plantuml-executable-args)
   :config
-  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
 #+end_src
 ** ditaa
@@ -1653,14 +1659,13 @@ place and assign ~plantuml-jar-path~ to there.
         (expand-file-name
          (concat kimim/path-kimikit "ditaa/ditaa.jar")))
   :config
-  (add-to-list 'org-src-lang-modes '("ditaa" . artist))
   (org-babel-do-load-languages 'org-babel-load-languages '((ditaa . t))))
 #+end_src
 * Calendar
 
 #+begin_src emacs-lisp
 (when (not (boundp 'kimim/file-diary))
-  (defvar kimim/file-diary (concat kimim/path-sync-emacs "diary"))
+  (defvar kimim/file-diary (concat kimim/path-org "diary"))
   (if (not (file-exists-p kimim/file-diary))
       (write-region "" nil kimim/file-diary)))
 #+end_src
@@ -1866,11 +1871,18 @@ place and assign ~plantuml-jar-path~ to there.
 #+begin_src emacs-lisp
 (use-package org
   :config
-  ;; (org-babel-do-load-languages
-  ;;  'org-babel-load-languages
-  ;;  '((C . t)
-  ;;    (clojure . t)
-  ;;    (shell . t)))
+  (add-to-list 'org-src-lang-modes '("C" . c))
+  (add-to-list 'org-src-lang-modes '("clojure" . clojure))
+  (add-to-list 'org-src-lang-modes '("shell" . shell))
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  (add-to-list 'org-src-lang-modes '("ditaa" . artist))
+  (org-babel-do-load-languages
+    'org-babel-load-languages
+    '((C . t)
+      (clojure . t)
+      (shell . t)
+      (plantuml . t)
+      (ditaa . t)))
   (setq org-src-window-setup 'current-window)
   (setq org-src-fontify-natively t)
   (setq org-src-preserve-indentation t)
@@ -1978,10 +1990,12 @@ sudo apt install python3-pygments
   :commands (org-latex-publish-to-pdf)
   :diminish org-beamer-mode
   :custom
-  (org-latex-image-default-height "0.8\\textheight")
-  (org-latex-image-default-width "0.8\\linewidth")
+  (org-latex-image-default-height "0.75\\textheight")
+  (org-latex-image-default-width "\\linewidth")
   (org-startup-with-beamer-mode t)
   (org-beamer-frame-level 2)
+  ;; export quotes match
+  (org-export-with-smart-quotes t)
   :config
   (require 'ox-latex)
   (require 'ox-beamer)
@@ -1990,6 +2004,8 @@ sudo apt install python3-pygments
         '(("frame" "single") ("fontsize" "\\small")))
   (add-to-list 'org-latex-minted-langs
                '(plantuml "text"))
+  (add-to-list 'org-latex-minted-langs
+               '(ditaa "text"))
   (setq org-latex-pdf-process
         `("latexmk -xelatex -shell-escape %f"))
 
@@ -2043,7 +2059,15 @@ sudo apt install python3-pygments
         `(,(concat "\\addbibresource{"
                    (expand-file-name org-ref-default-bibliography)
                    "}"))))
+#+end_src
 
+*** org to beamer pdf slides
+
+#+begin_src emacs-lisp
+(use-package ox-beamer
+  :ensure nil
+  :config
+  (require 'ox-latex))
 #+end_src
 
 *** org to html page
@@ -2067,7 +2091,7 @@ sudo apt install python3-pygments
       (ad-set-arg 1 fixed-contents))))
 #+end_src
 
-** org to html slide
+*** org to html slides
 
 #+begin_src emacs-lisp
   (use-package org-re-reveal
@@ -2812,7 +2836,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   :commands (ebdb ebdb-mail-aliases)
   :custom (ebdb-mua-pop-up nil)
   :config
-  (setq ebdb-sources (concat kimim/path-sync-emacs "ebdb"))
+  (setq ebdb-sources (concat kimim/path-org "ebdb"))
   (require 'ebdb-gnus)
   (require 'ebdb-message)
   (require 'ebdb-org)

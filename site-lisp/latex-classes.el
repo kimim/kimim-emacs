@@ -50,7 +50,6 @@ sorting=none]{biblatex}
 \\usepackage[citestyle=numeric, bibstyle=numeric, hyperref=true,
 backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
 sorting=none]{biblatex}
-\\addbibresource{../references.bib}
 \\fancypagestyle{plain}{
     \\fancyhf{}
     \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
@@ -92,7 +91,6 @@ sorting=none]{biblatex}
 \\usepackage{enumitem}
 \\usepackage{abstract}
 \\usepackage[backend=biber,style=gb7714-2015]{biblatex}
-\\addbibresource{../references.bib}
 \\renewcommand{\\abstractname}{摘要}
 \\renewcommand\\refname{参考文献}
 \\usepackage{fancyhdr, lastpage}
@@ -138,7 +136,6 @@ sorting=none]{biblatex}
 }
 \\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
 backref=true, maxcitenames=3, url=true]{biblatex}
-\\addbibresource{../references.bib}
 \\usepackage{hyperref}
 \\hypersetup{hidelinks}
 \\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
@@ -165,7 +162,6 @@ backref=true, maxcitenames=3, url=true]{biblatex}
 \\usepackage{abstract}
 \\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
 backref=true, maxcitenames=3, url=true]{biblatex}
-\\addbibresource{../references.bib}
 \\renewcommand{\\abstractname}{摘要}
 \\renewcommand\\refname{参考文献}
 \\usepackage{fancyhdr, lastpage}
@@ -198,6 +194,9 @@ backref=true, maxcitenames=3, url=true]{biblatex}
 \\usepackage{algorithmic}
 \\usepackage{xcolor}
 \\usepackage{hyperref}
+\\usepackage[citestyle=numeric, bibstyle=numeric, hyperref=true,
+backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
+sorting=none]{biblatex}
 \\def\\BibTeX{{\\rm B\\kern-.05em{\\sc i\\kern-.025em b}\\kern-.08em
   T\\kern-.1667em\\lower.7ex\\hbox{E}\\kern-.125emX}}"))
 
@@ -206,7 +205,6 @@ backref=true, maxcitenames=3, url=true]{biblatex}
     "\\documentclass[presentation, aspectratio=169]{ctexbeamer}
 \\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
 backref=true, maxcitenames=3, url=true]{biblatex}
-\\addbibresource{../references.bib}
 \\setlength{\\baselineskip}{20pt}
 \\setlength{\\parskip}{5pt}"
     ("\\begin{frame}{%s}" "\\end{frame}" "\\begin{frame}{%s}" "\\end{frame}")))
@@ -214,7 +212,8 @@ backref=true, maxcitenames=3, url=true]{biblatex}
 
 (defvar en-beamer
  '("beamer"
-   "\\documentclass[presentation, aspectratio=169]{beamer}"
+   "\\documentclass[presentation, aspectratio=169]{beamer}
+\\usepackage[backend=biber,style=gb7714-2015]{biblatex}"
    ("\\section{%s}" . "\\section*{%s}")
    ("\\subsection{%s}" . "\\subsection*{%s}")
    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
