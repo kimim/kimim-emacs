@@ -860,6 +860,7 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
   (dired-recursive-deletes t)
   (ls-lisp-dirs-first t)
   (dired-create-destination-dirs 'ask)
+  (dired-dwim-target t)
   :bind
   (("C-x C-j" . dired-jump)
    :map dired-mode-map
@@ -870,7 +871,8 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
    ("o" . kimim/open-external)
    ("M-n" . dired-narrow)
    ("M-c" . compose-attach-marked-files)
-   ("C-q" . kill-dired-buffers))
+   ("C-q" . kill-dired-buffers)
+   ("<tab>" . kimim/dired-other-window))
   :config
   (require 'dired-x)
   (add-hook 'dired-mode-hook
@@ -920,7 +922,14 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
     "Move up lines then position at filename, advice"
     (interactive "p")
     (if (= 3 (line-number-at-pos))
-        (goto-char (point-max)))))
+        (goto-char (point-max))))
+
+  (defun kimim/dired-other-window ()
+    (interactive)
+    (let ((other-dired-buffer (dired-dwim-target-directory)))
+      (if other-dired-buffer
+          (dired-other-window other-dired-buffer)
+        (dired-jump-other-window)))))
 #+end_src
 
 ** dired-recent
