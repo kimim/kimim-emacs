@@ -2039,7 +2039,11 @@ sudo apt install python3-pygments
           ("" "textcomp" t nil)
           ("" "lettrine" t nil)
           ("" "capt-of" nil nil))))
-  (setq org-latex-packages-alist nil))
+  (setq org-latex-packages-alist
+        `(,(concat "\\addbibresource{"
+                   (expand-file-name org-ref-default-bibliography)
+                   "}"))))
+
 #+end_src
 
 *** org to html page
