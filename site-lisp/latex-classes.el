@@ -213,7 +213,9 @@ backref=true, maxcitenames=3, url=true]{biblatex}
 (defvar en-beamer
  '("beamer"
    "\\documentclass[presentation, aspectratio=169]{beamer}
-\\usepackage[backend=biber,style=gb7714-2015]{biblatex}"
+\\usepackage[citestyle=numeric, bibstyle=numeric, hyperref=true,
+backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
+sorting=none]{biblatex}"
    ("\\section{%s}" . "\\section*{%s}")
    ("\\subsection{%s}" . "\\subsection*{%s}")
    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))

@@ -1991,8 +1991,7 @@ sudo apt install python3-pygments
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package ox-latex
-  :ensure org
+(use-package org
   :init
   (use-package org-ref) ;; latex-classes need default bib file
   :defines kimim/latex-classes
@@ -2068,15 +2067,6 @@ sudo apt install python3-pygments
         `(,(concat "\\addbibresource{"
                    (expand-file-name org-ref-default-bibliography)
                    "}"))))
-#+end_src
-
-*** org to beamer pdf slides
-
-#+begin_src emacs-lisp
-(use-package ox-beamer
-  :ensure nil
-  :config
-  (require 'ox-latex))
 #+end_src
 
 *** org to html page
