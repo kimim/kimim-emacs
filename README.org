@@ -848,7 +848,8 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
   :ensure nil
   :defines (dired-omit-localp
             dired-omit-files)
-  :functions dired-omit-mode
+  :functions (dired-omit-mode
+              dired-dwim-target-directory)
   :init
   (use-package dired-narrow)
   (use-package dired-filter)
@@ -1650,12 +1651,12 @@ place and assign ~plantuml-jar-path~ to there.
 #+begin_src emacs-lisp
 (use-package ob-plantuml
   :ensure nil
-  :init
-  (use-package plantuml-mode)
+  :after plantuml-mode
   :custom
   (org-plantuml-jar-path plantuml-jar-path)
   (org-plantuml-executable-args plantuml-executable-args)
   :config
+  (require 'plantuml-mode)
   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
 #+end_src
 ** ditaa
@@ -1992,8 +1993,7 @@ sudo apt install python3-pygments
 
 #+begin_src emacs-lisp
 (use-package org
-  :init
-  (use-package org-ref) ;; latex-classes need default bib file
+  :after org-ref
   :defines kimim/latex-classes
   :commands (org-latex-publish-to-pdf)
   :diminish org-beamer-mode
@@ -2005,6 +2005,7 @@ sudo apt install python3-pygments
   ;; export quotes match
   (org-export-with-smart-quotes t)
   :config
+  (require 'org-ref)
   (require 'ox-latex)
   (require 'ox-beamer)
   (setq org-latex-listings 'minted)
