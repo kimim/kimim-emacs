@@ -729,3 +729,32 @@ complete with keyword and annotation. need special dict files for different mode
   ;; Where to look for dictionary files
   (setq company-dict-dir (concat kimim/path-sync-emacs "dict")))
 #+end_src
+** sunrise commander
+
+The Sunrise Commmander is a powerful and versatile double-pane file manager for
+GNU Emacs. It's built atop of Dired and takes advantage of most of its
+functions, but also provides many handy features of its own.
+
+To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:11]
+
+#+begin_src emacs-lisp
+  (use-package sunrise-commander
+    :bind (("<f10>" . sunrise)
+           :map sr-mode-map
+           ("D" . dired-do-delete)
+           ("<f2>" . nil)
+           ("o" . kimim/open-external)
+           ("b" . sr-dired-prev-subdir)
+           ("<left>" . sr-dired-prev-subdir)
+           ("<right>" . sr-advertised-find-file))
+    :custom
+    (sr-cursor-follows-mouse nil)
+    (sr-windows-default-ratio 80)
+    (sr-listing-switches "-AGhlgov")
+    (sr-attributes-display-mask '(nil nil nil t t t))
+    (sr-show-file-attributes nil)
+    :config
+    (require 'dired)
+    (if (eq system-type 'darwin)
+        (setq sr-listing-switches "-Ahlgo")))
+#+end_src
