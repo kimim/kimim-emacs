@@ -447,6 +447,13 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
        ((string-equal system-type "cygwin")
         (mapc (lambda (path) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" path)) ) flist))))))
 
+(defun kimim/open-external-pdf ()
+  (interactive)
+  (kimim/open-external
+   (concat
+    (file-name-sans-extension (buffer-file-name))
+    ".pdf")))
+
 (defun kimim/update-kimim-emacs()
   (interactive)
   ;; set shell-file-name for WIN, otherwise, cmdproxy is chosen
@@ -606,5 +613,27 @@ documents."
                                  ("http" . "127.0.0.1:1080")
                                  ("https" . "127.0.0.1:1080")))
       (message "proxy is on"))))
+
+
+(defun compile-latex (exporter)
+  (let* ((pdfbasename (file-name-base
+                       (buffer-name)))
+         (pdfname (concat pdfbasename ".pdf")))
+    (funcall exporter)
+    (compile (concat
+              "latexmk.exe  -xelatex -shell-escape "
+              pdfbasename
+              "&& start "
+              pdfname))))
+
+(defun compile-beamer ()
+  "compile current orgmode buffer to beamer"
+  (interactive)
+  (compile-latex 'org-beamer-export-to-latex))
+
+(defun compile-pdf ()
+  "compile current orgmode buffer to pdf"
+  (interactive)
+  (compile-latex 'org-latex-export-to-latex))
 
 (provide 'kimim)

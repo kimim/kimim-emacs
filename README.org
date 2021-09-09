@@ -406,8 +406,8 @@ parentheses, brackets, and braces according to their depth.
 
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
-  :defer 3
-  :hook prog-mode-hook)
+  :diminish rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 
 Toggle Font-Lock mode in all buffers.
@@ -592,10 +592,7 @@ List recent used commands with ~smex~:
 
 #+begin_src emacs-lisp
 (use-package counsel
-  :defer 1
-  :init
-  (use-package ivy)
-  (use-package smex)
+  :after (ivy smex)
   :bind
   (("M-x" . counsel-M-x)
    ("C-x C-f" . counsel-find-file)
@@ -614,8 +611,7 @@ List recent used commands with ~smex~:
    :map read-expression-map
    ("C-r" . counsel-minibuffer-history))
   :config
-  (add-hook 'counsel-grep-post-action-hook 'recenter)
-  (ivy-mode 1))
+  (add-hook 'counsel-grep-post-action-hook 'recenter))
 #+end_src
 
 ** guru mode
@@ -654,11 +650,11 @@ frequency report by =M-x keyfreq-show=.
 (use-package eshell
   :config
   (add-hook 'eshell-mode-hook
-   (lambda ()
-     (setq company-backends
-           '((company-shell company-files)
-             company-capf company-yasnippet company-dabbrev company-ebdb company-ispell
-             (company-dabbrev-code company-gtags company-etags company-keywords))))))
+            (lambda ()
+              (setq company-backends
+                    '((company-shell company-files)
+                      company-capf company-yasnippet company-dabbrev company-ebdb company-ispell
+                      (company-dabbrev-code company-gtags company-etags company-keywords))))))
 #+end_src
 
 * Editing
@@ -821,6 +817,7 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
 
 #+begin_src emacs-lisp
 (use-package sunrise-commander
+  :after dired
   :bind (("<f10>" . sunrise)
          :map sr-mode-map
          ("D" . dired-do-delete)
@@ -835,7 +832,6 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
   (sr-listing-switches "-AGhlgov")
   (sr-attributes-display-mask '(nil nil nil t t t))
   (sr-show-file-attributes nil)
-  (ls-lisp-dirs-first t)
   :config
   (if (eq system-type 'darwin)
       (setq sr-listing-switches "-Ahlgo")))
@@ -851,10 +847,8 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
   :functions (dired-omit-mode
               dired-dwim-target-directory)
   :init
-  (use-package dired-narrow)
   (use-package dired-filter)
   (use-package dired-recent)
-  (use-package dired-efap)
   :custom
   (dired-listing-switches "-AGhlgov")
   (dired-recursive-copies t)
@@ -948,7 +942,8 @@ Keep a list of recently visited directories. Then we can quickly revisit them.
 dired-efap, Edit file at point, can be used to rename file name at the point:
 
 #+begin_src emacs-lisp
-(use-package dired-efap)
+(use-package dired-efap
+  :commands dired-efap)
 #+end_src
 
 ** dired-narrow
@@ -956,7 +951,8 @@ dired-efap, Edit file at point, can be used to rename file name at the point:
 ~M-n~ will prompt for strings to narrow the files in current dired buffer.
 
 #+begin_src emacs-lisp
-(use-package dired-narrow)
+(use-package dired-narrow
+  :commands dired-narrow)
 #+end_src
 
 ** ibuffer
@@ -1035,7 +1031,8 @@ any window by triggering ~ace-window~ (~C-x m w~).
 
 #+begin_src emacs-lisp
 (use-package swiper
-  :init (setq swiper-action-recenter t)
+  :custom
+  (swiper-action-recenter t)
   :bind
   ("C-s" . swiper)
   ("M-s ." . swiper-thing-at-point))
@@ -1350,18 +1347,17 @@ that dash version higher than 2.18 is installed[fn:16].
 ** C
 
 #+begin_src emacs-lisp
-(use-package clang-format
-  :defines c++-mode-map
-  :bind (:map
-         c++-mode-map
-         ("C-<tab>" . clang-format)))
+(use-package clang-format)
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package cc-mode
-  :init
-  (use-package clang-format)
+  :after clang-format
   :ensure nil
+  :defines c++-mode-map
+  :bind (:map
+         c++-mode-map
+         ("C-<tab>" . clang-format))
   :config
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
   (org-babel-do-load-languages 'org-babel-load-languages '((C . t)))
@@ -2541,7 +2537,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
 
 #+begin_src emacs-lisp
 (use-package org-ref
-  :after org
+  :after (org ivy-bibtex)
   :functions (-flatten
               f-join
               reftex-get-bib-field
@@ -2569,7 +2565,6 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
   (org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename)
   :demand t
   :config
-  (require 'ivy-bibtex)
   (require 'org-ref-ivy-cite)
   (setq org-ref-insert-link-function 'org-ref-insert-link
         org-ref-insert-cite-function 'kimim/org-ref-ivy-insert-cite-link
@@ -3085,6 +3080,7 @@ from system PATH, so you should set these to system PATH.
    ("S-<f9>" . kimim/cmd)
    ("C-c r" . kimim/rename-file-and-buffer)
    ("C-x m o" . kimim/open-external)
+   ("C-x m O" . kimim/open-external-pdf)
    ("C-x m d" . kimim/dc)
    ("C-c d" . kimim/lookinsight)
    ("<f1>" . delete-other-windows)
