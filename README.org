@@ -1195,6 +1195,7 @@ or other version control information.
 
 #+begin_src emacs-lisp
 (setq next-error-recenter 20)
+(setq compilation-scroll-output t)
 (bind-key "C-<f11>" 'compile)
 #+end_src
 
