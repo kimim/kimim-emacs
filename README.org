@@ -1705,7 +1705,6 @@ place and assign ~plantuml-jar-path~ to there.
 #+end_src
 
 * Orgmode
-
 ** org general setting
 
 #+begin_src emacs-lisp
@@ -1904,6 +1903,7 @@ When exporting, do not export with author and date.
 
 #+begin_src emacs-lisp
 (use-package org
+  :after ox-latex
   :bind ("C-c C-'" . org-insert-structure-template)
   :custom
   (org-export-allow-BIND t)
@@ -1989,10 +1989,11 @@ sudo apt install python3-pygments
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package org
+(use-package ox-latex
+  :ensure nil
   :after org-ref
   :defines kimim/latex-classes
-  :commands (org-latex-publish-to-pdf)
+  :commands org-latex-publish-to-pdf
   :diminish org-beamer-mode
   :custom
   (org-latex-image-default-height "0.75\\textheight")
@@ -2001,20 +2002,19 @@ sudo apt install python3-pygments
   (org-beamer-frame-level 2)
   ;; export quotes match
   (org-export-with-smart-quotes t)
+  (org-latex-listings 'minted)
+  (org-latex-minted-options
+   '(("frame" "single") ("fontsize" "\\small")))
+  (org-latex-pdf-process
+   '("latexmk -xelatex -shell-escape %f"))
   :config
   (require 'org-ref)
   (require 'ox-latex)
   (require 'ox-beamer)
-  (setq org-latex-listings 'minted)
-  (setq org-latex-minted-options
-        '(("frame" "single") ("fontsize" "\\small")))
   (add-to-list 'org-latex-minted-langs
                '(plantuml "text"))
   (add-to-list 'org-latex-minted-langs
                '(ditaa "text"))
-  (setq org-latex-pdf-process
-        `("latexmk -xelatex -shell-escape %f"))
-
   (defun ref-headline-removal (backend)
     "Remove reference headline with tag: ref"
     (org-map-entries
@@ -2041,7 +2041,6 @@ sudo apt install python3-pygments
   (add-to-list 'load-path "~/kimim-emacs/site-lisp")
   (require 'latex-classes)
   (setq org-latex-classes kimim/latex-classes)
-
   (setq org-latex-default-class "article")
   ;; remove fontenc, and AUTO in front of inputenc,
   ;; then francais can be processed
@@ -2108,7 +2107,27 @@ sudo apt install python3-pygments
 ** org as GTD system
 
 #+begin_src emacs-lisp
+(use-package org-capture
+  :ensure nil
+  :custom
+  (org-capture-templates
+   '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
+      "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
+      "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("s" "SCHED Task"    entry (file+headline "capture.org" "Inbox")
+      "* SCHED %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
+      "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
+      "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("h" "Habit"   entry (file+headline "global.org"   "Habit")
+      "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n"))))
+#+end_src
+
+#+begin_src emacs-lisp
 (use-package org
+  :after org-capture
   :init
   (use-package ivy) ; use ivy to complete refile files
   :functions (org-agenda-kill-all-agenda-buffers
@@ -2178,19 +2197,6 @@ sudo apt install python3-pygments
       ((org-agenda-sorting-strategy '(todo-state-down))))
      ("c" tags "clock"
       ((org-agenda-sorting-strategy '(priority-down))))))
-  (org-capture-templates
-   '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
-      "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-     ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
-      "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-     ("s" "SCHED Task"    entry (file+headline "capture.org" "Inbox")
-      "* SCHED %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-     ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
-      "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-     ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
-      "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-     ("h" "Habit"   entry (file+headline "global.org"   "Habit")
-      "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
   :config
   (require 'org-agenda)
   (add-hook 'kill-emacs-hook
@@ -2440,7 +2446,6 @@ sqlite3 is shipped in macOS by default.
     '((no-delete-other-windows . t)))
    (org-roam-link-auto-replace nil)
    (org-roam-file-extensions '("txt" "org"))
-   (org-roam-db-update-method 'immediate)
    (org-roam-capture-templates
     '(("d" "default" plain "%?"
        :if-new (file+head "%(concat (kimim/genfile-timestamp) \"${slug}.txt\")"
