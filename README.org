@@ -1577,8 +1577,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :mode ("\\.ps1\\'" . powershell-mode))
 #+end_src
 
-
-
 * Draw diagram in code
 ** PlantUML
 
@@ -1641,7 +1639,10 @@ yarn add @mermaid-js/mermaid-cli
 #+begin_src emacs-lisp
 (use-package ob-mermaid
   :custom
-  (ob-mermaid-cli-path "~/node_modules/.bin/mmdc.cmd"))
+  (ob-mermaid-cli-path "~/node_modules/.bin/mmdc.cmd")
+  :config
+  (org-babel-do-load-languages 'org-babel-load-languages '((mermaid . t)))
+  (add-to-list 'org-latex-minted-langs '(mermaid "text")))
 #+end_src
 
 #+begin_src emacs-lisp
