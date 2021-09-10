@@ -2629,10 +2629,9 @@ does not check that."
   (defun kimim/org-ref-open-pdf-at-point ()
     "Open the pdf for bibtex key under point if it exists."
     (interactive)
-    (let* ((results (and (eq major-mode 'org-mode)
-                         (condition-case nil
-                             (org-ref-get-bibtex-key-and-file)
-                           (error nil))))
+    (let* ((results (condition-case nil
+                        (org-ref-get-bibtex-key-and-file)
+                      (error nil)))
            (key (car results)))
       (if (or (eq "" key) (null key))
           (kimim/org-ref-open-pdf)
@@ -2673,10 +2672,9 @@ does not check that."
   (defun kimim/org-ref-open-pdf-in-dired-at-point ()
     "Open the pdf dired for bibtex key under point if it exists."
     (interactive)
-    (let* ((results (and (eq major-mode 'org-mode)
-                         (condition-case nil
-                             (org-ref-get-bibtex-key-and-file)
-                           (error nil))))
+    (let* ((results (condition-case nil
+                        (org-ref-get-bibtex-key-and-file)
+                      (error nil)))
            (key (car results)))
       (if (or (eq "" key) (null key))
           (kimim/org-ref-open-pdf-in-dired)
@@ -2714,10 +2712,9 @@ does not check that."
   (defun kimim/org-ref-open-notes-at-point ()
     "Open the notes of a reference if they exist."
     (interactive)
-    (let* ((results (and (eq major-mode 'org-mode)
-                         (condition-case nil
-                             (org-ref-get-bibtex-key-and-file)
-                           (error nil))))
+    (let* ((results (condition-case nil
+                        (org-ref-get-bibtex-key-and-file)
+                      (error nil)))
            (key (car results)))
       (if (or (eq "" key) (null key))
           (kimim/org-ref-open-notes)
