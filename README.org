@@ -844,7 +844,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
             (lambda ()
               (turn-on-gnus-dired-mode)
               ;; Set dired-x buffer-local variables here.  For example:
-              (dired-omit-mode 1)
+              ;;(dired-omit-mode 1)
               (dired-filter-mode 1)
               (hl-line-mode 1)
               (setq dired-omit-localp t)
@@ -1010,7 +1010,7 @@ any window by triggering ~ace-window~ (~C-x m w~).
 
 ** ag: the silver searcher
 
-=ag= [fn:12] is really a very fast grep tool, and =ag.el= [fn:13] provide the
+=ag= [fn:11] is really a very fast grep tool, and =ag.el= [fn:12] provide the
 Emacs interface to =ag=:
 
 #+begin_src emacs-lisp
@@ -1184,7 +1184,7 @@ Following error will reported when using magit to commit changes:
 server-ensure-safe-dir: The directory ‘~/.emacs.d/server’ is unsafe
 #+END_QUOTE
 
-The solution is to change the owner of =~/.emacs.d/server= [fn:14]
+The solution is to change the owner of =~/.emacs.d/server= [fn:13]
 
 #+BEGIN_QUOTE
 Click R-mouse on ~/.emacs.d/server and select “Properties” (last item in
@@ -1196,7 +1196,7 @@ this directory as secure because you are the owner.
 
 ** Parenthesis
 
-~smartparens-mode~[fn:15] is a general purpose mode for dealing with
+~smartparens-mode~[fn:14] is a general purpose mode for dealing with
 parenthesis. We define some keys for it:
 
 #+begin_src emacs-lisp
@@ -1253,7 +1253,7 @@ With ~yafolding-mode~, you can:
 ~lsp-mode~ aims to provide IDE-like experience.
 
 If you got error: =Symbol’s function definition is void: -compose=, make sure
-that dash version higher than 2.18 is installed[fn:16].
+that dash version higher than 2.18 is installed[fn:15].
 
 #+begin_src emacs-lisp
 (use-package dash
@@ -1350,7 +1350,7 @@ that dash version higher than 2.18 is installed[fn:16].
 
 ** Clojure
 
-Clojure[fn:17] is a lisp over JVM. Emm, I like it.
+Clojure[fn:16] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
@@ -1395,7 +1395,7 @@ npm install -g clj-kondo
 
 *** Cider
 
-Cider[fn:18] extends Emacs with support for interactive programming
+Cider[fn:17] extends Emacs with support for interactive programming
 in Clojure.
 
 #+begin_src emacs-lisp
@@ -1453,7 +1453,7 @@ in Clojure.
 
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:19] is used here:
+Python development configuration is quite easy. =elpy= [fn:18] is used here:
 
 #+begin_src emacs-lisp
   (use-package elpy
@@ -1545,7 +1545,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:20]
+=ahk-mode= developed by Rich Alesi[fn:19]
 
 #+begin_src emacs-lisp
   (use-package ahk-mode
@@ -1626,6 +1626,29 @@ place and assign ~plantuml-jar-path~ to there.
   :config
   (org-babel-do-load-languages 'org-babel-load-languages '((ditaa . t))))
 #+end_src
+** Mermaid
+
+Mermaid [fn:20] is another js based diagramming and charting tool. To
+use it inside orgmode, mermaid-cli should be installed:
+
+#+begin_src shell
+yarn add @mermaid-js/mermaid-cli
+#+end_src
+
+~mmdc~ will be installed at ~~/node_modules/.bin/mmdc~. Then we just setup
+~ob-mermaid~ and ~mermaid-mode~ for babel evaluation and editing.
+
+#+begin_src emacs-lisp
+(use-package ob-mermaid
+  :custom
+  (ob-mermaid-cli-path "~/node_modules/.bin/mmdc.cmd"))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package mermaid-mode
+  :mode ("\\.mermaid\\'" . mermaid-mode))
+#+end_src
+
 * Calendar
 
 #+begin_src emacs-lisp
@@ -3195,25 +3218,25 @@ Finally, let's list the useful key bindings in a table.
 
 [fn:10] https://github.com/kuanyui/tldr.el
 
-[fn:11] https://emacs.stackexchange.com/questions/22283/dired-group-directories-and-symlinks-to-directories-first
+[fn:11] https://github.com/ggreer/the_silver_searcher#installation
 
-[fn:12] https://github.com/ggreer/the_silver_searcher#installation
+[fn:12] https://github.com/Wilfred/ag.el
 
-[fn:13] https://github.com/Wilfred/ag.el
+[fn:13] https://github.com/syl20bnr/spacemacs/issues/381
 
-[fn:14] https://github.com/syl20bnr/spacemacs/issues/381
+[fn:14] https://github.com/Fuco1/smartparens
 
-[fn:15] https://github.com/Fuco1/smartparens
+[fn:15] https://github.com/emacs-lsp/lsp-mode/issues/2622
 
-[fn:16] https://github.com/emacs-lsp/lsp-mode/issues/2622
+[fn:16] https://clojure.org/
 
-[fn:17] https://clojure.org/
+[fn:17] https://cider.mx/
 
-[fn:18] https://cider.mx/
+[fn:18] https://github.com/jorgenschaefer/elpy
 
-[fn:19] https://github.com/jorgenschaefer/elpy
+[fn:19] https://github.com/ralesi/ahk-mode
 
-[fn:20] https://github.com/ralesi/ahk-mode
+[fn:20] https://mermaid-js.github.io/
 
 [fn:21] https://zettelkasten.de/
 
@@ -3221,4 +3244,6 @@ Finally, let's list the useful key bindings in a table.
 
 [fn:23] https://pandoc.org/
 
-[fn:24] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+[fn:25] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+
+[fn:24] https://emacs.stackexchange.com/questions/22283/dired-group-directories-and-symlinks-to-directories-first
