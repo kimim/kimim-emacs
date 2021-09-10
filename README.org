@@ -2091,6 +2091,8 @@ sudo apt install python3-pygments
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          :map org-agenda-mode-map
+         ("C-c C-x C-p" . org-previous-link)
+         ("C-c C-x C-n" . org-next-link)
          ("C-c C-k" . org-agenda-kill-files)
          ("<C-left>"  . org-agenda-do-date-earlier)
          ("<C-right>" . org-agenda-do-date-later)
