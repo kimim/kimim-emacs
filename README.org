@@ -1144,6 +1144,7 @@ This extension won't clutter the buffer contents.
 
 #+begin_src emacs-lisp
 (use-package company-posframe
+  :diminish company-posframe-mode
   :config
   (company-posframe-mode 1))
 #+end_src
