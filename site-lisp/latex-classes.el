@@ -70,51 +70,6 @@ sorting=none]{biblatex}
        ("\\paragraph{%s}" . "\\paragraph*{%s}")
        ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-
-(defvar biz-report
-  '("biz-report"
-    "\\documentclass[15pt]{ctexart}
-\\usepackage{geometry}
-\\usepackage{titlesec}
-\\usepackage{titling}
-\\posttitle{\\par\\end{center}\\vskip -60pt}
-\\let\\titleoriginal\\title
-\\renewcommand{\\title}[1]{
-  \\titleoriginal{\\LARGE{\\heiti{#1}}\\vspace{-4em}}
-  }
-\\let\\maketitleorig\\maketitle
-\\renewcommand{\\maketitle}{
-  \\maketitleorig
-  \\Large
-  }
-\\setlength{\\droptitle}{-60pt}
-\\usepackage{enumitem}
-\\usepackage{abstract}
-\\usepackage[backend=biber,style=gb7714-2015]{biblatex}
-\\renewcommand{\\abstractname}{摘要}
-\\renewcommand\\refname{参考文献}
-\\usepackage{fancyhdr, lastpage}
-\\fancypagestyle{plain}{
-    \\fancyhf{}
-    \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
-    \\renewcommand{\\headrulewidth}{0pt}
-}
-\\usepackage{hyperref}
-\\hypersetup{hidelinks}
-\\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
-\\pagestyle{plain}
-\\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
-\\geometry{a4paper,scale=0.8}
-\\geometry{a4paper,left=2.5cm,right=2.5cm,top=3cm,bottom=3cm}
-\\setlength{\\baselineskip}{20pt}
-\\setlength{\\parskip}{5pt}
-\\DeclareRobustCommand\\nobreakspace{\\leavevmode\\nobreak\\ }"
-   ("\\section{%s}" . "\\section*{%s}")
-   ("\\subsection{%s}" . "\\subsection*{%s}")
-   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-   ("\\paragraph{%s}" . "\\paragraph*{%s}")
-   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
 (defvar cn-article
   '("cn-article"
     "\\documentclass[a4paper,UTF8]{ctexart}
@@ -225,11 +180,10 @@ sorting=none]{biblatex}"
       `(
         ,cn-article      ;; Chinese style article
         ,cn-book         ;; Chinese style book
-        ,cn-beamer      ;; Chinese beamer slides
+        ,cn-beamer       ;; Chinese beamer slides
         ,en-article      ;; English article
         ,en-article2c    ;; English article in two columns
-        ,en-beamer
-        ,biz-report      ;; Business report format used in a private owned enterprice
+        ,en-beamer       ;; English beamer slides
         ,IEEEtrans       ;; IEEE transaction paper
         ))
 
