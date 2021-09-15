@@ -22,7 +22,7 @@ sorting=none]{biblatex}
 \\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
 \\fancypagestyle{plain}{
     \\fancyhf{}
-    \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
+    \\fancyfoot[C]{\\thepage}
     \\renewcommand{\\headrulewidth}{0pt}
 }
 \\pagestyle{plain}
@@ -52,7 +52,7 @@ backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
 sorting=none]{biblatex}
 \\fancypagestyle{plain}{
     \\fancyhf{}
-    \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
+    \\fancyfoot[C]{\\thepage}
     \\renewcommand{\\headrulewidth}{0pt}
 }
 \\usepackage{hyperref}
@@ -86,7 +86,7 @@ sorting=none]{biblatex}
 \\usepackage{fancyhdr, lastpage}
 \\fancypagestyle{plain}{
     \\fancyhf{}
-    \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
+    \\fancyfoot[C]{\\thepage}
     \\renewcommand{\\headrulewidth}{0pt}
 }
 \\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
@@ -122,7 +122,7 @@ backref=true, maxcitenames=3, url=true]{biblatex}
 \\usepackage{fancyhdr, lastpage}
 \\fancypagestyle{plain}{
     \\fancyhf{}
-    \\fancyfoot[C]{{\\thepage}/\\pageref*{LastPage}}
+    \\fancyfoot[C]{\\thepage}
     \\renewcommand{\\headrulewidth}{0pt}
 }
 \\usepackage{hyperref}

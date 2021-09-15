@@ -2798,7 +2798,7 @@ Check spell on the fly.
 #+begin_src emacs-lisp
 (use-package flyspell
   :diminish flyspell-mode
-  :hook ((prog-mode . flyspell-prog-mode)
+  :hook (;;(prog-mode . flyspell-prog-mode)
          (org-mode . flyspell-mode)))
 #+end_src
 
