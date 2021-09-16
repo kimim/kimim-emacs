@@ -1895,6 +1895,11 @@ yarn add @mermaid-js/mermaid-cli
   (setq org-edit-src-content-indentation 0)
   (setq org-confirm-babel-evaluate nil)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+  ;; load diagram languages, I frequently use in orgmode
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((plantuml . t)
+     (ditaa . t)))
   ;; get the idea from John Kitchen(author of org-ref):
   ;; https://emacs.stackexchange.com/questions/20577/org-babel-load-all-languages-on-demand
   (defadvice org-babel-execute-src-block (around load-language nil activate)
