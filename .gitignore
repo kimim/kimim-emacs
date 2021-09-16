@@ -14,6 +14,8 @@ README.bcf
 README.fdb_latexmk
 README.fls
 README.xdv
+README.blg
+README.run.xml
 references.bib
 references.back*
 _minted-*
