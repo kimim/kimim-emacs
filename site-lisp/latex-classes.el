@@ -168,6 +168,7 @@ backref=true, maxcitenames=3, url=true]{biblatex}
 (defvar en-beamer
  '("beamer"
    "\\documentclass[presentation, aspectratio=169]{beamer}
+\\usepackage{xeCJK}
 \\usepackage[citestyle=numeric, bibstyle=numeric, hyperref=true,
 backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
 sorting=none]{biblatex}"

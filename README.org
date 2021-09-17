@@ -2771,7 +2771,7 @@ does not check that."
                                              (member (cons "=key=" key)
                                                      (cdr cand)))
                                            candidates))))
-      (ivy-read "Open dired of: "
+      (ivy-read "Open note of: "
                 candidates
                 :preselect preselect
                 :caller 'ivy-bibtex
@@ -2799,6 +2799,7 @@ support more functions from =org-ref=:
   :ensure nil
   :bind (:map bibtex-mode-map
          ("C-x m p" . org-ref-open-bibtex-pdf)
+         ("C-x m n" . org-ref-open-bibtex-notes)
          ("C-x m d" . kimim/org-ref-open-bibtex-in-dired)
          ("C-c C-z" . org-ref-open-bibtex-notes))
   :config
