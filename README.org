@@ -1743,6 +1743,8 @@ yarn add @mermaid-js/mermaid-cli
   (org-export-with-sub-superscripts "{}")
   (org-startup-folded 'showall)
   :config
+  ;; no use for me, I always press this key accidentally
+  (unbind-key "C-'" 'org-mode-map)
   (setq company-minimum-prefix-length 2)
   (setq org-hide-emphasis-markers t)
   (setq org-support-shift-select t)
