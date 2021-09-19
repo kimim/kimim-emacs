@@ -1734,7 +1734,8 @@ yarn add @mermaid-js/mermaid-cli
    ("C-c  。" . org-time-stamp)
    ("M-." . org-open-at-point)
    ("M-*" . org-mark-ring-last-goto)
-   ("M-h" . nil))
+   ("M-h" . nil)
+   ("C-'" . org-emphasize))
   :custom
   (org-modules '(org-habit
                  ol-w3m ol-bbdb ol-bibtex
