@@ -91,7 +91,7 @@
             (underline :foreground "magenta4" :underline t)
             (org-level-1 :weight bold :foreground "#00008b") ;; dark blue
             (org-level-2 :weight bold :foreground "#6a5acd") ;; slate blue
-            (org-level-3 :weight bold :foreground "#a0522d") ;; sienna
+            (org-level-3 :weight bold :foreground "#0078d7")
             (org-level-4 :weight bold :foreground "#c71585") ;; medium violet red
             (org-level-5 :slant normal :foreground "#00008b")
             (org-level-6 :slant normal :foreground "#6a5acd")
@@ -117,6 +117,7 @@
             (org-warning :foreground "dark orchid" :weight bold)
             (org-table :foreground "blue1")
             (org-footnote :foreground "purple" :underline t)
+            (org-ref-cite-face :inherit link)
             (gnus-summary-cancelled :foreground "lightblue")
             (gnus-header-subject :foreground "blue" :bold t)
             (ido-subdir :weight bold)

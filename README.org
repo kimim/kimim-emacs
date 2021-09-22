@@ -2543,6 +2543,64 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
   (setf zetteldeft-id-regex "[0-9]\\{8\\}\\([A-Z]\\{2,\\}\\)"))
 #+end_src
 
+* Music
+
+** lilypond
+
+#+begin_src emacs-lisp
+(eval-and-compile
+  (defun lilypond-load-path ()
+    (cond ((eq system-type 'darwin)
+           "/usr/local/share/emacs/site-lisp/lilypond")
+          ((eq system-type 'windows-nt)
+           (concat kimim/path-kimikit "/LilyPond/usr/share/emacs/site-lisp"))
+          ((eq system-type 'gnu/linux)
+           "/usr/local/share/emacs/site-lisp/lilypond"))))
+
+(use-package LilyPond-mode
+  :load-path (lambda () (list (lilypond-load-path))))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package ob-lilypond
+  :ensure nil
+  :config
+  (require 'lilypond-mode)
+  (defun org-babel-lilypond-process-basic (body params)
+    "Execute a lilypond block in basic mode."
+    (let* ((out-file (cdr (assq :file params)))
+           (cmdline (or (cdr (assq :cmdline params))
+                        ""))
+           (in-file (org-babel-temp-file "lilypond-")))
+
+      (with-temp-file in-file
+        (insert (org-babel-expand-body:generic body params)))
+      (org-babel-eval
+       (concat
+        org-babel-lilypond-ly-command
+        " -dbackend=eps "
+        "-dno-gs-load-fonts "
+        "-dinclude-eps-fonts -dno-print-pages -dpreview "
+        (or (cdr (assoc (file-name-extension out-file)
+                        '(("pdf" . "--pdf ")
+                          ("ps" . "--ps ")
+                          ("svg" . "--svg ")
+                          ("png" . "--png "))))
+            "--png ")
+        "--output="
+        (file-name-sans-extension out-file)
+        " "
+        cmdline " "
+        in-file
+        ;; copy .preview file to sans .preview file
+        " && mv -f "
+        (file-name-sans-extension out-file)
+        ".preview."
+        (file-name-extension out-file)
+        " "
+        out-file) "")) nil))
+#+end_src
+
 * Markdown mode
 
 Markdown is widely used as plain text file format. Pandoc [fn:23] can
@@ -2938,6 +2996,15 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+end_src
 
 #+begin_src emacs-lisp
+(eval-and-compile
+  (defun mu4e-load-path ()
+    (cond ((eq system-type 'darwin)
+           "/usr/local/Cellar/mu/1.0_1/share/emacs/site-lisp/mu/mu4e")
+          ((eq system-type 'windows-nt)
+           "/usr/local/share/emacs/site-lisp/mu4e")
+          ((eq system-type 'gnu/linux)
+           "/usr/local/share/emacs/site-lisp/mu4e/"))))
+
 (use-package mu4e
   :ensure nil
   :functions (mu4e-compose-reply
@@ -2974,13 +3041,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
          ("<end>" . move-end-of-line)
          ("r" . kimim/mu4e-compose-reply-sender)
          ("R" . kimim/mu4e-compose-reply-all))
-  :load-path (lambda ()
-               (cond ((eq system-type 'darwin)
-                      "/usr/local/Cellar/mu/1.0_1/share/emacs/site-lisp/mu/mu4e")
-                     ((eq system-type 'cygwin)
-                      "/usr/local/share/emacs/site-lisp/mu4e")
-                     ((eq system-type 'gnu/linux)
-                      "/usr/local/share/emacs/site-lisp/mu4e/")))
+  :load-path (lambda () (list (mu4e-load-path)))
   :config
   (require 'sendmail)
   ;; turn html email to lighter color in dark theme
