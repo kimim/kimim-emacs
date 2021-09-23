@@ -2041,6 +2041,8 @@ sudo apt install python3-pygments
                '(ditaa "text"))
   (add-to-list 'org-latex-minted-langs
                '(mermaid "text"))
+  (add-to-list 'org-latex-minted-langs
+               '(lilypond "text"))
   (defun ref-headline-removal (backend)
     "Remove reference headline with tag: ref"
     (org-map-entries
