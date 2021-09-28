@@ -1779,6 +1779,8 @@ yarn add @mermaid-js/mermaid-cli
                        (push '("[X]" . "☑" ) prettify-symbols-alist)
                        (push '("#+begin_src" . "«" ) prettify-symbols-alist)
                        (push '("#+end_src" . "»" ) prettify-symbols-alist)
+                       ;;(push '("#+begin_quotation" . "❝" ) prettify-symbols-alist)
+                       ;;(push '("#+end_quotation" . "❞" ) prettify-symbols-alist)
                        (prettify-symbols-mode))))
   :custom
   (org-superstar-remove-leading-stars t)
@@ -1846,7 +1848,19 @@ yarn add @mermaid-js/mermaid-cli
 #+begin_src emacs-lisp
 (use-package org-download
   :commands (org-download-enable)
-  :custom (org-download-heading nil)
+  :custom
+  (org-download-heading nil)
+  (org-structure-template-alist '(("a" . "export ascii")
+                                  ("c" . "center")
+                                  ("C" . "comment")
+                                  ("e" . "example")
+                                  ("E" . "export")
+                                  ("h" . "export html")
+                                  ("l" . "export latex")
+                                  ("q" . "quote")
+                                  ("Q" . "quotation")
+                                  ("s" . "src")
+                                  ("v" . "verse")))
   :functions kimim/org-download-annotate
   :config
   (setq org-download-timestamp "")
@@ -2021,7 +2035,6 @@ sudo apt install python3-pygments
   :diminish org-beamer-mode
   :custom
   (org-latex-image-default-height "0.75\\textheight")
-  (org-latex-image-default-width "\\linewidth")
   (org-latex-listings 'minted)
   (org-latex-minted-options
    '(("frame" "single") ("fontsize" "\\small")))

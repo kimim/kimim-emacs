@@ -491,6 +491,23 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
 (defvar sumantrapdf-config
   (concat kimim/path-kimikit "sumatrapdf/SumatraPDF-settings.txt"))
 
+(defun sumantrapdf-show-scrollbar ()
+  "turn on/off scrollbar"
+  (interactive)
+  (find-file sumantrapdf-config)
+  (goto-char (point-min))
+  (replace-regexp "\\(HideScrollbars = \\).*" (concat "\\1" "false"))
+  (save-buffer)
+  (kill-this-buffer))
+
+(defun sumantrapdf-hide-scrollbar ()
+  "turn on/off scrollbar"
+  (interactive)
+  (find-file sumantrapdf-config)
+  (goto-char (point-min))
+  (replace-regexp "\\(HideScrollbars = \\).*" (concat "\\1" "true"))
+  (save-buffer)
+  (kill-this-buffer))
 
 (defun kimim/sumantrapdf-theme (window-color)
   "Change color theme in sumatrapdf, just modify the config file"
@@ -635,5 +652,24 @@ documents."
   "compile current orgmode buffer to pdf"
   (interactive)
   (compile-latex 'org-latex-export-to-latex))
+
+(defun kimim/backup-buffer-pdf ()
+  "Backup the correspondign PDF file of current orgmode buffer"
+  (interactive)
+    (let* ((pdfbasename (file-name-base
+                       (buffer-name)))
+           (pdfname (concat pdfbasename ".pdf")))
+      (copy-file pdfname
+                 (concat pdfbasename "_" (kimim/genfile-timestamp) ".pdf"))))
+
+(cl-defun kimim/lsp-fold-undefined ()
+  "Find definitions of the symbol under point. If undefined, fold the code"
+  (interactive)
+  (let ((loc (lsp-request "textDocument/definition"
+                          (append (lsp--text-document-position-params) nil))))
+    (if (seq-empty-p loc)
+        (progn (message "nil")
+               (yafolding-hide-element))
+      (message "t"))))
 
 (provide 'kimim)

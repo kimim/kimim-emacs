@@ -90,7 +90,7 @@
             (font-lock-doxygen-face :foreground "SaddleBrown" :background "#f7f7f7")
             (underline :foreground "orange" :underline t)
             (org-level-1 :weight bold :foreground "light blue")
-            (org-level-2 :weight bold :foreground "cyan")
+            (org-level-2 :weight bold :foreground "turquoise")
             (org-level-3 :weight bold :foreground "orange")
             (org-level-4 :slant normal :foreground "#E3258D")
             (org-level-5 :slant normal :foreground "#0088ff")
