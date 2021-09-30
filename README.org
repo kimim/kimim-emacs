@@ -2915,12 +2915,19 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
          ("C-x m 1" . youdao-dictionary-search-at-point-posframe)
          ("C-x m 2" . youdao-dictionary-search)
          :map youdao-dictionary-mode-map
+         ("C-y" . youdao-dictionary-search-yanked)
          ("<mouse-3>" . youdao-dictionary-def-copied)
          ("f" . youdao-dictionary-search-from-input))
   :config
   (defun youdao-dictionary-def-copied ()
     (interactive)
-    (youdao-dictionary-search (gui-get-selection))))
+    (youdao-dictionary-search (gui-get-selection)))
+    (defun youdao-dictionary-search-yanked ()
+    (interactive)
+    (youdao-dictionary-search
+     (if (x-get-clipboard)
+         (x-get-clipboard)
+       (car kill-ring)))))
 #+end_src
 
 * Mail and Contacts
