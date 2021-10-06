@@ -758,3 +758,12 @@ To list directories first, you need to set ~ls-lisp-dirs-first~ to non-nil. [fn:
     (if (eq system-type 'darwin)
         (setq sr-listing-switches "-Ahlgo")))
 #+end_src
+
+** tldr
+
+TL;DR stands for "Too Long; Didn't Read"[fn:9]. =tldr.el= [fn:10] is the Emacs
+client.
+
+#+begin_src emacs-lisp
+(use-package tldr)
+#+end_src

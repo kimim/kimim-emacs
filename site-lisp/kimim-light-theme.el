@@ -174,7 +174,8 @@
             (mu4e-unread-face :foreground "blue" :bold t)
             (message-cited-text-1 :foreground "blue")
             (sr-active-path-face :background ,kimim-theme-bg :foreground "deep pink")
-            (sr-passive-path-face :background ,kimim-theme-bg :foreground "blue")))))
+            (sr-passive-path-face :background ,kimim-theme-bg :foreground "blue")
+            (hide-ifdef-shadow :inherit shadow :foreground "olive drab")))))
 
 (custom-theme-set-variables
  'kimim-light

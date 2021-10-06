@@ -471,12 +471,12 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
     (save-excursion
       (end-of-buffer)
       (mapc #'(lambda (item)
-               (insert (concat "<#part filename=\""
-                               ;; remove "\\" in Windows environment
-                               (replace-regexp-in-string
-                                "C:" "/cygdrive/c"
-                                (replace-regexp-in-string (regexp-quote "\\") "/" item) t)
-                               "\" disposition=attachment><#/part>\n")))
+                (insert (concat "<#part filename=\""
+                                ;; remove "\\" in Windows environment
+                                (replace-regexp-in-string
+                                 "C:" "/cygdrive/c"
+                                 (replace-regexp-in-string (regexp-quote "\\") "/" item) t)
+                                "\" disposition=attachment><#/part>\n")))
             (split-string file-list "\n" t)))))
 
 
@@ -656,11 +656,11 @@ documents."
 (defun kimim/backup-buffer-pdf ()
   "Backup the correspondign PDF file of current orgmode buffer"
   (interactive)
-    (let* ((pdfbasename (file-name-base
+  (let* ((pdfbasename (file-name-base
                        (buffer-name)))
-           (pdfname (concat pdfbasename ".pdf")))
-      (copy-file pdfname
-                 (concat pdfbasename "_" (kimim/genfile-timestamp) ".pdf"))))
+         (pdfname (concat pdfbasename ".pdf")))
+    (copy-file pdfname
+               (concat pdfbasename "_" (kimim/genfile-timestamp) ".pdf"))))
 
 (cl-defun kimim/lsp-fold-undefined ()
   "Find definitions of the symbol under point. If undefined, fold the code"
@@ -671,5 +671,11 @@ documents."
         (progn (message "nil")
                (yafolding-hide-element))
       (message "t"))))
+
+(defun kimim/backup-buffer-note ()
+  "Backup current note to ~/notes"
+  (interactive)
+  (copy-file (buffer-name)
+             (concat "~/notes/" (buffer-name))))
 
 (provide 'kimim)

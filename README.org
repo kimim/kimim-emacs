@@ -1,7 +1,7 @@
 #+TITLE: README
 #+LATEX_CLASS: article
 #+OPTIONS: toc:nil
-#+STARTUP: showall
+#+STARTUP: show2levels
 
 [[https://travis-ci.org/kimim/kimim-emacs][https://travis-ci.org/kimim/kimim-emacs.svg]]
 
@@ -103,7 +103,6 @@ pacman -S emacs
 #+end_src
 
 * Preparation
-
 ** Get emacs config
 
 You can follow below shell commands to prepare the =emacs= configuration files and
@@ -143,8 +142,6 @@ Let's tell =emacs=, if the pathes are not set, report error:
 #+end_src
 
 Then you can execute =emacs= to bootstrap itself.
-
-* Environment
 
 ** PATH and exec-path
 
@@ -275,10 +272,7 @@ and defers loading of the module until they are used.
 (setq use-package-verbose t)
 #+end_src
 
-* Emacs Frame
-
-Set look & feel before all other settings.
-
+* Look & Feel
 ** Menu Bar and Tool Bar
 
 Don't display menu-bar, tool-bar, tooltip and scroll-bar. Because sometimes,
@@ -343,7 +337,7 @@ calculated with original default font height and width: =frame-char-height= and
 (kimim/frame-and-font)
 #+end_src
 
-* Frame Title
+** Frame Title
 
 Customize the frame title to display buffer file name.
 
@@ -352,7 +346,7 @@ Customize the frame title to display buffer file name.
       '((:eval (buffer-name))))
 #+end_src
 
-* Mode Line
+** Mode Line
 
 Display date and time, but do not display system load.
 
@@ -387,7 +381,7 @@ Show (line, column) numbers in mode line:
   (toggle-word-wrap -1))
 #+end_src
 
-* Color Theme
+** Color Theme
 
 Use =rainbow-mode= to edit colorful color string and symbol. In the
 beginning, I add ~:hook prog-mode~, that means to enable ~rainbow-mode~
@@ -435,30 +429,7 @@ Use kimim-light as default theme.
   (load-theme 'kimim-light t))
 #+end_src
 
-* Highlight
-
-Highlight current line in window systems, but disable this in terminal. Because
-the line highlight will cause the terminal blinking.
-
-#+begin_src emacs-lisp
-(use-package hl-line
-  :if window-system
-  :defer 5
-  :config
-  (global-hl-line-mode -1))
-#+end_src
-
-Automatically highlight current symbol where the cursor is inside.
-
-#+begin_src emacs-lisp
-(use-package auto-highlight-symbol
-  :diminish auto-highlight-symbol-mode
-  :bind ("C-x m e" . ahs-edit-mode)
-  :config
-  (global-auto-highlight-symbol-mode t))
-#+end_src
-
-* Other Visual Element
+** Other Visual Element
 
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
@@ -479,8 +450,7 @@ Automatically highlight current symbol where the cursor is inside.
   :custom (hi-lock-auto-select-face t))
 #+end_src
 
-* Help
-
+* Help & References
 ** Info
 
 #+begin_src emacs-lisp
@@ -496,166 +466,29 @@ Automatically highlight current symbol where the cursor is inside.
                "~/info"))
 #+end_src
 
-** tldr
+** Youdao dictionary
 
-TL;DR stands for "Too Long; Didn't Read"[fn:9]. =tldr.el= [fn:10] is the Emacs
-client.
-
-#+begin_src emacs-lisp
-(use-package tldr)
-#+end_src
-
-* Encryption
-
-Sometimes, you need to encrypt some secret files, setting ~epa-pinentry-mode~ to
-~loopback~ will prompt password inside minibuffer, while not show a dialog for it.
-
-And we also cache the symmetric key in the same
-#+begin_src emacs-lisp
-(use-package epa
-  :ensure nil
-  :custom
-  (epa-pinentry-mode 'loopback)
-  (epa-file-cache-passphrase-for-symmetric-encryption t))
-#+end_src
-
-* Controlling
-** Window and Frame
-
-By enabling ~winner-mode~, you can restore to previous window configuration by
-typing ~C-c <left>~.
+Search dictionary with Ctrl+F3 by youdao dictionary.
 
 #+begin_src emacs-lisp
-(use-package winner
-  ;; restore windows configuration, built-in package
-  :commands winner-mode
+(use-package youdao-dictionary
+  :bind (
+         ("C-x m 1" . youdao-dictionary-search-at-point-posframe)
+         ("C-x m 2" . youdao-dictionary-search)
+         :map youdao-dictionary-mode-map
+         ("C-y" . youdao-dictionary-search-yanked)
+         ("<mouse-3>" . youdao-dictionary-def-copied)
+         ("f" . youdao-dictionary-search-from-input))
   :config
-  (winner-mode t))
-#+end_src
-
-When type ~C-x m w~ it will create a new frame with the default frame
-configuration.
-
-The frame is inactive when emacsclientw connects to the daemon at the first
-time. So I add ~raise-frame~ in ~after-make-frame-functions~ to force emacs to bring
-the new frame to the front.
-
-#+begin_src emacs-lisp
-(use-package frame
-  :ensure nil
-  :defer 1
-  :bind ("C-x m w" . make-frame)
-  :config
-  (add-hook 'after-make-frame-functions
-            (lambda (frame)
-              (select-frame frame)
-              (kimim/menu-and-bar)
-              (kimim/frame-and-font)
-              (raise-frame frame))))
-#+end_src
-
-preserve the point in screen during scrolling looks nice(see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Scrolling.html][scrolling]]). scroll
-slowly with touchpad, thus we adjust the scroll amount.
-
-#+begin_src emacs-lisp
-(setq scroll-preserve-screen-position t)
-(setq mouse-wheel-scroll-amount '(0.01))
-#+end_src
-
-** Command
-
-Display key candidates when you typed part key prefix with ~which-key-mode~.
-
-#+begin_src emacs-lisp
-;; https://github.com/justbur/emacs-which-key
-(use-package which-key
-  :defer 3
-  :diminish which-key-mode
-  :custom (which-key-popup-type 'minibuffer)
-  :config
-  (which-key-mode 1))
-#+end_src
-
-List recent used commands with ~smex~:
-
-#+begin_src emacs-lisp
-
-;; smex will list the recent function on top of the cmd list
-(use-package smex
-  :commands (smex)
-  :config
-  (smex-initialize))
-#+end_src
-
-~counsel~ will enhance many built-in commands with nice ivy completion candidates.
-
-#+begin_src emacs-lisp
-(use-package counsel
-  :defer 5
-  :bind
-  (("M-x" . counsel-M-x)
-   ("C-x C-f" . counsel-find-file)
-   ("C-x m f" . counsel-describe-function)
-   ("C-x m v" . counsel-describe-variable)
-   ("C-x m l" . counsel-load-library)
-   ("C-x m i" . counsel-info-lookup-symbol)
-   ("C-x m j" . counsel-bookmark)
-   ("C-x m u" . counsel-unicode-char)
-   ("C-c j" . counsel-git-grep)
-   ("C-c g" . counsel-grep)
-   ("C-x b" . counsel-ibuffer)
-   ("C-c k" . counsel-ag)
-   ("C-c p" . counsel-pt)
-   ("C-x l" . counsel-locate)
-   :map read-expression-map
-   ("C-r" . counsel-minibuffer-history))
-  :config
-  (require 'ivy)
-  (require 'smex)
-  (add-hook 'counsel-grep-post-action-hook 'recenter))
-#+end_src
-
-** guru mode
-
-~guru-mode~ warns you when you type arrow keys, home or end. This could help you
-to establish the habit of efficiently using emacs keybinding.
-
-#+begin_src emacs-lisp
-(use-package guru-mode
-  :ensure t
-  :defer 1
-  :diminish guru-mode
-  :config
-  (guru-global-mode +1))
-#+end_src
-
-** Key Frequency
-
-We will use =keyfreq= to record the frequency of the key typing, and get a
-frequency report by =M-x keyfreq-show=.
-
-#+begin_src emacs-lisp
-(use-package keyfreq
-  :custom (keyfreq-file "~/.emacs.d/emacs.keyfreq")
-  :config
-  (keyfreq-mode +1)
-  (keyfreq-autosave-mode +1))
-#+end_src
-
-** eshell
-
-#+begin_src emacs-lisp
-(use-package company-shell
-  :commands company-shell)
-
-(use-package eshell
-  :config
-  (add-hook 'eshell-mode-hook
-            (lambda ()
-              (setq company-backends
-                    '((company-shell company-files)
-                      company-capf company-yasnippet company-dabbrev company-ebdb company-ispell
-                      (company-dabbrev-code company-gtags company-etags company-keywords))))))
+  (defun youdao-dictionary-def-copied ()
+    (interactive)
+    (youdao-dictionary-search (gui-get-selection)))
+    (defun youdao-dictionary-search-yanked ()
+    (interactive)
+    (youdao-dictionary-search
+     (if (gui-get-selection)
+         (gui-get-selection)
+       (car kill-ring)))))
 #+end_src
 
 * Editing
@@ -797,6 +630,290 @@ fill-column.
 #+begin_src emacs-lisp
 (use-package visual-fill-column
   :hook (markdown-mode . visual-fill-column-mode))
+#+end_src
+
+** Highlight
+
+Highlight current line in window systems, but disable this in terminal. Because
+the line highlight will cause the terminal blinking.
+
+#+begin_src emacs-lisp
+(use-package hl-line
+  :if window-system
+  :defer 5
+  :config
+  (global-hl-line-mode -1))
+#+end_src
+
+Automatically highlight current symbol where the cursor is inside.
+
+#+begin_src emacs-lisp
+(use-package auto-highlight-symbol
+  :diminish auto-highlight-symbol-mode
+  :bind ("C-x m e" . ahs-edit-mode)
+  :config
+  (global-auto-highlight-symbol-mode t))
+#+end_src
+
+** ispell
+
+#+begin_src emacs-lisp
+(use-package ispell
+  :custom (ispell-program-name "aspell")
+  :config
+  (cond ((eq system-type 'windows-nt)
+         (setq ispell-alternate-dictionary "~/.emacs.d/dict/words.txt"))))
+#+end_src
+
+** flyspell
+
+Check spell on the fly.
+
+#+begin_src emacs-lisp
+(use-package flyspell
+  :diminish flyspell-mode
+  :hook (;;(prog-mode . flyspell-prog-mode)
+         (org-mode . flyspell-mode)))
+#+end_src
+
+* Controlling
+** Window and Frame
+
+By enabling ~winner-mode~, you can restore to previous window configuration by
+typing ~C-c <left>~.
+
+#+begin_src emacs-lisp
+(use-package winner
+  ;; restore windows configuration, built-in package
+  :commands winner-mode
+  :config
+  (winner-mode t))
+#+end_src
+
+When type ~C-x m w~ it will create a new frame with the default frame
+configuration.
+
+The frame is inactive when emacsclientw connects to the daemon at the first
+time. So I add ~raise-frame~ in ~after-make-frame-functions~ to force emacs to bring
+the new frame to the front.
+
+#+begin_src emacs-lisp
+(use-package frame
+  :ensure nil
+  :defer 1
+  :bind ("C-x m w" . make-frame)
+  :config
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (select-frame frame)
+              (kimim/menu-and-bar)
+              (kimim/frame-and-font)
+              (raise-frame frame))))
+#+end_src
+
+preserve the point in screen during scrolling looks nice(see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Scrolling.html][scrolling]]). scroll
+slowly with touchpad, thus we adjust the scroll amount.
+
+#+begin_src emacs-lisp
+(setq scroll-preserve-screen-position t)
+(setq mouse-wheel-scroll-amount '(0.01))
+#+end_src
+
+** Command
+
+Display key candidates when you typed part key prefix with ~which-key-mode~.
+
+#+begin_src emacs-lisp
+;; https://github.com/justbur/emacs-which-key
+(use-package which-key
+  :defer 3
+  :diminish which-key-mode
+  :custom (which-key-popup-type 'minibuffer)
+  :config
+  (which-key-mode 1))
+#+end_src
+
+List recent used commands with ~smex~:
+
+#+begin_src emacs-lisp
+
+;; smex will list the recent function on top of the cmd list
+(use-package smex
+  :commands (smex)
+  :config
+  (smex-initialize))
+#+end_src
+
+~counsel~ will enhance many built-in commands with nice ivy completion candidates.
+
+#+begin_src emacs-lisp
+(use-package counsel
+  :defer 5
+  :bind
+  (("M-x" . counsel-M-x)
+   ("C-x C-f" . counsel-find-file)
+   ("C-x m f" . counsel-describe-function)
+   ("C-x m v" . counsel-describe-variable)
+   ("C-x m l" . counsel-load-library)
+   ("C-x m i" . counsel-info-lookup-symbol)
+   ("C-x m j" . counsel-bookmark)
+   ("C-x m u" . counsel-unicode-char)
+   ("C-c j" . counsel-git-grep)
+   ("C-c g" . counsel-grep)
+   ("C-x b" . counsel-ibuffer)
+   ("C-c k" . counsel-ag)
+   ("C-c p" . counsel-pt)
+   ("C-x l" . counsel-locate)
+   :map read-expression-map
+   ("C-r" . counsel-minibuffer-history))
+  :config
+  (require 'ivy)
+  (require 'smex)
+  (add-hook 'counsel-grep-post-action-hook 'recenter))
+#+end_src
+
+** guru mode
+
+~guru-mode~ warns you when you type arrow keys, home or end. This could help you
+to establish the habit of efficiently using emacs keybinding.
+
+#+begin_src emacs-lisp
+(use-package guru-mode
+  :ensure t
+  :defer 1
+  :diminish guru-mode
+  :config
+  (guru-global-mode +1))
+#+end_src
+
+** Key Frequency
+
+We will use =keyfreq= to record the frequency of the key typing, and get a
+frequency report by =M-x keyfreq-show=.
+
+#+begin_src emacs-lisp
+(use-package keyfreq
+  :custom (keyfreq-file "~/.emacs.d/emacs.keyfreq")
+  :config
+  (keyfreq-mode +1)
+  (keyfreq-autosave-mode +1))
+#+end_src
+
+** eshell
+
+#+begin_src emacs-lisp
+(use-package company-shell
+  :commands company-shell)
+
+(use-package eshell
+  :config
+  (add-hook 'eshell-mode-hook
+            (lambda ()
+              (setq company-backends
+                    '((company-shell company-files)
+                      company-capf company-yasnippet company-dabbrev company-ebdb company-ispell
+                      (company-dabbrev-code company-gtags company-etags company-keywords))))))
+#+end_src
+
+** Navigation
+
+#+begin_src emacs-lisp
+(use-package bookmark
+  :custom
+  (bookmark-default-file "~/.emacs.d/emacs.bmk")
+  (bookmark-save-flag 1)
+  (bookmark-fontify nil)
+  :config
+  (add-hook 'bookmark-after-jump-hook
+            (lambda ()
+              (recenter 'top))))
+#+end_src
+
+~bm~ is used to temporally toggle buffer local bookmarks with ~C-x m t~, then you
+can view all the local temporally bookmarks with ~C-x m s~.
+
+#+begin_src emacs-lisp
+(use-package bm
+  :bind (("C-x m t" . bm-toggle)
+         ("C-x m s" . bm-show-all)
+         ("C-x m <left>" . bm-previous)
+         ("C-x m <right>" . bm-next)))
+#+end_src
+
+You can jump to any character by triggering ~ace-jump-mode~ (~C-x m c~), and jump to
+any window by triggering ~ace-window~ (~C-x m w~).
+
+#+begin_src emacs-lisp
+(use-package ace-jump-mode
+  :bind
+  ("C-x m c" . ace-jump-mode))
+
+(use-package ace-window
+  :bind
+  (("M-o" . ace-window)
+   ("C-x o" . ace-window)
+   ("C-x m w" . ace-swap-window)
+   ("C-x m x" . ace-delete-window))
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+#+end_src
+
+* Search and Finding
+** swiper replaces isearch
+
+#+begin_src emacs-lisp
+(use-package swiper
+  :custom
+  (swiper-action-recenter t)
+  :bind
+  ("C-s" . swiper)
+  ("M-s ." . swiper-thing-at-point))
+#+end_src
+
+** ag: the silver searcher
+
+=ag= [fn:9] is really a very fast grep tool, and =ag.el= [fn:10] provide the
+Emacs interface to =ag=:
+
+#+begin_src emacs-lisp
+(use-package ag
+  :bind
+  ("C-x g" . ag-project)
+  :config
+  (setq ag-highlight-search t))
+#+end_src
+
+** pt: the platium searcher
+
+Because =counsel-ag= is not working in my Win64 machine, so I switch to =pt=
+now.
+
+Download =pt= from
+https://github.com/monochromegane/the_platinum_searcher/releases, and it works
+out of the box.
+
+** imenu & imenu-anywhere
+
+=imenu= is used to navigate the function definitions in current buffer.
+
+#+begin_src emacs-lisp
+(use-package imenu
+  :functions kimim/imenu-default-goto-function-advice
+  :config
+  (advice-add 'imenu-default-goto-function
+              :around
+              #'kimim/imenu-default-goto-function-advice))
+
+(use-package imenu-anywhere
+  :bind ("C-c i" . imenu-anywhere))
+#+end_src
+
+** search from web
+
+#+begin_src emacs-lisp
+(use-package eww
+  :custom
+  (eww-search-prefix "https://cn.bing.com/search?q="))
 #+end_src
 
 * File Management
@@ -953,108 +1070,7 @@ dired-efap, Edit file at point, can be used to rename file name at the point:
      (t (format "%8d" (buffer-size))))))
 #+end_src
 
-* Navigation
-
-#+begin_src emacs-lisp
-(use-package bookmark
-  :custom
-  (bookmark-default-file "~/.emacs.d/emacs.bmk")
-  (bookmark-save-flag 1)
-  (bookmark-fontify nil)
-  :config
-  (add-hook 'bookmark-after-jump-hook
-            (lambda ()
-              (recenter 'top))))
-#+end_src
-
-~bm~ is used to temporally toggle buffer local bookmarks with ~C-x m t~, then you
-can view all the local temporally bookmarks with ~C-x m s~.
-
-#+begin_src emacs-lisp
-(use-package bm
-  :bind (("C-x m t" . bm-toggle)
-         ("C-x m s" . bm-show-all)
-         ("C-x m <left>" . bm-previous)
-         ("C-x m <right>" . bm-next)))
-#+end_src
-
-You can jump to any character by triggering ~ace-jump-mode~ (~C-x m c~), and jump to
-any window by triggering ~ace-window~ (~C-x m w~).
-
-#+begin_src emacs-lisp
-(use-package ace-jump-mode
-  :bind
-  ("C-x m c" . ace-jump-mode))
-
-(use-package ace-window
-  :bind
-  (("M-o" . ace-window)
-   ("C-x o" . ace-window)
-   ("C-x m w" . ace-swap-window)
-   ("C-x m x" . ace-delete-window))
-  :custom
-  (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
-#+end_src
-
-* Search and Finding
-** swiper replaces isearch
-
-#+begin_src emacs-lisp
-(use-package swiper
-  :custom
-  (swiper-action-recenter t)
-  :bind
-  ("C-s" . swiper)
-  ("M-s ." . swiper-thing-at-point))
-#+end_src
-
-** ag: the silver searcher
-
-=ag= [fn:11] is really a very fast grep tool, and =ag.el= [fn:12] provide the
-Emacs interface to =ag=:
-
-#+begin_src emacs-lisp
-(use-package ag
-  :bind
-  ("C-x g" . ag-project)
-  :config
-  (setq ag-highlight-search t))
-#+end_src
-
-** pt: the platium searcher
-
-Because =counsel-ag= is not working in my Win64 machine, so I switch to =pt=
-now.
-
-Download =pt= from
-https://github.com/monochromegane/the_platinum_searcher/releases, and it works
-out of the box.
-
-** imenu & imenu-anywhere
-
-=imenu= is used to navigate the function definitions in current buffer.
-
-#+begin_src emacs-lisp
-(use-package imenu
-  :functions kimim/imenu-default-goto-function-advice
-  :config
-  (advice-add 'imenu-default-goto-function
-              :around
-              #'kimim/imenu-default-goto-function-advice))
-
-(use-package imenu-anywhere
-  :bind ("C-c i" . imenu-anywhere))
-#+end_src
-
-** search from web
-
-#+begin_src emacs-lisp
-(use-package eww
-  :custom
-  (eww-search-prefix "https://cn.bing.com/search?q="))
-#+end_src
-
-* auto-complete
+* Completion
 ** abbrev
 
 #+begin_src emacs-lisp
@@ -1202,7 +1218,7 @@ Following error will reported when using magit to commit changes:
 server-ensure-safe-dir: The directory ‘~/.emacs.d/server’ is unsafe
 #+END_QUOTE
 
-The solution is to change the owner of =~/.emacs.d/server= [fn:13]
+The solution is to change the owner of =~/.emacs.d/server= [fn:11]
 
 #+BEGIN_QUOTE
 Click R-mouse on ~/.emacs.d/server and select “Properties” (last item in
@@ -1214,7 +1230,7 @@ this directory as secure because you are the owner.
 
 ** Parenthesis
 
-~smartparens-mode~[fn:14] is a general purpose mode for dealing with
+~smartparens-mode~[fn:12] is a general purpose mode for dealing with
 parenthesis. We define some keys for it:
 
 #+begin_src emacs-lisp
@@ -1271,7 +1287,7 @@ With ~yafolding-mode~, you can:
 ~lsp-mode~ aims to provide IDE-like experience.
 
 If you got error: =Symbol’s function definition is void: -compose=, make sure
-that dash version higher than 2.18 is installed[fn:15].
+that dash version higher than 2.18 is installed[fn:13].
 
 #+begin_src emacs-lisp
 (use-package dash
@@ -1365,6 +1381,26 @@ that dash version higher than 2.18 is installed[fn:15].
   (add-to-list 'org-babel-load-languages '(C . t)))
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package hideif
+  :hook ((c-mode c++-mode) . hide-ifdef-mode)
+  :config
+  (when (eq system-type 'gnu/linux)
+    (add-to-list 'hide-ifdef-env '(__linux__ . 1))
+    (add-to-list 'hide-ifdef-env '(__GNUC__ . 11)))
+  (when (eq system-type 'darwin)
+    (add-to-list 'hide-ifdef-env '(__APPLE__ . 1))
+    (add-to-list 'hide-ifdef-env '(__clang__ . 1))
+    (add-to-list 'hide-ifdef-env '(__llvm__ . 1)))
+  (when (eq system-type 'windows-nt)
+    (add-to-list 'hide-ifdef-env '(__MINGW32__ . 1))
+    (add-to-list 'hide-ifdef-env '(_WIN32 . 1))
+    (add-to-list 'hide-ifdef-env '(__GNUC__ . 1)))
+  :custom
+  (hide-ifdef-initially t)
+  (hide-ifdef-shadow t))
+#+end_src
+
 ** C#
 
 #+begin_src emacs-lisp
@@ -1375,7 +1411,7 @@ that dash version higher than 2.18 is installed[fn:15].
 
 ** Clojure
 
-Clojure[fn:16] is a lisp over JVM. Emm, I like it.
+Clojure[fn:14] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
@@ -1420,7 +1456,7 @@ npm install -g clj-kondo
 
 *** Cider
 
-Cider[fn:17] extends Emacs with support for interactive programming
+Cider[fn:15] extends Emacs with support for interactive programming
 in Clojure.
 
 #+begin_src emacs-lisp
@@ -1449,9 +1485,10 @@ in Clojure.
 #+begin_src emacs-lisp
 (use-package ob-clojure
   :ensure org
+  :custom (org-babel-clojure-backend 'cider)
   :config
   (add-to-list 'org-src-lang-modes '("clojure" . clojure))
-  (setq org-babel-clojure-backend 'cider))
+  (add-to-list 'org-babel-load-languages '(clojure . t)))
 #+end_src
 
 *** clj-refactor
@@ -1476,7 +1513,7 @@ in Clojure.
 
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:18] is used here:
+Python development configuration is quite easy. =elpy= [fn:16] is used here:
 
 #+begin_src emacs-lisp
   (use-package elpy
@@ -1568,7 +1605,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:19]
+=ahk-mode= developed by Rich Alesi[fn:17]
 
 #+begin_src emacs-lisp
   (use-package ahk-mode
@@ -1608,7 +1645,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :mode ("\\.ps1\\'" . powershell-mode))
 #+end_src
 
-* Draw diagram in code
+* Diagram
 ** PlantUML
 
 That's fun to draw UML with =ob-plantuml= inside =orgmode=:
@@ -1659,7 +1696,7 @@ place and assign ~plantuml-jar-path~ to there.
 #+end_src
 ** Mermaid
 
-Mermaid [fn:20] is another js based diagramming and charting tool. To
+Mermaid [fn:18] is another js based diagramming and charting tool. To
 use it inside orgmode, mermaid-cli should be installed:
 
 #+begin_src shell
@@ -1682,40 +1719,62 @@ yarn add @mermaid-js/mermaid-cli
   :mode ("\\.mermaid\\'" . mermaid-mode))
 #+end_src
 
-* Calendar
+* Music
+
+** lilypond
 
 #+begin_src emacs-lisp
-(when (not (boundp 'kimim/file-diary))
-  (defvar kimim/file-diary (concat kimim/path-org "diary"))
-  (if (not (file-exists-p kimim/file-diary))
-      (write-region "" nil kimim/file-diary)))
+(eval-and-compile
+  (defun lilypond-load-path ()
+    (cond ((eq system-type 'darwin)
+           "/usr/local/share/emacs/site-lisp/lilypond")
+          ((eq system-type 'windows-nt)
+           (concat kimim/path-kimikit "/LilyPond/usr/share/emacs/site-lisp"))
+          ((eq system-type 'gnu/linux)
+           "/usr/local/share/emacs/site-lisp/lilypond"))))
+
+(use-package LilyPond-mode
+  :load-path (lambda () (list (lilypond-load-path))))
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package calendar
-  :custom
-  (diary-file kimim/file-diary)
-  (calendar-latitude +30.16)
-  (calendar-longitude +120.12)
-  (calendar-location-name "Hangzhou")
-  (calendar-remove-frame-by-deleting t)
-  (calendar-week-start-day 1)
-  (calendar-mark-holidays-flag t)
-  (holiday-christian-holidays nil)
-  (holiday-hebrew-holidays nil)
-  (holiday-islamic-holidays nil)
-  (holiday-solar-holidays nil)
-  (holiday-bahai-holidays nil)
-  (holiday-general-holidays
-   '((holiday-fixed 1 1 "元旦")
-     (holiday-float 5 0 2 "父親節")
-     (holiday-float 6 0 3 "母親節")))
-  (calendar-mark-diary-entries-flag t)
-  (calendar-view-holidays-initially-flag nil)
-  (calendar-chinese-celestial-stem
-   ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
-  (calendar-chinese-terrestrial-branch
-   ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"]))
+(use-package ob-lilypond
+  :ensure nil
+  :config
+  (require 'lilypond-mode)
+  (defun org-babel-lilypond-process-basic (body params)
+    "Execute a lilypond block in basic mode."
+    (let* ((out-file (cdr (assq :file params)))
+           (cmdline (or (cdr (assq :cmdline params))
+                        ""))
+           (in-file (org-babel-temp-file "lilypond-")))
+
+      (with-temp-file in-file
+        (insert (org-babel-expand-body:generic body params)))
+      (org-babel-eval
+       (concat
+        org-babel-lilypond-ly-command
+        " -dbackend=eps "
+        "-dno-gs-load-fonts "
+        "-dinclude-eps-fonts -dno-print-pages -dpreview "
+        (or (cdr (assoc (file-name-extension out-file)
+                        '(("pdf" . "--pdf ")
+                          ("ps" . "--ps ")
+                          ("svg" . "--svg ")
+                          ("png" . "--png "))))
+            "--png ")
+        "--output="
+        (file-name-sans-extension out-file)
+        " "
+        cmdline " "
+        in-file
+        ;; copy .preview file to sans .preview file
+        " && mv -f "
+        (file-name-sans-extension out-file)
+        ".preview."
+        (file-name-extension out-file)
+        " "
+        out-file) "")) nil))
 #+end_src
 
 * Orgmode
@@ -1916,7 +1975,8 @@ yarn add @mermaid-js/mermaid-cli
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((plantuml . t)
-     (ditaa . t)))
+     (ditaa . t)
+     (clojure .t)))
   ;; get the idea from John Kitchen(author of org-ref):
   ;; https://emacs.stackexchange.com/questions/20577/org-babel-load-all-languages-on-demand
   (defadvice org-babel-execute-src-block (around load-language nil activate)
@@ -2144,162 +2204,6 @@ sudo apt install python3-pygments
     (setq org-re-reveal-extra-css "./kimim.css"))
 #+end_src
 
-** org as GTD system
-
-#+begin_src emacs-lisp
-(use-package org-capture
-  :ensure nil
-  :custom
-  (org-capture-templates
-   '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
-      "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-     ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
-      "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-     ("s" "SCHED Task"    entry (file+headline "capture.org" "Inbox")
-      "* SCHED %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-     ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
-      "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-     ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
-      "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
-     ("h" "Habit"   entry (file+headline "global.org"   "Habit")
-      "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n"))))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package org
-  :functions (org-agenda-kill-all-agenda-buffers
-              org-agenda-todo
-              org-agenda-error
-              org-agenda-check-no-diary)
-  :defines org-agenda-mode-map
-  :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
-  :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         :map org-agenda-mode-map
-         ("C-c C-x C-p" . org-previous-link)
-         ("C-c C-x C-n" . org-next-link)
-         ("C-c C-k" . org-agenda-kill-files)
-         ("<C-left>"  . org-agenda-do-date-earlier)
-         ("<C-right>" . org-agenda-do-date-later)
-         ("<S-left>" . (lambda ()
-                         (interactive)
-                         (org-agenda-todo 'left)))
-         ("<S-right>" . (lambda ()
-                          (interactive)
-                          (org-agenda-todo 'right))))
-  :custom
-  (org-directory kimim/path-org)
-  (org-agenda-files
-   (file-expand-wildcards (concat kimim/path-org "*.org")))
-  (org-tags-exclude-from-inheritance '("project" "category"))
-  (org-log-done t)
-  (org-fontify-done-headline nil)
-  (org-todo-repeat-to-state "REPEAT")
-  (org-deadline-warning-days 2)
-  (org-todo-keywords
-   '(
-     ;; for tasks
-     (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
-     ;; for risks, actions, problems
-     (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
-     (sequence "|" "SOMEDAY(m)")
-     (sequence "|" "ABORT(a@/!)")
-     (sequence "REPEAT(r)" "|")))
-  (org-tag-alist
-   '(("@office" . ?o) ("@home" . ?h)
-     ("team" . ?t) ("leader" . ?l)
-     ("risk" . ?k)
-     ("reading" . ?r) ("writing" . ?w)
-     ("project" . ?p) ("category" . ?c)
-     ("habit" . ?H)))
-  (org-stuck-projects
-   '("+LEVEL>=2-category-habit-info"
-     ("TODO" "SCHED"  "DONE"
-      "OPEN" "WAIT" "CLOSE"
-      "ABORT" "SOMEDAY" "REPEAT")
-     nil nil))
-  (org-agenda-include-diary t)
-  (org-agenda-span 2)
-  (org-agenda-skip-scheduled-if-done t)
-  (org-agenda-skip-deadline-if-done t)
-  (org-agenda-custom-commands
-   '(("t" todo "TODO|OPEN"
-      ((org-agenda-sorting-strategy '(priority-down))))
-     ("w" todo "SCHED|WAIT"
-      ((org-agenda-sorting-strategy '(priority-down))))
-     ;; all task should be done or doing
-     ("d" todo "TODO|SCHED|OPEN|WAIT"
-      ((org-agenda-sorting-strategy '(priority-down))))
-     ("f" todo "SOMEDAY"
-      ((org-agenda-sorting-strategy '(priority-down))))
-     ("h" tags "habit/-ABORT-CLOSE"
-      ((org-agenda-sorting-strategy '(todo-state-down))))
-     ("c" tags "clock"
-      ((org-agenda-sorting-strategy '(priority-down))))))
-  :config
-  (require 'ivy) ; use ivy to complete refile files
-  (require 'org-capture)
-  (require 'org-agenda)
-  (add-hook 'kill-emacs-hook
-            (lambda ()
-              (org-clock-out nil t nil)
-              (org-save-all-org-buffers)))
-  ;; kill diary when exit agenda
-  (advice-add 'org-agenda-exit
-              :after (lambda () (kill-buffer "diary")))
-  (diminish 'auto-fill-function)
-
-  (setq org-refile-targets
-        '(;; refile to maxlevel 2 of current file
-          (nil . (:maxlevel . 1))
-          ;; refile to maxlevel 1 of org-agenda-files
-          (org-agenda-files :maxlevel . 1)
-          ;; refile to item with 'project' tag in org-agenda-files
-          (org-agenda-files :tag . "project")
-          (org-agenda-files :tag . "category")))
-
-  (defadvice org-schedule (after add-todo activate)
-    (if (or (string= "OPEN" (org-get-todo-state))
-            (string= "WAIT" (org-get-todo-state))
-            (string= "CLOSE" (org-get-todo-state)))
-        (org-todo "WAIT")
-      (org-todo "SCHED")))
-
-  (defadvice org-deadline (after add-todo activate)
-    (if (or (string= "OPEN" (org-get-todo-state))
-            (string= "WAIT" (org-get-todo-state))
-            (string= "CLOSE" (org-get-todo-state)))
-        (org-todo "WAIT")
-      (org-todo "SCHED")))
-
-  (add-hook 'org-agenda-after-show-hook 'org-narrow-to-subtree)
-
-  (defun org-agenda-add-note (&optional arg)
-    "Add a time-stamped note to the entry at point. DO NOT show other
-headers when adding notes"
-    (interactive "P")
-    (org-agenda-check-no-diary)
-    (let* ((marker (or (org-get-at-bol 'org-marker)
-		               (org-agenda-error)))
-	       (buffer (marker-buffer marker))
-	       (pos (marker-position marker))
-	       (hfdmarker (org-get-at-bol 'org-hd-marker))
-	       (inhibit-read-only t))
-      (with-current-buffer buffer
-        (org-narrow-to-subtree) ;; change from widen to org-narrow-to-subtree
-        (goto-char pos)
-        (org-show-context 'agenda)
-        (org-add-note))))
-
-  (defun org-agenda-kill-files ()
-    (interactive)
-    (org-agenda-kill-all-agenda-buffers)
-    (mapcar (lambda (file)
-              (if-let (buf (get-file-buffer file))
-                  (kill-buffer buf)))
-            org-agenda-files)))
-#+end_src
-
 ** org link: onenote
 
 New link to use Office Onenote.
@@ -2451,11 +2355,11 @@ New link to use Office Onenote.
       (org-open-file (org-html-export-to-html nil))))
 #+end_src
 
-* Note Taking Tools
+* Note Taking
 ** org-roam
 
-Org-roam implements =zettelkasten= method [fn:21] used by famous German socialogist
-Niklas Luhmann[fn:22].
+Org-roam implements =zettelkasten= method [fn:19] used by famous German socialogist
+Niklas Luhmann[fn:20].
 
 First you should install =sqlite3=, which is used to index the links.
 
@@ -2558,67 +2462,9 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
   (setf zetteldeft-id-regex "[0-9]\\{8\\}\\([A-Z]\\{2,\\}\\)"))
 #+end_src
 
-* Music
+** Markdown mode
 
-** lilypond
-
-#+begin_src emacs-lisp
-(eval-and-compile
-  (defun lilypond-load-path ()
-    (cond ((eq system-type 'darwin)
-           "/usr/local/share/emacs/site-lisp/lilypond")
-          ((eq system-type 'windows-nt)
-           (concat kimim/path-kimikit "/LilyPond/usr/share/emacs/site-lisp"))
-          ((eq system-type 'gnu/linux)
-           "/usr/local/share/emacs/site-lisp/lilypond"))))
-
-(use-package LilyPond-mode
-  :load-path (lambda () (list (lilypond-load-path))))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package ob-lilypond
-  :ensure nil
-  :config
-  (require 'lilypond-mode)
-  (defun org-babel-lilypond-process-basic (body params)
-    "Execute a lilypond block in basic mode."
-    (let* ((out-file (cdr (assq :file params)))
-           (cmdline (or (cdr (assq :cmdline params))
-                        ""))
-           (in-file (org-babel-temp-file "lilypond-")))
-
-      (with-temp-file in-file
-        (insert (org-babel-expand-body:generic body params)))
-      (org-babel-eval
-       (concat
-        org-babel-lilypond-ly-command
-        " -dbackend=eps "
-        "-dno-gs-load-fonts "
-        "-dinclude-eps-fonts -dno-print-pages -dpreview "
-        (or (cdr (assoc (file-name-extension out-file)
-                        '(("pdf" . "--pdf ")
-                          ("ps" . "--ps ")
-                          ("svg" . "--svg ")
-                          ("png" . "--png "))))
-            "--png ")
-        "--output="
-        (file-name-sans-extension out-file)
-        " "
-        cmdline " "
-        in-file
-        ;; copy .preview file to sans .preview file
-        " && mv -f "
-        (file-name-sans-extension out-file)
-        ".preview."
-        (file-name-extension out-file)
-        " "
-        out-file) "")) nil))
-#+end_src
-
-* Markdown mode
-
-Markdown is widely used as plain text file format. Pandoc [fn:23] can
+Markdown is widely used as plain text file format. Pandoc [fn:21] can
 be used to convert markdown file to html and other formats. We can
 download the [[https://github.com/jgm/pandoc/releases/latest][latest version]] and put the binary file to system path,
 such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
@@ -2883,51 +2729,197 @@ support more functions from =org-ref=:
   (require 'org-roam-bibtex))
 #+end_src
 
-* Dictionary
-** ispell
+* Task Management
+** Calendar
 
 #+begin_src emacs-lisp
-(use-package ispell
-  :custom (ispell-program-name "aspell")
-  :config
-  (cond ((eq system-type 'windows-nt)
-         (setq ispell-alternate-dictionary "~/.emacs.d/dict/words.txt"))))
+(when (not (boundp 'kimim/file-diary))
+  (defvar kimim/file-diary (concat kimim/path-org "diary"))
+  (if (not (file-exists-p kimim/file-diary))
+      (write-region "" nil kimim/file-diary)))
 #+end_src
 
-** flyspell
-
-Check spell on the fly.
-
 #+begin_src emacs-lisp
-(use-package flyspell
-  :diminish flyspell-mode
-  :hook (;;(prog-mode . flyspell-prog-mode)
-         (org-mode . flyspell-mode)))
+(use-package calendar
+  :custom
+  (diary-file kimim/file-diary)
+  (calendar-latitude +30.16)
+  (calendar-longitude +120.12)
+  (calendar-location-name "Hangzhou")
+  (calendar-remove-frame-by-deleting t)
+  (calendar-week-start-day 1)
+  (calendar-mark-holidays-flag t)
+  (holiday-christian-holidays nil)
+  (holiday-hebrew-holidays nil)
+  (holiday-islamic-holidays nil)
+  (holiday-solar-holidays nil)
+  (holiday-bahai-holidays nil)
+  (holiday-general-holidays
+   '((holiday-fixed 1 1 "元旦")
+     (holiday-float 5 0 2 "父親節")
+     (holiday-float 6 0 3 "母親節")))
+  (calendar-mark-diary-entries-flag t)
+  (calendar-view-holidays-initially-flag nil)
+  (calendar-chinese-celestial-stem
+   ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
+  (calendar-chinese-terrestrial-branch
+   ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"]))
 #+end_src
 
-** Youdao dictionary
-
-Search dictionary with Ctrl+F3 by youdao dictionary.
+** org as GTD system
 
 #+begin_src emacs-lisp
-(use-package youdao-dictionary
-  :bind (
-         ("C-x m 1" . youdao-dictionary-search-at-point-posframe)
-         ("C-x m 2" . youdao-dictionary-search)
-         :map youdao-dictionary-mode-map
-         ("C-y" . youdao-dictionary-search-yanked)
-         ("<mouse-3>" . youdao-dictionary-def-copied)
-         ("f" . youdao-dictionary-search-from-input))
+(use-package org-capture
+  :ensure nil
+  :custom
+  (org-capture-templates
+   '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
+      "* %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("t" "TODO Task"    entry (file+headline "capture.org" "Inbox")
+      "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("s" "SCHED Task"    entry (file+headline "capture.org" "Inbox")
+      "* SCHED %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("o" "OPEN Issue"  entry (file+headline "capture.org" "Inbox")
+      "* OPEN %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
+      "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
+     ("h" "Habit"   entry (file+headline "global.org"   "Habit")
+      "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n"))))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package org
+  :functions (org-agenda-kill-all-agenda-buffers
+              org-agenda-todo
+              org-agenda-error
+              org-agenda-check-no-diary)
+  :defines org-agenda-mode-map
+  :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         :map org-agenda-mode-map
+         ("C-c C-x C-p" . org-previous-link)
+         ("C-c C-x C-n" . org-next-link)
+         ("C-c C-k" . org-agenda-kill-files)
+         ("<C-left>"  . org-agenda-do-date-earlier)
+         ("<C-right>" . org-agenda-do-date-later)
+         ("<S-left>" . (lambda ()
+                         (interactive)
+                         (org-agenda-todo 'left)))
+         ("<S-right>" . (lambda ()
+                          (interactive)
+                          (org-agenda-todo 'right))))
+  :custom
+  (org-directory kimim/path-org)
+  (org-agenda-files
+   (file-expand-wildcards (concat kimim/path-org "*.org")))
+  (org-tags-exclude-from-inheritance '("project" "category"))
+  (org-log-done t)
+  (org-fontify-done-headline nil)
+  (org-todo-repeat-to-state "REPEAT")
+  (org-deadline-warning-days 2)
+  (org-todo-keywords
+   '(
+     ;; for tasks
+     (sequence "TODO(t!)" "SCHED(s)" "|" "DONE(d@/!)")
+     ;; for risks, actions, problems
+     (sequence "OPEN(o!)" "WAIT(w@/!)" "|" "CLOSE(c@/!)")
+     (sequence "|" "SOMEDAY(m)")
+     (sequence "|" "ABORT(a@/!)")
+     (sequence "REPEAT(r)" "|")))
+  (org-tag-alist
+   '(("@office" . ?o) ("@home" . ?h)
+     ("team" . ?t) ("leader" . ?l)
+     ("risk" . ?k)
+     ("reading" . ?r) ("writing" . ?w)
+     ("project" . ?p) ("category" . ?c)
+     ("habit" . ?H)))
+  (org-stuck-projects
+   '("+LEVEL>=2-category-habit-info"
+     ("TODO" "SCHED"  "DONE"
+      "OPEN" "WAIT" "CLOSE"
+      "ABORT" "SOMEDAY" "REPEAT")
+     nil nil))
+  (org-agenda-include-diary t)
+  (org-agenda-span 2)
+  (org-agenda-skip-scheduled-if-done t)
+  (org-agenda-skip-deadline-if-done t)
+  (org-agenda-custom-commands
+   '(("t" todo "TODO|OPEN"
+      ((org-agenda-sorting-strategy '(priority-down))))
+     ("w" todo "SCHED|WAIT"
+      ((org-agenda-sorting-strategy '(priority-down))))
+     ;; all task should be done or doing
+     ("d" todo "TODO|SCHED|OPEN|WAIT"
+      ((org-agenda-sorting-strategy '(priority-down))))
+     ("f" todo "SOMEDAY"
+      ((org-agenda-sorting-strategy '(priority-down))))
+     ("h" tags "habit/-ABORT-CLOSE"
+      ((org-agenda-sorting-strategy '(todo-state-down))))
+     ("c" tags "clock"
+      ((org-agenda-sorting-strategy '(priority-down))))))
   :config
-  (defun youdao-dictionary-def-copied ()
+  (require 'ivy) ; use ivy to complete refile files
+  (require 'org-capture)
+  (require 'org-agenda)
+  (add-hook 'kill-emacs-hook
+            (lambda ()
+              (org-clock-out nil t nil)
+              (org-save-all-org-buffers)))
+  ;; kill diary when exit agenda
+  (advice-add 'org-agenda-exit
+              :after (lambda () (kill-buffer "diary")))
+  (diminish 'auto-fill-function)
+
+  (setq org-refile-targets
+        '(;; refile to maxlevel 2 of current file
+          (nil . (:maxlevel . 1))
+          ;; refile to maxlevel 1 of org-agenda-files
+          (org-agenda-files :maxlevel . 1)
+          ;; refile to item with 'project' tag in org-agenda-files
+          (org-agenda-files :tag . "project")
+          (org-agenda-files :tag . "category")))
+
+  (defadvice org-schedule (after add-todo activate)
+    (if (or (string= "OPEN" (org-get-todo-state))
+            (string= "WAIT" (org-get-todo-state))
+            (string= "CLOSE" (org-get-todo-state)))
+        (org-todo "WAIT")
+      (org-todo "SCHED")))
+
+  (defadvice org-deadline (after add-todo activate)
+    (if (or (string= "OPEN" (org-get-todo-state))
+            (string= "WAIT" (org-get-todo-state))
+            (string= "CLOSE" (org-get-todo-state)))
+        (org-todo "WAIT")
+      (org-todo "SCHED")))
+
+  (add-hook 'org-agenda-after-show-hook 'org-narrow-to-subtree)
+
+  (defun org-agenda-add-note (&optional arg)
+    "Add a time-stamped note to the entry at point. DO NOT show other
+headers when adding notes"
+    (interactive "P")
+    (org-agenda-check-no-diary)
+    (let* ((marker (or (org-get-at-bol 'org-marker)
+		               (org-agenda-error)))
+	       (buffer (marker-buffer marker))
+	       (pos (marker-position marker))
+	       (hfdmarker (org-get-at-bol 'org-hd-marker))
+	       (inhibit-read-only t))
+      (with-current-buffer buffer
+        (org-narrow-to-subtree) ;; change from widen to org-narrow-to-subtree
+        (goto-char pos)
+        (org-show-context 'agenda)
+        (org-add-note))))
+
+  (defun org-agenda-kill-files ()
     (interactive)
-    (youdao-dictionary-search (gui-get-selection)))
-    (defun youdao-dictionary-search-yanked ()
-    (interactive)
-    (youdao-dictionary-search
-     (if (x-get-clipboard)
-         (x-get-clipboard)
-       (car kill-ring)))))
+    (org-agenda-kill-all-agenda-buffers)
+    (mapcar (lambda (file)
+              (if-let (buf (get-file-buffer file))
+                  (kill-buffer buf)))
+            org-agenda-files)))
 #+end_src
 
 * Mail and Contacts
@@ -3119,20 +3111,8 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
     (mu4e-compose-reply)))
 #+end_src
 
-* Viewing Documents
-
-doc-view-mode can view many kind of documents, such as PDF, PS and images. You
-should install postscript in cygwin.
-
-#+begin_src emacs-lisp
-(use-package doc-view
-  :custom
-  (doc-view-continuous t)
-  (doc-view-image-width 500)
-  (doc-view-resolution 300))
-#+end_src
-
-* Reading News
+* Utilities
+** Reading News
 
 #+begin_src emacs-lisp
 (use-package elfeed
@@ -3142,6 +3122,7 @@ should install postscript in cygwin.
   (browse-url-browser-function 'browse-url-default-browser)
   (elfeed-feeds
    '(("http://kimi.im/atom.xml" blog)
+     ("https://blog.tecosaur.com/tmio/rss.xml" Org)
      ("www.chinadaily.com.cn/rss/bizchina_rss.xml" CN)
      ;; from https://www.foxnews.com/story/foxnews-com-rss-feeds
      ("http://feeds.foxnews.com/foxnews/world" EN)
@@ -3168,6 +3149,33 @@ should install postscript in cygwin.
               (lambda (entry)
                 (setq line-spacing 0.4)
                 (article-fill-long-lines))))
+#+end_src
+
+** Encryption
+
+Sometimes, you need to encrypt some secret files, setting ~epa-pinentry-mode~ to
+~loopback~ will prompt password inside minibuffer, while not show a dialog for it.
+
+And we also cache the symmetric key in the same
+#+begin_src emacs-lisp
+(use-package epa
+  :ensure nil
+  :custom
+  (epa-pinentry-mode 'loopback)
+  (epa-file-cache-passphrase-for-symmetric-encryption t))
+#+end_src
+
+** Viewing Documents
+
+doc-view-mode can view many kind of documents, such as PDF, PS and images. You
+should install postscript in cygwin.
+
+#+begin_src emacs-lisp
+(use-package doc-view
+  :custom
+  (doc-view-continuous t)
+  (doc-view-image-width 500)
+  (doc-view-resolution 300))
 #+end_src
 
 * kimim utils
@@ -3345,36 +3353,32 @@ Finally, let's list the useful key bindings in a table.
 
 [fn:8] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
 
-[fn:9] https://github.com/tldr-pages/tldr
+[fn:9] https://github.com/ggreer/the_silver_searcher#installation
 
-[fn:10] https://github.com/kuanyui/tldr.el
+[fn:10] https://github.com/Wilfred/ag.el
 
-[fn:11] https://github.com/ggreer/the_silver_searcher#installation
+[fn:11] https://github.com/syl20bnr/spacemacs/issues/381
 
-[fn:12] https://github.com/Wilfred/ag.el
+[fn:12] https://github.com/Fuco1/smartparens
 
-[fn:13] https://github.com/syl20bnr/spacemacs/issues/381
+[fn:13] https://github.com/emacs-lsp/lsp-mode/issues/2622
 
-[fn:14] https://github.com/Fuco1/smartparens
+[fn:14] https://clojure.org/
 
-[fn:15] https://github.com/emacs-lsp/lsp-mode/issues/2622
+[fn:15] https://cider.mx/
 
-[fn:16] https://clojure.org/
+[fn:16] https://github.com/jorgenschaefer/elpy
 
-[fn:17] https://cider.mx/
+[fn:17] https://github.com/ralesi/ahk-mode
 
-[fn:18] https://github.com/jorgenschaefer/elpy
+[fn:18] https://mermaid-js.github.io/
 
-[fn:19] https://github.com/ralesi/ahk-mode
+[fn:19] https://zettelkasten.de/
 
-[fn:20] https://mermaid-js.github.io/
+[fn:20] https://en.wikipedia.org/wiki/Niklas_Luhmann
 
-[fn:21] https://zettelkasten.de/
+[fn:21] https://pandoc.org/
 
-[fn:22] https://en.wikipedia.org/wiki/Niklas_Luhmann
+[fn:22] https://emacs.stackexchange.com/questions/22283/dired-group-directories-and-symlinks-to-directories-first
 
-[fn:23] https://pandoc.org/
-
-[fn:25] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
-
-[fn:24] https://emacs.stackexchange.com/questions/22283/dired-group-directories-and-symlinks-to-directories-first
+[fn:23] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
