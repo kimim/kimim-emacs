@@ -111,6 +111,7 @@
             (org-tag :foreground ,kimim-theme-builtin)
             (org-block-begin-line :foreground ,kimim-theme-const)
             (org-block-end-line :foreground ,kimim-theme-const)
+            (org-block :background "gray20")
             (org-scheduled-previously :foreground "cyan")
             (org-todo :foreground "orange" :weight bold)
             (org-warning :foreground "orange red" :weight bold)
@@ -171,7 +172,8 @@
             (mu4e-forwarded-face :foreground "turquoise")
             (mu4e-unread-face :foreground "light green")
             (sr-active-path-face :background ,kimim-theme-bg :foreground "gold")
-            (sr-passive-path-face :background ,kimim-theme-bg :foreground "light blue")))))
+            (sr-passive-path-face :background ,kimim-theme-bg :foreground "light blue")
+            (hide-ifdef-shadow :inherit shadow :foreground "gray")))))
 
 ;;(custom-theme-set-variables
 ;; 'kimim-night

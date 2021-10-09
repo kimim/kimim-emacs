@@ -851,7 +851,6 @@ any window by triggering ~ace-window~ (~C-x m w~).
 (use-package ace-window
   :bind
   (("M-o" . ace-window)
-   ("C-x o" . ace-window)
    ("C-x m w" . ace-swap-window)
    ("C-x m x" . ace-delete-window))
   :custom
@@ -1322,7 +1321,7 @@ that dash version higher than 2.18 is installed[fn:13].
   :commands lsp-ui-mode
   :custom
   (lsp-ui-doc-alignment 'window)
-  (lsp-ui-doc-max-width 80))
+  (lsp-ui-doc-max-width 90))
 #+end_src
 
 ** eldoc
@@ -1350,6 +1349,19 @@ that dash version higher than 2.18 is installed[fn:13].
 
 #+begin_src emacs-lisp
 (use-package clang-format)
+#+end_src
+
+(use-package lsp-clangd
+  :ensure lsp-mode
+  :custom (lsp-clients-clangd-args
+           '("--header-insertion-decorators=0"
+             "--all-scopes-completion"
+             "--completion-style=detailed"
+             "--background-index"
+             "--clang-tidy"
+             "--header-insertion=iwyu"
+             "--pch-storage=memory"
+             "-j=12")))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1834,8 +1846,8 @@ yarn add @mermaid-js/mermaid-cli
   :hook ((org-mode . org-superstar-mode)
          (org-mode . (lambda ()
                        "Beautify Org Checkbox Symbol"
-                       (push '("[ ]" . "☐") prettify-symbols-alist)
-                       (push '("[X]" . "☑" ) prettify-symbols-alist)
+                       ;;(push '("[ ]" . "☐") prettify-symbols-alist)
+                       ;;(push '("[X]" . "☑" ) prettify-symbols-alist)
                        (push '("#+begin_src" . "«" ) prettify-symbols-alist)
                        (push '("#+end_src" . "»" ) prettify-symbols-alist)
                        ;;(push '("#+begin_quotation" . "❝" ) prettify-symbols-alist)

@@ -111,6 +111,7 @@
             (org-tag :foreground ,kimim-theme-builtin)
             (org-block-begin-line :foreground ,kimim-theme-const)
             (org-block-end-line :foreground ,kimim-theme-const)
+            (org-block :background "gray95")
             (org-scheduled-previously :foreground ,kimim-theme-comment)
             (org-todo :foreground "orange red" :weight bold)
             (org-warning :foreground "dark orchid" :weight bold)
