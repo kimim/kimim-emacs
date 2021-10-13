@@ -380,6 +380,44 @@ Show (line, column) numbers in mode line:
   (column-number-mode 1)
   (toggle-word-wrap -1))
 #+end_src
+** mini modeline
+
+#+begin_src emacs-lisp
+(use-package mini-modeline
+  :defer 3
+  :bind ("C-x m m" . mini-modeline-toggle)
+  :config
+  (defun mini-modeline-toggle (&optional arg)
+    (interactive)
+    (setq mini-modeline-face-attr nil)
+    (setq mini-modeline-right-padding 3)
+    (if (or arg (not mini-modeline-mode))
+        (progn
+          (if mini-modeline-mode
+              (mini-modeline-mode -1))
+          (let* ((active-bg (face-attribute 'mode-line :background))
+                 (inactive-bg (face-attribute 'mode-line-inactive :background)))
+            (set-face-attribute 'mini-modeline-mode-line nil
+                                :background active-bg :foreground active-bg)
+            (set-face-attribute 'mini-modeline-mode-line-inactive nil
+                                :background inactive-bg :foreground inactive-bg))
+          (setq mini-modeline-r-format '("%e" mode-line-position
+                                         celestial-mode-line-string " "
+                                         display-time-string))
+          (mini-modeline-mode +1))
+      (mini-modeline-mode -1)))
+  (mini-modeline-toggle t))
+#+end_src
+
+** Celestial modeline
+
+#+begin_src emacs-lisp
+(use-package celestial-mode-line
+  :defer 1
+  :config
+  (setq global-mode-string '("" celestial-mode-line-string "  " display-time-string ""))
+  (celestial-mode-line-start-timer))
+#+end_src
 
 ** Color Theme
 
@@ -428,6 +466,7 @@ Use kimim-light as default theme.
   :config
   (load-theme 'kimim-light t))
 #+end_src
+
 
 ** Other Visual Element
 
@@ -634,8 +673,8 @@ fill-column.
 
 ** Highlight
 
-Highlight current line in window systems, but disable this in terminal. Because
-the line highlight will cause the terminal blinking.
+Highlight current line in window systems, but disable this in
+terminal. Because the line highlight will cause the terminal blinking.
 
 #+begin_src emacs-lisp
 (use-package hl-line
@@ -643,16 +682,6 @@ the line highlight will cause the terminal blinking.
   :defer 5
   :config
   (global-hl-line-mode -1))
-#+end_src
-
-Automatically highlight current symbol where the cursor is inside.
-
-#+begin_src emacs-lisp
-(use-package auto-highlight-symbol
-  :diminish auto-highlight-symbol-mode
-  :bind ("C-x m e" . ahs-edit-mode)
-  :config
-  (global-auto-highlight-symbol-mode t))
 #+end_src
 
 ** ispell
@@ -693,9 +722,10 @@ typing ~C-c <left>~.
 When type ~C-x m w~ it will create a new frame with the default frame
 configuration.
 
-The frame is inactive when emacsclientw connects to the daemon at the first
-time. So I add ~raise-frame~ in ~after-make-frame-functions~ to force emacs to bring
-the new frame to the front.
+Before an emacsclient first connect to daemon, the daemon is working
+in terminal mode. Thus ~(display-graphic-p)~ will return ~nil~. So I add
+~raise-frame~ in ~after-make-frame-functions~ to force emacs to bring the
+new frame to the front and apply the gui related settings.
 
 #+begin_src emacs-lisp
 (use-package frame
@@ -708,7 +738,8 @@ the new frame to the front.
               (select-frame frame)
               (kimim/menu-and-bar)
               (kimim/frame-and-font)
-              (raise-frame frame))))
+              (raise-frame frame)
+              (mini-modeline-toggle t))))
 #+end_src
 
 preserve the point in screen during scrolling looks nice(see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Scrolling.html][scrolling]]). scroll
@@ -1302,9 +1333,8 @@ that dash version higher than 2.18 is installed[fn:13].
   (lsp-modeline-code-action-fallback-icon "★")
   :bind (:map
          lsp-mode-map
-         ("C-x ." . lsp-find-definition)
-         ("C-x ," . pop-tag-mark)
-         ("C-." . kimim/lsp-find-definition-other-window))
+         ("C-." . lsp-find-definition)
+         ("C-x ." . kimim/lsp-find-definition-other-window))
   :hook ((clojure-mode . lsp)
          (c-mode . lsp)
          (c++-mode . lsp)
@@ -1344,13 +1374,13 @@ that dash version higher than 2.18 is installed[fn:13].
 #+end_src
 
 * Programming Language
-
-** C
+** C and C++
 
 #+begin_src emacs-lisp
 (use-package clang-format)
-#+end_src
+#+End_src
 
+#+begin_src emacs-lisp
 (use-package lsp-clangd
   :ensure lsp-mode
   :custom (lsp-clients-clangd-args
@@ -1362,6 +1392,21 @@ that dash version higher than 2.18 is installed[fn:13].
              "--header-insertion=iwyu"
              "--pch-storage=memory"
              "-j=12")))
+#+end_src
+
+~lsp-clangd~ cannot find definition before visiting the ~.c~ file, so we
+will use ~ggtags~ to locate the definition in ~.c~ file. After that,
+~lsp-clangd~ can index ~.c~ files.
+
+#+begin_src emacs-lisp
+(use-package ggtags
+  :bind (:map
+         ggtags-mode-map
+         ("M-." . ggtags-find-definition))
+  :hook ((c-mode c++-mode) . ggtags-mode)
+  :config
+  (setq ggtags-global-ignore-case t)
+  (setq ggtags-sort-by-nearness t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3202,8 +3247,7 @@ from system PATH, so you should set these to system PATH.
   :defines (mac-option-modifier
             mac-command-modifier)
   :bind
-  (("C-x m m" . kimim/mail-new-empty)
-   ("C-x m y" . kimim/mail-attach-files)
+  (("C-x m y" . kimim/mail-attach-files)
    ("<f9>" . kimim/xterm)
    ("S-<f9>" . kimim/cmd)
    ("C-c r" . kimim/rename-file-and-buffer)

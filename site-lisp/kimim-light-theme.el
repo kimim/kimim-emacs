@@ -59,7 +59,7 @@
             (mode-line :foreground "black" :background ,kimim-theme-modeline-bg :box nil :height 0.85)
             (mode-line-inactive :foreground "royal blue" :background ,kimim-theme-modeline-bg :box nil :height 0.85)
             (mode-line-buffer-id :foreground "blue4" :box nil :weight bold)
-            (header-line :background ,kimim-theme-modeline-bg :inherit mode-line)
+            (header-line :foreground "black" :background ,kimim-theme-modeline-bg :box nil :height 0.85)
             (shadow :foreground ,kimim-theme-shadow)
             (success :foreground ,kimim-theme-error)
             (error :foreground ,kimim-theme-error :weight bold)
@@ -176,7 +176,8 @@
             (message-cited-text-1 :foreground "blue")
             (sr-active-path-face :background ,kimim-theme-bg :foreground "deep pink")
             (sr-passive-path-face :background ,kimim-theme-bg :foreground "blue")
-            (hide-ifdef-shadow :inherit shadow :foreground "olive drab")))))
+            (hide-ifdef-shadow :inherit shadow :foreground "olive drab")
+            (ggtags-global-line :inherit secondary-selection :foreground "black")))))
 
 (custom-theme-set-variables
  'kimim-light
