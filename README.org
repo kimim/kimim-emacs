@@ -389,6 +389,7 @@ Show (line, column) numbers in mode line:
   :bind ("C-x m m" . mini-modeline-toggle)
   :config
   (defun mini-modeline-update-theme ()
+    (setq mini-modeline-face-attr nil)
     (let* ((active-bg (face-attribute 'mode-line :background))
            (inactive-bg (face-attribute 'mode-line-inactive :background)))
       (set-face-attribute 'mini-modeline-mode-line nil
