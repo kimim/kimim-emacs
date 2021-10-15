@@ -214,7 +214,7 @@ I prefer to use English/UTF-8 as default language environment.
 (set-locale-environment "en_US.UTF-8")
 (set-language-environment 'English)
 (prefer-coding-system 'utf-8)
-(set-buffer-file-coding-system 'utf-8)
+(set-buffer-file-coding-system 'utf-8-unix)
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (set-file-name-coding-system 'utf-8)
@@ -380,13 +380,22 @@ Show (line, column) numbers in mode line:
   (column-number-mode 1)
   (toggle-word-wrap -1))
 #+end_src
+
 ** mini modeline
 
 #+begin_src emacs-lisp
 (use-package mini-modeline
-  :defer 3
+  :defer 1
   :bind ("C-x m m" . mini-modeline-toggle)
   :config
+  (defun mini-modeline-update-theme ()
+    (let* ((active-bg (face-attribute 'mode-line :background))
+           (inactive-bg (face-attribute 'mode-line-inactive :background)))
+      (set-face-attribute 'mini-modeline-mode-line nil
+                          :background active-bg :foreground active-bg)
+      (set-face-attribute 'mini-modeline-mode-line-inactive nil
+                          :background inactive-bg :foreground inactive-bg)))
+
   (defun mini-modeline-toggle (&optional arg)
     (interactive)
     (setq mini-modeline-face-attr nil)
@@ -395,17 +404,16 @@ Show (line, column) numbers in mode line:
         (progn
           (if mini-modeline-mode
               (mini-modeline-mode -1))
-          (let* ((active-bg (face-attribute 'mode-line :background))
-                 (inactive-bg (face-attribute 'mode-line-inactive :background)))
-            (set-face-attribute 'mini-modeline-mode-line nil
-                                :background active-bg :foreground active-bg)
-            (set-face-attribute 'mini-modeline-mode-line-inactive nil
-                                :background inactive-bg :foreground inactive-bg))
+          (mini-modeline-update-theme)
           (setq mini-modeline-r-format '("%e" mode-line-position
-                                         celestial-mode-line-string " "
                                          display-time-string))
           (mini-modeline-mode +1))
       (mini-modeline-mode -1)))
+
+  (defun mini-modeline-update-theme-advice (&rest args)
+    (mini-modeline-update-theme))
+  ;; reset modeline color after theme change
+  (advice-add 'load-theme :after #'mini-modeline-update-theme-advice)
   (mini-modeline-toggle t))
 #+end_src
 
@@ -2220,7 +2228,7 @@ sudo apt install python3-pygments
           ("" "capt-of" nil nil))))
   (setq org-latex-packages-alist
         `(,(concat "\\addbibresource{"
-                   (expand-file-name org-ref-default-bibliography)
+                   (expand-file-name bibtex-completion-bibliography)
                    "}"))))
 #+end_src
 
@@ -2555,7 +2563,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
               kimim/org-ref-open-pdf
               kimim/org-ref-open-pdf-in-dired
               kimim/org-ref-open-notes)
-  :defines org-ref-default-bibliography
+  :defines bibtex-completion-bibliography
   :bind (("C-x m p" . kimim/org-ref-open-pdf-at-point)
          ("C-x m P" . kimim/org-ref-open-pdf-in-dired-at-point)
          ("C-x m n" . kimim/org-ref-open-notes-at-point))
@@ -2563,10 +2571,8 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
   (reftex-default-bibliography (concat kimim/path-ref "references.bib"))
   (org-ref-default-bibliography (concat kimim/path-ref "references.bib"))
   (bibtex-completion-bibliography (concat kimim/path-ref "references.bib"))
-  (org-ref-pdf-directory kimim/path-ref)
-  (bibtex-completion-library-path org-ref-pdf-directory)
-  (org-ref-bibliography-notes (concat kimim/path-notes "org-ref-notes.txt"))
-  (bibtex-completion-notes-path org-ref-bibliography-notes)
+  (bibtex-completion-library-path kimim/path-ref)
+  (bibtex-completion-notes-path (concat kimim/path-notes "org-ref-notes.txt"))
   (org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename)
   :demand t
   :config
@@ -2583,7 +2589,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
 `ivy-bibtex-display-transformer'"
     (interactive "P")
     (setq org-ref-bibtex-files (if arg
-				                   org-ref-default-bibliography
+				                   bibtex-completion-bibliography
 			                     (org-ref-find-bibliography)))
     (bibtex-completion-init)
     (let* ((candidates (bibtex-completion-candidates))
@@ -2623,10 +2629,10 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
   is found it is returned, but if multiple results are found,
   e.g. there are related files to the KEY you are prompted for
   which one you want."
-    (if org-ref-pdf-directory
-        (let* ((pdf-dirs (if (listp org-ref-pdf-directory)
-                             org-ref-pdf-directory
-                           (list org-ref-pdf-directory)))
+    (if bibtex-completion-library-path
+        (let* ((pdf-dirs (if (listp bibtex-completion-library-path)
+                             bibtex-completion-library-path
+                           (list bibtex-completion-library-path)))
                (pdfs
                 (-flatten
                  (--map (file-expand-wildcards
@@ -2637,12 +2643,12 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
                                         pdf-dirs)))))))
           (cond
            ((= 0 (length pdfs))
-            (expand-file-name (format "%s.pdf" key) org-ref-pdf-directory))
+            (expand-file-name (format "%s.pdf" key) bibtex-completion-library-path))
            ((= 1 (length pdfs))
             (car pdfs))
            ((> (length pdfs) 1)
             (completing-read "Choose: " pdfs))))
-      ;; No org-ref-pdf-directory defined so return just a file name.
+      ;; No bibtex-completion-library-path defined so return just a file name.
       (format "%s.pdf" key)))
 
   (defun kimim/org-ref-open-pdf-action (entry)
