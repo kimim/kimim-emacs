@@ -1084,6 +1084,12 @@ dired-efap, Edit file at point, can be used to rename file name at the point:
   :commands dired-narrow)
 #+end_src
 
+** dired-filter
+
+#+begin_src emacs-lisp
+(use-package dired-filter)
+#+end_src
+
 ** ibuffer
 
 #+begin_src emacs-lisp
@@ -1509,6 +1515,11 @@ Clojure[fn:14] is a lisp over JVM. Emm, I like it.
   (add-hook 'clojurescript-mode-hook #'cider-mode)
   (add-hook 'clojurescript-mode-hook #'lsp)
   (add-hook 'clojurescript-mode-hook #'clj-refactor-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package clojure-snippets)
+(use-package clojure-mode-extra-font-locking)
 #+end_src
 
 *** clj-kondo
