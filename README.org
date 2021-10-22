@@ -386,6 +386,8 @@ Show (line, column) numbers in mode line:
 #+begin_src emacs-lisp
 (use-package mini-modeline
   :defer 1
+  :functions (mini-modeline-update-theme
+              mini-modeline-update-theme-advice)
   :bind ("C-x m m" . mini-modeline-toggle)
   :config
   (defun mini-modeline-update-theme ()
@@ -407,6 +409,7 @@ Show (line, column) numbers in mode line:
               (mini-modeline-mode -1))
           (mini-modeline-update-theme)
           (setq mini-modeline-r-format '("%e" mode-line-position
+                                         celestial-mode-line-string "  "
                                          display-time-string))
           (mini-modeline-mode +1))
       (mini-modeline-mode -1)))
@@ -1868,6 +1871,8 @@ yarn add @mermaid-js/mermaid-cli
                  ol-irc ol-mhe ol-rmail ol-eww))
   (org-export-with-sub-superscripts "{}")
   (org-startup-folded 'showall)
+  (org-startup-with-inline-images t)
+  (org-hide-block-startup t)
   :config
   ;; no use for me, I always press this key accidentally
   (unbind-key "C-'" 'org-mode-map)
@@ -1991,8 +1996,6 @@ yarn add @mermaid-js/mermaid-cli
   (setq org-download-timestamp "")
   (setq-default org-download-image-dir "./images")
   (setq org-download-method 'directory)
-
-  (setq org-startup-with-inline-images nil)
 
   (defun kimim/org-download-annotate (link)
     "Annotate LINK with the time of download."
@@ -2452,8 +2455,6 @@ sqlite3 is shipped in macOS by default.
    (org-roam-db-location (file-truename
                           (concat user-emacs-directory
                                   "org-roam.db")))
-   (org-roam-buffer-window-parameters
-    '((no-delete-other-windows . t)))
    (org-roam-link-auto-replace nil)
    (org-roam-file-extensions '("txt" "org"))
    (org-roam-capture-templates
