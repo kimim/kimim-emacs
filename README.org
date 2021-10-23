@@ -127,12 +127,15 @@ define them in =~/.emacs=:
 - =kimim/path-ref= to keep reference documents
 - =kimim/path-kimim-emacs= where kimim-emacs you clone to
 
-Let's tell =emacs=, if the pathes are not set, report error:
+Let's tell =emacs=, if the path is not set, report error, if the path is
+set, but not exists, create it.
 
 #+begin_src emacs-lisp
 (mapc (lambda (path)
         (if (not (boundp path))
-            (error (concat "please set " (symbol-name path) " in ~/.emacs"))))
+            (error (concat "please set " (symbol-name path) " in ~/.emacs"))
+          (if (not (file-exists-p (symbol-value path)))
+              (make-directory (symbol-value path)))))
       '(kimim/path-sync
         kimim/path-sync-emacs
         kimim/path-org
