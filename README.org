@@ -781,7 +781,7 @@ Display key candidates when you typed part key prefix with ~which-key-mode~.
 (use-package which-key
   :defer 3
   :diminish which-key-mode
-  :custom (which-key-popup-type 'minibuffer)
+  :custom (which-key-popup-type 'side-window)
   :config
   (which-key-mode 1))
 #+end_src
