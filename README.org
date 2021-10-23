@@ -392,7 +392,14 @@ Show (line, column) numbers in mode line:
   :functions (mini-modeline-update-theme
               mini-modeline-update-theme-advice)
   :bind ("C-x m m" . mini-modeline-toggle)
+  :custom (mini-modeline-echo-duration 10)
   :config
+
+  (defun kimim/mini-modeline-restore ()
+    (window-resize (minibuffer-window mini-modeline-frame) -100))
+  ;; force restore minibuffer when press C-g
+  (advice-add #'keyboard-quit :before #'kimim/mini-modeline-restore)
+
   (defun mini-modeline-update-theme ()
     (setq mini-modeline-face-attr nil)
     (let* ((active-bg (face-attribute 'mode-line :background))
