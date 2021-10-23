@@ -2026,7 +2026,6 @@ yarn add @mermaid-js/mermaid-cli
   :custom (org-num-skip-footnotes t)
   :config
   (require 'org-download)
-  (require 'pangu-spacing)
   (setq org-hide-leading-stars t)
   (setq org-footnote-auto-adjust t)
   (setq org-footnote-define-inline nil)
