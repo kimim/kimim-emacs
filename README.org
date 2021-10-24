@@ -1266,7 +1266,7 @@ relationship.
 
 #+begin_src emacs-lisp
 (use-package magit
-  :bind (("C-x p m" . magit))
+  :bind (("C-x p m" . magit-status-here))
   :custom (magit-log-show-refname-after-summary t))
 #+end_src
 
