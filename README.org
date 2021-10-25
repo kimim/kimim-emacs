@@ -384,6 +384,55 @@ Show (line, column) numbers in mode line:
   (toggle-word-wrap -1))
 #+end_src
 
+** mini modeline
+
+#+begin_src emacs-lisp
+(use-package mini-modeline
+  :defer 1
+  :functions (mini-modeline-update-theme
+              mini-modeline-update-theme-advice)
+  :bind ("C-x m m" . mini-modeline-toggle)
+  :custom (mini-modeline-echo-duration 10)
+  :config
+
+  (defun kimim/mini-modeline-restore ()
+    (window-resize (minibuffer-window mini-modeline-frame) -100))
+  ;; force restore minibuffer when press C-g
+  (advice-add #'keyboard-quit :before #'kimim/mini-modeline-restore)
+  ;; (add-hook 'after-make-frame-functions
+  ;;           (lambda (frame)
+  ;;             (mini-modeline-mode +1)))
+  (defun mini-modeline-update-theme ()
+    (setq mini-modeline-face-attr nil)
+    (let* ((active-bg (face-attribute 'mode-line :background))
+           (inactive-bg (face-attribute 'mode-line-inactive :background)))
+      (set-face-attribute 'mini-modeline-mode-line nil
+                          :background active-bg :foreground active-bg)
+      (set-face-attribute 'mini-modeline-mode-line-inactive nil
+                          :background inactive-bg :foreground inactive-bg)))
+
+  (defun mini-modeline-toggle (&optional arg)
+    (interactive)
+    (setq mini-modeline-face-attr nil)
+    (setq mini-modeline-right-padding 3)
+    (if (or arg (not mini-modeline-mode))
+        (progn
+          (if mini-modeline-mode
+              (mini-modeline-mode -1))
+          (mini-modeline-update-theme)
+          (setq mini-modeline-r-format '("%e" mode-line-position
+                                         celestial-mode-line-string "  "
+                                         display-time-string))
+          (mini-modeline-mode +1))
+      (mini-modeline-mode -1)))
+
+  (defun mini-modeline-update-theme-advice (&rest args)
+    (mini-modeline-update-theme))
+  ;; reset modeline color after theme change
+  (advice-add 'load-theme :after #'mini-modeline-update-theme-advice)
+  (mini-modeline-toggle t))
+#+end_src
+
 ** Celestial modeline
 
 #+begin_src emacs-lisp
