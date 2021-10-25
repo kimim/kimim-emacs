@@ -1735,6 +1735,15 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
   :mode ("\\.ps1\\'" . powershell-mode))
 #+end_src
 
+** solidity
+
+Major mode to edit ethereum solidity smart contract code.
+
+#+begin_src emacs-lisp
+(use-package solidity-mode
+  :mode ("\\.sol\\'" . solidity-mode))
+#+end_src
+
 * Diagram
 ** PlantUML
 
