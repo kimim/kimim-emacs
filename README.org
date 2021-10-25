@@ -713,8 +713,7 @@ new frame to the front and apply the gui related settings.
               (select-frame frame)
               (kimim/menu-and-bar)
               (kimim/frame-and-font)
-              (raise-frame frame)
-              (mini-modeline-toggle t))))
+              (raise-frame frame))))
 #+end_src
 
 preserve the point in screen during scrolling looks nice(see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Scrolling.html][scrolling]]). scroll
