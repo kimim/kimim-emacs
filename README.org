@@ -2342,7 +2342,7 @@ New link to use Office Onenote.
     ;; file in jekyll base will also be uploaded to github
     (defvar path-jekyll-base "~/kimi.im/_notes/_posts")
     ;; in order to sync draft with cloud sync driver
-    (defvar path-jekyll-draft (concat kimim/path-sync-emacs "kimim/_draft/"))
+    (defvar path-jekyll-draft (concat kimim/path-sync "kimim/_draft/"))
     ;; file in jekyll base will also be uploaded to github
 
     (setq org-publish-project-alist
