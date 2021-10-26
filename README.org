@@ -394,7 +394,6 @@ Show (line, column) numbers in mode line:
   :bind ("C-x m m" . mini-modeline-toggle)
   :custom (mini-modeline-echo-duration 10)
   :config
-
   (defun kimim/mini-modeline-restore ()
     (window-resize (minibuffer-window mini-modeline-frame) -100))
   ;; force restore minibuffer when press C-g
@@ -429,8 +428,7 @@ Show (line, column) numbers in mode line:
   (defun mini-modeline-update-theme-advice (&rest args)
     (mini-modeline-update-theme))
   ;; reset modeline color after theme change
-  (advice-add 'load-theme :after #'mini-modeline-update-theme-advice)
-  (mini-modeline-toggle t))
+  (advice-add 'load-theme :after #'mini-modeline-update-theme-advice))
 #+end_src
 
 ** Celestial modeline
