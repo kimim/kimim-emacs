@@ -815,7 +815,6 @@ List recent used commands with ~smex~:
    ("C-x b" . counsel-ibuffer)
    ("C-c k" . counsel-ag)
    ("C-c p" . counsel-pt)
-   ("C-x l" . counsel-locate)
    :map read-expression-map
    ("C-r" . counsel-minibuffer-history))
   :config
@@ -1359,6 +1358,7 @@ that dash version higher than 2.18 is installed[fn:13].
   (lsp-headerline-breadcrumb-icons-enable nil)
   (lsp-headerline-breadcrumb-enable nil)
   (lsp-modeline-code-action-fallback-icon "★")
+  (lsp-ui-doc-text-scale-level -1)
   :bind (:map
          lsp-mode-map
          ("C-." . lsp-find-definition)
@@ -1370,6 +1370,7 @@ that dash version higher than 2.18 is installed[fn:13].
          (rustic-mode . lsp))
   :config
   (require 'dash)
+  (define-key lsp-mode-map (kbd "C-x l") lsp-command-map)
   (defun kimim/lsp-find-definition-other-window ()
     (interactive)
     (lsp-find-definition :display-action 'window)
@@ -2192,7 +2193,6 @@ sudo apt install python3-pygments
   :commands org-latex-publish-to-pdf
   :diminish org-beamer-mode
   :custom
-  (org-latex-image-default-height "0.75\\textheight")
   (org-latex-listings 'minted)
   (org-latex-minted-options
    '(("frame" "single") ("fontsize" "\\small")))
