@@ -175,7 +175,9 @@
             (mu4e-unread-face :foreground "blue" :bold t)
             (message-cited-text-1 :foreground "blue")
             (sr-active-path-face :background ,kimim-theme-bg :foreground "deep pink")
-            (sr-passive-path-face :background ,kimim-theme-bg :foreground "blue")))))
+            (sr-passive-path-face :background ,kimim-theme-bg :foreground "blue")
+            (lsp-ui-doc-url :inherit link :height 0.8)
+            (lsp-ui-doc-background :background ,kimim-theme-modeline-bg)))))
 
 (custom-theme-set-variables
  'kimim-paper

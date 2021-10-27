@@ -174,7 +174,10 @@
             (mu4e-unread-face :foreground "light green")
             (sr-active-path-face :background ,kimim-theme-bg :foreground "gold")
             (sr-passive-path-face :background ,kimim-theme-bg :foreground "light blue")
-            (hide-ifdef-shadow :inherit shadow :foreground "gray")))))
+            (hide-ifdef-shadow :inherit shadow :foreground "gray")
+            (lsp-ui-doc-url :inherit link :height 0.8)
+            (lsp-ui-doc-background :background ,kimim-theme-modeline-bg)))))
+
 ;;(custom-theme-set-variables
 ;; 'kimim-night
 ;; '(ansi-color-names-vector ["#242424" "#e5786d" "#95e454" "#cae682"

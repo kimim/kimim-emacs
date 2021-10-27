@@ -1352,7 +1352,22 @@ that dash version higher than 2.18 is installed[fn:13].
 #+end_src
 
 #+begin_src emacs-lisp
+(use-package goto-addr
+  :config
+  ;;(setq goto-address-uri-schemes-ignored '("mailto:" "data:" "jar:"))
+  (setq goto-address-uri-schemes
+        (cons "C:" (seq-reduce (lambda (accum elt) (delete elt accum))
+                        goto-address-uri-schemes-ignored
+                        (copy-sequence thing-at-point-uri-schemes))))
+  (setq goto-address-url-regexp
+        (concat "\\<"
+                (regexp-opt goto-address-uri-schemes t)
+                thing-at-point-url-path-regexp)))
+#+end_src
+
+#+begin_src emacs-lisp
 (use-package lsp-mode
+  :after goto-addr
   :commands lsp
   :custom
   (lsp-headerline-breadcrumb-icons-enable nil)
@@ -1370,6 +1385,7 @@ that dash version higher than 2.18 is installed[fn:13].
          (rustic-mode . lsp))
   :config
   (require 'dash)
+  (require 'goto-addr)
   (define-key lsp-mode-map (kbd "C-x l") lsp-command-map)
   (defun kimim/lsp-find-definition-other-window ()
     (interactive)

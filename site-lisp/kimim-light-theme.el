@@ -178,7 +178,9 @@
             (sr-active-path-face :background ,kimim-theme-bg :foreground "deep pink")
             (sr-passive-path-face :background ,kimim-theme-bg :foreground "blue")
             (hide-ifdef-shadow :inherit shadow :foreground "olive drab")
-            (ggtags-global-line :inherit secondary-selection :foreground "black")))))
+            (ggtags-global-line :inherit secondary-selection :foreground "black")
+            (lsp-ui-doc-url :inherit link :height 0.8)
+            (lsp-ui-doc-background :background ,kimim-theme-modeline-bg)))))
 
 (custom-theme-set-variables
  'kimim-light
