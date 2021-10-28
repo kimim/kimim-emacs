@@ -3222,6 +3222,16 @@ headers when adding notes"
 #+end_src
 
 * Utilities
+** restclient
+
+#+begin_src emacs-lisp
+(use-package restclient
+  :mode ("\\.http\\'" . restclient-mode)
+  :bind (:map restclient-mode-map
+         ("C-c C-c" . restclient-http-send-current-stay-in-window)
+         ("C-c C-v" . restclient-http-send-current)))
+#+end_src
+
 ** Reading News
 
 #+begin_src emacs-lisp
