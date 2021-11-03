@@ -727,6 +727,13 @@ Check spell on the fly.
          (org-mode . flyspell-mode)))
 #+end_src
 
+** olivetti
+
+#+begin_src emacs-lisp
+(use-package olivetti
+  :hook (text-mode . olivetti-mode))
+#+end_src
+
 * Controlling
 ** Window and Frame
 

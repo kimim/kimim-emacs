@@ -54,6 +54,9 @@
          (mapcar
           (lambda (x) `(,(car x) ((,class ,(cdr x)))))
           `((default :foreground ,kimim-theme-fg :background ,kimim-theme-bg)
+            (bold :inherit default :weight bold)
+            (italic :inherit default :slant italic)
+            (underline :inherit default :foreground "orange red" :underline t)
             (cursor :background ,"orange")
             (fringe :background ,kimim-theme-bg)
             (mode-line :foreground "black" :background ,kimim-theme-modeline-bg :box nil :height 0.85)
@@ -88,7 +91,6 @@
             (font-lock-variable-name-face :foreground ,kimim-theme-fg)
             (font-lock-warning-face :foreground ,kimim-theme-error)
             (font-lock-doxygen-face :foreground "SaddleBrown" :background "#f7f7f7")
-            (underline :foreground "orange red" :underline t)
             (org-level-1 :weight bold :foreground "#00008b") ;; dark blue
             (org-level-2 :weight bold :foreground "#6a5acd") ;; slate blue
             (org-level-3 :weight bold :foreground "#0078d7")
@@ -119,6 +121,8 @@
             (org-table :foreground "blue1")
             (org-footnote :foreground "purple" :underline t)
             (org-ref-cite-face :inherit link)
+            (org-agenda-clocking :inherit secondary-selection
+                                 :foreground ,kimim-theme-fg)
             (gnus-summary-cancelled :foreground "lightblue")
             (gnus-header-subject :foreground "blue" :bold t)
             (ido-subdir :weight bold)
