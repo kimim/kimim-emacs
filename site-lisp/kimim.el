@@ -581,8 +581,8 @@ documents."
   (set-frame-height (selected-frame) 18)
   (set-frame-position
    (selected-frame)
-   (/ (nth 3 (caar (display-monitor-attributes-list))) 10)
-   (* 6 (/ (nth 4 (caar (display-monitor-attributes-list))) 10))))
+   (/ (display-pixel-width) 10)
+   (* 6 (/ (display-pixel-height) 10))))
 
 (defun kimim/shrink-up ()
   "Shrink window to the middle up part, leave space for reading
@@ -592,8 +592,8 @@ documents."
   (set-frame-height (selected-frame) 18)
   (set-frame-position
    (selected-frame)
-   (/ (nth 3 (caar (display-monitor-attributes-list))) 10)
-   (* 1 (/ (nth 4 (caar (display-monitor-attributes-list))) 20))))
+   (/ (display-pixel-width) 10)
+   (* 1 (/ (display-pixel-height) 20))))
 
 (defun kimim/shrink-right ()
   "Shrink window to the right part, leave space for reading
@@ -603,7 +603,7 @@ documents."
   (set-frame-width (selected-frame) (round (/ (frame-width) 2.1)))
   (set-frame-position
    (selected-frame)
-   (/ (* (nth 3 (caar (display-monitor-attributes-list))) 3) 5)
+   (/ (* (display-pixel-width) 3) 5)
    (cdr (frame-position))))
 
 (defun kimim/shrink-left ()
@@ -614,7 +614,7 @@ documents."
   (set-frame-width (selected-frame) (round (/ (frame-width) 2.1)))
   (set-frame-position
    (selected-frame)
-   (/ (nth 3 (caar (display-monitor-attributes-list))) 100)
+   (/ (display-pixel-width) 100)
    (cdr (frame-position))))
 
 
