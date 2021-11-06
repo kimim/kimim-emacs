@@ -360,7 +360,7 @@ Display date and time, but do not display system load.
 #+begin_src emacs-lisp
 (use-package time
   :ensure nil
-  :defer 1
+  :defer 0
   :custom
   (display-time-24hr-format t)
   (display-time-day-and-date t)
@@ -392,7 +392,6 @@ Show (line, column) numbers in mode line:
 
 #+begin_src emacs-lisp
 (use-package mini-modeline
-  :defer 1
   :functions (mini-modeline-update-theme
               mini-modeline-update-theme-advice)
   :bind ("C-x m m" . mini-modeline-toggle)
@@ -484,13 +483,10 @@ Use kimim-light as default theme.
 #+begin_src emacs-lisp
 (use-package custom
   :ensure nil
-  :defer 0
   :custom (;; do not warning when load new theme
            (custom-safe-themes t)
            ;; add my theme files to custom theme directory
-           (custom-theme-directory "~/kimim-emacs/site-lisp/"))
-  :config
-  (load-theme 'kimim-light t))
+           (custom-theme-directory "~/kimim-emacs/site-lisp/")))
 #+end_src
 
 
@@ -678,7 +674,6 @@ region. That's amazing.
 
 #+begin_src emacs-lisp
 (use-package multiple-cursors
-  :defer 5
   :bind
   ("C-S-c C-S-c" . mc/edit-lines)
   ("C->" . mc/mark-next-like-this)
@@ -705,7 +700,6 @@ terminal. Because the line highlight will cause the terminal blinking.
 #+begin_src emacs-lisp
 (use-package hl-line
   :if window-system
-  :defer 5
   :config
   (global-hl-line-mode -1))
 #+end_src
@@ -812,7 +806,6 @@ List recent used commands with ~smex~:
 
 #+begin_src emacs-lisp
 (use-package counsel
-  :defer 5
   :bind
   (("M-x" . counsel-M-x)
    ("C-x C-f" . counsel-find-file)
@@ -842,8 +835,6 @@ help you to establish the habit of efficiently using emacs keybinding.
 
 #+begin_src emacs-lisp
 (use-package guru-mode
-  :ensure t
-  :defer 1
   :diminish guru-mode
   :config
   (guru-global-mode +1))
@@ -1191,7 +1182,7 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
 
 #+begin_src emacs-lisp
 (use-package company
-  :defer 0
+  :defer 10
   :functions (company-abort)
   :bind (:map company-active-map
               ("C-n" . company--select-next-and-warn)
@@ -2512,7 +2503,6 @@ sqlite3 is shipped in macOS by default.
 #+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
-  :defer 5
   :custom
   ((org-roam-directory kimim/path-notes)
    (org-roam-db-location (file-truename
@@ -2639,7 +2629,6 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
   (bibtex-completion-library-path kimim/path-ref)
   (bibtex-completion-notes-path (concat kimim/path-notes "org-ref-notes.txt"))
   (org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename)
-  :demand t
   :config
   (require 'ivy-bibtex)
   (require 'org-ref-ivy-cite)
@@ -2845,7 +2834,6 @@ support more functions from =org-ref=:
 
 #+begin_src emacs-lisp
 (use-package bibtex
-  :demand t
   :ensure nil
   :bind (:map bibtex-mode-map
          ("C-x m p" . org-ref-open-bibtex-pdf)
