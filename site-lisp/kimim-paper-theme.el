@@ -181,7 +181,9 @@
             (sr-active-path-face :background ,kimim-theme-bg :foreground "deep pink")
             (sr-passive-path-face :background ,kimim-theme-bg :foreground "blue")
             (lsp-ui-doc-url :inherit link :height 0.8)
-            (lsp-ui-doc-background :background ,kimim-theme-modeline-bg)))))
+            (lsp-ui-doc-background :background ,kimim-theme-modeline-bg)
+            (term-color-white :foreground "blue")
+            (term-color-blue :foreground "blue")))))
 
 (custom-theme-set-variables
  'kimim-paper

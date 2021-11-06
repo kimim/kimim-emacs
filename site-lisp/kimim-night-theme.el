@@ -180,7 +180,9 @@
             (sr-passive-path-face :background ,kimim-theme-bg :foreground "light blue")
             (hide-ifdef-shadow :inherit shadow :foreground "gray")
             (lsp-ui-doc-url :inherit link :height 0.8)
-            (lsp-ui-doc-background :background ,kimim-theme-modeline-bg)))))
+            (lsp-ui-doc-background :background ,kimim-theme-modeline-bg)
+            (term-color-white :foreground "white")
+            (term-color-blue :foreground "light blue")))))
 
 ;;(custom-theme-set-variables
 ;; 'kimim-night
