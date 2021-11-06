@@ -307,6 +307,10 @@ calculated with original default font height and width: =frame-char-height= and
 
 #+begin_src emacs-lisp
 (use-package cnfonts
+  :bind (("C-+" . cnfonts-increase-fontsize)
+         ("C--" . cnfonts-decrease-fontsize)
+         ("C-=" . cnfonts-increase-fontsize)
+         ("C-0" . cnfonts-reset-fontsize))
   :functions cnfonts-set-font-first-time)
 #+end_src
 
@@ -318,8 +322,8 @@ calculated with original default font height and width: =frame-char-height= and
     (cnfonts-enable)
     (cnfonts-set-font-first-time)
     ;; top, left ... must be integer
-    (let ((width (nth 3 (caar (display-monitor-attributes-list))))
-          (height (nth 4 (caar (display-monitor-attributes-list))))
+    (let ((width (display-pixel-width))
+          (height (display-pixel-height))
           (frame (selected-frame)))
       (set-frame-position frame (/ width 10) (/ height 10))
       (set-frame-height frame (/ (* 4 height)
@@ -689,8 +693,8 @@ Markdown file is not fill-column'ed, so let emacs visually
 fill-column.
 
 #+begin_src emacs-lisp
-(use-package visual-fill-column
-  :hook (markdown-mode . visual-fill-column-mode))
+;; (use-package visual-fill-column
+;;   :hook (markdown-mode . visual-fill-column-mode))
 #+end_src
 
 ** Highlight
@@ -731,6 +735,7 @@ Check spell on the fly.
 
 #+begin_src emacs-lisp
 (use-package olivetti
+  :custom (olivetti-body-width (+ fill-column 8))
   :hook (text-mode . olivetti-mode))
 #+end_src
 
@@ -832,8 +837,8 @@ List recent used commands with ~smex~:
 
 ** guru mode
 
-~guru-mode~ warns you when you type arrow keys, home or end. This could help you
-to establish the habit of efficiently using emacs keybinding.
+~guru-mode~ warns you when you type arrow keys, home or end. This could
+help you to establish the habit of efficiently using emacs keybinding.
 
 #+begin_src emacs-lisp
 (use-package guru-mode
@@ -1464,6 +1469,12 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
 #+begin_src emacs-lisp
 (use-package cc-mode
   :ensure nil
+  :custom   (c-default-style
+             '((java-mode . "java")
+               (awk-mode . "awk")
+               (c-mode . "cc-mode")
+               (c++-mode . "stroustrup")
+               (other . "k&r")))
   :defines c++-mode-map
   :bind (:map
          c++-mode-map
@@ -1938,7 +1949,7 @@ yarn add @mermaid-js/mermaid-cli
   (if window-system
       (setq org-startup-indented t)
     (setq org-startup-indented nil))
-  (setq org-image-actual-width 750))
+  (setq org-image-actual-width 700))
 #+end_src
 
 ** org-appear
@@ -3355,10 +3366,6 @@ from system PATH, so you should set these to system PATH.
    ("C-x  ‘" . hippie-expand)
    ("C-x  ’" . hippie-expand)
    ("C-x M-s" . eshell)
-   ("C-+" . text-scale-increase)
-   ("C--" . text-scale-decrease)
-   ("C-=" . text-scale-adjust)
-   ("C-0" . kimim/restore-text-scale)
    ("C-x /" . kimim/toggle-path-header)
    ("C-x m 0" . kimim/frame-and-font)
    ("C-x m SPC" . kimim/shrink-down)
