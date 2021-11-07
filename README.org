@@ -2607,6 +2607,13 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
 * Reference management
 
 #+begin_src emacs-lisp
+(use-package bibtex-completion
+  :bind ("C-x m b" . (lambda ()
+                       (interactive)
+                       (find-file bibtex-completion-bibliography))))
+#+end_src
+
+#+begin_src emacs-lisp
 (use-package org-ref
   :functions (-flatten
               f-join
