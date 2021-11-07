@@ -2610,7 +2610,6 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
 (use-package org-ref
   :functions (-flatten
               f-join
-              reftex-get-bib-field
               org-ref-get-bibtex-key-and-file
               bibtex-completion-key-at-point
               bibtex-completion-candidates
@@ -2624,68 +2623,25 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
   :defines bibtex-completion-bibliography
   :bind (("C-x m p" . kimim/org-ref-open-pdf-at-point)
          ("C-x m P" . kimim/org-ref-open-pdf-in-dired-at-point)
-         ("C-x m n" . kimim/org-ref-open-notes-at-point))
+         ("C-x m n" . kimim/org-ref-open-notes-at-point)
+         :map org-mode-map
+         ("C-c ]" . org-ref-insert-cite-link))
   :custom
   (reftex-default-bibliography (concat kimim/path-ref "references.bib"))
   (org-ref-default-bibliography (concat kimim/path-ref "references.bib"))
   (bibtex-completion-bibliography (concat kimim/path-ref "references.bib"))
   (bibtex-completion-library-path kimim/path-ref)
   (bibtex-completion-notes-path (concat kimim/path-notes "org-ref-notes.txt"))
-  (org-ref-get-pdf-filename-function 'kimim/org-ref-get-pdf-filename)
   :config
   (require 'ivy-bibtex)
-  (require 'org-ref-ivy-cite)
-  (setq org-ref-insert-link-function 'org-ref-insert-link
-        org-ref-insert-cite-function 'kimim/org-ref-ivy-insert-cite-link
-        org-ref-insert-label-function 'org-ref-ivy-insert-label-link
-        org-ref-insert-ref-function 'org-ref-ivy-insert-ref-link
-        org-ref-cite-onclick-function (lambda (_) (org-ref-cite-hydra/body)))
-
-  (defun kimim/org-ref-ivy-insert-cite-link (&optional arg)
-    "insert cite link with help of `ivy-bibtext' and corresponding
-`ivy-bibtex-display-transformer'"
-    (interactive "P")
-    (setq org-ref-bibtex-files (if arg
-				                   bibtex-completion-bibliography
-			                     (org-ref-find-bibliography)))
-    (bibtex-completion-init)
-    (let* ((candidates (bibtex-completion-candidates))
-           (key (bibtex-completion-key-at-point))
-           (preselect (and key
-                           (cl-position-if (lambda (cand)
-                                             (member (cons "=key=" key)
-                                                     (cdr cand)))
-                                           candidates))))
-      (ivy-read "Open: "
-                candidates
-                :preselect preselect
-                :caller 'ivy-bibtex
-                :history 'ivy-bibtex-history
-                :action 'or-ivy-bibtex-insert-cite)))
-
-  (defun kimim/org-ref-open-bibtex-in-dired ()
-    "Open dired buffer of pdf for a bibtex entry, if it exists."
-    (interactive)
-    (save-excursion
-      (bibtex-beginning-of-entry)
-      (let* ((bibtex-expand-strings t)
-             (entry (bibtex-parse-entry t))
-             (key (reftex-get-bib-field "=key=" entry))
-             (pdf (funcall org-ref-get-pdf-filename-function key)))
-        (if (file-exists-p pdf)
-            (dired-jump nil (directory-file-name pdf))
-          (ding)))))
-  ;; open pdf with system pdf viewer
-  ;;(setq bibtex-completion-pdf-open-function
-  ;;      (lambda (fpath)
-  ;;        (kimim/open-external fpath)))
-
+  (require 'org-roam-bibtex)
   (defun kimim/org-ref-get-pdf-filename (key)
-    "Return the pdf filename associated with a bibtex KEY.
-  This searches recursively for the pattern KEY*.pdf. If one result
-  is found it is returned, but if multiple results are found,
-  e.g. there are related files to the KEY you are prompted for
-  which one you want."
+    "Unlike `org-ref-get-pdf-filename', this function will get the
+  pdf file name recursively, and return the pdf filename
+  associated with a bibtex KEY. This searches recursively for the
+  pattern KEY*.pdf. If one result is found it is returned, but if
+  multiple results are found, e.g. there are related files to the
+  KEY you are prompted for which one you want."
     (if bibtex-completion-library-path
         (let* ((pdf-dirs (if (listp bibtex-completion-library-path)
                              bibtex-completion-library-path
@@ -2712,7 +2668,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
     "Open the pdf for bibtex key under point if it exists."
     (with-ivy-window
       (let* ((key (cdr (assoc "=key=" entry)))
-             (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+             (pdf-file (kimim/org-ref-get-pdf-filename key)))
         (if (file-exists-p pdf-file)
             (org-open-file pdf-file)
           (message "no pdf found for %s" key)))))
@@ -2746,16 +2702,17 @@ does not check that."
            (key (car results)))
       (if (or (eq "" key) (null key))
           (kimim/org-ref-open-pdf)
-        (let ((pdf-file (funcall org-ref-get-pdf-filename-function key)))
+        (let ((pdf-file (kimim/org-ref-get-pdf-filename key)))
           (if (file-exists-p pdf-file)
               (org-open-file pdf-file)
             (kimim/org-ref-open-pdf))))))
+
 
   (defun kimim/org-ref-open-pdf-in-dired-action (entry)
     "Open the pdf dired for bibtex key under point if it exists."
     (with-ivy-window
       (let* ((key (cdr (assoc "=key=" entry)))
-             (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+             (pdf-file (kimim/org-ref-get-pdf-filename key)))
         (if (file-exists-p pdf-file)
             (dired-jump nil pdf-file)
           (message "no pdf found for %s" key)))))
@@ -2789,7 +2746,7 @@ does not check that."
            (key (car results)))
       (if (or (eq "" key) (null key))
           (kimim/org-ref-open-pdf-in-dired)
-        (let ((pdf-file (funcall org-ref-get-pdf-filename-function key)))
+        (let ((pdf-file (kimim/org-ref-get-pdf-filename key)))
           (if (file-exists-p pdf-file)
               (dired-jump nil pdf-file)
             (message "no pdf found for %s" key))))))
