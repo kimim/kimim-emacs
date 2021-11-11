@@ -732,6 +732,7 @@ Check spell on the fly.
 
 #+begin_src emacs-lisp
 (use-package olivetti
+  :diminish olivetti-mode
   :custom (olivetti-body-width (+ fill-column 8))
   :hook (text-mode . olivetti-mode))
 #+end_src
@@ -1315,6 +1316,8 @@ parenthesis. We define some keys for it:
   :hook (prog-mode . smartparens-mode)
   :diminish smartparens-mode
   :config
+  (sp-with-modes '(c-mode c++-mode)
+    (sp-local-pair "<" ">"))
   (sp-with-modes sp-lisp-modes
     ;; disable ', it's the quote character!
     (sp-local-pair "'" nil :actions nil)
@@ -2634,6 +2637,8 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
          :map org-mode-map
          ("C-c ]" . org-ref-insert-cite-link))
   :custom
+  (bibtex-completion-display-formats
+  '((t . "${=key=:20} ${author:36} ${title:*} ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")))
   (reftex-default-bibliography (concat kimim/path-ref "references.bib"))
   (org-ref-default-bibliography (concat kimim/path-ref "references.bib"))
   (bibtex-completion-bibliography (concat kimim/path-ref "references.bib"))
