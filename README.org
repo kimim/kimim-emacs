@@ -2137,7 +2137,52 @@ When exporting, do not export with author and date.
   (org-export-with-author t)
   (org-export-with-date t)
   :config
-  (require 'ox-latex))
+  (require 'ox-latex)
+  (defun org-export--collect-tree-properties (data info)
+    "Extract tree properties from parse tree.
+
+DATA is the parse tree from which information is retrieved.  INFO
+is a list holding export options.
+
+Following tree properties are set or updated:
+
+`:headline-offset' Offset between true level of headlines and
+     local level.  An offset of -1 means a headline
+     of level 2 should be considered as a level
+     1 headline in the context.
+
+`:headline-numbering' Alist of all headlines as key and the
+        associated numbering as value.
+
+`:id-alist' Alist of all ID references as key and associated file
+            as value.
+
+Return updated plist."
+    ;; Install the parse tree in the communication channel.
+    (setq info (plist-put info :parse-tree data))
+    ;; Compute `:headline-offset' in order to be able to use
+    ;; `org-export-get-relative-level'.
+    (setq info
+          (plist-put info
+                     :headline-offset
+                     (- 1 (org-export--get-min-level data info))))
+    ;; From now on, properties order doesn't matter: get the rest of the
+    ;; tree properties.
+    (org-combine-plists
+     info
+     (list :headline-numbering (org-export--collect-headline-numbering data info)
+           :id-alist
+           (org-element-map data 'link
+             (lambda (l)
+               (and (string= (org-element-property :type l) "id")
+                    (let* ((id (org-element-property :path l))
+                           (file (car (org-id-find id))))
+                      ;; replace txt extension with exported PDF file
+                      (and file
+                           (let ((pdf-file (concat (file-name-sans-extension file) ".pdf")))
+                             (if (file-exists-p pdf-file)
+                                 (cons id (file-relative-name pdf-file))
+                               (cons id (file-relative-name file)))))))))))))
 #+end_src
 
 *** org to pdf
