@@ -57,6 +57,9 @@
             (bold :inherit default :weight bold)
             (italic :inherit default :slant italic)
             (underline :inherit default :foreground "orange red" :underline t)
+            ;; make the code font in markdown look better
+            (fixed-pitch :family Consolas)
+            (fixed-pitch-serif :family Consolas)
             (cursor :background ,"orange")
             (fringe :background ,kimim-theme-bg)
             (mode-line :foreground "black" :background ,kimim-theme-modeline-bg :box nil :height 0.85)

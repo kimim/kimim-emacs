@@ -114,6 +114,15 @@
     (kill-new msg)
     (message msg)))
 
+(defun get-file-link ()
+  "Show (and set kill-ring) current file"
+  (interactive)
+  (unless (buffer-file-name)
+    (error "No file for buffer %s" (buffer-name)))
+  (let ((msg (format "file:\\\\%s" (replace-regexp-in-string "/" "\\\\"
+                           (file-truename (buffer-file-name))))))
+    (kill-new msg)
+    (message msg)))
 
 (defun open-folder-in-explorer ()
   "Call when editing a file in a buffer.
@@ -123,7 +132,6 @@
    "open" "explorer"
    (concat "/e,/select," (convert-standard-filename buffer-file-name))
    ))
-
 
 (defun mac-open-terminal ()
   (interactive)

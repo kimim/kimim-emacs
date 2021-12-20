@@ -313,8 +313,7 @@ calculated with original default font height and width: =frame-char-height= and
   :bind (("C-+" . cnfonts-increase-fontsize)
          ("C--" . cnfonts-decrease-fontsize)
          ("C-=" . cnfonts-increase-fontsize)
-         ("C-0" . cnfonts-reset-fontsize))
-  :functions cnfonts-set-font-first-time)
+         ("C-0" . cnfonts-reset-fontsize)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -323,7 +322,7 @@ calculated with original default font height and width: =frame-char-height= and
   (when window-system
     (use-package cnfonts)
     (cnfonts-enable)
-    (cnfonts-set-font-first-time)
+    (cnfonts-set-font)
     ;; top, left ... must be integer
     (let ((width (display-pixel-width))
           (height (display-pixel-height))
@@ -441,6 +440,7 @@ Show (line, column) numbers in mode line:
 
 #+begin_src emacs-lisp
 (use-package celestial-mode-line
+  :disabled
   :defer 1
   :config
   (setq global-mode-string '("" celestial-mode-line-string "  " display-time-string ""))
@@ -733,8 +733,8 @@ Check spell on the fly.
 #+begin_src emacs-lisp
 (use-package olivetti
   :diminish olivetti-mode
-  :custom (olivetti-body-width (+ fill-column 8))
-  :hook (text-mode . olivetti-mode))
+  :custom (olivetti-body-width (+ fill-column 12))
+  :hook ((text-mode elfeed-show-mode) . olivetti-mode))
 #+end_src
 
 * Controlling
@@ -1390,6 +1390,7 @@ that dash version higher than 2.18 is installed[fn:13].
   :hook ((clojure-mode . lsp)
          (c-mode . lsp)
          (c++-mode . lsp)
+         (cc-mode . lsp)
          (go-mode . lsp)
          (rustic-mode . lsp))
   :config
@@ -3027,25 +3028,6 @@ support more functions from =org-ref=:
         (org-todo "WAIT")
       (org-todo "SCHED")))
 
-  (add-hook 'org-agenda-after-show-hook 'org-narrow-to-subtree)
-
-  (defun org-agenda-add-note (&optional arg)
-    "Add a time-stamped note to the entry at point. DO NOT show other
-headers when adding notes"
-    (interactive "P")
-    (org-agenda-check-no-diary)
-    (let* ((marker (or (org-get-at-bol 'org-marker)
-		               (org-agenda-error)))
-	       (buffer (marker-buffer marker))
-	       (pos (marker-position marker))
-	       (hfdmarker (org-get-at-bol 'org-hd-marker))
-	       (inhibit-read-only t))
-      (with-current-buffer buffer
-        (org-narrow-to-subtree) ;; change from widen to org-narrow-to-subtree
-        (goto-char pos)
-        (org-show-context 'agenda)
-        (org-add-note))))
-
   (defun org-agenda-kill-files ()
     (interactive)
     (org-agenda-kill-all-agenda-buffers)
@@ -3287,11 +3269,10 @@ headers when adding notes"
   (require 'org)
   ;; open feed link with eww
   (require 'gnus-art)
-  ;;(setq elfeed-curl-extra-arguments '("--proxy" "127.0.0.1:1080"))
   (advice-add 'elfeed-show-entry :after
               (lambda (entry)
                 (setq line-spacing 0.4)
-                (article-fill-long-lines))))
+                (elfeed-show-refresh))))
 #+end_src
 
 ** Encryption

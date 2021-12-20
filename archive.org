@@ -777,3 +777,26 @@ client.
 #+begin_src emacs-lisp
 (use-package tldr)
 #+end_src
+
+** org agenda
+
+#+begin_src emacs-lisp
+
+  (add-hook 'org-agenda-after-show-hook 'org-narrow-to-subtree)
+  (defun org-agenda-add-note (&optional arg)
+    "Add a time-stamped note to the entry at point. DO NOT show other
+headers when adding notes"
+    (interactive "P")
+    (org-agenda-check-no-diary)
+    (let* ((marker (or (org-get-at-bol 'org-marker)
+		               (org-agenda-error)))
+	       (buffer (marker-buffer marker))
+	       (pos (marker-position marker))
+	       (hfdmarker (org-get-at-bol 'org-hd-marker))
+	       (inhibit-read-only t))
+      (with-current-buffer buffer
+        (org-narrow-to-subtree) ;; change from widen to org-narrow-to-subtree
+        (goto-char pos)
+        (org-show-context 'agenda)
+        (org-add-note))))
+#+end_src
