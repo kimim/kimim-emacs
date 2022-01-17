@@ -1054,13 +1054,13 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
     (if (eobp)
         (progn
           (goto-char (point-min))
-          (forward-line 2)
+          (forward-line 1)
           (dired-move-to-filename))))
 
   (defadvice dired-previous-line (before dired-previous-line-advice (arg) activate)
     "Move up lines then position at filename, advice"
     (interactive "p")
-    (if (= 3 (line-number-at-pos))
+    (if (= 2 (line-number-at-pos))
         (goto-char (point-max))))
 
   (defun kimim/dired-other-window ()
