@@ -686,6 +686,6 @@ documents."
   "Backup current note to ~/notes"
   (interactive)
   (copy-file (buffer-name)
-             (concat "~/notes/" (buffer-name))))
+             (concat "~/notes/" (buffer-name)) t))
 
 (provide 'kimim)
