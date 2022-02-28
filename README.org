@@ -1014,6 +1014,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
   (require 'dired-filter)
   (require 'dired-recent)
   (require 'dired-x)
+  (require 'dired-efap)
   (add-hook 'dired-mode-hook
             (lambda ()
               (turn-on-gnus-dired-mode)
@@ -2565,10 +2566,16 @@ sqlite3 is shipped in macOS by default.
     '(("d" "default" plain "%?"
        :if-new (file+head "%(concat (kimim/genfile-timestamp) \"${slug}.txt\")"
                           "#+TITLE: ${title}\n")
-       :unnarrowed t))))
+       :unnarrowed t)))
+   (org-roam-dailies-capture-templates
+    '(("d" "default" plain "- %?" :target
+       (file+head "%<%Y-%m-%d>.org" "#+TITLE: %<%Y-%m-%d>
+")))))
   :bind (("C-c n f" . org-roam-node-find)
          ("C-c n c" . org-roam-capture)
-         ("C-c n r" . org-roam-node-random)
+         ("C-c n j" . org-roam-dailies-capture-today)
+         ("C-c n r" . org-roam-ref-add)
+         ("C-c n x" . org-roam-node-random)
          :map org-roam-mode-map
          (("C-c n l" . org-roam)
           ("C-c n g" . org-roam-graph))
@@ -2579,6 +2586,7 @@ sqlite3 is shipped in macOS by default.
           ("C-c n g" . org-id-get-create)
           ("C-c n b" . org-roam-buffer-toggle)))
   :config
+  (require 'org-roam-dailies)
   (require 'kimim)
   (setq org-roam-v2-ack t)
   (org-roam-db-autosync-enable)
