@@ -544,6 +544,38 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
          ("<mouse-3>" . youdao-dictionary-def-copied)
          ("f" . youdao-dictionary-search-from-input))
   :config
+  ;; redefine youdao-format-result
+  (defun youdao-dictionary--format-result (json)
+    "Format result in JSON."
+    (let* ((query        (assoc-default 'query       json)) ; string
+           (translation  (assoc-default 'translation json)) ; array
+           (_errorCode    (assoc-default 'errorCode   json)) ; number
+           (web          (assoc-default 'web         json)) ; array
+           (basic        (assoc-default 'basic       json)) ; alist
+           ;; construct data for display
+           (phonetic (assoc-default 'phonetic basic))
+           (translation-str (mapconcat
+                             (lambda (trans) (concat "- " trans))
+                             translation "\n"))
+           (basic-explains-str (mapconcat
+                                (lambda (explain) (concat "- " explain))
+                                (assoc-default 'explains basic) "\n"))
+           (web-str (mapconcat
+                     (lambda (k-v)
+                       (format "- %s :: %s"
+                               (assoc-default 'key k-v)
+                               (mapconcat 'identity (assoc-default 'value k-v) "; ")))
+                     web "\n")))
+      (let ((result-str
+             (if basic
+                 (format "%s [%s]\n\nBasic Explains\n%s\n\nWeb References\n%s\n"
+                         query phonetic basic-explains-str web-str)
+               (format "%s\n\nTranslation\n%s\n"
+                       query translation-str))))
+        (kill-new result-str)
+        (kill-new (format "%s [%s]" query phonetic))
+        result-str)))
+
   (defun youdao-dictionary-def-copied ()
     (interactive)
     (youdao-dictionary-search (gui-get-selection)))
@@ -2569,8 +2601,7 @@ sqlite3 is shipped in macOS by default.
        :unnarrowed t)))
    (org-roam-dailies-capture-templates
     '(("d" "default" plain "- %?" :target
-       (file+head "%<%Y-%m-%d>.org" "#+TITLE: %<%Y-%m-%d>
-")))))
+       (file+datetree "%<%Y>.org" :day)))))
   :bind (("C-c n f" . org-roam-node-find)
          ("C-c n c" . org-roam-capture)
          ("C-c n j" . org-roam-dailies-capture-today)
