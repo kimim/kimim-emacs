@@ -174,6 +174,11 @@
         ((eq system-type 'darwin)
          (mac-open-terminal))))
 
+(defun kimim/msys2-term ()
+  "Open msys2 term"
+  (interactive)
+  (w32-shell-execute "open" (concat (getenv "MSYS_ROOT") "msys2.exe")))
+
 (defun kimim/4nt ()
   "Open 4NT terminal"
   (interactive)

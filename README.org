@@ -3364,6 +3364,8 @@ from system PATH, so you should set these to system PATH.
   (("C-x m y" . kimim/mail-attach-files)
    ("<f9>" . kimim/xterm)
    ("S-<f9>" . kimim/cmd)
+   ;; when deploy clojars, need msys2 term to use pinetry
+   ("C-<f9>" . kimim/msys2-term)
    ("C-c r" . kimim/rename-file-and-buffer)
    ("C-x m o" . kimim/open-external)
    ("C-x m O" . kimim/open-external-pdf)
