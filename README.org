@@ -1579,7 +1579,6 @@ Clojure[fn:14] is a lisp over JVM. Emm, I like it.
   (require 'clojure-snippets)
   (require 'clojure-mode-extra-font-locking)
   (require 'lsp-mode)
-  (add-to-list 'org-babel-load-languages '(clojure . t))
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'cider-mode)
