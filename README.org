@@ -704,6 +704,7 @@ for all backups.
   :diminish undo-tree-mode
   :custom
   (undo-tree-visualizer-timestamps t)
+  (undo-tree-visualizer-diff t)
   (undo-tree-history-directory-alist '(("." . "~/temp/")))
   :config
   (global-undo-tree-mode))
