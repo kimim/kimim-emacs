@@ -396,7 +396,6 @@ Show (line, column) numbers in mode line:
 (use-package mini-modeline
   :functions (mini-modeline-update-theme
               mini-modeline-update-theme-advice)
-  :bind ("C-x m m" . mini-modeline-toggle)
   :custom (mini-modeline-echo-duration 10)
   :config
   (defun kimim/mini-modeline-restore ()
@@ -572,7 +571,11 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
                          query phonetic basic-explains-str web-str)
                (format "%s\n\nTranslation\n%s\n"
                        query translation-str))))
-        (kill-new result-str)
+        (kill-new
+         (mapconcat
+          (lambda (x)
+            (concat x "\n"))
+          (cdr (split-string result-str "\n"))))
         (kill-new (format "%s [%s]" query phonetic))
         result-str)))
 
@@ -690,14 +693,18 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 
 ** undo-tree
 
-~C-x u~ is undo command, now it is rebind to ~undo-tree~, when it is invoked, emacs
-will show the undo tree of current buffer.
+~C-x u~ is undo command, now it is rebind to ~undo-tree~, when it is
+invoked, emacs will show the undo tree of current buffer. By default,
+undo-tree file is kept in the same folder,
+~undo-tree-history-directry-alist~ is used to specify the one directory
+for all backups.
 
 #+begin_src emacs-lisp
 (use-package undo-tree
-  :bind ("C-x u" . undo-tree)
   :diminish undo-tree-mode
-  :custom (undo-tree-visualizer-timestamps t)
+  :custom
+  (undo-tree-visualizer-timestamps t)
+  (undo-tree-history-directory-alist '(("." . "~/temp/")))
   :config
   (global-undo-tree-mode))
 #+end_src
@@ -988,6 +995,7 @@ out of the box.
 #+begin_src emacs-lisp
 (use-package imenu
   :functions kimim/imenu-default-goto-function-advice
+  :bind ("M-i" . imenu)
   :config
   (advice-add 'imenu-default-goto-function
               :around
@@ -2599,7 +2607,7 @@ sqlite3 is shipped in macOS by default.
                           "#+TITLE: ${title}\n")
        :unnarrowed t)))
    (org-roam-dailies-capture-templates
-    '(("d" "default" plain "- %?" :target
+    '(("d" "default" plain "- /%<%H:%M>/ %?" :target
        (file+datetree "%<%Y>.org" :day)))))
   :bind (("C-c n f" . org-roam-node-find)
          ("C-c n c" . org-roam-capture)
@@ -2682,12 +2690,18 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
 (use-package markdown-mode
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :custom ((markdown-hide-markup t)
-           (markdown-command "pandoc"))
+  :custom ((markdown-hide-urls t)
+           (markdown-command "pandoc")
+           (markdown-max-image-size '(1200 . nil)))
   :bind(:map
         markdown-mode-map
-        ("M-<up>" . markdown-move-subtree-up)
-        ("M-<down>" . markdown-move-subtree-down)))
+        ("M-<up>" . markdown-move-up)
+        ("M-<down>" . markdown-move-down)
+        ("C-c C-x C-v" . markdown-toggle-inline-images))
+  :config
+  ;; to support azure markdown format with =WxH after file link
+  (setq markdown-regex-link-inline
+        "\\(?1:!\\)?\\(?2:\\[\\)\\(?3:\\^?\\(?:\\\\\\]\\|[^]]\\)*\\|\\)\\(?4:\\]\\)\\(?5:(\\)\\s-*\\(?6:[^)]*?\\)\\(?:\\s-+\\(?7:\"[^\"]*\"\\|=.*\\)\\)?\\s-*\\(?8:)\\)"))
 #+end_src
 
 * Reference management
