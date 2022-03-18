@@ -1,3 +1,32 @@
+** guru mode
+
+~guru-mode~ warns you when you type arrow keys, home or end. This could
+help you to establish the habit of efficiently using emacs keybinding.
+
+#+begin_src emacs-lisp
+(use-package guru-mode
+  :diminish guru-mode
+  :config
+  (guru-global-mode +1))
+#+end_src
+** undo-tree
+
+~C-x u~ is undo command, now it is rebind to ~undo-tree~, when it is
+invoked, emacs will show the undo tree of current buffer. By default,
+undo-tree file is kept in the same folder,
+~undo-tree-history-directry-alist~ is used to specify the one directory
+for all backups.
+
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :custom
+  (undo-tree-visualizer-timestamps t)
+  (undo-tree-visualizer-diff t)
+  (undo-tree-history-directory-alist '(("." . "~/temp/")))
+  :config
+  (global-undo-tree-mode))
+#+end_src
 ** auto-highlight-symbol
 Automatically highlight current symbol where the cursor is inside.
 

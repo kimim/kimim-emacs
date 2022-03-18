@@ -691,25 +691,6 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 (setq save-place-file (expand-file-name "saveplace" "~"))
 #+end_src
 
-** undo-tree
-
-~C-x u~ is undo command, now it is rebind to ~undo-tree~, when it is
-invoked, emacs will show the undo tree of current buffer. By default,
-undo-tree file is kept in the same folder,
-~undo-tree-history-directry-alist~ is used to specify the one directory
-for all backups.
-
-#+begin_src emacs-lisp
-(use-package undo-tree
-  :diminish undo-tree-mode
-  :custom
-  (undo-tree-visualizer-timestamps t)
-  (undo-tree-visualizer-diff t)
-  (undo-tree-history-directory-alist '(("." . "~/temp/")))
-  :config
-  (global-undo-tree-mode))
-#+end_src
-
 ** multi cursors
 
 You can mark a region, and ~C-S-c C-S-c~ to start edit every line in this
@@ -872,18 +853,6 @@ List recent used commands with ~smex~:
   (add-hook 'counsel-grep-post-action-hook 'recenter))
 #+end_src
 
-** guru mode
-
-~guru-mode~ warns you when you type arrow keys, home or end. This could
-help you to establish the habit of efficiently using emacs keybinding.
-
-#+begin_src emacs-lisp
-(use-package guru-mode
-  :diminish guru-mode
-  :config
-  (guru-global-mode +1))
-#+end_src
-
 ** Key Frequency
 
 We will use =keyfreq= to record the frequency of the key typing, and get a
@@ -996,14 +965,14 @@ out of the box.
 #+begin_src emacs-lisp
 (use-package imenu
   :functions kimim/imenu-default-goto-function-advice
-  :bind ("M-i" . imenu)
+  :bind ("C-x i" . imenu)
   :config
   (advice-add 'imenu-default-goto-function
               :around
               #'kimim/imenu-default-goto-function-advice))
 
 (use-package imenu-anywhere
-  :bind ("C-c i" . imenu-anywhere))
+  :bind ("C-x m i" . imenu-anywhere))
 #+end_src
 
 ** search from web
@@ -2501,10 +2470,10 @@ New link to use Office Onenote.
                                  category "/"
                                  (format-time-string "%Y-%m-%d-") filename))
               (rename-file buffer-file-name newfilename)
-              (switch-to-buffer (find-file-noselect newfilename)))
-          ;; execute org-publish-current-file
-          (org-publish-current-file)
-          (magit-status-setup-buffer))))
+              (switch-to-buffer (find-file-noselect newfilename))))
+        ;; execute org-publish-current-file
+        (org-publish-current-file nil t)
+        (magit-status-setup-buffer)))
 
     (defun jekyll-tag ()
       "add new tags"
