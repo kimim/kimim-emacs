@@ -7,9 +7,9 @@ before_install:
   - sudo add-apt-repository -y ppa:ubuntu-elisp
   - sudo apt-get update -qq
   - sudo apt-get install -qq $emacs
-  - sudo apt-get install python3
-  - sudo apt-get install python3-pip
-  - sudo pip3 install pygments
+#  - sudo apt-get install python3
+#  - sudo apt-get install python3-pip
+#  - sudo pip3 install pygments
 #  - sudo apt-get install texlive-full
 
 
@@ -18,7 +18,4 @@ script:
   - cd ~
   - git clone https://github.com/kimim/kimim-emacs
   - cp kimim-emacs/.emacs ~
-  - mkdir kimikit .emacs.d
-  - mkdir -p kimim-sync/kimikit/emacs.d
-  - mkdir -p kimim-sync/org kimim-sync/notes kimim-sync/ref
   - emacs-snapshot --batch -l ~/kimim-emacs/test.el
