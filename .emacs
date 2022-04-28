@@ -20,7 +20,7 @@
 ;; path to keep notes
 (defvar kimim/path-notes (concat kimim/path-sync "notes/"))
 ;; path to refrence documents
-(defvar kimim/path-ref (concat kimim/path-sync "ref/"))
+(defvar kimim/path-docs (concat kimim/path-sync "docs/"))
 
 ;; if kimim-emacs is clone to ~/kimim-emacs
 (load (concat kimim/path-kimim-emacs "init.el"))
