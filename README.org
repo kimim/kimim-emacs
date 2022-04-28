@@ -1392,11 +1392,12 @@ that dash version higher than 2.18 is installed[fn:13].
   :custom
   (lsp-headerline-breadcrumb-icons-enable nil)
   (lsp-headerline-breadcrumb-enable nil)
-  (lsp-modeline-code-action-fallback-icon "★")
+  (lsp-modeline-code-action-fallback-icon "✶")
   (lsp-ui-doc-text-scale-level -1)
   :bind (:map
          lsp-mode-map
          ("C-." . lsp-find-definition)
+         ("C-," . xref-go-back)
          ("C-x ." . kimim/lsp-find-definition-other-window))
   :hook ((clojure-mode . lsp)
          (c-mode . lsp)
@@ -1482,7 +1483,7 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
              '((java-mode . "java")
                (awk-mode . "awk")
                (c-mode . "cc-mode")
-               (c++-mode . "stroustrup")
+               (c++-mode . "stroustrup++")
                (other . "k&r")))
   :defines c++-mode-map
   :bind (:map
@@ -1499,7 +1500,21 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
               ;;(c-toggle-syntactic-indentation 1)
               ;;(highlight-indentation-mode 1)
               (which-function-mode 1)
-              (local-set-key "\C-co" 'ff-find-other-file))))
+              (local-set-key "\C-co" 'ff-find-other-file)))
+  ;; +   `c-basic-offset' times 1
+  ;; -   `c-basic-offset' times -1
+  ;; ++  `c-basic-offset' times 2
+  ;; --  `c-basic-offset' times -2
+  ;; *   `c-basic-offset' times 0.5
+  ;; /   `c-basic-offset' times -0.5
+  (c-add-style "stroustrup++"
+               '("stroustrup"
+                 (c-basic-offset . 4)
+                 (c-offsets-alist
+                  (topmost-intro . 0)
+                  (inclass . +)
+                  (innamespace . -)
+                  (access-label . /)))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2571,6 +2586,7 @@ sqlite3 is shipped in macOS by default.
                                   "org-roam.db")))
    (org-roam-link-auto-replace nil)
    (org-roam-file-extensions '("txt" "org"))
+   (org-roam-node-display-template "${title:70}${tags:30}${refs}")
    (org-roam-capture-templates
     '(("d" "default" plain "%?"
        :if-new (file+head "%(concat (kimim/genfile-timestamp) \"${slug}.txt\")"
@@ -2582,6 +2598,7 @@ sqlite3 is shipped in macOS by default.
   :bind (("C-c n f" . org-roam-node-find)
          ("C-c n c" . org-roam-capture)
          ("C-c n j" . org-roam-dailies-capture-today)
+         ("C-c n ." . org-roam-dailies-goto-today)
          ("C-c n r" . org-roam-ref-add)
          ("C-c n x" . org-roam-node-random)
          :map org-roam-mode-map
@@ -2834,7 +2851,7 @@ does not check that."
     "Open the notes for bibtex key under point if it exists."
     (with-ivy-window
       (let* ((key (cdr (assoc "=key=" entry))))
-        (funcall org-ref-notes-function key))))
+        (bibtex-completion-edit-notes (list key)))))
 
   (defun kimim/org-ref-open-notes (&optional arg)
     "Open pdf dired for a bibtex entry, if it exists.
