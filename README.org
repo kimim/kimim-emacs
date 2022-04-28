@@ -2631,6 +2631,31 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
   (require 'org-ref))
 #+end_src
 
+** consult-org-roam
+
+#+begin_src emacs-lisp
+(use-package consult-org-roam
+  :ensure t
+  :init
+  (require 'consult-org-roam)
+  ;; Activate the minor-mode
+  (consult-org-roam-mode 1)
+  :custom
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  :bind
+  ("C-c n e" . consult-org-roam-file-find)
+  ("C-c n l" . consult-org-roam-backlinks)
+  ("C-c n s" . consult-org-roam-search)
+  :config
+  ;; Eventually suppress previewing for certain functions
+  (consult-customize
+   consult-org-roam-forward-links
+   :preview-key (kbd "C-."))
+  (consult-customize
+   org-roam-node-find
+   :preview-key (kbd "C-.")))
+#+end_src
+
 ** deft
 
 #+begin_src emacs-lisp
