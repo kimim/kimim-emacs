@@ -1974,7 +1974,7 @@ yarn add @mermaid-js/mermaid-cli
   (setq org-image-actual-width 700)
 
   (defun org--create-inline-image-advice (im)
-    (nconc im (list :background "white")))
+    (nconc im (list :background "#f8f8f8")))
   (advice-add 'org--create-inline-image
               :filter-return #'org--create-inline-image-advice))
 #+end_src
@@ -2485,14 +2485,14 @@ New link to use Office Onenote.
             newfilename)
         (if (not (string-match-p (expand-file-name path-jekyll-base) filepath))
             (progn
-              (setq newfilename (concat
-                                 path-jekyll-base "/"
-                                 category "/"
-                                 (format-time-string "%Y-%m-%d-") filename))
-              (rename-file buffer-file-name newfilename)
-              (switch-to-buffer (find-file-noselect newfilename))))
+              (setq filename (concat
+                              path-jekyll-base "/"
+                              category "/"
+                              (format-time-string "%Y-%m-%d-") filename))
+              (rename-file buffer-file-name filename)))
+        (switch-to-buffer (find-file-noselect filename))
         ;; execute org-publish-current-file
-        (org-publish-current-file nil t)
+        (org-publish-current-file t)
         (magit-status-setup-buffer)))
 
     (defun jekyll-tag ()
