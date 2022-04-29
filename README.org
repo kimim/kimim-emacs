@@ -1971,7 +1971,12 @@ yarn add @mermaid-js/mermaid-cli
   (if window-system
       (setq org-startup-indented t)
     (setq org-startup-indented nil))
-  (setq org-image-actual-width 700))
+  (setq org-image-actual-width 700)
+
+  (defun org--create-inline-image-advice (im)
+    (nconc im (list :background "white")))
+  (advice-add 'org--create-inline-image
+              :filter-return #'org--create-inline-image-advice))
 #+end_src
 
 ** org-appear
