@@ -166,7 +166,7 @@
   "Open shell window from emacs."
   (interactive)
   (cond ((eq system-type 'gnu/linux)
-         (shell-command "xfce4-terminal"))
+         (async-shell-command "xfce4-terminal"))
         ((eq system-type 'cygwin)
          (start-process "" nil "xdg-open" "mintty"))
         ((eq system-type 'windows-nt)
