@@ -276,7 +276,6 @@ and defers loading of the module until they are used.
 (setq use-package-always-ensure t)
 (setq use-package-always-defer t)
 (setq use-package-verbose t)
-(add-to-list 'load-path "~/kimim-emacs/site-lisp")
 #+end_src
 
 * Look & Feel
@@ -2153,8 +2152,7 @@ support more functions from =org-ref=:
   :mode (("\\.txt\\'" . org-mode)
          ("\\.org\\'" . org-mode))
   :bind
-  (:map
-   org-mode-map
+  (:map org-mode-map
    ("C-c b" . org-iswitchb)
    ("C-c l" . org-store-link)
    ("C-c  ！" . org-time-stamp-inactive)
@@ -2321,14 +2319,16 @@ support more functions from =org-ref=:
   (setq org-hide-leading-stars t)
   (setq org-footnote-auto-adjust t)
   (setq org-footnote-define-inline nil)
-  (define-key org-mode-map (kbd "C-c C-x h") (lambda ()
-                                               (interactive)
-                                               (insert "^{()}")
-                                               (backward-char 2)))
-  (define-key org-mode-map (kbd "C-c C-x l") (lambda ()
-                                               (interactive)
-                                               (insert "_{}")
-                                               (backward-char 1))))
+  (define-key org-mode-map (kbd "C-c C-x h")
+    (lambda ()
+      (interactive)
+      (insert "^{()}")
+      (backward-char 2)))
+  (define-key org-mode-map (kbd "C-c C-x l")
+    (lambda ()
+      (interactive)
+      (insert "_{}")
+      (backward-char 1))))
 #+end_src
 
 ** org with source code
@@ -2795,42 +2795,47 @@ sqlite3 is shipped in macOS by default.
 (use-package org-roam
   :ensure t
   :custom
-  ((org-roam-directory kimim/path-notes)
-   (org-roam-db-location (file-truename
-                          (concat user-emacs-directory
-                                  "org-roam.db")))
-   (org-roam-link-auto-replace nil)
-   (org-roam-file-extensions '("txt" "org"))
-   (org-roam-node-display-template "${title:70}${tags:30}${refs}")
-   (org-roam-capture-templates
-    '(("d" "default" plain "%?"
-       :if-new (file+head "%(concat (kimim/genfile-timestamp) \"${slug}.txt\")"
-                          "#+TITLE: ${title}\n")
-       :unnarrowed t)))
-   (org-roam-dailies-capture-templates
-    '(("d" "default" plain "- /%<%H:%M>/ %?" :target
-       (file+datetree "%<%Y>.org" :day)))))
-  :bind (("C-c n f" . org-roam-node-find)
-         ("C-c n c" . org-roam-capture)
-         ("C-c n j" . org-roam-dailies-capture-today)
-         ("C-c n ." . org-roam-dailies-goto-today)
-         ("C-c n r" . org-roam-ref-add)
-         ("C-c n x" . org-roam-node-random)
-         :map org-roam-mode-map
-         (("C-c n l" . org-roam)
-          ("C-c n g" . org-roam-graph))
-         :map org-mode-map
-         (("C-c n i" . org-roam-node-insert)
-          ("C-c n t" . org-roam-tag-add)
-          ("C-c n a" . org-roam-alias-add)
-          ("C-c n g" . org-id-get-create)
-          ("C-c n b" . org-roam-buffer-toggle)))
+  (org-roam-directory kimim/path-notes)
+  (org-roam-db-location (file-truename
+                         (concat user-emacs-directory
+                                 "org-roam.db")))
+  (org-roam-link-auto-replace nil)
+  (org-roam-file-extensions '("txt" "org"))
+  (org-roam-node-display-template "${title:70}${tags:30}${refs}")
+  (org-roam-capture-templates
+   '(("d" "default" plain "%?"
+      :if-new
+      (file+head
+       "%(concat (kimim/genfile-timestamp) \"${slug}.txt\")"
+       "#+TITLE: ${title}\n")
+      :unnarrowed t)))
+  (org-roam-dailies-capture-templates
+   '(("d" "default" plain "- /%<%H:%M>/ %?" :target
+      (file+datetree "%<%Y>.org" :day))))
+  :bind
+  (("C-c n f" . org-roam-node-find)
+   ("C-c n c" . org-roam-capture)
+   ("C-c n j" . org-roam-dailies-capture-today)
+   ("C-c n ." . org-roam-dailies-goto-today)
+   ("C-c n r" . org-roam-ref-add)
+   ("C-c n x" . org-roam-node-random)
+   :map org-roam-mode-map
+   (("C-c n l" . org-roam)
+    ("C-c n g" . org-roam-graph))
+   :map org-mode-map
+   (("C-c n i" . org-roam-node-insert)
+    ("C-c n t" . org-roam-tag-add)
+    ("C-c n a" . org-roam-alias-add)
+    ("C-c n g" . org-id-get-create)
+    ("C-c n b" . org-roam-buffer-toggle)))
   :config
+  (add-to-list 'load-path "~/kimim-emacs/site-lisp")
   (require 'org-roam-dailies)
   (require 'kimim)
   (setq org-roam-v2-ack t)
   (org-roam-db-autosync-enable)
-  (advice-add 'org-roam-node-visit :after (lambda (&rest r) (reposition-window))))
+  (advice-add 'org-roam-node-visit
+              :after (lambda (&rest r) (reposition-window))))
 #+end_src
 
 ** org-roam-bibtex
@@ -2851,10 +2856,6 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
 #+begin_src emacs-lisp
 (use-package consult-org-roam
   :ensure t
-  :init
-  (require 'consult-org-roam)
-  ;; Activate the minor-mode
-  (consult-org-roam-mode 1)
   :custom
   (consult-org-roam-grep-func #'consult-ripgrep)
   :bind
@@ -2862,6 +2863,9 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
   ("C-c n l" . consult-org-roam-backlinks)
   ("C-c n s" . consult-org-roam-search)
   :config
+  (require 'consult-org-roam)
+  ;; Activate the minor-mode
+  (consult-org-roam-mode 1)
   ;; Eventually suppress previewing for certain functions
   (consult-customize
    consult-org-roam-forward-links
@@ -2970,11 +2974,12 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
   ;; redefine Chinese sexagesimal format
   (defun calendar-chinese-sexagesimal-name (n)
     "The N-th name of the Chinese sexagesimal cycle.
-N congruent to 1 gives the first name, N congruent to 2 gives the second name,
-..., N congruent to 60 gives the sixtieth name."
-    (format "%s%s年"
-            (aref calendar-chinese-celestial-stem (% (1- n) 10))
-            (aref calendar-chinese-terrestrial-branch (% (1- n) 12)))))
+N congruent to 1 gives the first name, N congruent to 2 gives the
+second name, ..., N congruent to 60 gives the sixtieth name."
+    (format
+     "%s%s年"
+     (aref calendar-chinese-celestial-stem (% (1- n) 10))
+     (aref calendar-chinese-terrestrial-branch (% (1- n) 12)))))
 #+end_src
 
 ** org as GTD system
