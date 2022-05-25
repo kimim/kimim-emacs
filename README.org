@@ -1996,7 +1996,9 @@ place and assign ~plantuml-jar-path~ to there.
   (plantuml-default-exec-mode 'jar)
   (plantuml-jar-path (expand-file-name
                       (concat kimim/path-kimikit "plantuml/plantuml.jar")))
-  (plantuml-executable-args "-headless -charset UTF-8"))
+  (plantuml-executable-args "-headless -charset UTF-8")
+  :config
+  (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2333,7 +2335,8 @@ support more functions from =org-ref=:
    ("M-." . org-open-at-point)
    ("M-*" . org-mark-ring-last-goto)
    ("M-h" . nil)
-   ("C-'" . org-emphasize))
+   ("C-'" . org-emphasize)
+   ("C-c p" . kimim/preview-babel-image))
   :custom
   (org-modules '(org-habit
                  ol-w3m ol-bbdb ol-bibtex

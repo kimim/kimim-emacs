@@ -693,4 +693,14 @@ documents."
   (copy-file (buffer-name)
              (concat "~/notes/" (buffer-name)) t))
 
+(defun kimim/preview-babel-image ()
+  "Preview image generated from babel code, such as plantuml svg"
+  (interactive)
+  (save-excursion
+    (let ((params (nth 2 (org-babel-get-src-block-info))))
+      (find-file-other-window (assoc-default :file params))
+      (image-mode)
+      (image-transform-fit-to-window)
+      (other-window 1))))
+
 (provide 'kimim)
