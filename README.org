@@ -633,14 +633,15 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 (setq inhibit-eol-conversion nil)
 ;; fill-column is a buffer-local variable
 ;; use setq-default to change it globally
-(if window-system
-    (setq-default fill-column
-                  (min 70
-                       (ceiling
-                        (/ (x-display-pixel-width)
-                           (frame-char-width)
-                           2.3))))
-  (setq-default fill-column 70))
+;; (if window-system
+;;     (setq-default fill-column
+;;                   (min 70
+;;                        (ceiling
+;;                         (/ (x-display-pixel-width)
+;;                            (frame-char-width)
+;;                            2.3))))
+;;   (setq-default fill-column 70))
+(setq-default fill-column 70)
 (use-package drag-stuff
   :diminish drag-stuff-mode
   :config
