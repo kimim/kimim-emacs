@@ -996,6 +996,13 @@ out of the box.
   (eww-search-prefix "https://cn.bing.com/search?q="))
 #+end_src
 
+** recentf
+
+#+begin_src emacs-lisp
+(use-package recentf
+  :config
+  (recentf-mode))
+#+end_src
 * File Management
 ** delete files
 
@@ -1226,7 +1233,7 @@ Rich annotations in the minibuffer.
 
   ;; The :init configuration is always executed (Not lazy)
   :init
-
+  (use-package recentf)
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
@@ -1320,6 +1327,7 @@ Rich annotations in the minibuffer.
   ;; Enable recursive minibuffers
   (setq enable-recursive-minibuffers t))
 #+end_src
+
 ** abbrev
 
 #+begin_src emacs-lisp
@@ -1439,7 +1447,9 @@ Sort candidates using completion history.
 or other version control information.
 
 #+begin_src emacs-lisp
-(use-package project)
+(use-package project
+  :config
+  (require 'magit))
 #+end_src
 
 ** Compiling
@@ -1452,8 +1462,8 @@ or other version control information.
 
 ** Version Control
 
-Bind ~magit~ to ~C-x p m~ with the same prefix of ~project~, as they have strong
-relationship.
+Bind ~magit~ to ~C-x p m~ with the same prefix of ~project~, as they have
+strong relationship.
 
 #+begin_src emacs-lisp
 (use-package magit
