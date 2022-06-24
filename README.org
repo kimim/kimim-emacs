@@ -2111,7 +2111,24 @@ yarn add @mermaid-js/mermaid-cli
 #+end_src
 
 * Reference management
+** ebib
 
+#+begin_src emacs-lisp
+(use-package ebib
+  :bind (:map ebib-entry-mode-map
+         ("N" . kimim/ebib-open-note)
+         :map ebib-index-mode-map
+         ("N" . kimim/ebib-open-note))
+  :custom
+  (ebib-preload-bib-files (list bibtex-completion-bibliography))
+  :config
+  (defun kimim/ebib-open-note ()
+    "open bib note at ebib entry"
+    (interactive)
+    (bibtex-completion-edit-notes (list (ebib--get-key-at-point)))))
+#+end_src
+
+** org-ref
 #+begin_src emacs-lisp
 (use-package bibtex-completion
   :bind ("C-x m b" . (lambda ()
@@ -3044,6 +3061,9 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
 (use-package org-roam-bibtex
   :hook ((org-mode bibtex-mode) . org-roam-bibtex-mode)
   :diminish org-roam-bibtex-mode
+  ;; use the original title captalization
+  :custom (orb-bibtex-entry-get-value-function
+           #'bibtex-completion-get-value)
   :config
   (require 'org-ref))
 #+end_src

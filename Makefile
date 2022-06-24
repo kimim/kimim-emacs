@@ -1,5 +1,5 @@
 clean:
-	-rm *.pdf *.tex *.log *.aux *.log *.out *.html *.pyg
+	-rm *.pdf *.tex *.log *.aux *.log *.out *.html *.pyg *.bcf *.fls *.run.xml *.xdv *.fdb_latexmk
 	-rm -rf _minted*
 
 dist-clean:
