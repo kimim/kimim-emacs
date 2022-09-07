@@ -114,10 +114,8 @@ backref=true, maxcitenames=3, url=true]{biblatex}
   '("cn-book"
     "\\documentclass[a4paper,UTF8]{ctexbook}
 \\usepackage{enumitem}
-\\usepackage{abstract}
 \\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
 backref=true, maxcitenames=3, url=true]{biblatex}
-\\renewcommand{\\abstractname}{摘要}
 \\renewcommand\\refname{参考文献}
 \\usepackage{fancyhdr, lastpage}
 \\fancypagestyle{plain}{
@@ -162,7 +160,9 @@ sorting=none]{biblatex}
 backref=true, maxcitenames=3, url=true]{biblatex}
 \\setlength{\\baselineskip}{20pt}
 \\setlength{\\parskip}{5pt}"
-    ("\\begin{frame}{%s}" "\\end{frame}" "\\begin{frame}{%s}" "\\end{frame}")))
+    ("\\section{%s}" . "\\section*{%s}")
+    ("\\subsection{%s}" . "\\subsection*{%s}")
+    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
 
 (defvar en-beamer

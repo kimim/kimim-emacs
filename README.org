@@ -73,17 +73,7 @@ subsystem for Linux version 2. You can get Ubuntu Linux from Windows App
 Store. And Manjaro Linux for WSL2[fn:6] from
 https://github.com/sileshn/ManjaroWSL/releases
 
-** macOS
-
-For Apple macOS, most UNIX tools are installed already. You can use
-homebrew[fn:7] to install additional application if it is missing.
-
-#+begin_src shell
-/bin/bash -c \
-"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-brew tap railwaycat/emacsmacport
-brew install emacs-mac
-#+end_src
+Commands to install Emacs is same as on Linux in next section.
 
 ** Linux
 
@@ -100,6 +90,18 @@ It is also very quick to add emacs in ArchLinux/Manjaro:
 
 #+begin_src shell
 pacman -S emacs
+#+end_src
+
+** macOS
+
+For Apple macOS, most UNIX tools are installed already. You can use
+homebrew[fn:7] to install additional application if it is missing.
+
+#+begin_src shell
+/bin/bash -c \
+"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+brew tap railwaycat/emacsmacport
+brew install emacs-mac
 #+end_src
 
 * Preparation
@@ -249,6 +251,13 @@ All the extensions used in this file are installed and managed by =package=.
 Here I use =use-package= to defer the package loading and even installation,
 When you use the =:commands= keyword, it creates autoloads for those commands
 and defers loading of the module until they are used.
+
+When I want to upgrade elpa packages, I just call ~list-packages~, and
+let emacs refresh the package lists, then I just need to press =U= to
+upgrade all new packages.
+
+If some weird things happen, for example ~compat-current-version~ error,
+a ~byte-force-recompile~ in =~/.emacs.d= could work.
 
 #+begin_src emacs-lisp
 ;; temporary disable signature check
@@ -767,7 +776,7 @@ Check spell on the fly.
 #+begin_src emacs-lisp
 (use-package olivetti
   :diminish olivetti-mode
-  :custom (olivetti-body-width (+ fill-column 12))
+  :custom (olivetti-body-width (+ fill-column 10))
   :hook ((text-mode elfeed-show-mode) . olivetti-mode))
 #+end_src
 
@@ -1045,6 +1054,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
   (require 'dired-recent)
   (require 'dired-x)
   (require 'dired-efap)
+  (require 'kimim) ;; for kimim/open-external
   (add-hook 'dired-mode-hook
             (lambda ()
               (turn-on-gnus-dired-mode)
@@ -1233,6 +1243,7 @@ Rich annotations in the minibuffer.
 
   ;; The :init configuration is always executed (Not lazy)
   :init
+  (global-set-key [remap repeat-complex-command] #'consult-complex-command)
   (use-package recentf)
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
@@ -1243,9 +1254,6 @@ Rich annotations in the minibuffer.
   ;; Optionally tweak the register preview window.
   ;; This adds thin lines, sorting and hides the mode line of the window.
   (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Optionally replace `completing-read-multiple' with an enhanced version.
-  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
   ;; Use Consult to select xref locations with preview
   (setq xref-show-xrefs-function #'consult-xref
@@ -1511,8 +1519,8 @@ parenthesis. We define some keys for it:
   :hook (prog-mode . smartparens-mode)
   :diminish smartparens-mode
   :config
-  (sp-with-modes '(c-mode c++-mode)
-    (sp-local-pair "<" ">"))
+  ;;(sp-with-modes '(c-mode c++-mode)
+  ;;  (sp-local-pair "<" ">"))
   (sp-with-modes sp-lisp-modes
     ;; disable ', it's the quote character!
     (sp-local-pair "'" nil :actions nil)
@@ -2168,7 +2176,7 @@ yarn add @mermaid-js/mermaid-cli
          ("C-c ]" . org-ref-insert-cite-link))
   :custom
   (bibtex-completion-display-formats
-  '((t . "${=key=:20} ${author:36} ${title:*} ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")))
+  '((t . "${=key=:30} ${author:36} ${title:*} ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")))
   (reftex-default-bibliography (concat kimim/path-docs "references.bib"))
   (org-ref-default-bibliography (concat kimim/path-docs "references.bib"))
   (bibtex-completion-bibliography (concat kimim/path-docs "references.bib"))
@@ -3055,8 +3063,10 @@ sqlite3 is shipped in macOS by default.
   :config
   (add-to-list 'load-path "~/kimim-emacs/site-lisp")
   (require 'org-roam-dailies)
+  (require 'emacsql)
   (require 'kimim)
   (setq org-roam-v2-ack t)
+  (setq emacsql-global-timeout 60) ;; default 30 seconds will timeout
   (org-roam-db-autosync-enable)
   (advice-add 'org-roam-node-visit
               :after (lambda (&rest r) (reposition-window))))
@@ -3152,6 +3162,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
            (markdown-max-image-size '(1200 . nil)))
   :bind(:map
         markdown-mode-map
+        ("C-<tab>" . hide-entry)
         ("M-<up>" . markdown-move-up)
         ("M-<down>" . markdown-move-down)
         ("C-c C-x C-v" . markdown-toggle-inline-images))
