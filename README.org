@@ -2032,6 +2032,18 @@ place and assign ~plantuml-jar-path~ to there.
     (add-to-list 'org-babel-load-languages '(plantuml . t)))
 #+end_src
 
+I want to preview plantuml result in a full window, so I set
+~image-auto-resize~ to ~fit-window~. If the image is still to small, when
+it is a long sequence diagram, I can use key ~s i~ to invoke
+~image-transform-fit-to-width~ to maximize the width of the image.
+
+#+begin_src emacs-lisp
+(use-package image-mode
+  :ensure nil
+  :custom
+  (image-auto-resize 'fit-window))
+#+end_src
+
 ** ditaa
 
 #+begin_src emacs-lisp
@@ -2785,7 +2797,19 @@ sudo apt install python3-pygments
   (setq org-latex-packages-alist
         `(,(concat "\\addbibresource{"
                    (expand-file-name bibtex-completion-bibliography)
-                   "}"))))
+                   "}")))
+  ;; preview latex equation with SVG image
+  (add-to-list 'org-preview-latex-process-alist
+               '(xdvsvgm :progams
+					     ("xelatex" "dvisvgm")
+					     :discription "xdv > svg"
+					     :message "you need install the programs: xelatex and dvisvgm."
+					     :image-input-type "xdv"
+					     :image-output-type "svg"
+					     :image-size-adjust (1.3 . 1.3)
+					     :latex-compiler ("latexmk -xelatex -shell-escape -output-directory=%o %f")
+					     :image-converter ("dvisvgm %f -n -b min -c %S -o %O")))
+  (setq org-preview-latex-default-process 'xdvsvgm))
 #+end_src
 
 *** org to html page
