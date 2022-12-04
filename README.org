@@ -148,6 +148,30 @@ set, but not exists, create it.
 
 Then you can execute =emacs= to bootstrap itself.
 
+** chemacs2
+
+Another way to try this configure out is to use chemacs2.
+
+Clone to ~/.emacs.kimim
+
+#+begin_src shell
+git clone https://github.com/kimim/kimim-emacs ~/.emacs.kimim
+#+end_src
+
+Add to chemacs2 profile
+
+#+begin_src
+(("default" . ((user-emacs-directory . "~/.emacs.default")))
+ ("kimim" . ((user-emacs-directory . "~/.emacs.kimim"))))
+#+end_src
+
+Start emacs with this config:
+
+#+begin_src shell
+emacs --with-profile kimim
+#+end_src
+
+
 ** PATH and exec-path
 
 Environment variable =PATH= is the the searching path of executables by the
