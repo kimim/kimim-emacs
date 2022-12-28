@@ -610,22 +610,36 @@ documents."
    (/ (display-pixel-width) 10)
    (* 1 (/ (display-pixel-height) 20))))
 
+(defun kimim/restore-to-default-width ()
+  (interactive)
+  (when window-system
+    (use-package cnfonts)
+    (cnfonts-enable)
+    (cnfonts-set-font)
+    (let ((width (display-pixel-width))
+          (frame (selected-frame)))
+      (set-frame-width frame (/ (* 4 width)
+                                (* 5 (frame-char-width)))))))
+
 (defun kimim/shrink-right ()
   "Shrink window to the right part, leave space for reading
 documents."
   (interactive)
-  (kimim/frame-and-font)
+  ;;(kimim/frame-and-font)
+  (kimim/restore-to-default-width)
   (set-frame-width (selected-frame) (round (/ (frame-width) 2.1)))
   (set-frame-position
    (selected-frame)
    (/ (* (display-pixel-width) 3) 5)
    (cdr (frame-position))))
 
+
 (defun kimim/shrink-left ()
   "Shrink window to the left part, leave space for reading
 documents."
   (interactive)
-  (kimim/frame-and-font)
+  ;;(kimim/frame-and-font)
+  (kimim/restore-to-default-width)
   (set-frame-width (selected-frame) (round (/ (frame-width) 2.1)))
   (set-frame-position
    (selected-frame)

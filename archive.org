@@ -1,3 +1,41 @@
+** ivy-mode
+
+#+begin_src emacs-lisp
+(use-package ivy
+  :diminish ivy-mode
+  :bind ("<f6>" . ivy-resume)
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-wrap nil)
+  (ivy-mode 1))
+#+end_src
+** counsel
+~counsel~ will enhance many built-in commands with nice ivy completion candidates.
+
+#+begin_src emacs-lisp
+(use-package counsel
+  :bind
+  (("M-x" . counsel-M-x)
+   ("C-x C-f" . counsel-find-file)
+   ("C-x m f" . counsel-describe-function)
+   ("C-x m v" . counsel-describe-variable)
+   ("C-x m l" . counsel-load-library)
+   ("C-x m i" . counsel-info-lookup-symbol)
+   ("C-x m j" . counsel-bookmark)
+   ("C-x m u" . counsel-unicode-char)
+   ("C-c j" . counsel-git-grep)
+   ("C-c g" . counsel-grep)
+   ("C-x b" . counsel-ibuffer)
+   ("C-c k" . counsel-ag)
+   ("C-c p" . counsel-pt)
+   :map read-expression-map
+   ("C-r" . counsel-minibuffer-history))
+  :config
+  (require 'ivy)
+  (require 'smex)
+  (add-hook 'counsel-grep-post-action-hook 'recenter))
+#+end_src
 ** guru mode
 
 ~guru-mode~ warns you when you type arrow keys, home or end. This could

@@ -533,9 +533,18 @@ clearly in dark color theme.
 (use-package image
   :ensure nil
   :config
+  (setq auto-mode-alist
+        (append '(("\\.svg\\'" . image-mode))
+                auto-mode-alist))
   (defun create-image-advice (im)
     (nconc im (list :background "#f8f8f8")))
   (advice-add 'create-image :filter-return #'create-image-advice))
+#+end_src
+
+** posframe
+
+#+begin_src emacs-lisp
+(use-package posframe)
 #+end_src
 
 ** Other Visual Element
@@ -801,7 +810,8 @@ Check spell on the fly.
 (use-package olivetti
   :diminish olivetti-mode
   :custom (olivetti-body-width (+ fill-column 10))
-  :hook ((text-mode elfeed-show-mode) . olivetti-mode))
+  :hook ((text-mode elfeed-show-mode eww-mode info-mode woman-mode)
+         . olivetti-mode))
 #+end_src
 
 * Controlling
@@ -871,32 +881,6 @@ List recent used commands with ~smex~:
   :commands (smex)
   :config
   (smex-initialize))
-#+end_src
-
-~counsel~ will enhance many built-in commands with nice ivy completion candidates.
-
-#+begin_src emacs-lisp
-(use-package counsel
-  :bind
-  (("M-x" . counsel-M-x)
-   ("C-x C-f" . counsel-find-file)
-   ("C-x m f" . counsel-describe-function)
-   ("C-x m v" . counsel-describe-variable)
-   ("C-x m l" . counsel-load-library)
-   ("C-x m i" . counsel-info-lookup-symbol)
-   ("C-x m j" . counsel-bookmark)
-   ("C-x m u" . counsel-unicode-char)
-   ("C-c j" . counsel-git-grep)
-   ("C-c g" . counsel-grep)
-   ("C-x b" . counsel-ibuffer)
-   ("C-c k" . counsel-ag)
-   ("C-c p" . counsel-pt)
-   :map read-expression-map
-   ("C-r" . counsel-minibuffer-history))
-  :config
-  (require 'ivy)
-  (require 'smex)
-  (add-hook 'counsel-grep-post-action-hook 'recenter))
 #+end_src
 
 ** Key Frequency
@@ -1021,6 +1005,11 @@ out of the box.
   :bind ("C-x m i" . imenu-anywhere))
 #+end_src
 
+** ripgrep: a fast command line search tool
+#+begin_src emacs-lisp
+(use-package ripgrep)
+#+end_src
+
 ** search from web
 
 #+begin_src emacs-lisp
@@ -1036,6 +1025,12 @@ out of the box.
   :config
   (recentf-mode))
 #+end_src
+** avy
+#+begin_src emacs-lisp
+(use-package avy
+  :bind ("C-x m g" . avy-goto-word-or-subword-1))
+#+end_src
+
 * File Management
 ** delete files
 
@@ -1208,6 +1203,7 @@ Rich annotations in the minibuffer.
   :init
   (marginalia-mode))
 #+end_src
+
 ** consult
 #+begin_src emacs-lisp
 (use-package consult
@@ -1221,6 +1217,7 @@ Rich annotations in the minibuffer.
          ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ("C-x M-b" . consult-buffer-other-window)
          ("C-x m j" . consult-bookmark)            ;; orig. bookmark-jump
          ("C-x m v" . find-variable)
          ("C-x m f" . find-function)
@@ -1248,6 +1245,7 @@ Rich annotations in the minibuffer.
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
          ("M-s r" . consult-ripgrep)
+         ("M-s p" . kimim/consult-ripgrep-current)
          ("M-s l" . consult-line)
          ("M-s L" . consult-line-multi)
          ("M-s m" . consult-multi-occur)
@@ -1263,7 +1261,7 @@ Rich annotations in the minibuffer.
 
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
+  ;;:hook (completion-list-mode . consult-preview-at-point-mode)
 
   ;; The :init configuration is always executed (Not lazy)
   :init
@@ -1287,8 +1285,13 @@ Rich annotations in the minibuffer.
   ;; after lazily loading the package.
   :config
 
+  (defun kimim/consult-ripgrep-current ()
+    (interactive)
+    (consult-ripgrep "."))
+
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
+  (setq consult-preview-key '(:debounce 1.5 any))
   ;; (setq consult-preview-key 'any)
   ;; (setq consult-preview-key (kbd "M-."))
   ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
@@ -1364,19 +1367,6 @@ Rich annotations in the minibuffer.
 
 #+begin_src emacs-lisp
 (diminish 'abbrev-mode)
-#+end_src
-
-** COMMENT ivy-mode
-
-#+begin_src emacs-lisp
-(use-package ivy
-  :diminish ivy-mode
-  :bind ("<f6>" . ivy-resume)
-  :config
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "(%d/%d) ")
-  (setq ivy-wrap nil)
-  (ivy-mode 1))
 #+end_src
 
 ** ivy-bibtex
@@ -1480,8 +1470,22 @@ or other version control information.
 
 #+begin_src emacs-lisp
 (use-package project
+  :bind ("C-x p r" . project-find-ripgrep-regexp)
   :config
-  (require 'magit))
+  (require 'magit)
+  (defun project-find-ripgrep-regexp (regexp)
+    "Find all matches for REGEXP in the current project's roots."
+    (interactive (list (project--read-regexp)))
+    (require 'ripgrep)
+    (let* ((caller-dir default-directory)
+           (pr (project-current t))
+           (default-directory (project-root pr))
+           (dir
+            (if (not current-prefix-arg)
+                default-directory
+              (read-directory-name "Base directory: "
+                                   caller-dir nil t))))
+      (ripgrep-regexp regexp dir))))
 #+end_src
 
 ** Compiling
@@ -1544,7 +1548,7 @@ parenthesis. We define some keys for it:
   :diminish smartparens-mode
   :config
   ;;(sp-with-modes '(c-mode c++-mode)
-  ;;  (sp-local-pair "<" ">"))
+  ;;  (sp-local-pair "<" nil :actions nil))
   (sp-with-modes sp-lisp-modes
     ;; disable ', it's the quote character!
     (sp-local-pair "'" nil :actions nil)
@@ -1606,15 +1610,15 @@ that dash version higher than 2.18 is installed[fn:13].
   :after goto-addr
   :commands lsp
   :custom
-  (lsp-headerline-breadcrumb-icons-enable nil)
-  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-headerline-breadcrumb-icons-enable t)
+  (lsp-headerline-breadcrumb-enable t)
   (lsp-modeline-code-action-fallback-icon "✶")
-  (lsp-ui-doc-text-scale-level -1)
   :bind (:map
          lsp-mode-map
          ("C-." . lsp-find-definition)
          ("C-," . xref-go-back)
-         ("C-x ." . kimim/lsp-find-definition-other-window))
+         ("C-x ." . kimim/lsp-find-definition-other-window)
+         ("C-x l t s" . lsp-treemacs-symbols))
   :hook ((clojure-mode . lsp)
          (c-mode . lsp)
          (c++-mode . lsp)
@@ -1625,6 +1629,7 @@ that dash version higher than 2.18 is installed[fn:13].
   (require 'dash)
   (require 'goto-addr)
   (define-key lsp-mode-map (kbd "C-x l") lsp-command-map)
+  (add-hook 'xref-after-return-hook 'recenter)
   (defun kimim/lsp-find-definition-other-window ()
     (interactive)
     (lsp-find-definition :display-action 'window)
@@ -1633,6 +1638,9 @@ that dash version higher than 2.18 is installed[fn:13].
 (use-package lsp-ui
   :commands lsp-ui-mode
   :custom
+  (lsp-ui-doc-text-scale-level -1)
+  ;(lsp-ui-doc-show-with-cursor t)
+  (lsp-ui-doc-show-with-mouse t)
   (lsp-ui-doc-alignment 'window)
   (lsp-ui-doc-max-width 90))
 #+end_src
@@ -1765,6 +1773,7 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
 
 #+begin_src emacs-lisp
 (use-package csharp-mode
+  :ensure nil
   :mode ("\\.cs\\'" . csharp-mode))
 #+end_src
 
@@ -2036,10 +2045,11 @@ place and assign ~plantuml-jar-path~ to there.
 #+begin_src emacs-lisp
 (use-package plantuml-mode
   :custom
+  (plantuml-output-type "svg")
   (plantuml-default-exec-mode 'jar)
   (plantuml-jar-path (expand-file-name
                       (concat kimim/path-kimikit "plantuml/plantuml.jar")))
-  (plantuml-executable-args "-headless -charset UTF-8")
+  (plantuml-executable-args '("-headless" "-charset" "UTF-8"))
   :config
   (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode)))
 #+end_src
@@ -2065,7 +2075,9 @@ it is a long sequence diagram, I can use key ~s i~ to invoke
 (use-package image-mode
   :ensure nil
   :custom
-  (image-auto-resize 'fit-window))
+  (image-auto-resize 'fit-window)
+  :config
+  (add-to-list 'auto-mode-alist '("\\.svg\\'" . image-mode)))
 #+end_src
 
 ** ditaa
@@ -2081,6 +2093,7 @@ it is a long sequence diagram, I can use key ~s i~ to invoke
   (add-to-list 'org-src-lang-modes '("ditaa" . artist))
   (add-to-list 'org-babel-load-languages '(ditaa . t)))
 #+end_src
+
 ** Mermaid
 
 Mermaid [fn:18] is another js based diagramming and charting tool. To
@@ -2221,6 +2234,7 @@ yarn add @mermaid-js/mermaid-cli
   :config
   (require 'ivy-bibtex)
   (require 'org-roam-bibtex)
+  ;; dont put [ inside file name
   (defun kimim/org-ref-get-pdf-filename (key)
     "Unlike `org-ref-get-pdf-filename', this function will get the
   pdf file name recursively, and return the pdf filename
@@ -2428,7 +2442,8 @@ support more functions from =org-ref=:
   (if window-system
       (setq org-startup-indented t)
     (setq org-startup-indented nil))
-  (setq org-image-actual-width 700))
+  ;; image width in preview
+  (setq org-image-actual-width 1200))
 #+end_src
 
 ** org-appear
@@ -2818,10 +2833,11 @@ sudo apt install python3-pygments
           ("" "textcomp" t nil)
           ("" "lettrine" t nil)
           ("" "capt-of" nil nil))))
-  (setq org-latex-packages-alist
-        `(,(concat "\\addbibresource{"
-                   (expand-file-name bibtex-completion-bibliography)
-                   "}")))
+  ;; latex preview report exception with bibref
+  ;; (setq org-latex-packages-alist
+  ;;       `(,(concat "\\addbibresource{"
+  ;;                  (expand-file-name bibtex-completion-bibliography)
+  ;;                  "}")))
   ;; preview latex equation with SVG image
   (add-to-list 'org-preview-latex-process-alist
                '(xdvsvgm :progams
@@ -3093,7 +3109,14 @@ sqlite3 is shipped in macOS by default.
    '(("d" "default" plain "- /%<%H:%M>/ %?" :target
       (file+datetree "%<%Y>.org" :day))))
   :bind
-  (("C-c n f" . org-roam-node-find)
+  (("C-c n f" . (lambda ()
+                  (interactive)
+                  (org-roam-node-find
+                   nil nil 'kimim/non-cite-filter)))
+   ("C-c n F" . (lambda ()
+                  (interactive)
+                  (org-roam-node-find
+                   nil nil 'kimim/cite-filter)))
    ("C-c n c" . org-roam-capture)
    ("C-c n j" . org-roam-dailies-capture-today)
    ("C-c n ." . org-roam-dailies-goto-today)
@@ -3103,7 +3126,12 @@ sqlite3 is shipped in macOS by default.
    (("C-c n l" . org-roam)
     ("C-c n g" . org-roam-graph))
    :map org-mode-map
-   (("C-c n i" . org-roam-node-insert)
+   (("C-c n i" . (lambda ()
+                   (interactive)
+                   (org-roam-node-insert 'kimim/non-cite-filter)))
+    ("C-c n I" . (lambda ()
+                   (interactive)
+                   (org-roam-node-insert 'kimim/cite-filter)))
     ("C-c n t" . org-roam-tag-add)
     ("C-c n a" . org-roam-alias-add)
     ("C-c n g" . org-id-get-create)
@@ -3111,11 +3139,16 @@ sqlite3 is shipped in macOS by default.
   :config
   (add-to-list 'load-path "~/kimim-emacs/site-lisp")
   (require 'org-roam-dailies)
+  (require 'org-roam-bibtex)
   (require 'emacsql)
   (require 'kimim)
   (setq org-roam-v2-ack t)
   (setq emacsql-global-timeout 60) ;; default 30 seconds will timeout
   (org-roam-db-autosync-enable)
+  (defun kimim/cite-filter (node)
+    (orb-get-node-citekey node))
+  (defun kimim/non-cite-filter (node)
+    (not (orb-get-node-citekey node)))
   (advice-add 'org-roam-node-visit
               :after (lambda (&rest r) (reposition-window))))
 #+end_src
@@ -3141,6 +3174,7 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
 #+begin_src emacs-lisp
 (use-package consult-org-roam
   :ensure t
+  :diminish consult-org-roam-mode
   :custom
   (consult-org-roam-grep-func #'consult-ripgrep)
   :bind
@@ -3215,9 +3249,89 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
         ("M-<down>" . markdown-move-down)
         ("C-c C-x C-v" . markdown-toggle-inline-images))
   :config
+  (require 'org)
   ;; to support azure markdown format with =WxH after file link
   (setq markdown-regex-link-inline
-        "\\(?1:!\\)?\\(?2:\\[\\)\\(?3:\\^?\\(?:\\\\\\]\\|[^]]\\)*\\|\\)\\(?4:\\]\\)\\(?5:(\\)\\s-*\\(?6:[^)]*?\\)\\(?:\\s-+\\(?7:\"[^\"]*\"\\|=.*\\)\\)?\\s-*\\(?8:)\\)"))
+        "\\(?1:!\\)?\\(?2:\\[\\)\\(?3:\\^?\\(?:\\\\\\]\\|[^]]\\)*\\|\\)\\(?4:\\]\\)\\(?5:(\\)\\s-*\\(?6:[^)]*?\\)\\(?:\\s-+\\(?7:\"[^\"]*\"\\|=.*\\)\\)?\\s-*\\(?8:)\\)")
+  (defun markdown--browse-url (url)
+    (let* ((struct (url-generic-parse-url url))
+           (full (url-fullness struct))
+           (file url))
+      (message file)
+      ;; Parse URL, determine fullness, strip query string
+      (setq file (car (url-path-and-query struct)))
+      (let ((file (if (and (s-starts-with? "/" file)
+                           (not (file-exists-p file)))
+                      (concat (project-root (project-current t))
+                              file)
+                    file)))
+        ;; Open full URLs in browser, files in Emacs
+        (if full
+            (browse-url url)
+          (when (and file (> (length file) 0))
+            (let ((link-file (funcall markdown-translate-filename-function file)))
+              (if (and markdown-open-image-command (string-match-p (image-file-name-regexp) link-file))
+                  (if (functionp markdown-open-image-command)
+                      (funcall markdown-open-image-command link-file)
+                    (process-file markdown-open-image-command nil nil nil link-file))
+                (find-file link-file))))))))
+
+  (defun markdown-display-inline-images ()
+    "Add inline image overlays to image links in the buffer.
+This can be toggled with `markdown-toggle-inline-images'
+or \\[markdown-toggle-inline-images]."
+    (interactive)
+    (unless (display-images-p)
+      (error "Cannot show images"))
+    (save-excursion
+      (save-restriction
+        (widen)
+        (goto-char (point-min))
+        (while (re-search-forward markdown-regex-link-inline nil t)
+          (let* ((start (match-beginning 0))
+                 (imagep (match-beginning 1))
+                 (end (match-end 0))
+                 (file (match-string-no-properties 6))
+                 (file (if (s-starts-with? "/" file)
+                           (concat (project-root (project-current t))
+                                   file)
+                         file)))
+            (when (and imagep
+                       (not (zerop (length file))))
+              (unless (file-exists-p file)
+                (let* ((download-file (funcall markdown-translate-filename-function file))
+                       (valid-url (ignore-errors
+                                    (member (downcase (url-type (url-generic-parse-url download-file)))
+                                            markdown-remote-image-protocols))))
+                  (if (and markdown-display-remote-images valid-url)
+                      (setq file (markdown--get-remote-image download-file))
+                    (when (not valid-url)
+                      ;; strip query parameter
+                      (setq file (replace-regexp-in-string "?.+\\'" "" file))
+                      (unless (file-exists-p file)
+                        (setq file (url-unhex-string file)))))))
+              (when (file-exists-p file)
+                (let* ((abspath (if (file-name-absolute-p file)
+                                    file
+                                  (concat default-directory file)))
+                       (image
+                        (cond ((and markdown-max-image-size
+                                    (image-type-available-p 'imagemagick))
+                               (create-image
+                                abspath 'imagemagick nil
+                                :max-width (car markdown-max-image-size)
+                                :max-height (cdr markdown-max-image-size)))
+                              (markdown-max-image-size
+                               (create-image abspath nil nil
+                                             :max-width (car markdown-max-image-size)
+                                             :max-height (cdr markdown-max-image-size)))
+                              (t (create-image abspath)))))
+                  (when image
+                    (let ((ov (make-overlay start end)))
+                      (overlay-put ov 'display image)
+                      (overlay-put ov 'face 'default)
+                      (push ov markdown-inline-image-overlays)))))))))))
+  )
 #+end_src
 
 * Task Management
@@ -3750,78 +3864,6 @@ from system PATH, so you should set these to system PATH.
     (interactive)
     (text-scale-increase 0)))
 #+end_src
-
-* Keybindings
-
-Finally, let's list the useful key bindings in a table.
-
-#+ATTR_LATEX: :environment longtable :align l|lp{3cm}r|l|l
-| Mode     | Keys    | Commands                     | Description               |
-|----------+---------+------------------------------+---------------------------|
-| Global   | C-x m 0 | kimim/top-right-mouse        | Move mouse to top right   |
-|          | C-x m c | ace-jump-mode                |                           |
-|          | C-x o   | ace-window                   |                           |
-|          | M-o     | ace-window                   |                           |
-|          | C-x m w | ace-swap-window              |                           |
-|          | C-x m x | ace-delete-window            |                           |
-|          | C-s     | swiper                       | search with swiper        |
-|          | C-s C-s | resume swiper search         |                           |
-|          | C-x 5 2 | make-frame                   | make a new frame          |
-|          | C-x 5 0 | delete-frame                 | delete current frame      |
-|          | C-x 5 1 | delete-other-frames          | only keep current frame   |
-|          | C-x 5 b | switch-to-buffer-other-frame |                           |
-|          | C-x 5 f | find-file-other-frame        |                           |
-|          | C-x 5 d | dired-other-frame            |                           |
-|          | C-x 5 o | other-frame                  |                           |
-| File     | C-x m r | kimim/rename-file-and-buffer | rename buffer file        |
-| chars    | C-q M-a |                              | á                         |
-|          | C-q M-b |                              | â                         |
-|          | C-q M-c |                              | ã                         |
-|          | C-q M-d |                              | ä                         |
-|          | C-q M-e |                              | å                         |
-|          | C-q M-f |                              | æ                         |
-|          | C-q M-g |                              | ç                         |
-|          | C-q M-h |                              | è                         |
-|          | C-q M-i |                              | é                         |
-|          | C-q M-j |                              | ê                         |
-|          | C-q M-k |                              | ë                         |
-|          | C-q M-l |                              | ì                         |
-|          | C-q M-m |                              | í                         |
-|          | C-q M-n |                              | î                         |
-|          | C-q M-o |                              | ï                         |
-|          | C-q M-p |                              | ð                         |
-|          | C-q M-q |                              | ñ                         |
-|          | C-q M-r |                              | ò                         |
-|          | C-q M-s |                              | ó                         |
-|          | C-q M-t |                              | ô                         |
-|          | C-q M-u |                              | õ                         |
-|          | C-q M-v |                              | ö                         |
-|          | C-q M-w |                              | ÷                         |
-|          | C-q M-x |                              | ø                         |
-|          | C-q M-y |                              | ù                         |
-|          | C-q M-z |                              | ú                         |
-|          | C-q M-0 |                              | °                         |
-|          | C-q M-1 |                              | ±                         |
-|          | C-q M-2 |                              | ²                         |
-|          | C-q M-3 |                              | ³                         |
-|          | C-q M-4 |                              | ´                         |
-|          | C-q M-5 |                              | µ                         |
-|          | C-q M-6 |                              | ¶                         |
-|          | C-q M-7 |                              | ·                         |
-|          | C-q M-8 |                              | ¸                         |
-|          | C-q M-9 |                              | ¹                         |
-|          | C-q M-` |                              | à                         |
-|          | C-q M-- |                              | ­                         |
-|          | C-q M-+ |                              | ½                         |
-| flyspell | C-,     | flyspell-goto-next-error     |                           |
-|          | C-.     | flyspell-auto-correct-word   |                           |
-| dired    | R       | dired-do-rename              |                           |
-|          | C       | dired-do-copy                |                           |
-|          | o       | kimim/open-external          | Open file in external app |
-|          | b       | dired-up-directory           |                           |
-|          | e       | dired-efap                   | Edit file name            |
-|          | C-q     | kimim/kill-dired-buffers     |                           |
-|          | q       | quit-window                  |                           |
 
 * Footnotes
 
