@@ -74,6 +74,7 @@
             (compilation-error :underline t :inherit error)
             (compilation-info :underline t :foreground ,kimim-theme-const)
             (highlight :background "gray30")
+            (marginalia-documentation :background nil :slant italic) ;; remove background
             (region :background ,kimim-theme-region)
             (secondary-selection :background "deep sky blue" :foreground "#f6f3e8")
             (whitespace-indentation :background "LightYellow" :foreground "lightgray")
