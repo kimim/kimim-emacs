@@ -2133,7 +2133,7 @@ yarn add @mermaid-js/mermaid-cli
           ((eq system-type 'gnu/linux)
            "/usr/local/share/emacs/site-lisp/lilypond"))))
 
-(use-package LilyPond-mode
+(use-package lilypond-mode
   :load-path (lambda () (list (lilypond-load-path))))
 #+end_src
 
@@ -3148,7 +3148,9 @@ sqlite3 is shipped in macOS by default.
   (defun kimim/cite-filter (node)
     (orb-get-node-citekey node))
   (defun kimim/non-cite-filter (node)
-    (not (orb-get-node-citekey node)))
+    (or
+     (not (orb-get-node-citekey node))
+     (-contains? (org-roam-node-tags node) "standard")))
   (advice-add 'org-roam-node-visit
               :after (lambda (&rest r) (reposition-window))))
 #+end_src
