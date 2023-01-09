@@ -7,9 +7,10 @@
 
 * Introduction
 
-This Emacs configuration file is written with literate programming method[fn:1].
-The =emacs-lisp= code is extracted from this =orgmode= [fn:2] file, and then
-compiled to binary =elc= file for fast loading in the future.
+This Emacs configuration file is written in literate programming
+method[fn:1].  The =emacs-lisp= code is extracted from this
+=orgmode= [fn:2] file, and then compiled to binary =elc= file for fast
+loading in the future.
 
 * Installation
 
@@ -17,68 +18,61 @@ First of all, you need to get =emacs= and install it in your machine.
 
 ** Windows/MSYS2
 
-On Windows platform, we have three options: 1) MSYS2, 2) Cygwin, 3) WSL2.
+On Windows platform, we have three options: 1) MSYS2, 2) Cygwin, 3)
+WSL2.
 
-With msys2[fn:3] installed in =C:\msys64=, you can open =C:\msys64\mingw64.exe=, and
-run following command to install Emacs:
+If your msys2[fn:3] is installed in =C:\msys64=, you can open
+=C:\msys64\mingw64.exe=, and run following command to install Emacs:
 
 #+begin_src shell
 pacman -S git mingw-w64-x86_64-emacs
 #+end_src
 
-Since 2020, I use MSYS2 MingW64 Emacs for most of the time, Cygwin Emacs is not
-actively tested now, but Emacs should work in Cygwin environment smoothly.
-
 ** Windows/Cygwin
 
-Cygwin project[fn:4] is a large collection of GNU and Open Source tools provide
-functionality similar to a Linux distribution on Windows.
+Since 2020, I use MSYS2 MingW64 Emacs for most of the time, Cygwin
+Emacs is not actively tested now, but Emacs should work in Cygwin
+environment smoothly.
 
-You can find Cygwin setup here: https://cygwin.com/setup-x86_64.exe , download
-and install it in your machine, for example, at =C:\cygwin64=. Then you can use
-=mintty.exe= to work with =bash=.
+Cygwin project[fn:4] is a large collection of GNU and Open Source
+tools provide functionality similar to a Linux distribution on
+Windows.
 
-In order to make life easier, we will use =apt-cyg=[fn:5] to install =emacs= and
-other tools. Let's download =apt-cyg= and install =emacs= and =git=:
+You can find Cygwin setup here: https://cygwin.com/setup-x86_64.exe ,
+download and install it in your machine, for example, at
+=C:\cygwin64=. Then you can use =mintty.exe= to work with =bash=.
 
-#+begin_src shell
-curl https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg \
-     > /usr/local/bin/apt-cyg
-chmod +x /usr/local/bin/apt-cyg
-apt-cyg install emacs-w32 git
-#+end_src
-
-Then start =emacs= from cygwin terminal, and right click the =emacs= icon to pin it
-to taskbar, then click the property of this icon to add bellow to the target
-field. This way will hide the black terminal.
+Then start =emacs= from cygwin terminal, and right click the =emacs= icon
+to pin it to taskbar, then click the property of this icon to add
+bellow to the target field. This way will hide the black terminal.
 
 #+begin_src bat
 C:\cygwin64\bin\run.exe emacs-w32
 #+end_src
 
-You can also add =emacs --daemon= in your scheduled task, and change the target
-field as:
+You can also add =emacs --daemon= in your scheduled task, and change the
+target field as:
 
 #+begin_src bat
 C:\cygwin64\bin\run.exe emacsclient -c
 #+end_src
 
-This will attach the client to the server daemon. You can get a running =emacs=
-very quick.
+This will attach the client to the server daemon. You can get a
+running =emacs= very quick.
 
 ** Windows/WSL2
 
-Nowadays, Windows is embracing Linux tightly. You can try =emacs= on Windows
-subsystem for Linux version 2. You can get Ubuntu Linux from Windows App
-Store. And Manjaro Linux for WSL2[fn:6] from
+Nowadays, Windows is embracing Linux tightly. You can try =emacs= on
+Windows subsystem for Linux version 2. You can get Ubuntu Linux from
+Windows App Store. And Manjaro Linux for WSL2[fn:6] from
 https://github.com/sileshn/ManjaroWSL/releases
 
 Commands to install Emacs is same as on Linux in next section.
 
 ** Linux
 
-Most of the external tools I used in this Emacs configuration should be easily
-installed or already available in main Linux distributions.
+Most of the external tools I used in this Emacs configuration should
+be easily installed or already available in main Linux distributions.
 
 For example, in Ubuntu, you can install this way:
 
@@ -107,8 +101,8 @@ brew install emacs-mac
 * Preparation
 ** Get emacs config
 
-You can follow below shell commands to prepare the =emacs= configuration files and
-folders:
+You can follow below shell commands to prepare the =emacs= configuration
+files and folders:
 
 #+begin_src shell
 # backup existing emacs config
@@ -119,8 +113,8 @@ git clone https://github.com/kimim/kimim-emacs
 cp kimim-emacs/.emacs ~
 #+end_src
 
-This configuration uses several path to keep different information, you need to
-define them in =~/.emacs=:
+This configuration uses several path to keep different information,
+you need to define them in =~/.emacs=:
 
 - =kimim/path-sync= is the root of sync folder
 - =kimim/path-sync-emacs= to sync emacs settings
@@ -174,12 +168,12 @@ emacs --with-profile kimim
 
 ** PATH and exec-path
 
-Environment variable =PATH= is the the searching path of executables by the
-shell running in Emacs while =exec-path= is the search path of Emacs itself. So
-we should set both of them to almost the same paths.
+Environment variable =PATH= is the the searching path of executables by
+the shell running in Emacs while =exec-path= is the search path of Emacs
+itself. So we should set both of them to almost the same paths.
 
-As I have a Windows box in the office, and a Apple macOS at home, so I need to
-specify these variables in different way.
+As I have a Windows box in the office, and a Apple macOS at home, so I
+need to specify these variables in different way.
 
 #+begin_src emacs-lisp
 (cond
@@ -207,8 +201,8 @@ Then append exec-path to PATH:
          (getenv "PATH")))
 #+end_src
 
-For Windows/MSYS64, we need to modify =executable-find= to locate
-shell scripts:
+For Windows/MSYS64, we need to modify =executable-find= to locate shell
+scripts:
 
 #+begin_src emacs-lisp
 (defun executable-find (command &optional remote)
@@ -265,16 +259,18 @@ Define new command prefix for keys such as "C-x m f", "C-x m v".
 
 * Package
 
-=package= [fn:8] is the modern =elisp= package management system, which let you
-easily download and install packages that implement additional features. Each
-package is a separate Emacs Lisp program, sometimes including other components
-such as an Info manual.
+=package= [fn:8] is the modern =elisp= package management system, which
+let you easily download and install packages that implement additional
+features. Each package is a separate Emacs Lisp program, sometimes
+including other components such as an Info manual.
 
-All the extensions used in this file are installed and managed by =package=.
+All the extensions used in this file are installed and managed by
+=package=.
 
-Here I use =use-package= to defer the package loading and even installation,
-When you use the =:commands= keyword, it creates autoloads for those commands
-and defers loading of the module until they are used.
+Here I use =use-package= to defer the package loading and even
+installation, When you use the =:commands= keyword, it creates autoloads
+for those commands and defers loading of the module until they are
+used.
 
 When I want to upgrade elpa packages, I just call ~list-packages~, and
 let emacs refresh the package lists, then I just need to press =U= to
@@ -314,9 +310,10 @@ a ~byte-force-recompile~ in =~/.emacs.d= could work.
 * Look & Feel
 ** Menu Bar and Tool Bar
 
-Don't display menu-bar, tool-bar, tooltip and scroll-bar. Because sometimes,
-they may catch your attention. But you cannot hide menu bar in macOS desktop
-environment, because the system preserves menu bar for every applications.
+Don't display menu-bar, tool-bar, tooltip and scroll-bar. Because
+sometimes, they may catch your attention. But you cannot hide menu bar
+in macOS desktop environment, because the system preserves menu bar
+for every applications.
 
 #+begin_src emacs-lisp
 (defun kimim/menu-and-bar ()
@@ -338,8 +335,8 @@ environment, because the system preserves menu bar for every applications.
 
 Set default font and frame size for both window system. You should
 =set-default-font= first, otherwise, the frame height and width will be
-calculated with original default font height and width: =frame-char-height= and
-=frame-char-width=.
+calculated with original default font height and width:
+=frame-char-height= and =frame-char-width=.
 
 #+begin_src emacs-lisp
 (use-package cnfonts
@@ -423,51 +420,6 @@ Show (line, column) numbers in mode line:
   (toggle-word-wrap -1))
 #+end_src
 
-** mini modeline
-
-#+begin_src emacs-lisp
-(use-package mini-modeline
-  :functions (mini-modeline-update-theme
-              mini-modeline-update-theme-advice)
-  :custom (mini-modeline-echo-duration 10)
-  :config
-  (defun kimim/mini-modeline-restore ()
-    (window-resize (minibuffer-window mini-modeline-frame) -100))
-  ;; force restore minibuffer when press C-g
-  (advice-add #'keyboard-quit :before #'kimim/mini-modeline-restore)
-  ;; (add-hook 'after-make-frame-functions
-  ;;           (lambda (frame)
-  ;;             (mini-modeline-mode +1)))
-  (defun mini-modeline-update-theme ()
-    (setq mini-modeline-face-attr nil)
-    (let* ((active-bg (face-attribute 'mode-line :background))
-           (inactive-bg (face-attribute 'mode-line-inactive :background)))
-      (set-face-attribute 'mini-modeline-mode-line nil
-                          :background active-bg :foreground active-bg)
-      (set-face-attribute 'mini-modeline-mode-line-inactive nil
-                          :background inactive-bg :foreground inactive-bg)))
-
-  (defun mini-modeline-toggle (&optional arg)
-    (interactive)
-    (setq mini-modeline-face-attr nil)
-    (setq mini-modeline-right-padding 3)
-    (if (or arg (not mini-modeline-mode))
-        (progn
-          (if mini-modeline-mode
-              (mini-modeline-mode -1))
-          (mini-modeline-update-theme)
-          (setq mini-modeline-r-format '("%e" mode-line-position
-                                         celestial-mode-line-string "  "
-                                         display-time-string))
-          (mini-modeline-mode +1))
-      (mini-modeline-mode -1)))
-
-  (defun mini-modeline-update-theme-advice (&rest args)
-    (mini-modeline-update-theme))
-  ;; reset modeline color after theme change
-  (advice-add 'load-theme :after #'mini-modeline-update-theme-advice))
-#+end_src
-
 ** Celestial modeline
 
 #+begin_src emacs-lisp
@@ -548,6 +500,7 @@ clearly in dark color theme.
 #+end_src
 
 ** Other Visual Element
+
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
 (setq initial-scratch-message nil)
@@ -2226,8 +2179,6 @@ yarn add @mermaid-js/mermaid-cli
   :custom
   (bibtex-completion-display-formats
   '((t . "${=key=:30} ${author:36} ${title:*} ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")))
-  (reftex-default-bibliography (concat kimim/path-docs "references.bib"))
-  (org-ref-default-bibliography (concat kimim/path-docs "references.bib"))
   (bibtex-completion-bibliography (concat kimim/path-docs "references.bib"))
   (bibtex-completion-library-path kimim/path-docs)
   (bibtex-completion-notes-path (concat kimim/path-notes "org-ref-notes.txt"))
@@ -3150,7 +3101,8 @@ sqlite3 is shipped in macOS by default.
   (defun kimim/non-cite-filter (node)
     (or
      (not (orb-get-node-citekey node))
-     (-contains? (org-roam-node-tags node) "standard")))
+     (-contains? (org-roam-node-tags node) "standard")
+     (-contains? (org-roam-node-tags node) "terminology")))
   (advice-add 'org-roam-node-visit
               :after (lambda (&rest r) (reposition-window))))
 #+end_src
