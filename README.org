@@ -154,7 +154,7 @@ git clone https://github.com/kimim/kimim-emacs ~/kimim-emacs
 
 Add to chemacs2 profile file ~~/.emacs.profile.el~
 
-#+begin_src
+#+begin_src emacs-lisp :eval no
 (("default" . ((user-emacs-directory . "~/.emacs.default")))
  ("kimim" . ((user-emacs-directory . "~/kimim-emacs"))))
 #+end_src
@@ -168,6 +168,10 @@ emacs --with-profile kimim
 If you want use ~~/.emacs.kimim~ as the ~user-emacs-directory~, you need
 to modify the value of variable ~kimim/path-kimim-emacs~ in
 ~early-init.el~.
+
+#+begin_src emacs-lisp :eval no
+(defvar kimim/path-kimim-emacs "~/.emacs.kimim/")
+#+end_src
 
 ** PATH and exec-path
 
