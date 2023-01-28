@@ -144,7 +144,7 @@ Then you can execute =emacs= to bootstrap itself.
 
 ** chemacs2
 
-Another way to try this configure out is to use chemacs2.
+Another way to try this configure out is to use [[https://github.com/plexus/chemacs2][chemacs2]].
 
 Clone to ~~/kimim-emacs~
 
