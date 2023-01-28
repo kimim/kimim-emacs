@@ -149,14 +149,14 @@ Another way to try this configure out is to use chemacs2.
 Clone to ~/.emacs.kimim
 
 #+begin_src shell
-git clone https://github.com/kimim/kimim-emacs ~/.emacs.kimim
+git clone https://github.com/kimim/kimim-emacs ~/kimim-emacs
 #+end_src
 
 Add to chemacs2 profile
 
 #+begin_src
 (("default" . ((user-emacs-directory . "~/.emacs.default")))
- ("kimim" . ((user-emacs-directory . "~/.emacs.kimim"))))
+ ("kimim" . ((user-emacs-directory . "~/kimim-emacs"))))
 #+end_src
 
 Start emacs with this config:
@@ -165,6 +165,9 @@ Start emacs with this config:
 emacs --with-profile kimim
 #+end_src
 
+If you want use ~~/.emacs.kimim~ as the ~user-emacs-directory~, you need
+to modify the value of variable ~kimim/path-kimim-emacs~ in
+~early-init.el~.
 
 ** PATH and exec-path
 
