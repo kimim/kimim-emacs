@@ -146,13 +146,13 @@ Then you can execute =emacs= to bootstrap itself.
 
 Another way to try this configure out is to use chemacs2.
 
-Clone to ~/.emacs.kimim
+Clone to ~~/kimim-emacs~
 
 #+begin_src shell
 git clone https://github.com/kimim/kimim-emacs ~/kimim-emacs
 #+end_src
 
-Add to chemacs2 profile
+Add to chemacs2 profile file ~~/.emacs.profile.el~
 
 #+begin_src
 (("default" . ((user-emacs-directory . "~/.emacs.default")))
