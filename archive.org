@@ -1,3 +1,24 @@
+** ag: the silver searcher
+
+=ag= [fn:9] is really a very fast grep tool, and =ag.el= [fn:10] provide the
+Emacs interface to =ag=:
+
+#+begin_src emacs-lisp
+(use-package ag
+  :bind
+  ("C-x g" . ag-project)
+  :config
+  (setq ag-highlight-search t))
+#+end_src
+
+** pt: the platium searcher
+
+Because =counsel-ag= is not working in my Win64 machine, so I switch to =pt=
+now.
+
+Download =pt= from
+https://github.com/monochromegane/the_platinum_searcher/releases, and it works
+out of the box.
 ** ivy-mode
 
 #+begin_src emacs-lisp
