@@ -14,7 +14,6 @@
 \\usepackage[citestyle=numeric, bibstyle=numeric, hyperref=true,
 backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
 sorting=none]{biblatex}
-\\addbibresource{../references.bib}
 \\makeatletter
 \\def\\maxwidth#1{\\ifdim\\Gin@nat@width>#1 #1\\else\\Gin@nat@width\\fi}
 \\makeatother

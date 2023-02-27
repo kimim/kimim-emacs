@@ -357,7 +357,7 @@ calculated with original default font height and width:
 (defun kimim/frame-and-font ()
   (interactive)
   (when window-system
-    (use-package cnfonts)
+    (require 'cnfonts)
     (cnfonts-enable)
     (cnfonts-set-font)
     ;; top, left ... must be integer
@@ -886,8 +886,8 @@ frequency report by =M-x keyfreq-show=.
               (recenter 'top))))
 #+end_src
 
-~bm~ is used to temporally toggle buffer local bookmarks with ~C-x m t~, then you
-can view all the local temporally bookmarks with ~C-x m s~.
+~bm~ is used to temporally toggle buffer local bookmarks with ~C-x m t~,
+then you can view all the local temporally bookmarks with ~C-x m s~.
 
 #+begin_src emacs-lisp
 (use-package bm
@@ -897,13 +897,13 @@ can view all the local temporally bookmarks with ~C-x m s~.
          ("C-x m <right>" . bm-next)))
 #+end_src
 
-You can jump to any character by triggering ~ace-jump-mode~ (~C-x m c~), and jump to
-any window by triggering ~ace-window~ (~C-x m w~).
+You can jump to any character by triggering ~ace-jump-mode~ (~C-x m c~),
+and jump to any window by triggering ~ace-window~ (~C-x m w~).
 
 #+begin_src emacs-lisp
-(use-package ace-jump-mode
-  :bind
-  ("C-x m c" . ace-jump-mode))
+;; (use-package ace-jump-mode
+;;   :bind
+;;   ("C-x m c" . ace-jump-mode))
 
 (use-package ace-window
   :bind
@@ -1043,7 +1043,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
               (hl-line-mode 1)
               (setq dired-omit-localp t)
               (setq dired-omit-files
-                    (concat "|desktop.ini"
+                    (concat "|_minted[.]*\\|desktop.ini"
                             "\\|NTUSER\\|ntuser"
                             "\\|Cookies\\|AppData"
                             "\\|Contacts\\|Links"
@@ -1088,7 +1088,49 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
     (let ((other-dired-buffer (dired-dwim-target-directory)))
       (if other-dired-buffer
           (dired-other-window other-dired-buffer)
-        (dired-jump-other-window)))))
+        (dired-jump-other-window))))
+
+  (defun kimim/pdf2svg ()
+    (interactive)
+    (let* ((filename (dired-get-filename))
+           (exportname (replace-regexp-in-string ".pdf$" ".svg" filename))
+           (counter 10))
+      (w32-shell-execute
+       "open" (concat (getenv "MSYS64_PATH") "\\kimikit\\inkscape\\bin\\inkscape.exe")
+       (format "--export-filename=\"%s\" \"%s\""
+               exportname filename))
+      (while (and (not (file-exists-p exportname))
+                  (> counter 0))                    ; true-or-false-test
+        (sleep-for 1)
+        (setq counter (1- counter)))
+      (dired-revert)))
+
+  (defun kimim/drawio-to (ext)
+    (let* ((filename (dired-get-filename))
+           (exportname (replace-regexp-in-string "drawio$" ext filename))
+           (counter 10))
+      (w32-shell-execute
+       "open" (concat (getenv "MSYS64_PATH")
+                      "\\kimikit\\draw.io\\draw.io.exe")
+       (format "-x \"%s\" -o \"%s\""
+               filename exportname))
+      (while (and (not (file-exists-p exportname))
+                  (> counter 0))                    ; true-or-false-test
+        (sleep-for 1)
+        (setq counter (1- counter)))
+      (dired-revert)))
+
+  (defun kimim/drawio2png ()
+    (interactive)
+    (kimim/drawio-to "png"))
+
+  (defun kimim/drawio2svg ()
+    (interactive)
+    (kimim/drawio-to "svg"))
+
+  (defun kimim/drawio2pdf ()
+    (interactive)
+    (kimim/drawio-to "pdf")))
 #+end_src
 
 ** dired-recent
@@ -1430,7 +1472,8 @@ or other version control information.
 
 #+begin_src emacs-lisp
 (use-package project
-  :bind ("C-x p r" . project-find-ripgrep-regexp)
+  :bind (("C-x p r" . project-find-ripgrep-regexp)
+         ("C-x p s" . kimim/magit-stage-file))
   :config
   (require 'magit)
   (defun project-find-ripgrep-regexp (regexp)
@@ -1445,7 +1488,18 @@ or other version control information.
                 default-directory
               (read-directory-name "Base directory: "
                                    caller-dir nil t))))
-      (ripgrep-regexp regexp dir))))
+      (ripgrep-regexp regexp dir)))
+
+  (defun kimim/magit-stage-file ()
+    (interactive)
+    (let* ((current (magit-file-relative-name))
+           (choices (nconc (magit-unstaged-files)
+                           (magit-untracked-files)))
+           (default (car (member current choices))))
+      (if default
+          (magit-with-toplevel
+            (magit-stage-1 nil (list default)))
+        (message "Already staged")))))
 #+end_src
 
 ** Compiling
@@ -2009,7 +2063,7 @@ place and assign ~plantuml-jar-path~ to there.
   (plantuml-default-exec-mode 'jar)
   (plantuml-jar-path (expand-file-name
                       (concat kimim/path-kimikit "plantuml/plantuml.jar")))
-  (plantuml-executable-args '("-headless" "-charset" "UTF-8"))
+  (plantuml-executable-args '("-charset" "UTF-8"))
   :config
   (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode)))
 #+end_src
@@ -2021,7 +2075,7 @@ place and assign ~plantuml-jar-path~ to there.
     (require 'plantuml-mode)
     ;; WARNING: if variables are from other package, setq them at :config
     (setq org-plantuml-jar-path plantuml-jar-path)
-    (setq org-plantuml-executable-args plantuml-executable-args)
+    (setq org-plantuml-args plantuml-executable-args)
     (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
     (add-to-list 'org-babel-load-languages '(plantuml . t)))
 #+end_src
@@ -2255,12 +2309,14 @@ does not check that."
     "Open the pdf for bibtex key under point if it exists."
     (interactive)
     (let* ((results (condition-case nil
-                        (org-ref-get-bibtex-key-and-file)
-                      (error nil)))
-           (key (car results)))
-      (if (or (eq "" key) (null key))
+                        (if (eq 'org-mode
+                                (buffer-local-value
+                                 'major-mode (current-buffer)))
+                            (org-ref-get-bibtex-key-and-file))
+                        (error nil))))
+      (if (or (null results) (eq "" (car results)) (null (car results)))
           (kimim/org-ref-open-pdf)
-        (let ((pdf-file (kimim/org-ref-get-pdf-filename key)))
+        (let ((pdf-file (kimim/org-ref-get-pdf-filename (car results))))
           (if (file-exists-p pdf-file)
               (org-open-file pdf-file)
             (kimim/org-ref-open-pdf))))))
@@ -2302,7 +2358,7 @@ does not check that."
                         (org-ref-get-bibtex-key-and-file)
                       (error nil)))
            (key (car results)))
-      (if (or (eq "" key) (null key))
+      (if (or (string= "" key) (null key))
           (kimim/org-ref-open-pdf-in-dired)
         (let ((pdf-file (kimim/org-ref-get-pdf-filename key)))
           (if (file-exists-p pdf-file)
@@ -2342,7 +2398,7 @@ does not check that."
                         (org-ref-get-bibtex-key-and-file)
                       (error nil)))
            (key (car results)))
-      (if (or (eq "" key) (null key))
+      (if (or (string= "" key) (null key))
           (kimim/org-ref-open-notes)
         (funcall org-ref-notes-function key)))))
 #+end_src
@@ -2374,6 +2430,7 @@ support more functions from =org-ref=:
   (:map org-mode-map
    ("C-c b" . org-iswitchb)
    ("C-c l" . org-store-link)
+   ("C-c C-x l" . org-toggle-link-display)
    ("C-c  ！" . org-time-stamp-inactive)
    ("C-c  。" . org-time-stamp)
    ("M-." . org-open-at-point)
@@ -2422,8 +2479,8 @@ support more functions from =org-ref=:
   :hook ((org-mode . org-superstar-mode)
          (org-mode . (lambda ()
                        "Beautify Org Checkbox Symbol"
-                       ;;(push '("[ ]" . "☐") prettify-symbols-alist)
-                       ;;(push '("[X]" . "☑" ) prettify-symbols-alist)
+                       (push '(":category:" . "▲") prettify-symbols-alist)
+                       (push '("[X]" . "☑" ) prettify-symbols-alist)
                        (push '("#+begin_src" . "«" ) prettify-symbols-alist)
                        (push '("#+end_src" . "»" ) prettify-symbols-alist)
                        ;;(push '("#+begin_quotation" . "❝" ) prettify-symbols-alist)
@@ -2534,17 +2591,7 @@ support more functions from =org-ref=:
   (require 'org-download)
   (setq org-hide-leading-stars t)
   (setq org-footnote-auto-adjust t)
-  (setq org-footnote-define-inline nil)
-  (define-key org-mode-map (kbd "C-c C-x h")
-    (lambda ()
-      (interactive)
-      (insert "^{()}")
-      (backward-char 2)))
-  (define-key org-mode-map (kbd "C-c C-x l")
-    (lambda ()
-      (interactive)
-      (insert "_{}")
-      (backward-char 1))))
+  (setq org-footnote-define-inline nil))
 #+end_src
 
 ** org with source code
@@ -2744,6 +2791,8 @@ sudo apt install python3-pygments
   (add-to-list 'org-latex-minted-langs
                '(ditaa "text"))
   (add-to-list 'org-latex-minted-langs
+               '(conf "text"))
+  (add-to-list 'org-latex-minted-langs
                '(mermaid "text"))
   (add-to-list 'org-latex-minted-langs
                '(lilypond "text"))
@@ -2753,7 +2802,7 @@ sudo apt install python3-pygments
      (lambda ()
        (when (member "ref" org-scanner-tags)
          (delete-region (point) (line-beginning-position 2))))))
-  (add-hook 'org-export-before-parsing-hook 'ref-headline-removal)
+  (add-hook 'org-export-before-parsing-functions 'ref-headline-removal)
 
   ;;;;; Nicolas Goaziou, http://article.gmane.org/gmane.emacs.orgmode/67692
   ;; (defun org-latex-ignore-heading-filter-headline (headline backend info)
@@ -2805,7 +2854,7 @@ sudo apt install python3-pygments
 					     :image-input-type "xdv"
 					     :image-output-type "svg"
 					     :image-size-adjust (1.3 . 1.3)
-					     :latex-compiler ("latexmk -xelatex -shell-escape -output-directory=%o %f")
+					     :latex-compiler ("xelatex -no-pdf -shell-escape -output-directory=%o %f")
 					     :image-converter ("dvisvgm %f -n -b min -c %S -o %O")))
   (setq org-preview-latex-default-process 'xdvsvgm))
 #+end_src
@@ -2872,6 +2921,27 @@ a communication channel."
     (setq org-re-reveal-extra-css "./kimim.css"))
 #+end_src
 
+** org link: page in pdf
+
+#+begin_src emacs-lisp
+(use-package org
+  :functions org-supdf-open
+  :config
+  (org-link-set-parameters "supdf"
+                           :follow #'org-supdf-open)
+
+  (defun org-supdf-open (path)
+    "Visit the pdf page"
+    (let ((file-page (split-string path "::")))
+      (cond
+       ((eq system-type 'windows-nt)
+        (progn
+          (w32-shell-execute
+           "open" (concat kimim/path-kimikit "sumatrapdf/sumatrapdf.exe")
+           (concat "\"" (expand-file-name (car file-page))
+                   "\" -page " (cadr file-page)))))))))
+#+end_src
+
 ** org link: onenote
 
 New link to use Office Onenote.
@@ -2925,6 +2995,7 @@ New link to use Office Onenote.
              :publishing-function org-html-publish-to-html
              :headline-levels 4
              :section-numbers t
+             :html-preamble t
              :html-extension "html"
              :body-only t ;; Only export section between <body></body>
              :with-toc nil
@@ -2943,7 +3014,7 @@ New link to use Office Onenote.
       (load-theme 'kimim-light t)
       ;; get categories
       ;; get buffer file name
-      (let ((category (jekyll-get-category))
+      (let ((category (org-macro--find-keyword-value "category" t))
             (filepath (file-name-directory buffer-file-name))
             (filename (file-name-nondirectory buffer-file-name))
             newfilename)
@@ -3205,7 +3276,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
            (markdown-max-image-size '(1200 . nil)))
   :bind(:map
         markdown-mode-map
-        ("C-<tab>" . hide-entry)
+        ("C-<tab>" . outline-hide-entry)
         ("M-<up>" . markdown-move-up)
         ("M-<down>" . markdown-move-down)
         ("C-c C-x C-v" . markdown-toggle-inline-images))
@@ -3235,7 +3306,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
                   (if (functionp markdown-open-image-command)
                       (funcall markdown-open-image-command link-file)
                     (process-file markdown-open-image-command nil nil nil link-file))
-                (find-file link-file))))))))
+                (find-file-other-window link-file))))))))
 
   (defun markdown-display-inline-images ()
     "Add inline image overlays to image links in the buffer.
@@ -3369,6 +3440,7 @@ second name, ..., N congruent to 60 gives the sixtieth name."
               org-agenda-todo
               org-agenda-error
               org-agenda-check-no-diary)
+  :hook (org-agenda-mode . hl-line-mode)
   :defines org-agenda-mode-map
   :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
   :bind (("C-c a" . org-agenda)
