@@ -1,0 +1,3 @@
+[submodule "site-lisp/o2jk"]
+	path = site-lisp/o2jk
+	url = https://github.com/kimim/o2jk

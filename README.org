@@ -2969,129 +2969,91 @@ New link to use Office Onenote.
 ** org publish to jekyll
 
 #+begin_src emacs-lisp
-  (use-package org
-    :ensure nil
-    :functions (jekyll-get-category
-                jekyll-tag
-                jekyll-header)
-    :commands (jekyll)
-    :config
-    (require 'ivy)
-    ;; file in jekyll base will also be uploaded to github
-    (defvar path-jekyll-base "~/kimi.im/_notes/_posts")
-    ;; in order to sync draft with cloud sync driver
-    (defvar path-jekyll-draft (concat kimim/path-sync "kimim/_draft/"))
-    ;; file in jekyll base will also be uploaded to github
+(use-package o2jk
+  :load-path "~/kimim-emacs/site-lisp"
+  :commands (o2jk-publish
+             o2jk-list-drafts
+             o2jk-create-draft)
+  :bind (("C-x m k" . o2jk-create-draft)
+         ("C-x m l" . o2jk-list-posts))
+  :config
+  (custom-set-variables
+   '(o2jk-blog-author "kimim")
+   '(o2jk-source-directory "~/notes/kimi.im/_notes/_posts")
+   '(o2jk-jekyll-directory "~/notes/kimi.im/_posts")
+   '(o2jk-jekyll-drafts-dir "~/notes/_draft")
+   '(o2jk-jekyll-posts-dir "")
+   '(org-publish-project-alist
+     `(("post"  ;; dynamic pages like blog articles
+        :base-directory ,(o2jk-input-directory)
+        :base-extension "org\\|txt"
+        :publishing-directory ,(o2jk-output-directory)
+        :publishing-function org-ref-html-publish-to-html
+        :headline-levels 4
+        :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
+        :html-preamble t
+        :recursive t
+        :make-index t
+        :html-extension "html"
+        :body-only t)
+       ("images"
+        :base-directory ,(o2jk-input-directory "img")
+        :base-extension "jpg\\|gif\\|png"
+        :publishing-directory ,(o2jk-output-directory "img")
+        :publishing-function org-publish-attachment
+        :recursive t)
+       ("js"
+        :base-directory ,(o2jk-input-directory "js")
+        :base-extension "js"
+        :publishing-directory ,(o2jk-output-directory "js")
+        :publishing-function org-publish-attachment
+        :recursive t)
+       ("css"
+        :base-directory ,(o2jk-input-directory "css")
+        :base-extension "css\\|el"
+        :publishing-directory ,(o2jk-output-directory "css")
+        :publishing-function org-publish-attachment
+        :recursive t)
+       ("web" :components ("images" "js" "css")))))
 
-    (setq org-publish-project-alist
-          '(
-            ("org-blog-content"
-             ;; Path to your org files.
-             :base-directory "~/kimi.im/_notes"
-             :base-extension "org"
-             ;; Path to your jekyll project.
-             :publishing-directory "~/kimi.im/"
-             :recursive t
-             :publishing-function org-html-publish-to-html
-             :headline-levels 4
-             :section-numbers t
-             :html-preamble t
-             :html-extension "html"
-             :body-only t ;; Only export section between <body></body>
-             :with-toc nil
-             )
-            ("org-blog-static"
-             :base-directory "~/kimi.im/_notes/"
-             :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php\\|svg"
-             :publishing-directory "~/kimi.im/"
-             :recursive t
-             :publishing-function org-publish-attachment)
-            ("blog" :components ("org-blog-content" "org-blog-static"))))
+  (require 'org-ref)
+  ;; Very simplified version of org-ref-export-to from org-ref-export.el
+  ;; that export to filename
+  (defun org-ref-export-to-file-nomarks-noopen
+      (backend filename &optional async subtreep visible-only body-only info)
+    (org-export-with-buffer-copy
+     (org-export-expand-include-keyword)
+     (org-ref-process-buffer backend subtreep)
+     (org-export-to-file backend filename
+       async subtreep visible-only
+       body-only info)))
 
-    (defun jekyll-post ()
-      "Post current buffer to kimi.im"
-      (interactive)
-      (load-theme 'kimim-light t)
-      ;; get categories
-      ;; get buffer file name
-      (let ((category (org-macro--find-keyword-value "category" t))
-            (filepath (file-name-directory buffer-file-name))
-            (filename (file-name-nondirectory buffer-file-name))
-            newfilename)
-        (if (not (string-match-p (expand-file-name path-jekyll-base) filepath))
-            (progn
-              (setq filename (concat
-                              path-jekyll-base "/"
-                              category "/"
-                              (format-time-string "%Y-%m-%d-") filename))
-              (rename-file buffer-file-name filename)))
-        (switch-to-buffer (find-file-noselect filename))
-        ;; execute org-publish-current-file
-        (org-publish-current-file t)
-        (magit-status-setup-buffer)))
-
-    (defun jekyll-tag ()
-      "add new tags"
-      (interactive)
-      ;; find "tags: [" and replace with "tags: [new-tag, "
-      (let (tag)
-        (goto-char (point-min))
-        ;;  (search-forward "tags: [")
-        (re-search-forward "tags: \\[" nil t)
-        (setq tag (ivy-read "tags: " '(
-                                       "Deutsch" "Français" "English"
-                                       "emacs" "org-mode"
-                                       "Windows" "macOS" "Linux"
-                                       "industry" "edge-computing"
-                                       "travel" "photography"
-                                       "leadership"
-                                       "x"
-                                       )))
-        (if (string= "x" tag)
-            (insert "")
-          (insert tag ", "))
-        tag))
-
-    (defun jekyll-header()
-      "Insert jekyll post headers,
-  catergories and tags are generated from exisiting posts"
-      (interactive)
-      (let (tag)
-        (insert "#+BEGIN_EXPORT html\n---\nlayout: post\ntitle: ")
-        (insert (read-string "Title: "))
-        (insert "\ncategories: [")
-        (insert (ivy-read "categories: " '(
-                                           "technology"
-                                           "productivity" "leadership"
-                                           "psychology" "language"
-                                           "education" "photography"
-                                           )))
-        (insert "]")
-        (insert "\ntags: [")
-        (while (progn
-                 (setq tag (jekyll-tag))
-                 (not (string= "x" tag))))
-        (move-end-of-line 1)
-        (backward-delete-char 2)
-        (insert "]\n---\n#+END_EXPORT\n\n")))
-
-    (defun jekyll ()
-      (interactive)
-      (find-file (concat path-jekyll-draft "/"
-                         (replace-regexp-in-string
-                          " " "-" (read-string "Filename: ")) ".org"))
-      (jekyll-header)
-      (save-buffer))
-
-    (defun jekyll-get-category ()
-      (interactive)
-      (goto-char (point-min))
-      (re-search-forward "^categories: \\[\\([a-z-]*\\)\\]$" nil t)
-      (match-string 1))
-
-    (defun jekyll-test ()
-      (interactive)
-      (org-open-file (org-html-export-to-html nil))))
+  ;; org-html-publish-to-html from ox-html.el adapted to org-ref
+  ;; Instead of org-export-to-file calls org-ref-export-to-file-nomarks-noopen
+  (defun org-ref-html-publish-to-html (plist filename pub-dir)
+    (unless (or (not pub-dir)
+                (file-exists-p pub-dir))
+      (make-directory pub-dir t))
+    ;; Check if a buffer visiting FILENAME is already open.
+    (let* ((org-inhibit-startup t)
+           (visiting (find-buffer-visiting filename))
+           (work-buffer (or visiting (find-file-noselect filename))))
+      (unwind-protect
+          (with-current-buffer work-buffer
+            (let ((output (org-export-output-file-name ".html" nil pub-dir)))
+              (org-ref-export-to-file-nomarks-noopen
+               'html output
+               nil nil nil (plist-get plist :body-only)
+               (org-combine-plists
+                plist
+                `(:crossrefs
+                  ,(org-publish-cache-get-file-property
+                    ;; Normalize file names in cache.
+                    (file-truename filename) :crossrefs nil t)
+                  :filter-final-output
+                  (org-publish--store-crossrefs
+                   org-publish-collect-index
+                   ,@(plist-get plist :filter-final-output)))))))))))
 #+end_src
 
 * Note Taking
