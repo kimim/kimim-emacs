@@ -679,7 +679,8 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
   (add-hook 'write-file-functions 'time-stamp))
 
 (defun kimim/save-buffer-advice (orig-fun &rest arg)
-  (delete-trailing-whitespace)
+  (when (not (memq major-mode '(org-mode markdown-mode text-mode)))
+      (delete-trailing-whitespace))
   (apply orig-fun arg))
 
 (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
@@ -770,7 +771,7 @@ Check spell on the fly.
 (use-package olivetti
   :diminish olivetti-mode
   :custom (olivetti-body-width (+ fill-column 10))
-  :hook ((text-mode elfeed-show-mode eww-mode info-mode woman-mode)
+  :hook ((text-mode elfeed-show-mode eww-mode Info-mode woman-mode)
          . olivetti-mode))
 #+end_src
 
