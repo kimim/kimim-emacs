@@ -1022,7 +1022,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
               (hl-line-mode 1)
               (setq dired-omit-localp t)
               (setq dired-omit-files
-                    (concat "|_minted[.]*\\|desktop.ini"
+                    (concat "_minted[.]*\\|desktop.ini"
                             "\\|NTUSER\\|ntuser"
                             "\\|Cookies\\|AppData"
                             "\\|Contacts\\|Links"
@@ -1272,10 +1272,10 @@ Rich annotations in the minibuffer.
 
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
-  (setq consult-preview-key '(:debounce 1.5 any))
+  ;; (setq consult-preview-key '(:debounce 1.5 any))
   ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key (kbd "M-."))
-  ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+  ;; (setq consult-preview-key "M-.")
+  ;; (setq consult-preview-key (list "<S-down>") (kbd "<S-up>"))
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
   (consult-customize
@@ -1285,7 +1285,7 @@ Rich annotations in the minibuffer.
    consult-bookmark consult-recent-file consult-xref
    consult--source-bookmark consult--source-recent-file
    consult--source-project-recent-file
-   :preview-key (kbd "M-."))
+   :preview-key "M-.")
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
@@ -2949,7 +2949,7 @@ New link to use Office Onenote.
 
 #+begin_src emacs-lisp
 (use-package o2jk
-  :load-path "~/kimim-emacs/site-lisp"
+  :load-path "~/kimim-emacs/site-lisp/o2jk"
   :commands (o2jk-publish
              o2jk-list-drafts
              o2jk-create-draft)
@@ -3161,10 +3161,10 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
   ;; Eventually suppress previewing for certain functions
   (consult-customize
    consult-org-roam-forward-links
-   :preview-key (kbd "C-."))
+   :preview-key "C-.")
   (consult-customize
    org-roam-node-find
-   :preview-key (kbd "C-.")))
+   :preview-key "C-."))
 #+end_src
 
 ** deft
