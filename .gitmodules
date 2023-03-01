@@ -1,6 +1,3 @@
 [submodule "site-lisp/o2jk"]
 	path = site-lisp/o2jk
 	url = https://github.com/kimim/o2jk
-[submodule "site-lisp/consult-bibtex"]
-	path = site-lisp/consult-bibtex
-	url = https://github.com/mohkale/consult-bibtex
