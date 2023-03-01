@@ -987,7 +987,8 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
   :defines (dired-omit-localp
             dired-omit-files)
   :functions (dired-omit-mode
-              dired-dwim-target-directory)
+              dired-dwim-target-directory
+              kimim/drawio-to)
   :custom
   (dired-listing-switches "-AGhlgov")
   (dired-recursive-copies t)
@@ -1279,8 +1280,8 @@ Rich annotations in the minibuffer.
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
   (consult-customize
-   consult-theme
-   :preview-key '(:debounce 0.2 any)
+   consult-theme consult--source-buffer
+   :preview-key '(:debounce 5 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
    consult--source-bookmark consult--source-recent-file
@@ -3142,31 +3143,6 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
   (require 'org-ref))
 #+end_src
 
-** consult-org-roam
-
-#+begin_src emacs-lisp
-(use-package consult-org-roam
-  :ensure t
-  :diminish consult-org-roam-mode
-  :custom
-  (consult-org-roam-grep-func #'consult-ripgrep)
-  :bind
-  ("C-c n e" . consult-org-roam-file-find)
-  ("C-c n l" . consult-org-roam-backlinks)
-  ("C-c n s" . consult-org-roam-search)
-  :config
-  (require 'consult-org-roam)
-  ;; Activate the minor-mode
-  (consult-org-roam-mode 1)
-  ;; Eventually suppress previewing for certain functions
-  (consult-customize
-   consult-org-roam-forward-links
-   :preview-key "C-.")
-  (consult-customize
-   org-roam-node-find
-   :preview-key "C-."))
-#+end_src
-
 ** deft
 
 #+begin_src emacs-lisp
@@ -3448,7 +3424,6 @@ second name, ..., N congruent to 60 gives the sixtieth name."
      ("c" tags "clock"
       ((org-agenda-sorting-strategy '(priority-down))))))
   :config
-  (require 'ivy) ; use ivy to complete refile files
   (require 'org-capture)
   (require 'org-agenda)
   (add-hook 'kill-emacs-hook

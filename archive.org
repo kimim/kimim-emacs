@@ -1,3 +1,28 @@
+** consult-org-roam
+
+#+begin_src emacs-lisp
+(use-package consult-org-roam
+  :ensure t
+  :diminish consult-org-roam-mode
+  :custom
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  :bind
+  ("C-c n e" . consult-org-roam-file-find)
+  ("C-c n l" . consult-org-roam-backlinks)
+  ("C-c n s" . consult-org-roam-search)
+  :config
+  (require 'consult-org-roam)
+  ;; Activate the minor-mode
+  (consult-org-roam-mode 1)
+  ;; Eventually suppress previewing for certain functions
+  (consult-customize
+   consult-org-roam-forward-links
+   :preview-key "M-.")
+  (consult-customize
+   org-roam-node-find
+   :preview-key "M-."))
+#+end_src
+
 ** ag: the silver searcher
 
 =ag= [fn:9] is really a very fast grep tool, and =ag.el= [fn:10] provide the
