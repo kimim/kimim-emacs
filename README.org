@@ -1456,7 +1456,6 @@ or other version control information.
               magit-unstaged-files
               magit-file-relative-name
               project--read-regexp)
-              
   :config
   (require 'magit)
   (defun project-find-ripgrep-regexp (regexp)
