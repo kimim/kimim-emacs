@@ -1190,7 +1190,8 @@ Rich annotations in the minibuffer.
 ** consult
 #+begin_src emacs-lisp
 (use-package consult
-  ;; Replace bindings. Lazily loaded due by `use-package'.
+  :defines (xref-show-xrefs-function
+            xref-show-definitions-function)
   :bind (;; C-c bindings (mode-specific-map)
          ("C-c h" . consult-history)
          ("C-c m" . consult-mode-command)
@@ -1449,6 +1450,13 @@ or other version control information.
 (use-package project
   :bind (("C-x p r" . project-find-ripgrep-regexp)
          ("C-x p s" . kimim/magit-stage-file))
+  :functions (magit-stage-1
+              magit-with-toplevel
+              magit-untracked-files
+              magit-unstaged-files
+              magit-file-relative-name
+              project--read-regexp)
+              
   :config
   (require 'magit)
   (defun project-find-ripgrep-regexp (regexp)
@@ -1533,6 +1541,7 @@ parenthesis. We define some keys for it:
          ("C-d" . sp-delete-char)
          ("C-M-<backspace>" . sp-backward-copy-sexp)
          ("C-M-w" . sp-copy-sexp))
+  :functions (sp-local-pair)
   :hook (prog-mode . smartparens-mode)
   :diminish smartparens-mode
   :config
@@ -2175,6 +2184,8 @@ yarn add @mermaid-js/mermaid-cli
          ("N" . kimim/ebib-open-note)
          :map ebib-index-mode-map
          ("N" . kimim/ebib-open-note))
+  :functions (ebib--get-key-at-point
+              bibtex-completion-edit-notes)
   :custom
   (ebib-preload-bib-files (list bibtex-completion-bibliography))
   :config
@@ -2204,7 +2215,9 @@ yarn add @mermaid-js/mermaid-cli
               org-ref-find-bibliography
               kimim/org-ref-open-pdf
               kimim/org-ref-open-pdf-in-dired
-              kimim/org-ref-open-notes)
+              kimim/org-ref-open-notes
+              kimim/org-ref-open-notes-action
+              kimim/org-ref-get-pdf-filename)
   :defines bibtex-completion-bibliography
   :bind (("C-x m p" . kimim/org-ref-open-pdf-at-point)
          ("C-x m P" . kimim/org-ref-open-pdf-in-dired-at-point)
@@ -2358,7 +2371,7 @@ support more functions from =org-ref=:
                  ol-w3m ol-bbdb ol-bibtex
                  ol-docview ol-gnus ol-info
                  ol-irc ol-mhe ol-rmail ol-eww))
-  (org-export-with-sub-superscripts "{}")
+  (org-export-with-sub-superscripts '{})
   (org-startup-folded 'showall)
   (org-startup-with-inline-images t)
   :config
@@ -2549,6 +2562,8 @@ When exporting, do not export with author and date.
 #+begin_src emacs-lisp
 (use-package org
   :bind ("C-c C-'" . org-insert-structure-template)
+  :functions (org-export--collect-headline-numbering
+              org-export--get-min-level)
   :custom
   (org-export-allow-BIND t)
   (org-export-html-validation-link nil)
@@ -2685,6 +2700,7 @@ sudo apt install python3-pygments
   :defines (kimim/latex-classes
             org-beamer-frame-level
             org-latex-minted-langs)
+  :functions (org-html--make-attribute-string)
   :commands org-latex-publish-to-pdf
   :diminish org-beamer-mode
   :custom
@@ -2779,6 +2795,9 @@ sudo apt install python3-pygments
 #+begin_src emacs-lisp
 (use-package ox-html
   :ensure org
+  :functions (org-html-encode-plain-text
+              org-html-close-tag
+              f-read)
   :commands (org-html-publish-to-html)
   :config
   (setq org-html-validation-link nil)
@@ -2886,6 +2905,11 @@ New link to use Office Onenote.
 #+begin_src emacs-lisp
 (use-package o2jk
   :load-path "~/kimim-emacs/site-lisp/o2jk"
+  :functions (org-publish-cache-get-file-property
+              org-ref-export-to-file-nomarks-noopen
+              org-export-output-file-name
+              org-ref-process-buffer
+              org-export-expand-include-keyword)
   :commands (o2jk-publish
              o2jk-list-drafts
              o2jk-create-draft)
@@ -2995,6 +3019,7 @@ sqlite3 is shipped in macOS by default.
 
 #+begin_src emacs-lisp
 (use-package org-roam
+  :functions (orb-get-node-citekey)
   :ensure t
   :custom
   (org-roam-directory kimim/path-notes)
@@ -3122,6 +3147,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
 (use-package markdown-mode
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
+  :functions (s-starts-with?)
   :custom ((markdown-hide-urls t)
            (markdown-command "pandoc")
            (markdown-max-image-size '(1200 . nil)))
@@ -3229,6 +3255,8 @@ or \\[markdown-toggle-inline-images]."
 
 #+begin_src emacs-lisp
 (use-package calendar
+  :defines (calendar-chinese-celestial-stem
+            calendar-chinese-terrestrial-branch)
   :custom
   (diary-file kimim/file-diary)
   (calendar-latitude +30.16)
