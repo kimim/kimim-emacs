@@ -2210,13 +2210,17 @@ yarn add @mermaid-js/mermaid-cli
               bibtex-completion-key-at-point
               bibtex-completion-candidates
               bibtex-completion-init
+              bibtex-completion-edit-notes
               org-ref-cite-hydra/body
               org-ref-find-bibliography
+              org-ref-get-bibtex-key-and-file
               kimim/org-ref-open-pdf
               kimim/org-ref-open-pdf-in-dired
               kimim/org-ref-open-notes
               kimim/org-ref-open-notes-action
-              kimim/org-ref-get-pdf-filename)
+              kimim/org-ref-get-pdf-filename
+              kimim/org-ref-open-pdf-action
+              kimim/org-ref-open-pdf-in-dired-action)
   :defines bibtex-completion-bibliography
   :bind (("C-x m p" . kimim/org-ref-open-pdf-at-point)
          ("C-x m P" . kimim/org-ref-open-pdf-in-dired-at-point)
@@ -3018,7 +3022,8 @@ sqlite3 is shipped in macOS by default.
 
 #+begin_src emacs-lisp
 (use-package org-roam
-  :functions (orb-get-node-citekey)
+  :functions (orb-get-node-citekey
+              -contains?)
   :ensure t
   :custom
   (org-roam-directory kimim/path-notes)
@@ -3146,8 +3151,9 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
 (use-package markdown-mode
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :functions (s-starts-with?)
-  :custom ((markdown-hide-urls t)
+  :functions (s-starts-with?
+              markdown--get-remote-image)
+  :custom ((markdown-hide-urls nil)
            (markdown-command "pandoc")
            (markdown-max-image-size '(1200 . nil)))
   :bind(:map
@@ -3238,8 +3244,7 @@ or \\[markdown-toggle-inline-images]."
                     (let ((ov (make-overlay start end)))
                       (overlay-put ov 'display image)
                       (overlay-put ov 'face 'default)
-                      (push ov markdown-inline-image-overlays)))))))))))
-  )
+                      (push ov markdown-inline-image-overlays))))))))))))
 #+end_src
 
 * Task Management
@@ -3433,6 +3438,7 @@ second name, ..., N congruent to 60 gives the sixtieth name."
 
 #+begin_src emacs-lisp
 (use-package ebdb
+  :functions (ebdb-gethash)
   :commands (ebdb ebdb-mail-aliases)
   :custom (ebdb-mua-pop-up nil)
   :config
@@ -3459,7 +3465,8 @@ second name, ..., N congruent to 60 gives the sixtieth name."
 #+begin_src emacs-lisp
 ;; erc settings
 (use-package erc
-  :functions erc-autojoin-enable
+  :functions (erc-autojoin-mode
+              erc-autojoin-enable)
   :commands (erc)
   :custom
   (erc-autojoin-channels-alist
@@ -3632,6 +3639,7 @@ second name, ..., N congruent to 60 gives the sixtieth name."
 
 #+begin_src emacs-lisp
 (use-package elfeed
+  :functions (elfeed-show-refresh)
   :commands (elfeed)
   :custom
   (elfeed-curl-timeout 100)
