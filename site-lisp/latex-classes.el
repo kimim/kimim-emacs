@@ -1,3 +1,4 @@
+(require 'bibtex-completion)
 ;; maxwidth macro comes from:
 ;; https://tex.stackexchange.com/questions/86350/includegraphics-maximum-width
 (defvar en-article ;; this is the default latex class
@@ -153,27 +154,30 @@ sorting=none]{biblatex}
   T\\kern-.1667em\\lower.7ex\\hbox{E}\\kern-.125emX}}"))
 
 (defvar cn-beamer
-  '("ctexbeamer"
-    "\\documentclass[presentation, aspectratio=169]{ctexbeamer}
+  `("ctexbeamer"
+    ,(concat "\\documentclass[presentation, aspectratio=169]{ctexbeamer}
 \\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
 backref=true, maxcitenames=3, url=true]{biblatex}
 \\setlength{\\baselineskip}{20pt}
-\\setlength{\\parskip}{5pt}"
+\\setlength{\\parskip}{5pt}
+\\addbibresource{" (expand-file-name bibtex-completion-bibliography) "}")
     ("\\section{%s}" . "\\section*{%s}")
     ("\\subsection{%s}" . "\\subsection*{%s}")
     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
 
 (defvar en-beamer
- '("beamer"
-   "\\documentclass[presentation, aspectratio=169]{beamer}
+  `("beamer"
+    ,(concat
+      "\\documentclass[presentation, aspectratio=169]{beamer}
 \\usepackage{xeCJK}
 \\usepackage[citestyle=numeric, bibstyle=numeric, hyperref=true,
 backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
-sorting=none]{biblatex}"
-   ("\\section{%s}" . "\\section*{%s}")
-   ("\\subsection{%s}" . "\\subsection*{%s}")
-   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+sorting=none]{biblatex}
+\\addbibresource{" (expand-file-name bibtex-completion-bibliography) "}")
+    ("\\section{%s}" . "\\section*{%s}")
+    ("\\subsection{%s}" . "\\subsection*{%s}")
+    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
 (defvar kimim/latex-classes
       ;; use backquote ` to evaluate element before put to list

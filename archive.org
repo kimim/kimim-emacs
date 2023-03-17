@@ -657,19 +657,6 @@ Install the project...
           (condition-case nil (org-babel-script-escape result)
             (error result)))))
 #+end_src
-** pangu-spacing
-
-#+begin_src emacs-lisp
-  (use-package pangu-spacing
-    :diminish pangu-spacing-mode
-    :config
-    (global-pangu-spacing-mode 1)
-    (add-hook 'org-mode-hook
-              '(lambda ()
-                 (set
-                  (make-local-variable
-                   'pangu-spacing-real-insert-separtor) t))))
-#+end_src
 
 ** dired-collapse
 

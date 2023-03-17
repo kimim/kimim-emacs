@@ -2182,6 +2182,15 @@ yarn add @mermaid-js/mermaid-cli
 #+end_src
 
 * Reference management
+** pdf-tools
+
+Hook ~pdf-view-themed-minor-mode~ to ~pdf-view-mode~ to follow emacs theme color.
+
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :hook (pdf-view-mode . pdf-view-themed-minor-mode))
+#+end_src
+
 ** ebib
 
 #+begin_src emacs-lisp
@@ -2205,6 +2214,12 @@ yarn add @mermaid-js/mermaid-cli
 #+begin_src emacs-lisp
 (use-package bibtex-completion
   :defines bibtex-completion-bibliography
+  :custom
+  (bibtex-completion-display-formats
+   '((t . "${=key=:30} ${author:36} ${title:*} ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")))
+  (bibtex-completion-bibliography (concat kimim/path-docs "references.bib"))
+  (bibtex-completion-library-path kimim/path-docs)
+  (bibtex-completion-notes-path (concat kimim/path-notes "org-ref-notes.txt"))
   :bind ("C-x m b" . (lambda ()
                        (interactive)
                        (find-file bibtex-completion-bibliography))))
@@ -2234,12 +2249,6 @@ yarn add @mermaid-js/mermaid-cli
          ("C-x m n" . kimim/org-ref-open-notes-at-point)
          :map org-mode-map
          ("C-c ]" . org-ref-insert-cite-link))
-  :custom
-  (bibtex-completion-display-formats
-  '((t . "${=key=:30} ${author:36} ${title:*} ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")))
-  (bibtex-completion-bibliography (concat kimim/path-docs "references.bib"))
-  (bibtex-completion-library-path kimim/path-docs)
-  (bibtex-completion-notes-path (concat kimim/path-notes "org-ref-notes.txt"))
   :config
   (require 'bibtex-completion)
   (require 'org-roam-bibtex)
@@ -2386,6 +2395,7 @@ support more functions from =org-ref=:
   (org-startup-folded 'showall)
   (org-startup-with-inline-images t)
   :config
+  (require 'pangu-spacing)
   ;; no use for me, I always press this key accidentally
   (unbind-key "C-'" 'org-mode-map)
   (setq company-minimum-prefix-length 2)
@@ -2937,7 +2947,7 @@ New link to use Office Onenote.
   (require 'org-ref)
 
   (setq org-publish-project-alist
-        '(("post"  ;; dynamic pages like blog articles
+        `(("post"  ;; dynamic pages like blog articles
            :base-directory ,(o2jk-input-directory)
            :base-extension "org\\|txt"
            :publishing-directory ,(o2jk-output-directory)
@@ -3007,6 +3017,23 @@ New link to use Office Onenote.
                    ,@(plist-get plist :filter-final-output)))))))))))
 #+end_src
 
+** pangu-spacing
+
+Enable pangu spacing for orgmode:
+
+#+begin_src emacs-lisp
+  (use-package pangu-spacing
+    :diminish pangu-spacing-mode
+    :config
+    (global-pangu-spacing-mode 1)
+    (add-hook 'org-mode-hook
+              '(lambda ()
+                 (set
+                  (make-local-variable
+                   'pangu-spacing-real-insert-separtor) t))))
+#+end_src
+
+
 * Note Taking
 ** org-roam
 
@@ -3051,12 +3078,8 @@ sqlite3 is shipped in macOS by default.
        "#+TITLE: ${title}\n")
       :unnarrowed t)))
   (org-roam-dailies-capture-templates
-   '(("d" "default" plain "%?"
-      :if-new
-      (file+head
-       "%(concat (kimim/genfile-timestamp) \"${slug}.txt\")"
-       "#+TITLE: ${title}\n")
-      :unnarrowed t)))
+   '(("d" "default" plain "- /%<%H:%M>/ %?" :target
+      (file+datetree "%<%Y>.org" :day))))
   (orb-preformat-keywords '("citekey"))
   (orb-templates
    '(("r" "reference" plain
