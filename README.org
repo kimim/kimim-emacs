@@ -1071,6 +1071,17 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
           (dired-other-window other-dired-buffer)
         (dired-jump-other-window))))
 
+  (defun kimim/dired-get-org-link ()
+    "get a link from dired for org"
+    (interactive)
+    (let ((filename (dired-get-filename)))
+      (kill-new (concat
+                 "[["
+                 filename
+                 "]["
+                 (file-name-nondirectory filename)
+                 "]]"))))
+
   (defun kimim/open-with-inkscape ()
     (interactive)
     (let* ((filename (dired-get-filename)))
@@ -2729,7 +2740,11 @@ sudo apt install python3-pygments
   (org-latex-minted-options
    '(("frame" "single") ("fontsize" "\\small")))
   (org-latex-pdf-process
-   '("latexmk -xelatex -shell-escape %f"))
+   '("latexmk -xelatex -shell-escape -output-directory=%o %F"))
+  ;; avoid warning when preview tikz in org babel
+  (org-babel-latex-preamble
+      (lambda (_)
+        "\\documentclass[preview]{standalone}"))
   :config
   (require 'org-ref)
   (require 'ox)
@@ -3123,6 +3138,10 @@ sqlite3 is shipped in macOS by default.
   (require 'org-roam-bibtex)
   (require 'emacsql)
   (require 'kimim)
+  ;; open org link in current window
+  (add-to-list
+   'org-link-frame-setup
+   '(file . find-file))
   (setq org-roam-v2-ack t)
   (setq emacsql-global-timeout 60) ;; default 30 seconds will timeout
   (org-roam-db-autosync-enable)
