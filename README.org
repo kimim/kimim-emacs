@@ -1259,7 +1259,10 @@ Rich annotations in the minibuffer.
          ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
          ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
          ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
+         ("M-s L" . consult-line-multi)
+         :map minibuffer-local-map
+         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+         ("M-r" . consult-history))           ;; needed by consult-line to detect isearch
 
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
@@ -2406,7 +2409,6 @@ support more functions from =org-ref=:
   (org-startup-folded 'showall)
   (org-startup-with-inline-images t)
   :config
-  (require 'pangu-spacing)
   ;; no use for me, I always press this key accidentally
   (unbind-key "C-'" 'org-mode-map)
   (setq company-minimum-prefix-length 2)
@@ -2600,7 +2602,7 @@ When exporting, do not export with author and date.
   (org-export-allow-BIND t)
   (org-export-html-validation-link nil)
   ;;(org-export-with-sub-superscripts '{})
-  (org-export-with-author t)
+  (org-export-with-author nil)
   (org-export-with-date t)
   :config
   (require 'ox-latex)
@@ -3031,23 +3033,6 @@ New link to use Office Onenote.
                    org-publish-collect-index
                    ,@(plist-get plist :filter-final-output)))))))))))
 #+end_src
-
-** pangu-spacing
-
-Enable pangu spacing for orgmode:
-
-#+begin_src emacs-lisp
-  (use-package pangu-spacing
-    :diminish pangu-spacing-mode
-    :config
-    (global-pangu-spacing-mode 1)
-    (add-hook 'org-mode-hook
-              '(lambda ()
-                 (set
-                  (make-local-variable
-                   'pangu-spacing-real-insert-separtor) t))))
-#+end_src
-
 
 * Note Taking
 ** org-roam
