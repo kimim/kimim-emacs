@@ -350,7 +350,14 @@ calculated with original default font height and width:
   :bind (("C-+" . cnfonts-increase-fontsize)
          ("C--" . cnfonts-decrease-fontsize)
          ("C-=" . cnfonts-increase-fontsize)
-         ("C-0" . cnfonts-reset-fontsize)))
+         ("C-0" . cnfonts-reset-fontsize))
+  :config
+  (add-hook 'cnfonts-set-font-finish-hook
+            (lambda (args)
+              (setq org-image-actual-width
+                    `(,(* olivetti-body-width
+                          (frame-char-width))))
+              (org-redisplay-inline-images))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -770,7 +777,12 @@ Check spell on the fly.
 #+begin_src emacs-lisp
 (use-package olivetti
   :diminish olivetti-mode
-  :custom (olivetti-body-width (+ fill-column 10))
+  :custom ((olivetti-body-width (+ fill-column 10))
+           ;; let tags show in ollivetti mode
+           (org-tags-column (- fill-column))
+           ;; image width in preview
+           (org-image-actual-width `(,(* olivetti-body-width
+                                         (frame-char-width)))))
   :hook ((text-mode elfeed-show-mode eww-mode Info-mode woman-mode)
          . olivetti-mode))
 #+end_src
@@ -1652,13 +1664,20 @@ that dash version higher than 2.18 is installed[fn:10].
     (interactive)
     (lsp-find-definition :display-action 'window)
     (other-window 1)))
+#+end_src
 
+** lsp-ui
+
+UI helper for lsp-mode.
+
+#+begin_src emacs-lisp
 (use-package lsp-ui
   :commands lsp-ui-mode
   :custom
   (lsp-ui-doc-text-scale-level -1)
-  ;(lsp-ui-doc-show-with-cursor t)
+  (lsp-ui-doc-show-with-cursor t)
   (lsp-ui-doc-show-with-mouse t)
+  (lsp-ui-sideline-show-code-actions t)
   (lsp-ui-doc-alignment 'window)
   (lsp-ui-doc-max-width 90))
 #+end_src
@@ -1741,7 +1760,6 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
               ;;(c-toggle-auto-hungry-state 0)
               ;;(c-toggle-syntactic-indentation 1)
               ;;(highlight-indentation-mode 1)
-              (which-function-mode 1)
               (local-set-key "\C-co" 'ff-find-other-file)))
   ;; +   `c-basic-offset' times 1
   ;; -   `c-basic-offset' times -1
@@ -2266,6 +2284,14 @@ Hook ~pdf-view-themed-minor-mode~ to ~pdf-view-mode~ to follow emacs theme color
   :config
   (require 'bibtex-completion)
   (require 'org-roam-bibtex)
+  ;; use MS word to open office file
+  (add-to-list 'org-file-apps
+               '("\\.docx?\\'" . default))
+  (add-to-list 'org-file-apps
+               '("\\.pptx?\\'" . default))
+  (add-to-list 'org-file-apps
+               '("\\.xlsx?\\'" . default))
+
   ;; dont put [ inside file name
   (defun kimim/org-ref-get-pdf-filename (key)
     (if bibtex-completion-library-path
@@ -2418,9 +2444,7 @@ support more functions from =org-ref=:
   (setq org-cycle-separator-lines 0)
   (if window-system
       (setq org-startup-indented t)
-    (setq org-startup-indented nil))
-  ;; image width in preview
-  (setq org-image-actual-width 1200))
+    (setq org-startup-indented nil)))
 #+end_src
 
 ** org-appear
@@ -2443,6 +2467,7 @@ support more functions from =org-ref=:
                        "Beautify Org Checkbox Symbol"
                        (push '(":category:" . "▲") prettify-symbols-alist)
                        (push '("[X]" . "☑" ) prettify-symbols-alist)
+                       (push '("[ ]" . "☐" ) prettify-symbols-alist)
                        (push '("#+begin_src" . "«" ) prettify-symbols-alist)
                        (push '("#+end_src" . "»" ) prettify-symbols-alist)
                        ;;(push '("#+begin_quotation" . "❝" ) prettify-symbols-alist)

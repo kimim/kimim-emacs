@@ -49,7 +49,8 @@
       (kimim-theme-region "LightBlue")
       (kimim-theme-shadow "grey20")
       (kimim-theme-highlight "azure")
-      (kimim-theme-modeline-bg "gainsboro"))
+      (kimim-theme-modeline-bg "gainsboro")
+      (kimim-theme-lowlight "SlateGray4"))
   (apply 'custom-theme-set-faces 'kimim-light
          (mapcar
           (lambda (x) `(,(car x) ((,class ,(cdr x)))))
@@ -114,7 +115,8 @@
             (org-code :foreground ,kimim-theme-builtin :weight bold)
             (org-verbatim :foreground ,kimim-theme-const)
             (org-hide :foreground ,kimim-theme-bg)
-            (org-tag :slant italic :weight normal :foreground ,kimim-theme-shadow)
+            (org-drawer :foreground ,kimim-theme-lowlight)
+            (org-tag :slant italic :weight normal :foreground ,kimim-theme-lowlight)
             (org-beamer-tag :inherit org-tag)
             (org-block-begin-line :inherit fixed-pitch :foreground ,kimim-theme-const)
             (org-block-end-line :inherit fixed-pitch :foreground ,kimim-theme-const)
