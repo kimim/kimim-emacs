@@ -350,14 +350,7 @@ calculated with original default font height and width:
   :bind (("C-+" . cnfonts-increase-fontsize)
          ("C--" . cnfonts-decrease-fontsize)
          ("C-=" . cnfonts-increase-fontsize)
-         ("C-0" . cnfonts-reset-fontsize))
-  :config
-  (add-hook 'cnfonts-set-font-finish-hook
-            (lambda (args)
-              (setq org-image-actual-width
-                    `(,(* olivetti-body-width
-                          (frame-char-width))))
-              (org-redisplay-inline-images))))
+         ("C-0" . cnfonts-reset-fontsize)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -777,14 +770,17 @@ Check spell on the fly.
 #+begin_src emacs-lisp
 (use-package olivetti
   :diminish olivetti-mode
-  :custom ((olivetti-body-width (+ fill-column 10))
-           ;; let tags show in ollivetti mode
-           (org-tags-column (- fill-column))
-           ;; image width in preview
-           (org-image-actual-width `(,(* olivetti-body-width
-                                         (frame-char-width)))))
+  :custom
+  (olivetti-body-width (+ fill-column 10))
   :hook ((text-mode elfeed-show-mode eww-mode Info-mode woman-mode)
-         . olivetti-mode))
+	     . olivetti-mode)
+  :config
+  (add-hook 'cnfonts-set-font-finish-hook
+	        (lambda (args)
+		      (let ((frame-width (* (+ fill-column 10)
+				                    (frame-char-width))))
+		        (setq org-image-actual-width frame-width)
+		        (org-redisplay-inline-images)))))
 #+end_src
 
 * Controlling
@@ -1123,7 +1119,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
       (w32-shell-execute
        "open" (concat (getenv "MSYS64_PATH")
                       "\\kimikit\\draw.io\\draw.io.exe")
-       (format "-x \"%s\" -o \"%s\""
+       (format "--crop -b 5 -x \"%s\" -o \"%s\""
                filename exportname))
       (while (and (not (file-exists-p exportname))
                   (> counter 0))                    ; true-or-false-test
@@ -1417,6 +1413,7 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
   :bind (:map company-active-map
               ("C-n" . company--select-next-and-warn)
               ("C-p" . company--select-previous-and-warn)
+              ("C-h" . delete-backward-char)
               ("SPC" . (lambda ()
                          (interactive)
                          (company-abort)
@@ -1479,7 +1476,7 @@ Sort candidates using completion history.
 ~project-find-file~ (~C-x p f~) can find files of current project, indicated by git
 or other version control information.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results none
 (use-package project
   :bind (("C-x p r" . project-find-ripgrep-regexp)
          ("C-x p s" . kimim/magit-stage-file))
@@ -1530,9 +1527,12 @@ or other version control information.
 Bind ~magit~ to ~C-x p m~ with the same prefix of ~project~, as they have
 strong relationship.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results none
 (use-package magit
-  :bind (("C-x p m" . magit-status-here))
+  :bind (("C-x p m" . magit-status-here)
+         (:map magit-revision-mode-map)
+         ("C-<return>" . magit-diff-visit-file-other-window)
+         ("<SPC>" . magit-diff-visit-worktree-file-other-window))
   :custom (magit-log-show-refname-after-summary t))
 #+end_src
 
@@ -1636,6 +1636,10 @@ that dash version higher than 2.18 is installed[fn:10].
 #+end_src
 
 #+begin_src emacs-lisp
+(use-package treemacs)
+#+end_src
+
+#+begin_src emacs-lisp
 (use-package lsp-mode
   :after goto-addr
   :commands lsp
@@ -1649,12 +1653,8 @@ that dash version higher than 2.18 is installed[fn:10].
          ("C-," . xref-go-back)
          ("C-x ." . kimim/lsp-find-definition-other-window)
          ("C-x l t s" . lsp-treemacs-symbols))
-  :hook ((clojure-mode . lsp)
-         (c-mode . lsp)
-         (c++-mode . lsp)
-         (cc-mode . lsp)
-         (go-mode . lsp)
-         (rustic-mode . lsp))
+  :hook ((clojure-mode c-mode c++-mode cc-mode go-mode rustic-mode)
+         . lsp)
   :config
   (require 'dash)
   (require 'goto-addr)
@@ -1675,7 +1675,7 @@ UI helper for lsp-mode.
   :commands lsp-ui-mode
   :custom
   (lsp-ui-doc-text-scale-level -1)
-  (lsp-ui-doc-show-with-cursor t)
+  (lsp-ui-doc-show-with-cursor nil)
   (lsp-ui-doc-show-with-mouse t)
   (lsp-ui-sideline-show-code-actions t)
   (lsp-ui-doc-alignment 'window)
@@ -1801,7 +1801,7 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
     (add-to-list 'hide-ifdef-env '(_WIN32 . 1))
     (add-to-list 'hide-ifdef-env '(__GNUC__ . 1)))
   :custom
-  (hide-ifdef-initially t)
+  (hide-ifdef-initially nil)
   (hide-ifdef-shadow t))
 #+end_src
 
@@ -1917,6 +1917,7 @@ in Clojure.
 ** Java
 
 #+begin_src emacs-lisp
+(use-package dap-mode)
 (use-package lsp-java)
 #+end_src
 
@@ -1998,8 +1999,14 @@ Open =.go= file with go-mode.
 Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 #+begin_src emacs-lisp
-  (use-package dockerfile-mode
-    :mode ("\\dockerfile\\'" . dockerfile-mode))
+(use-package dockerfile-mode
+  :mode ("\\dockerfile\\'" . dockerfile-mode))
+#+end_src
+
+~lsp-docker~ requires ~yaml~:
+
+#+begin_src emacs-lisp
+(use-package yaml)
 #+end_src
 
 ** Emacs lisp
@@ -2252,9 +2259,11 @@ Hook ~pdf-view-themed-minor-mode~ to ~pdf-view-mode~ to follow emacs theme color
   (bibtex-completion-bibliography (concat kimim/path-docs "references.bib"))
   (bibtex-completion-library-path kimim/path-docs)
   (bibtex-completion-notes-path (concat kimim/path-notes "org-ref-notes.txt"))
-  :bind ("C-x m b" . (lambda ()
-                       (interactive)
-                       (find-file bibtex-completion-bibliography))))
+  :bind ("C-x m b" .
+         (lambda ()
+           (interactive)
+           (find-file
+            (concat kimim/path-docs "references.bib")))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2434,6 +2443,10 @@ support more functions from =org-ref=:
   (org-export-with-sub-superscripts '{})
   (org-startup-folded 'showall)
   (org-startup-with-inline-images t)
+  (org-tags-column (- fill-column))
+  ;; image width in preview
+  (org-image-actual-width `(,(* (+ fill-column 10)
+                                (frame-char-width))))
   :config
   ;; no use for me, I always press this key accidentally
   (unbind-key "C-'" 'org-mode-map)
@@ -2754,6 +2767,13 @@ sudo apt install python3-pygments
 #+end_src
 
 #+begin_src emacs-lisp
+(use-package latex-classes
+  :load-path "~/kimim-emacs/site-lisp"
+  :config
+  (require 'bibtex-completion))
+#+end_src
+
+#+begin_src emacs-lisp
 (use-package ox-latex
   :ensure nil
   :defines (kimim/latex-classes
@@ -2776,6 +2796,7 @@ sudo apt install python3-pygments
   (require 'org-ref)
   (require 'ox)
   (require 'ox-beamer)
+  (require 'latex-classes)
   (setq org-startup-with-beamer-mode t)
   (setq org-beamer-frame-level 2)
   ;; export quotes match
@@ -2839,6 +2860,11 @@ sudo apt install python3-pygments
   ;;       `(,(concat "\\addbibresource{"
   ;;                  (expand-file-name bibtex-completion-bibliography)
   ;;                  "}")))
+  ;; (mapconcat
+  ;;  (lambda (it)
+  ;;    (concat "\\addbibresource{" (expand-file-name it) "}\n"))
+  ;;  bibtex-completion-bibliography)
+
   ;; preview latex equation with SVG image
   (add-to-list 'org-preview-latex-process-alist
                '(xdvsvgm :progams
@@ -3106,14 +3132,6 @@ sqlite3 is shipped in macOS by default.
    '(("d" "default" plain "- /%<%H:%M>/ %?" :target
       (file+datetree "%<%Y>.org" :day))))
   (orb-preformat-keywords '("citekey"))
-  (orb-templates
-   '(("r" "reference" plain
-      "#+ROAM_KEY: %^{citekey}\n\n%?"
-      :target
-      (file+head
-       "references/%(concat (kimim/genfile-timestamp) \"${citekey}.txt\")"
-       "#+title: ${title}\n")
-      :unnarrowed t)))
   :bind
   (("C-c n f" . (lambda ()
                   (interactive)
@@ -3155,6 +3173,14 @@ sqlite3 is shipped in macOS by default.
   (setq org-roam-v2-ack t)
   (setq emacsql-global-timeout 60) ;; default 30 seconds will timeout
   (org-roam-db-autosync-enable)
+  (setq orb-templates
+        '(("r" "reference" plain
+           "#+ROAM_KEY: %^{citekey}\n\n%?"
+           :target
+           (file+head
+            "references/%(concat (kimim/genfile-timestamp) \"${citekey}.txt\")"
+            "#+title: ${title}\n")
+           :unnarrowed t)))
   (defun kimim/cite-filter (node)
     (orb-get-node-citekey node))
   (defun kimim/non-cite-filter (node)
@@ -3789,6 +3815,7 @@ from system PATH, so you should set these to system PATH.
 
 #+begin_src emacs-lisp
 (use-package kimim
+  :load-path "~/kimim-emacs/site-lisp"
   :ensure nil
   :commands (kimim/mail-setup)
   :defines (mac-option-modifier
@@ -3844,7 +3871,6 @@ from system PATH, so you should set these to system PATH.
    ("C-x m ^" . kimim/shrink-up)
    ("C-x m '" . kimim/top-right-mouse)
    ("C-x m r" . kimim/rename-file-and-buffer))
-  :load-path "~/kimim-emacs/site-lisp"
   :config
   (unbind-key "C-x C-z")
   (when (eq system-type 'darwin) ;; mac specific settings

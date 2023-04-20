@@ -155,12 +155,11 @@ sorting=none]{biblatex}
 
 (defvar cn-beamer
   `("ctexbeamer"
-    ,(concat "\\documentclass[presentation, aspectratio=169]{ctexbeamer}
+    "\\documentclass[presentation, aspectratio=169]{ctexbeamer}
 \\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
 backref=true, maxcitenames=3, url=true]{biblatex}
 \\setlength{\\baselineskip}{20pt}
-\\setlength{\\parskip}{5pt}
-\\addbibresource{" (expand-file-name bibtex-completion-bibliography) "}")
+\\setlength{\\parskip}{5pt}"
     ("\\section{%s}" . "\\section*{%s}")
     ("\\subsection{%s}" . "\\subsection*{%s}")
     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
@@ -168,13 +167,11 @@ backref=true, maxcitenames=3, url=true]{biblatex}
 
 (defvar en-beamer
   `("beamer"
-    ,(concat
-      "\\documentclass[presentation, aspectratio=169]{beamer}
+    "\\documentclass[presentation, aspectratio=169]{beamer}
 \\usepackage{xeCJK}
 \\usepackage[citestyle=numeric, bibstyle=numeric, hyperref=true,
 backref=true, maxcitenames=3, url=true,backend=biber, natbib=true,
-sorting=none]{biblatex}
-\\addbibresource{" (expand-file-name bibtex-completion-bibliography) "}")
+sorting=none]{biblatex}"
     ("\\section{%s}" . "\\section*{%s}")
     ("\\subsection{%s}" . "\\subsection*{%s}")
     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))

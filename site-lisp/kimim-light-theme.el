@@ -192,7 +192,8 @@
             (lsp-ui-doc-url :inherit link :height 0.8)
             (lsp-ui-doc-background :background ,kimim-theme-modeline-bg)
             (term-color-white :foreground "blue")
-            (term-color-blue :foreground "blue")))))
+            (term-color-blue :foreground "blue")
+            (next-error :inherit highlight)))))
 
 (custom-theme-set-variables
  'kimim-light

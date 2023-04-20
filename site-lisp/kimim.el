@@ -160,7 +160,7 @@
   "Open cmd.exe from emacs just as you type: Win-R, cmd, return."
   (interactive)
   (w32-shell-execute
-   "open" "cmd"))
+   "open" "mintty" "-e cmd"))
 
 (defun kimim/xterm ()
   "Open shell window from emacs."
