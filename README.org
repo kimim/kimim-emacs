@@ -8,7 +8,7 @@
 * Introduction
 
 This Emacs configuration file is written in literate programming
-method[fn:1].  The =emacs-lisp= code is extracted from this
+method [fn:1].  The =emacs-lisp= code is extracted from this
 =orgmode= [fn:2] file, and then compiled to binary =elc= file for fast
 loading in the future.
 
@@ -18,10 +18,9 @@ First of all, you need to get =emacs= and install it in your machine.
 
 ** Windows/MSYS2
 
-On Windows platform, we have three options: 1) MSYS2, 2) Cygwin, 3)
-WSL2.
+On Windows, we have three options: 1) MSYS2, 2) Cygwin, 3) WSL2.
 
-If your msys2[fn:3] is installed in =C:\msys64=, you can open
+If your msys2 [fn:3] is installed in =C:\msys64=, you can open
 =C:\msys64\mingw64.exe=, and run following command to install Emacs:
 
 #+begin_src shell
@@ -38,9 +37,9 @@ Cygwin project[fn:4] is a large collection of GNU and Open Source
 tools provide functionality similar to a Linux distribution on
 Windows.
 
-You can find Cygwin setup here: https://cygwin.com/setup-x86_64.exe ,
-download and install it in your machine, for example, at
-=C:\cygwin64=. Then you can use =mintty.exe= to work with =bash=.
+You can download and install Cygwin setup [fn:5] in your machine, for
+example, at =C:\cygwin64=. Then you can use =mintty.exe= to work with
+=bash=.
 
 Then start =emacs= from cygwin terminal, and right click the =emacs= icon
 to pin it to taskbar, then click the property of this icon to add
@@ -64,8 +63,7 @@ running =emacs= very quick.
 
 Nowadays, Windows is embracing Linux tightly. You can try =emacs= on
 Windows subsystem for Linux version 2. You can get Ubuntu Linux from
-Windows App Store. And Manjaro Linux for WSL2[fn:5] from
-https://github.com/sileshn/ManjaroWSL/releases
+Windows App Store or Manjaro Linux for WSL2 [fn:6].
 
 Commands to install Emacs is same as on Linux in next section.
 
@@ -89,7 +87,7 @@ pacman -S emacs
 ** macOS
 
 For Apple macOS, most UNIX tools are installed already. You can use
-homebrew[fn:6] to install additional application if it is missing.
+homebrew [fn:7] to install additional application if it is missing.
 
 #+begin_src shell
 /bin/bash -c \
@@ -266,7 +264,7 @@ Define new command prefix for keys such as "C-x m f", "C-x m v".
 
 * Package
 
-=package= [fn:7] is the modern =elisp= package management system, which
+=package= [fn:8] is the modern =elisp= package management system, which
 let you easily download and install packages that implement additional
 features. Each package is a separate Emacs Lisp program, sometimes
 including other components such as an Info manual.
@@ -1542,7 +1540,7 @@ Following error will reported when using magit to commit changes:
 server-ensure-safe-dir: The directory ‘~/.emacs.d/server’ is unsafe
 #+END_QUOTE
 
-The solution is to change the owner of =~/.emacs.d/server= [fn:8]
+The solution is to change the owner of =~/.emacs.d/server= [fn:9]
 
 #+BEGIN_QUOTE
 Click R-mouse on ~/.emacs.d/server and select “Properties” (last item in
@@ -1554,7 +1552,7 @@ this directory as secure because you are the owner.
 
 ** Parenthesis
 
-~smartparens-mode~[fn:9] is a general purpose mode for dealing with
+~smartparens-mode~[fn:10] is a general purpose mode for dealing with
 parenthesis. We define some keys for it:
 
 #+begin_src emacs-lisp
@@ -1614,7 +1612,7 @@ With ~yafolding-mode~, you can:
 ~lsp-mode~ aims to provide IDE-like experience.
 
 If you got error: =Symbol’s function definition is void: -compose=, make sure
-that dash version higher than 2.18 is installed[fn:10].
+that dash version higher than 2.18 is installed[fn:11].
 
 #+begin_src emacs-lisp
 (use-package dash
@@ -1816,7 +1814,7 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
 
 ** Clojure
 
-Clojure[fn:11] is a lisp over JVM. Emm, I like it.
+Clojure[fn:12] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
@@ -1865,7 +1863,7 @@ npm install -g clj-kondo
 
 *** Cider
 
-Cider[fn:12] extends Emacs with support for interactive programming
+Cider[fn:13] extends Emacs with support for interactive programming
 in Clojure.
 
 #+begin_src emacs-lisp
@@ -1923,7 +1921,7 @@ in Clojure.
 
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:13] is used here:
+Python development configuration is quite easy. =elpy= [fn:14] is used here:
 
 #+begin_src emacs-lisp
   (use-package elpy
@@ -2021,7 +2019,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:14]
+=ahk-mode= developed by Rich Alesi[fn:15]
 
 #+begin_src emacs-lisp
   (use-package ahk-mode
@@ -2139,7 +2137,7 @@ it is a long sequence diagram, I can use key ~s i~ to invoke
 
 ** Mermaid
 
-Mermaid [fn:15] is another js based diagramming and charting tool. To
+Mermaid [fn:16] is another js based diagramming and charting tool. To
 use it inside orgmode, mermaid-cli should be installed:
 
 #+begin_src shell
@@ -3088,8 +3086,8 @@ New link to use Office Onenote.
 * Note Taking
 ** org-roam
 
-Org-roam implements =zettelkasten= method [fn:16] used by famous German socialogist
-Niklas Luhmann[fn:17].
+Org-roam implements =zettelkasten= method [fn:17] used by famous German socialogist
+Niklas Luhmann[fn:18].
 
 First you should install =sqlite3=, which is used to index the links.
 
@@ -3249,7 +3247,7 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
 
 ** Markdown mode
 
-Markdown is widely used as plain text file format. Pandoc [fn:18] can
+Markdown is widely used as plain text file format. Pandoc [fn:19] can
 be used to convert markdown file to html and other formats. We can
 download the [[https://github.com/jgm/pandoc/releases/latest][latest version]] and put the binary file to system path,
 such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
@@ -3900,36 +3898,38 @@ from system PATH, so you should set these to system PATH.
 
 [fn:4] http://cygwin.com/
 
-[fn:5] http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows
+[fn:5] https://cygwin.com/setup-x86_64.exe
 
-[fn:6] http://brew.sh/
+[fn:6] http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows
 
-[fn:7] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
+[fn:7] http://brew.sh/
 
-[fn:8] https://github.com/syl20bnr/spacemacs/issues/381
+[fn:8] https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
 
-[fn:9] https://github.com/Fuco1/smartparens
+[fn:9] https://github.com/syl20bnr/spacemacs/issues/381
 
-[fn:10] https://github.com/emacs-lsp/lsp-mode/issues/2622
+[fn:10] https://github.com/Fuco1/smartparens
 
-[fn:11] https://clojure.org/
+[fn:11] https://github.com/emacs-lsp/lsp-mode/issues/2622
 
-[fn:12] https://cider.mx/
+[fn:12] https://clojure.org/
 
-[fn:13] https://github.com/jorgenschaefer/elpy
+[fn:13] https://cider.mx/
 
-[fn:14] https://github.com/ralesi/ahk-mode
+[fn:14] https://github.com/jorgenschaefer/elpy
 
-[fn:15] https://mermaid-js.github.io/
+[fn:15] https://github.com/ralesi/ahk-mode
 
-[fn:16] https://zettelkasten.de/
+[fn:16] https://mermaid-js.github.io/
 
-[fn:17] https://en.wikipedia.org/wiki/Niklas_Luhmann
+[fn:17] https://zettelkasten.de/
 
-[fn:18] https://pandoc.org/
+[fn:18] https://en.wikipedia.org/wiki/Niklas_Luhmann
 
-[fn:19] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+[fn:19] https://pandoc.org/
 
-[fn:20] https://emacs.stackexchange.com/questions/22283/dired-group-directories-and-symlinks-to-directories-first
+[fn:22] https://github.com/transcode-open/apt-cyg
 
-[fn:21] https://github.com/transcode-open/apt-cyg
+[fn:21] https://emacs.stackexchange.com/questions/22283/dired-group-directories-and-symlinks-to-directories-first
+
+[fn:20] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
