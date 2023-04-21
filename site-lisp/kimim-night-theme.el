@@ -74,7 +74,7 @@
             (compilation-error :underline t :inherit error)
             (compilation-info :underline t :foreground ,kimim-theme-const)
             (highlight :background "gray30")
-            (marginalia-documentation :background nil :slant italic) ;; remove background
+            (marginalia-documentation :background unspecified :slant italic) ;; remove background
             (region :background ,kimim-theme-region)
             (secondary-selection :background "deep sky blue" :foreground "#f6f3e8")
             (whitespace-indentation :background "LightYellow" :foreground "lightgray")
@@ -186,7 +186,9 @@
             (lsp-ui-doc-url :inherit link :height 0.8)
             (lsp-ui-doc-background :background ,kimim-theme-modeline-bg)
             (term-color-white :foreground "white")
-            (term-color-blue :foreground "light blue")))))
+            (term-color-blue :foreground "light blue")
+            (next-error :inherit highlight)
+            (yas-field-highlight-face :inherit highlight)))))
 
 ;;(custom-theme-set-variables
 ;; 'kimim-night

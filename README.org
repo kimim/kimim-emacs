@@ -1577,8 +1577,8 @@ parenthesis. We define some keys for it:
   :hook (prog-mode . smartparens-mode)
   :diminish smartparens-mode
   :config
-  ;;(sp-with-modes '(c-mode c++-mode)
-  ;;  (sp-local-pair "<" nil :actions nil))
+  (sp-with-modes '(c-mode c++-mode)
+    (sp-local-pair "<" ">" :actions '(wrap autoskip navigate)))
   (sp-with-modes sp-lisp-modes
     ;; disable ', it's the quote character!
     (sp-local-pair "'" nil :actions nil)
@@ -1654,7 +1654,7 @@ that dash version higher than 2.18 is installed[fn:10].
          ("C-x ." . kimim/lsp-find-definition-other-window)
          ("C-x l t s" . lsp-treemacs-symbols))
   :hook ((clojure-mode c-mode c++-mode cc-mode go-mode rustic-mode)
-         . lsp)
+         . lsp-mode)
   :config
   (require 'dash)
   (require 'goto-addr)
