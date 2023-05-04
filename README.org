@@ -602,6 +602,27 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
        (car kill-ring)))))
 #+end_src
 
+** fanyi.el
+
+A translator extension written by [[https://condy0919.github.io][Youmu]].
+
+#+begin_src emacs-lisp
+(use-package fanyi
+  :ensure t
+  :custom
+  (fanyi-providers '(;; 海词
+                     fanyi-haici-provider
+                     ;; 有道同义词词典
+                     fanyi-youdao-thesaurus-provider
+                     ;; Etymonline
+                     fanyi-etymon-provider
+                     ;; Longman
+                     fanyi-longman-provider))
+  :bind (:map fanyi-mode-map
+              ("n" . outline-next-heading)
+              ("p" . outline-previous-heading)))
+#+end_src
+
 * Editing
 ** Input Method
 
