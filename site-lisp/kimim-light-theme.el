@@ -74,9 +74,9 @@
             (compilation-warning :underline t :inherit warning)
             (compilation-error :underline t :inherit error)
             (compilation-info :underline t :foreground ,kimim-theme-const)
-            (highlight :background "DarkSeaGreen2")
+            (highlight :background "DarkSeaGreen1")
             (marginalia-documentation :background unspecified :slant italic) ;; remove background
-            (region :background ,kimim-theme-region :foreground ,kimim-theme-bg)
+            (region :background ,kimim-theme-region)
             (secondary-selection :background "PaleTurquoise" :foreground "orange")
             (whitespace-indentation :background "LightYellow" :foreground "LightGray")
             ;; (font-lock-negation-char-face :foreground "#e8e2b7")
@@ -194,7 +194,9 @@
             (term-color-white :foreground "blue")
             (term-color-blue :foreground "blue")
             (next-error :inherit highlight)
+            (lsp-ui-doc-highlight-hover :inherit highlight)
             (yas-field-highlight-face :inherit highlight)))))
+
 
 (custom-theme-set-variables
  'kimim-light

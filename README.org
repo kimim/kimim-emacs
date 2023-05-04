@@ -292,9 +292,7 @@ a ~byte-force-recompile~ in =~/.emacs.d= could work.
       '(;;("elpa" . "https://elpa.gnu.org/packages/")
         ;;("melpa" . "https://melpa.org/packages/")
         ("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-        ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-        ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-        ))
+        ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 (mapc
  (lambda (package)
    (unless (package-installed-p package)
@@ -908,13 +906,10 @@ You can jump to any character by triggering ~ace-jump-mode~ (~C-x m c~),
 and jump to any window by triggering ~ace-window~ (~C-x m w~).
 
 #+begin_src emacs-lisp
-;; (use-package ace-jump-mode
-;;   :bind
-;;   ("C-x m c" . ace-jump-mode))
-
 (use-package ace-window
   :bind
-  (("M-o" . ace-window)
+  (("C-x o" . ace-window)
+   ("M-o" . other-window)
    ("C-x m w" . ace-swap-window)
    ("C-x m x" . ace-delete-window))
   :custom
@@ -940,8 +935,10 @@ and jump to any window by triggering ~ace-window~ (~C-x m w~).
 #+begin_src emacs-lisp
 (use-package imenu
   :functions kimim/imenu-default-goto-function-advice
-  :bind ("C-x i" . imenu)
+  :bind (("C-x i" . imenu)
+         ("C-c i" . lsp-ui-imenu))
   :config
+  (require 'lsp-ui)
   (advice-add 'imenu-default-goto-function
               :around
               #'kimim/imenu-default-goto-function-advice))
@@ -1412,6 +1409,7 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
               ("C-n" . company--select-next-and-warn)
               ("C-p" . company--select-previous-and-warn)
               ("C-h" . delete-backward-char)
+              ("C-d" . delete-forward-char)
               ("SPC" . (lambda ()
                          (interactive)
                          (company-abort)
@@ -1425,9 +1423,14 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
   (require 'company-posframe)
   (global-company-mode t)
   (setq company-backends
-        '((company-capf company-yasnippet company-files :separate)
-          company-dabbrev company-ebdb company-ispell
-          (company-dabbrev-code company-gtags company-etags company-keywords))))
+        '((company-yasnippet
+           company-keywords
+           company-capf
+           company-files :separate)
+          (company-dabbrev
+           company-dabbrev-code
+           company-ebdb
+           company-ispell :with))))
 #+end_src
 
 ** company-try-hard
@@ -1637,6 +1640,10 @@ that dash version higher than 2.18 is installed[fn:11].
 (use-package treemacs)
 #+end_src
 
+~lsp-mode~ will add ~company-capf~ in front for ~company-backends~, then it
+will prevent my global ~company-backends~ settings. You can customize
+~lsp-completion-provider~ to ~:none~ prevent this.
+
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :after goto-addr
@@ -1645,14 +1652,14 @@ that dash version higher than 2.18 is installed[fn:11].
   (lsp-headerline-breadcrumb-icons-enable t)
   (lsp-headerline-breadcrumb-enable t)
   (lsp-modeline-code-action-fallback-icon "✶")
+  (lsp-completion-provider :none)
   :bind (:map
          lsp-mode-map
+         ("C-x l l" . lsp-ui-doc-glance)
          ("C-." . lsp-find-definition)
          ("C-," . xref-go-back)
          ("C-x ." . kimim/lsp-find-definition-other-window)
          ("C-x l t s" . lsp-treemacs-symbols))
-  :hook ((clojure-mode c-mode c++-mode cc-mode go-mode rustic-mode)
-         . lsp-mode)
   :config
   (require 'dash)
   (require 'goto-addr)
@@ -1674,7 +1681,7 @@ UI helper for lsp-mode.
   :custom
   (lsp-ui-doc-text-scale-level -1)
   (lsp-ui-doc-show-with-cursor nil)
-  (lsp-ui-doc-show-with-mouse t)
+  (lsp-ui-doc-show-with-mouse nil)
   (lsp-ui-sideline-show-code-actions t)
   (lsp-ui-doc-alignment 'window)
   (lsp-ui-doc-max-width 90))
@@ -1726,9 +1733,12 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
 
 #+begin_src emacs-lisp
 (use-package ggtags
-  :bind (:map
-         ggtags-mode-map
-         ("M-." . ggtags-find-definition))
+  :bind (:map ggtags-mode-map
+         ("M-." . ggtags-find-definition)
+         :map ggtags-navigation-mode-map
+         ("M-o" . other-window)
+         ("M-<" . beginning-of-buffer)
+         ("M->" . end-of-buffer))
   :hook ((c-mode c++-mode) . ggtags-mode)
   :config
   (setq ggtags-global-ignore-case t)
@@ -1748,6 +1758,7 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
   :bind (:map
          c++-mode-map
          ("C-<tab>" . clang-format))
+  :hook ((c-mode c++-mode cc-mode) . lsp-mode)
   :config
   (require 'clang-format)
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
@@ -1822,6 +1833,7 @@ Clojure[fn:12] is a lisp over JVM. Emm, I like it.
          ("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode)
          ("\\.cljc\\'" . clojurec-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
+  :hook (clojure-mode . lsp-mode)
   :config
   (require 'cider)
   (require 'company)
@@ -1971,11 +1983,10 @@ curl https://sh.rustup.rs -sSf | sh
 
 #+begin_src emacs-lisp
 (use-package rustic
-  :config
-  (add-hook 'rustic-mode-hook
-            (lambda ()
-	          (set (make-local-variable 'compile-command)
-		           "cargo run"))))
+  :hook ((rustic-mode . lsp-mode)
+         (rustic-mode . (lambda ()
+	                      (set (make-local-variable 'compile-command)
+		                       "cargo run")))))
 #+end_src
 
 ** Swift
@@ -1987,9 +1998,11 @@ curl https://sh.rustup.rs -sSf | sh
 
 ** Golang
 Open =.go= file with go-mode.
+
 #+begin_src emacs-lisp
-  (use-package go-mode
-    :mode ("\\.go\\'" . go-mode))
+(use-package go-mode
+  :mode ("\\.go\\'" . go-mode)
+  :hook (go-mode . lsp-mode))
 #+end_src
 
 ** Docker file
@@ -2221,11 +2234,32 @@ yarn add @mermaid-js/mermaid-cli
 * Reference management
 ** pdf-tools
 
-Hook ~pdf-view-themed-minor-mode~ to ~pdf-view-mode~ to follow emacs theme color.
+Hook ~pdf-view-themed-minor-mode~ to ~pdf-view-mode~ and add
+~pdf-view-refresh-themed-buffer~ to ~enable-theme-functions~ to follow
+emacs theme color.
 
 #+begin_src emacs-lisp
 (use-package pdf-tools
-  :hook (pdf-view-mode . pdf-view-themed-minor-mode))
+  :functions (pdf-view-refresh-themed-buffer)
+  :defines (pdf-view-themed-minor-mode)
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :hook (pdf-view-mode . pdf-view-themed-minor-mode)
+  :custom
+  (pdf-view-display-size 'fit-height)
+  (enable-theme-functions
+           '((lambda (theme)
+               (require 'pdf-tools)
+               (when pdf-view-themed-minor-mode
+                 (pdf-view-refresh-themed-buffer theme)))))
+  :bind (:map pdf-view-mode-map
+         ("C-s" . isearch-forward)
+         ("C-r" . isearch-backward)
+         ("<home>". (lambda ()
+                      (interactive)
+                      (image-scroll-up -999)))
+         ("<end>". (lambda ()
+                      (interactive)
+                      (image-scroll-up 999)))))
 #+end_src
 
 ** ebib
@@ -2275,7 +2309,6 @@ Hook ~pdf-view-themed-minor-mode~ to ~pdf-view-mode~ to follow emacs theme color
               bibtex-completion-edit-notes
               org-ref-cite-hydra/body
               org-ref-find-bibliography
-              org-ref-get-bibtex-key-and-file
               kimim/org-ref-open-pdf
               kimim/org-ref-open-pdf-in-dired
               kimim/org-ref-open-notes
@@ -3108,6 +3141,7 @@ sqlite3 is shipped in macOS by default.
 #+begin_src emacs-lisp
 (use-package org-roam
   :functions (orb-get-node-citekey
+              orb--new-note
               -contains?)
   :commands (kimim/non-cite-filter)
   :ensure t
@@ -3168,17 +3202,17 @@ sqlite3 is shipped in macOS by default.
   (add-to-list
    'org-link-frame-setup
    '(file . find-file))
-  (setq org-roam-v2-ack t)
+  ;;(setq org-roam-v2-ack t)
   (setq emacsql-global-timeout 60) ;; default 30 seconds will timeout
   (org-roam-db-autosync-enable)
-  (setq orb-templates
-        '(("r" "reference" plain
-           "#+ROAM_KEY: %^{citekey}\n\n%?"
-           :target
-           (file+head
-            "references/%(concat (kimim/genfile-timestamp) \"${citekey}.txt\")"
-            "#+title: ${title}\n")
-           :unnarrowed t)))
+  (defvar orb-templates
+    '(("r" "reference" plain
+       "#+ROAM_KEY: %^{citekey}\n\n%?"
+       :target
+       (file+head
+        "references/%(concat (kimim/genfile-timestamp) \"${citekey}.txt\")"
+        "#+title: ${title}\n")
+       :unnarrowed t)))
   (defun kimim/cite-filter (node)
     (orb-get-node-citekey node))
   (defun kimim/non-cite-filter (node)
@@ -3543,8 +3577,8 @@ second name, ..., N congruent to 60 gives the sixtieth name."
 
 #+begin_src emacs-lisp
 (use-package ebdb
-  :functions (ebdb-gethash)
-  :commands (ebdb ebdb-mail-aliases)
+  :functions ebdb-gethash
+  :commands ebdb ebdb-mail-aliases
   :custom (ebdb-mua-pop-up nil)
   :config
   (setq ebdb-sources (concat kimim/path-org "ebdb"))
@@ -3570,19 +3604,16 @@ second name, ..., N congruent to 60 gives the sixtieth name."
 #+begin_src emacs-lisp
 ;; erc settings
 (use-package erc
-  :functions (erc-autojoin-mode
-              erc-autojoin-enable)
-  :commands (erc)
+  :functions erc-autojoin-enable
+  :commands erc
   :custom
   (erc-autojoin-channels-alist
    '(("irc.freenode.net" "#emacs")))
   (erc-hide-list '("JOIN" "PART" "QUIT"))
   :config
   (require 'erc-join)
-  (erc-autojoin-mode 1)
   (erc-autojoin-enable)
-  (setq erc-default-server "irc.freenode.net")
-  (setq ))
+  (setq erc-default-server "irc.freenode.net"))
 #+end_src
 
 ** GNUS dired
@@ -3744,7 +3775,7 @@ second name, ..., N congruent to 60 gives the sixtieth name."
 
 #+begin_src emacs-lisp
 (use-package elfeed
-  :functions (elfeed-show-refresh)
+  :functions elfeed-show-refresh
   :commands (elfeed)
   :custom
   (elfeed-curl-timeout 100)
