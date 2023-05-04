@@ -619,8 +619,8 @@ A translator extension written by [[https://condy0919.github.io][Youmu]].
                      ;; Longman
                      fanyi-longman-provider))
   :bind (:map fanyi-mode-map
-              ("n" . outline-next-heading)
-              ("p" . outline-previous-heading)))
+              ("n" . outline-next-visible-heading)
+              ("p" . outline-previous-visible-heading)))
 #+end_src
 
 * Editing
