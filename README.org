@@ -3267,39 +3267,6 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
   (require 'org-ref))
 #+end_src
 
-** deft
-
-#+begin_src emacs-lisp
-(use-package deft
-  :bind
-  ("C-x d" . deft-find-file)
-  :custom (deft-text-mode 'org-mode)
-  :config
-  (setq deft-extensions '("txt" "org" "md"))
-  (setq deft-directory kimim/path-notes)
-  (setq deft-recursive t)
-  ;; disable auto save
-  (setq deft-auto-save-interval 0)
-  (setq deft-file-naming-rules '((noslash . "_")))
-  (setq deft-use-filter-string-for-filename t)
-  (setq deft-org-mode-title-prefix t)
-  (setq deft-use-filename-as-title nil)
-  (setq deft-strip-summary-regexp
-        (concat "\\("
-                "[\n\t]" ;; blank
-                "\\|^#\\+[[:upper:]_]+:.*$" ;; org-mode metadata
-                "\\|^#\\+[[:alnum:]_]+:.*$" ;; org-mode metadata
-                "\\)")))
-#+end_src
-** zetteldeft
-
-#+begin_src emacs-lisp
-(use-package zetteldeft
-  :config
-  (zetteldeft-set-classic-keybindings)
-  (setf zetteldeft-id-regex "[0-9]\\{8\\}\\([A-Z]\\{2,\\}\\)"))
-#+end_src
-
 ** Markdown mode
 
 Markdown is widely used as plain text file format. Pandoc [fn:19] can
