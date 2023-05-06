@@ -2275,6 +2275,7 @@ emacs theme color.
   :bind (:map pdf-view-mode-map
          ("C-s" . isearch-forward)
          ("C-r" . isearch-backward)
+         ("C-o" . pdf-occur)
          ("<home>". (lambda ()
                       (interactive)
                       (image-scroll-up -999)))
@@ -2381,7 +2382,7 @@ emacs theme color.
     "Open the pdf for bibtex key under point if it exists."
     (let* ((pdf-file (kimim/org-ref-get-pdf-filename key)))
       (if (file-exists-p pdf-file)
-          (org-open-file pdf-file)
+          (find-file pdf-file)
         (message "no pdf found for %s" key))))
 
   (defun kimim/org-ref-open-pdf (&optional arg)
@@ -2403,9 +2404,8 @@ emacs theme color.
           (kimim/org-ref-open-pdf)
         (let ((pdf-file (kimim/org-ref-get-pdf-filename (car results))))
           (if (file-exists-p pdf-file)
-              (org-open-file pdf-file)
+              (find-file pdf-file)
             (kimim/org-ref-open-pdf))))))
-
 
   (defun kimim/org-ref-open-pdf-in-dired-action (key)
     "Open the pdf dired for bibtex key under point if it exists."
