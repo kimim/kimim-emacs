@@ -2654,28 +2654,6 @@ support more functions from =org-ref=:
 		            nil 'face 'org-indent)))))))
 #+end_src
 
-** org-inline-pdf
-
-~org-inline-pdf-mode~ includes a page from a PDF file. It need ~pdf2svg~
-to extract a page.
-
-Install ~pdf2svg~ for msys64/mingw64:
-
-#+begin_src shell
-pacman -S mingw-w64-x86_64-pdf2svg
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package org-inline-pdf
-  :after org
-  :hook (org-mode . org-inline-pdf-mode))
-#+end_src
-
-Then we can include a PDF file like this:
-
-#+ATTR_ORG: :width 60% :page 3
-[[~/docs/README.pdf]]
-
 ** orgalist
 
 #+begin_src emacs-lisp
