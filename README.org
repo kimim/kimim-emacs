@@ -2516,6 +2516,20 @@ support more functions from =org-ref=:
   (require 'org-roam-bibtex))
 #+end_src
 
+** nov: reading epub books
+
+#+begin_src emacs-lisp
+(use-package nov
+  :mode ("\\.epub\\'" . nov-mode)
+  :hook ((nov-mode . olivetti-mode)
+         (nov-mode . (lambda ()
+                       (visual-line-mode)
+                       (setq line-spacing 0.5))))
+  :config
+  (require 'olivetti)
+  (setq nov-text-width olivetti-body-width))
+#+end_src
+
 * Orgmode
 ** org general setting
 
