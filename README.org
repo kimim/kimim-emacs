@@ -807,7 +807,7 @@ Check spell on the fly.
   :after text-mode
   :load-path (lambda ()
                (concat kimim/path-kimim-emacs
-                "~/.emacs.d/site-lisp/cns"))
+                "site-lisp/cns"))
   :hook (text-mode . cns-mode)
   :bind ((:map cns-mode-map)
          ("M-h" . cns-backward-kill-word))
