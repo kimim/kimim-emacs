@@ -1,3 +1,9 @@
 [submodule "site-lisp/o2jk"]
 	path = site-lisp/o2jk
 	url = git@github.com:kimim/o2jk.git
+[submodule "site-lisp/pdf-view-pagemark"]
+	path = site-lisp/pdf-view-pagemark
+	url = git@github.com:kimim/pdf-view-pagemark.git
+[submodule "site-lisp/cns"]
+	path = site-lisp/cns
+	url = git@github.com:kanglmf/emacs-chinese-word-segmentation.git

@@ -800,6 +800,28 @@ Check spell on the fly.
 		        (org-redisplay-inline-images)))))
 #+end_src
 
+** Chinese word segmentation
+
+#+begin_src emacs-lisp
+(use-package cns
+  :after text-mode
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                "~/.emacs.d/site-lisp/cns"))
+  :hook (text-mode . cns-mode)
+  :bind ((:map cns-mode-map)
+         ("M-h" . cns-backward-kill-word))
+  :config
+  (setq cns-prog
+        (concat kimim/path-kimim-emacs
+                "site-lisp/cns/cnws.exe"))
+  (setq cns-dict-directory
+        (concat kimim/path-kimim-emacs
+                "site-lisp/cns/cppjieba/dict"))
+  (setq cns-recent-segmentation-limit 20) ; default is 10
+  (setq cns-debug nil))
+#+end_src
+
 * Controlling
 ** Window and Frame
 
@@ -2276,12 +2298,38 @@ emacs theme color.
          ("C-s" . isearch-forward)
          ("C-r" . isearch-backward)
          ("C-o" . pdf-occur)
+         ("j" . pdf-view-next-line-or-next-page)
+         ("k" . pdf-view-previous-line-or-previous-page)
          ("<home>". (lambda ()
                       (interactive)
                       (image-scroll-up -999)))
          ("<end>". (lambda ()
                       (interactive)
                       (image-scroll-up 999)))))
+#+end_src
+
+** pdf-view-store
+
+To remember visited pages of PDF files.
+
+#+begin_src emacs-lisp
+(use-package pdf-view-restore
+  :after pdf-tools
+  :custom (pdf-view-restore-filename "~/.emacs.d/.pdf-view-restore")
+  :hook (pdf-view-mode . pdf-view-restore-mode))
+#+end_src
+
+** pdf-view-pagemark
+
+Add indicator of remaining text when scrolling PDF pages.
+
+#+begin_src emacs-lisp
+(use-package pdf-view-pagemark
+  :after pdf-tools
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                       "site-lisp/pdf-view-pagemark"))
+  :hook (pdf-view-mode . pdf-view-pagemark-mode))
 #+end_src
 
 ** ebib
@@ -3418,7 +3466,7 @@ or \\[markdown-toggle-inline-images]."
 N congruent to 1 gives the first name, N congruent to 2 gives the
 second name, ..., N congruent to 60 gives the sixtieth name."
     (format
-     "%s%s年"
+     "%s%s 年"
      (aref calendar-chinese-celestial-stem (% (1- n) 10))
      (aref calendar-chinese-terrestrial-branch (% (1- n) 12)))))
 #+end_src
