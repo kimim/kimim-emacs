@@ -789,7 +789,12 @@ Check spell on the fly.
   :diminish olivetti-mode
   :custom
   (olivetti-body-width (+ fill-column 10))
-  :hook ((text-mode elfeed-show-mode eww-mode Info-mode woman-mode)
+  :hook ((text-mode
+          elfeed-show-mode
+          eww-mode
+          Info-mode
+          woman-mode
+          fanyi-mode)
 	     . olivetti-mode)
   :config
   (add-hook 'cnfonts-set-font-finish-hook
@@ -2309,12 +2314,24 @@ emacs theme color.
          ("C-o" . pdf-occur)
          ("j" . pdf-view-next-line-or-next-page)
          ("k" . pdf-view-previous-line-or-previous-page)
+         ("n" . kimim/pdf-view-next-page-command)
+         ("p" . kimim/pdf-view-previous-page-command)
          ("<home>". (lambda ()
                       (interactive)
                       (image-scroll-up -999)))
          ("<end>". (lambda ()
                       (interactive)
-                      (image-scroll-up 999)))))
+                      (image-scroll-up 999))))
+  :config
+  (defun kimim/pdf-view-next-page-command (&optional n)
+    (interactive "p")
+    (pdf-view-next-page-command n)
+    (image-bob))
+
+  (defun kimim/pdf-view-previous-page-command (&optional n)
+    (interactive "p")
+    (pdf-view-previous-page-command n)
+    (image-bob)))
 #+end_src
 
 ** pdf-view-store
@@ -3962,7 +3979,8 @@ from system PATH, so you should set these to system PATH.
    ("<pause>" . (lambda ()
                   (interactive)
                   (kimim/switch-to-scratch-buffer)
-                  (iconify-frame))))
+                  (iconify-frame)))
+   ("C-<pause>" . iconify-frame))
   :config
   (unbind-key "C-x C-z")
   (when (eq system-type 'darwin) ;; mac specific settings
