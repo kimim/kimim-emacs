@@ -376,6 +376,28 @@ calculated with original default font height and width:
                    (cons 'width (/ (* 4 width)
                                    (* 5 (frame-char-width))))))))
 
+(defun kimim/frame-and-font-mini ()
+  (interactive)
+  ;; top, left ... must be integer
+  (let ((width  (ceiling (/ (display-pixel-width) 2.5)))
+        (height (/ (display-pixel-height) 2))
+        (frame (selected-frame)))
+    (set-frame-position frame (ceiling (* 1.5 width)) height)
+    (set-frame-height frame (/ (* 4 height)
+                               (* 5 (frame-char-height))))
+    (set-frame-width frame (/ (* 4 width)
+                              (* 5 (frame-char-width))))
+    (add-to-list 'default-frame-alist
+                 (cons 'top  (/ height 10)))
+    (add-to-list 'default-frame-alist
+                 (cons 'left (/ width 10)))
+    (add-to-list 'default-frame-alist
+                 (cons 'height (/ (* 4 height)
+                                  (* 5 (frame-char-height)))))
+    (add-to-list 'default-frame-alist
+                 (cons 'width (/ (* 4 width)
+                                 (* 5 (frame-char-width)))))))
+
 (kimim/frame-and-font)
 #+end_src
 
@@ -476,7 +498,8 @@ Use kimim-light as default theme.
   :custom (;; do not warning when load new theme
            (custom-safe-themes t)
            ;; add my theme files to custom theme directory
-           (custom-theme-directory "~/kimim-emacs/site-lisp/")))
+           (custom-theme-directory
+            "~/kimim-emacs/site-lisp/emacs-hippo-theme")))
 #+end_src
 
 ** Image
@@ -2302,7 +2325,7 @@ emacs theme color.
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :hook (pdf-view-mode . pdf-view-themed-minor-mode)
   :custom
-  (pdf-view-display-size 'fit-height)
+  (pdf-view-display-size 3.85)
   (enable-theme-functions
            '((lambda (theme)
                (require 'pdf-tools)
@@ -2312,8 +2335,14 @@ emacs theme color.
          ("C-s" . isearch-forward)
          ("C-r" . isearch-backward)
          ("C-o" . pdf-occur)
-         ("j" . pdf-view-next-line-or-next-page)
-         ("k" . pdf-view-previous-line-or-previous-page)
+         ("j" . (lambda ()
+                  "Next line within page"
+                  (interactive)
+                  (image-next-line 1)))
+         ("k" . (lambda ()
+                  "Previous line within page"
+                  (interactive)
+                  (image-next-line -1)))
          ("n" . kimim/pdf-view-next-page-command)
          ("p" . kimim/pdf-view-previous-page-command)
          ("<home>". (lambda ()
@@ -2321,8 +2350,10 @@ emacs theme color.
                       (image-scroll-up -999)))
          ("<end>". (lambda ()
                       (interactive)
-                      (image-scroll-up 999))))
+                      (image-scroll-up 999)))
+         ("C-c C-z" . pdf-view-open-bibtex-notes))
   :config
+  (require 'bibtex-completion)
   (defun kimim/pdf-view-next-page-command (&optional n)
     (interactive "p")
     (pdf-view-next-page-command n)
@@ -2331,7 +2362,17 @@ emacs theme color.
   (defun kimim/pdf-view-previous-page-command (&optional n)
     (interactive "p")
     (pdf-view-previous-page-command n)
-    (image-bob)))
+    (image-bob))
+
+  (defun pdf-view-open-bibtex-notes ()
+    "From PDF file, open the notes if they exist."
+    (interactive)
+    (bibtex-completion-edit-notes (list (pdf-view-get-bibtex-key))))
+
+
+  (defun pdf-view-get-bibtex-key ()
+    "Get bibtex key from PDF buffer name in pdf-view mode"
+    (car (string-split (buffer-name) "-"))))
 #+end_src
 
 ** pdf-view-store
@@ -3968,6 +4009,7 @@ from system PATH, so you should set these to system PATH.
    ("C-x M-s" . eshell)
    ("C-x /" . kimim/toggle-path-header)
    ("C-x m 0" . kimim/frame-and-font)
+   ("C-x m -" . kimim/frame-and-font-mini)
    ("C-x m SPC" . kimim/shrink-down)
    ("C-x m ]" . kimim/shrink-right)
    ("C-x m [" . kimim/shrink-left)
