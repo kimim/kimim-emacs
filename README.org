@@ -493,13 +493,11 @@ Toggle Font-Lock mode in all buffers.
 Use kimim-light as default theme.
 
 #+begin_src emacs-lisp
-(use-package custom
+(use-package hippo-themes
   :ensure nil
+  :load-path "~/kimim-emacs/site-lisp/emacs-hippo-theme"
   :custom (;; do not warning when load new theme
-           (custom-safe-themes t)
-           ;; add my theme files to custom theme directory
-           (custom-theme-directory
-            "~/kimim-emacs/site-lisp/emacs-hippo-theme")))
+           (custom-safe-themes t)))
 #+end_src
 
 ** Image
@@ -822,9 +820,9 @@ Check spell on the fly.
   :config
   (add-hook 'cnfonts-set-font-finish-hook
 	        (lambda (args)
-		      (let ((frame-width (* (+ fill-column 10)
+		      (let ((frame-width (* (+ fill-column 8)
 				                    (frame-char-width))))
-		        (setq org-image-actual-width frame-width)
+		        (setq org-image-actual-width `(,frame-width))
 		        (org-redisplay-inline-images)))))
 #+end_src
 
@@ -2324,13 +2322,7 @@ emacs theme color.
   :defines (pdf-view-themed-minor-mode)
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :hook (pdf-view-mode . pdf-view-themed-minor-mode)
-  :custom
-  (pdf-view-display-size 3.85)
-  (enable-theme-functions
-           '((lambda (theme)
-               (require 'pdf-tools)
-               (when pdf-view-themed-minor-mode
-                 (pdf-view-refresh-themed-buffer theme)))))
+  :custom (pdf-view-display-size 3.85)
   :bind (:map pdf-view-mode-map
          ("C-s" . isearch-forward)
          ("C-r" . isearch-backward)
@@ -2351,8 +2343,18 @@ emacs theme color.
          ("<end>". (lambda ()
                       (interactive)
                       (image-scroll-up 999)))
-         ("C-c C-z" . pdf-view-open-bibtex-notes))
+         ("C-c C-z" . pdf-view-open-bibtex-notes)
+         ("/" . (lambda ()
+                  (interactive)
+                  (let ((filename (file-name-nondirectory
+                                   (buffer-file-name))))
+                    (kill-new
+                     filename)
+                    (message "Copied %s" filename)))))
   :config
+  (advice-add 'enable-theme :after
+              (lambda (&rest _)
+                (pdf-view-refresh-themed-buffer t)))
   (require 'bibtex-completion)
   (defun kimim/pdf-view-next-page-command (&optional n)
     (interactive "p")
@@ -2372,7 +2374,7 @@ emacs theme color.
 
   (defun pdf-view-get-bibtex-key ()
     "Get bibtex key from PDF buffer name in pdf-view mode"
-    (car (string-split (buffer-name) "-"))))
+    (car (string-split (buffer-name) "[-\\(_\\.]+"))))
 #+end_src
 
 ** pdf-view-store
@@ -4018,10 +4020,6 @@ from system PATH, so you should set these to system PATH.
    ("C-x m ^" . kimim/shrink-up)
    ("C-x m '" . kimim/top-right-mouse)
    ("C-x m r" . kimim/rename-file-and-buffer)
-   ("<pause>" . (lambda ()
-                  (interactive)
-                  (kimim/switch-to-scratch-buffer)
-                  (iconify-frame)))
    ("C-<pause>" . iconify-frame))
   :config
   (unbind-key "C-x C-z")
