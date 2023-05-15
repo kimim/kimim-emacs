@@ -2002,13 +2002,6 @@ in Clojure.
   (add-to-list 'cljr-magic-require-namespaces '("s"  . "clojure.string")))
 #+end_src
 
-** Java
-
-#+begin_src emacs-lisp
-(use-package dap-mode)
-(use-package lsp-java)
-#+end_src
-
 ** Python
 
 Python development configuration is quite easy. =elpy= [fn:14] is used here:
@@ -2335,8 +2328,8 @@ emacs theme color.
                   "Previous line within page"
                   (interactive)
                   (image-next-line -1)))
-         ("n" . kimim/pdf-view-next-page-command)
-         ("p" . kimim/pdf-view-previous-page-command)
+         ("n" . kimim/pdf-view-next-page)
+         ("p" . kimim/pdf-view-previous-page)
          ("<home>". (lambda ()
                       (interactive)
                       (image-scroll-up -999)))
@@ -2358,14 +2351,14 @@ emacs theme color.
                   (pdf-view-refresh-themed-buffer t))))
 
   (require 'bibtex-completion)
-  (defun kimim/pdf-view-next-page-command (&optional n)
+  (defun kimim/pdf-view-next-page (&optional n)
     (interactive "p")
-    (pdf-view-next-page-command n)
+    (pdf-view-next-page n)
     (image-bob))
 
-  (defun kimim/pdf-view-previous-page-command (&optional n)
+  (defun kimim/pdf-view-previous-page (&optional n)
     (interactive "p")
-    (pdf-view-previous-page-command n)
+    (pdf-view-previous-page n)
     (image-bob))
 
   (defun pdf-view-open-bibtex-notes ()
