@@ -2354,7 +2354,9 @@ emacs theme color.
   :config
   (advice-add 'enable-theme :after
               (lambda (&rest _)
-                (pdf-view-refresh-themed-buffer t)))
+                (when pdf-view-themed-minor-mode
+                  (pdf-view-refresh-themed-buffer t))))
+
   (require 'bibtex-completion)
   (defun kimim/pdf-view-next-page-command (&optional n)
     (interactive "p")
