@@ -737,7 +737,6 @@ A translator extension written by [[https://condy0919.github.io][Youmu]].
 
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 (add-to-list 'auto-mode-alist '("\\.S\\'" . asm-mode))
-(add-to-list 'auto-mode-alist '("\\.svg\\'" . html-mode))
 (add-to-list 'auto-mode-alist '("\\.pas\\'" . delphi-mode))
 
 (require 'saveplace)
