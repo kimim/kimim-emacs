@@ -759,16 +759,6 @@ region. That's amazing.
   ("C-c C->" . mc/mark-all-dwim))
 #+end_src
 
-** visual-fill-column
-
-Markdown file is not fill-column'ed, so let emacs visually
-fill-column.
-
-#+begin_src emacs-lisp
-;; (use-package visual-fill-column
-;;   :hook (markdown-mode . visual-fill-column-mode))
-#+end_src
-
 ** Highlight
 
 Highlight current line in window systems, but disable this in
@@ -3418,7 +3408,10 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
   (require 'org)
   ;; to support azure markdown format with =WxH after file link
   (setq markdown-regex-link-inline
-        "\\(?1:!\\)?\\(?2:\\[\\)\\(?3:\\^?\\(?:\\\\\\]\\|[^]]\\)*\\|\\)\\(?4:\\]\\)\\(?5:(\\)\\s-*\\(?6:[^)]*?\\)\\(?:\\s-+\\(?7:\"[^\"]*\"\\|=.*\\)\\)?\\s-*\\(?8:)\\)")
+        "\\(?1:!\\)?\\(?2:\\[\\)\\(?3:\\^?\\(?:\\\\\\]\\|\
+[^]]\\)*\\|\\)\\(?4:\\]\\)\\(?5:(\\)\\s-*\\(?6:[^)]*?\\)\\\
+(?:\\s-+\\(?7:\"[^\"]*\"\\|=.*\\)\\)?\\s-*\\(?8:)\\)")
+
   (defun markdown--browse-url (url)
     (let* ((struct (url-generic-parse-url url))
            (full (url-fullness struct))
@@ -3458,6 +3451,7 @@ or \\[markdown-toggle-inline-images]."
                  (imagep (match-beginning 1))
                  (end (match-end 0))
                  (file (match-string-no-properties 6))
+                 ;; make file path if starts with /
                  (file (if (s-starts-with? "/" file)
                            (concat (project-root (project-current t))
                                    file)
