@@ -1,3 +1,16 @@
+* Edit
+
+** visual-fill-column
+
+[2023-05-18 Thu] Many markdown file contains long lines,
+~visual-fill-column~ can visually wrap lines. But because I use
+~olivetti-mode~ for text files, now I don't use this package anymore.
+
+#+begin_src emacs-lisp
+(use-package visual-fill-column
+  :hook (markdown-mode . visual-fill-column-mode))
+#+end_src
+
 ** consult-org-roam
 
 #+begin_src emacs-lisp
