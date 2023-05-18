@@ -884,6 +884,20 @@ amount.
 (setq mouse-wheel-scroll-amount '(0.01))
 #+end_src
 
+** Move Frame
+
+Move frame to one of the nine grids on the screen with ~C-x y <N>~ keys.
+
+#+begin_src emacs-lisp
+(use-package nine-grid
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                       "site-lisp/nine-grid"))
+  :config
+  (require 'nine-grid)
+  (nine-grid-mode))
+#+end_src
+
 ** Command
 
 Display key candidates when you typed part key prefix with ~which-key-mode~.
