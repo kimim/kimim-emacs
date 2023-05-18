@@ -330,8 +330,6 @@ for every applications.
     (scroll-bar-mode -1))
    ((eq window-system nil)
     (menu-bar-mode 0))))
-
-(kimim/menu-and-bar)
 #+end_src
 
 ** Font and Frame Size
@@ -350,6 +348,29 @@ calculated with original default font height and width:
 #+end_src
 
 #+begin_src emacs-lisp
+(defun kimim/set-frame-alist (top left height width)
+  (let ((frame (selected-frame)))
+    (set-frame-position frame left top)
+    (set-frame-height frame height)
+    (set-frame-width frame width))
+  (setq default-frame-alist
+        `((top . ,top)
+          (left . ,left)
+          (height . ,height)
+          (width . ,width)
+          (scroll-bar-width)
+          (vertical-scroll-bars)
+          (tool-bar-lines)
+          (menu-bar-lines))))
+
+(defun kimim/screen-width ()
+  (/ (display-pixel-width)
+     (frame-char-width)))
+
+(defun kimim/screen-height ()
+  (/ (display-pixel-height)
+     (frame-char-height)))
+
 (defun kimim/frame-and-font ()
   (interactive)
   (when window-system
@@ -357,46 +378,37 @@ calculated with original default font height and width:
     (cnfonts-enable)
     (cnfonts-set-font)
     ;; top, left ... must be integer
-    (let ((width (display-pixel-width))
-          (height (display-pixel-height))
-          (frame (selected-frame)))
-      (set-frame-position frame (/ width 10) (/ height 10))
-      (set-frame-height frame (/ (* 4 height)
-                                 (* 5 (frame-char-height))))
-      (set-frame-width frame (/ (* 4 width)
-                                (* 5 (frame-char-width))))
-      (add-to-list 'default-frame-alist
-                   (cons 'top  (/ height 10)))
-      (add-to-list 'default-frame-alist
-                   (cons 'left (/ width 10)))
-      (add-to-list 'default-frame-alist
-                   (cons 'height (/ (* 4 height)
-                                    (* 5 (frame-char-height)))))
-      (add-to-list 'default-frame-alist
-                   (cons 'width (/ (* 4 width)
-                                   (* 5 (frame-char-width))))))))
+    (let* ((width (ceiling (* 0.8 (kimim/screen-width))))
+           (height (ceiling (* 0.8 (kimim/screen-height))))
+           (top (/ (display-pixel-height) 10))
+           (left (/ (display-pixel-width) 10)))
+      (kimim/menu-and-bar)
+      (kimim/set-frame-alist
+       top left height width))))
 
 (defun kimim/frame-and-font-mini ()
   (interactive)
   ;; top, left ... must be integer
-  (let ((width  (ceiling (/ (display-pixel-width) 2.5)))
-        (height (/ (display-pixel-height) 2))
-        (frame (selected-frame)))
-    (set-frame-position frame (ceiling (* 1.5 width)) height)
-    (set-frame-height frame (/ (* 4 height)
-                               (* 5 (frame-char-height))))
-    (set-frame-width frame (/ (* 4 width)
-                              (* 5 (frame-char-width))))
-    (add-to-list 'default-frame-alist
-                 (cons 'top  (/ height 10)))
-    (add-to-list 'default-frame-alist
-                 (cons 'left (/ width 10)))
-    (add-to-list 'default-frame-alist
-                 (cons 'height (/ (* 4 height)
-                                  (* 5 (frame-char-height)))))
-    (add-to-list 'default-frame-alist
-                 (cons 'width (/ (* 4 width)
-                                 (* 5 (frame-char-width)))))))
+  (let* ((width (ceiling (* 0.8 (kimim/screen-width))))
+         (height (ceiling (* 0.4 (kimim/screen-height))))
+         (top (/ (display-pixel-height) 2))
+         (left (/ (display-pixel-width) 10))
+         (frame (selected-frame)))
+    (kimim/menu-and-bar)
+    (kimim/set-frame-alist
+     top left height width)))
+
+(defun kimim/new-mini-frame-bottom ()
+  "Create a small frame at bottom for write note."
+  (interactive)
+  ;; after-make-frame-hook make this no work, maybe change that hook
+  (let ((frm (make-frame
+              `((height . ,(ceiling (* 0.4 (kimim/screen-height))))
+                (width . ,(ceiling (* 0.8 (kimim/screen-width))))))))
+    (set-frame-position
+     frm
+     (/ (display-pixel-width) 10)
+     (/ (display-pixel-height) 2))))
 
 (kimim/frame-and-font)
 #+end_src
@@ -856,27 +868,16 @@ typing ~C-c <left>~.
 When type ~C-x m w~ it will create a new frame with the default frame
 configuration.
 
-Before an emacsclient first connect to daemon, the daemon is working
-in terminal mode. Thus ~(display-graphic-p)~ will return ~nil~. So I add
-~raise-frame~ in ~after-make-frame-functions~ to force emacs to bring the
-new frame to the front and apply the gui related settings.
-
 #+begin_src emacs-lisp
 (use-package frame
   :ensure nil
   :defer 1
-  :bind ("C-x m w" . make-frame)
-  :config
-  (add-hook 'after-make-frame-functions
-            (lambda (frame)
-              (select-frame frame)
-              (kimim/menu-and-bar)
-              (kimim/frame-and-font)
-              (raise-frame frame))))
+  :bind ("C-x m w" . make-frame))
 #+end_src
 
-preserve the point in screen during scrolling looks nice(see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Scrolling.html][scrolling]]). scroll
-slowly with touchpad, thus we adjust the scroll amount.
+preserve the point in screen during scrolling looks nice(see
+[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Scrolling.html][scrolling]]). scroll slowly with touchpad, thus we adjust the scroll
+amount.
 
 #+begin_src emacs-lisp
 (setq scroll-preserve-screen-position t)

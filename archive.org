@@ -1,3 +1,24 @@
+
+* Frame
+Before an emacsclient first connect to daemon, the daemon is working
+in terminal mode. Thus ~(display-graphic-p)~ will return ~nil~. So I add
+~raise-frame~ in ~after-make-frame-functions~ to force emacs to bring the
+new frame to the front and apply the gui related settings.
+
+#+begin_src emacs-lisp
+(use-package frame
+  :ensure nil
+  :defer 1
+  :bind ("C-x m w" . make-frame)
+  :config
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (select-frame frame)
+              (kimim/menu-and-bar)
+              (kimim/frame-and-font)
+              (raise-frame frame))))
+#+end_src
+
 * Edit
 
 ** visual-fill-column
