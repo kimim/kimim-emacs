@@ -465,7 +465,6 @@ Nachdenken damit beschäftigt: Der bestirnte Himmel über mir, und das
 moralische Gesetz in mir.
 
 -- Immanuel Kant
-
 #+end_quote
 
 #+begin_src emacs-lisp
@@ -2264,7 +2263,6 @@ yarn add @mermaid-js/mermaid-cli
 #+end_src
 
 * Music
-
 ** lilypond
 
 #+begin_src emacs-lisp
