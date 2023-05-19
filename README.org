@@ -106,7 +106,7 @@ files and folders:
 # backup existing emacs config
 cd ~ && mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup
 # clone this config
-git clone https://github.com/kimim/kimim-emacs
+git clone --recurse-submodules https://github.com/kimim/kimim-emacs
 # copy default .emacs to ~
 cp kimim-emacs/.emacs ~
 #+end_src
@@ -358,7 +358,6 @@ calculated with original default font height and width:
           (left . ,left)
           (height . ,height)
           (width . ,width)
-          (scroll-bar-width)
           (vertical-scroll-bars)
           (tool-bar-lines)
           (menu-bar-lines))))
@@ -459,12 +458,27 @@ Show (line, column) numbers in mode line:
 
 ** Celestial modeline
 
+#+begin_quote
+Zwei Dinge erfüllen das Gemüt mit immer neuer und zunehmender
+Bewunderung und Ehrfurcht, je öfter und anhaltender sich das
+Nachdenken damit beschäftigt: Der bestirnte Himmel über mir, und das
+moralische Gesetz in mir.
+
+-- Immanuel Kant
+
+#+end_quote
+
 #+begin_src emacs-lisp
 (use-package celestial-mode-line
-  :disabled
   :defer 1
   :config
-  (setq global-mode-string '("" celestial-mode-line-string "  " display-time-string ""))
+  ;; use smaller symbols, the original one expand the modeline
+  (setq celestial-mode-line-sunrise-sunset-alist
+        '((sunrise . "○ꜛ") (sunset . "○ꜜ")))
+  (setq celestial-mode-line-phase-representation-alist
+        '((0 . "○") (1 . ">") (2 . "●") (3 . "<")))
+  (setq global-mode-string '("" celestial-mode-line-string
+                             "  " display-time-string ""))
   (celestial-mode-line-start-timer))
 #+end_src
 
@@ -946,6 +960,7 @@ frequency report by =M-x keyfreq-show=.
   :config
   (add-hook 'eshell-mode-hook
             (lambda ()
+              (make-local-variable company-backends)
               (setq company-backends
                     '((company-shell company-files)
                       company-capf company-yasnippet company-dabbrev company-ebdb company-ispell
@@ -983,8 +998,8 @@ and jump to any window by triggering ~ace-window~ (~C-x m w~).
 #+begin_src emacs-lisp
 (use-package ace-window
   :bind
-  (("C-x o" . ace-window)
-   ("M-o" . other-window)
+  (("C-x o" . other-window)
+   ("M-o" . ace-window)
    ("C-x m w" . ace-swap-window)
    ("C-x m x" . ace-delete-window))
   :custom
@@ -3506,6 +3521,17 @@ or \\[markdown-toggle-inline-images]."
                       (overlay-put ov 'display image)
                       (overlay-put ov 'face 'default)
                       (push ov markdown-inline-image-overlays))))))))))))
+#+end_src
+
+** org-transclusion
+
+Add a virtual piece of other org file to current one.
+
+#+begin_src emacs-lisp
+(use-package org-transclusion
+  :after org
+  :custom (org-transclusion-include-first-section nil)
+  :bind ("<f12>" . org-transclusion-add-all))
 #+end_src
 
 * Task Management
