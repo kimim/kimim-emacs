@@ -470,6 +470,7 @@ moralische Gesetz in mir.
 #+begin_src emacs-lisp
 (use-package celestial-mode-line
   :defer 1
+  :custom (celestial-mode-line-update-interval 300)
   :config
   ;; use smaller symbols, the original one expand the modeline
   (setq celestial-mode-line-sunrise-sunset-alist
@@ -1268,11 +1269,17 @@ dired-efap, Edit file at point, can be used to rename file name at the point:
 
 ** ibuffer
 
+~M-o~ is bound to ~ibuffer-visit-buffer-1-window~ to visit the buffer on
+this line, and delete other windows. This conflicts with global key
+binding to ~ace-window~. Unbind ~M-o~ from ~ibuffer-mode-map~.
+
 #+begin_src emacs-lisp
 (use-package ibuffer
   :bind (("C-x C-b" . ibuffer-other-window)
          :map ibuffer-mode-map
          ("<right>" . ibuffer-visit-buffer))
+  :init
+  (unbind-key "M-o" ibuffer-mode-map)
   :custom
   (ibuffer-formats
    '((mark modified read-only " "
@@ -3529,6 +3536,7 @@ Add a virtual piece of other org file to current one.
 (use-package org-transclusion
   :after org
   :custom (org-transclusion-include-first-section nil)
+  :hook (org-mode . org-transclusion-add-all)
   :bind ("<f12>" . org-transclusion-add-all))
 #+end_src
 
@@ -4011,6 +4019,7 @@ from system PATH, so you should set these to system PATH.
    ("M-<f1>" . kimim/switch-to-scratch-and-nuke-others)
    ("<f2>" . other-window)
    ("<f5>" . kimim/switch-to-scratch-buffer)
+   ("C-<f5>" . kimim/switch-to-scratch-other-window)
    ("<f7>" . bury-buffer)
    ("<f8>" . unbury-buffer)
    ("C-h" . delete-backward-char)
@@ -4062,6 +4071,9 @@ from system PATH, so you should set these to system PATH.
     (interactive)
     (switch-to-buffer "*scratch*")
     (delete-other-windows))
+  (defun kimim/switch-to-scratch-other-window ()
+    (interactive)
+    (switch-to-buffer-other-window "*scratch*"))
   (defun kimim/restore-text-scale ()
     (interactive)
     (text-scale-increase 0)))
