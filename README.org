@@ -834,11 +834,15 @@ Check spell on the fly.
 	     . olivetti-mode)
   :config
   (add-hook 'cnfonts-set-font-finish-hook
-	        (lambda (args)
-		      (let ((frame-width (* (+ fill-column 8)
-				                    (frame-char-width))))
-		        (setq org-image-actual-width `(,frame-width))
-		        (org-redisplay-inline-images)))))
+            (lambda (args)
+              (let ((frame-width (* (+ fill-column 8)
+                                    (frame-char-width))))
+                (setq org-image-actual-width `(,frame-width))
+                (setq markdown-max-image-size org-image-actual-width)
+                (org-redisplay-inline-images)
+                (when markdown-inline-image-overlays
+                  (markdown-remove-inline-images)
+                  (markdown-display-inline-images))))))
 #+end_src
 
 ** Chinese word segmentation
@@ -3459,7 +3463,9 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
               markdown--get-remote-image)
   :custom ((markdown-hide-urls nil)
            (markdown-command "pandoc")
-           (markdown-max-image-size '(1200 . nil)))
+           (markdown-max-image-size
+            `(,(* (+ fill-column 10)
+                  (frame-char-width)))))
   :bind(:map
         markdown-mode-map
         ("C-<tab>" . outline-hide-entry)
