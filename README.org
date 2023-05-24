@@ -904,6 +904,7 @@ Move frame to one of the nine grids on the screen with ~C-x y <N>~ keys.
 
 #+begin_src emacs-lisp
 (use-package nine-grid
+  :diminish nine-grid-minor-mode
   :load-path (lambda ()
                (concat kimim/path-kimim-emacs
                        "site-lisp/nine-grid"))
@@ -2615,7 +2616,23 @@ support more functions from =org-ref=:
                        (setq line-spacing 0.5))))
   :config
   (require 'olivetti)
-  (setq nov-text-width olivetti-body-width))
+  (setq nov-text-width (- olivetti-body-width 2)))
+#+end_src
+
+* Text Mode
+
+#+begin_src emacs-lisp
+(use-package text-mode
+  :ensure nil
+  :config
+  (add-hook
+   'text-mode-hook
+   (lambda ()
+     (make-local-variable 'company-backends)
+     (setq company-backends
+           '((company-ispell company-capf
+              company-yasnippet company-dabbrev
+              company-ebdb company-files :seperate))))))
 #+end_src
 
 * Orgmode
@@ -2677,23 +2694,22 @@ support more functions from =org-ref=:
 #+begin_src emacs-lisp
 (use-package org-superstar
   :ensure t
-  :hook ((org-mode . org-superstar-mode)
-         (org-mode . (lambda ()
-                       "Beautify Org Checkbox Symbol"
-                       (push '(":category:" . "▲") prettify-symbols-alist)
-                       (push '("[X]" . "☑" ) prettify-symbols-alist)
-                       (push '("[ ]" . "☐" ) prettify-symbols-alist)
-                       (push '("#+begin_src" . "«" ) prettify-symbols-alist)
-                       (push '("#+end_src" . "»" ) prettify-symbols-alist)
-                       ;;(push '("#+begin_quotation" . "❝" ) prettify-symbols-alist)
-                       ;;(push '("#+end_quotation" . "❞" ) prettify-symbols-alist)
-                       (prettify-symbols-mode))))
+  :hook
+  ((org-mode . org-superstar-mode)
+   (org-mode . (lambda ()
+                 "Beautify Org Symbols"
+                 (push '(":category:" . "▲") prettify-symbols-alist)
+                 (push '("[X]" . "☑" ) prettify-symbols-alist)
+                 (push '("[ ]" . "☐" ) prettify-symbols-alist)
+                 (push '("#+begin_src" . "«" ) prettify-symbols-alist)
+                 (push '("#+end_src" . "»" ) prettify-symbols-alist)
+                 (prettify-symbols-mode))))
   :custom
   (org-superstar-remove-leading-stars t)
   (org-superstar-headline-bullets-list
-   '(9673 9675 9679 9632))
+   '(?⦿ ?○ ?● ?◌))
   (org-superstar-item-bullet-alist
-   '((42 . 9679) (43 . 9830) (45 . 9644))))
+   '((?* . ?●) (?+ . ?♦) (?- . ?▬))))
 #+end_src
 
 ** org-indent
@@ -3417,6 +3433,18 @@ It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
   (require 'org-ref))
 #+end_src
 
+** org-transclusion
+
+Add a virtual piece of other org file to current one.
+
+#+begin_src emacs-lisp
+(use-package org-transclusion
+  :after org
+  :custom (org-transclusion-include-first-section nil)
+  :hook (org-mode . org-transclusion-add-all)
+  :bind ("<f12>" . org-transclusion-add-all))
+#+end_src
+
 ** Markdown mode
 
 Markdown is widely used as plain text file format. Pandoc [fn:19] can
@@ -3426,8 +3454,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
 
 #+begin_src emacs-lisp
 (use-package markdown-mode
-  :mode (("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
+  :mode ("\\.\\(?:md\\|markdown\\)\\'" . markdown-mode)
   :functions (s-starts-with?
               markdown--get-remote-image)
   :custom ((markdown-hide-urls nil)
@@ -3441,6 +3468,36 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
         ("C-c C-x C-v" . markdown-toggle-inline-images))
   :config
   (require 'org)
+  (setq markdown-fontify-code-blocks-natively t)
+  (setq markdown-list-item-bullets
+        '("▬" "►" "•"))
+  (setq markdown-list-indent-width 2)
+  (advice-add
+   'markdown-fontify-list-items :override
+   (lambda (last)
+     (when (markdown-match-list-items last)
+       (when (not (markdown-code-block-at-point-p (match-beginning 2)))
+         (let* ((indent (length (match-string-no-properties 1)))
+                (level (/ indent markdown-list-indent-width))
+                ;; level = 0, 1, 2, ...
+                (bullet (nth (mod level (length markdown-list-item-bullets))
+                             markdown-list-item-bullets)))
+           (add-text-properties
+            (match-beginning 2) (match-end 2) '(face markdown-list-face))
+           (cond
+            ;; Unordered lists
+            ((string-match-p "[\\*\\+-]" (match-string 2))
+             (add-text-properties
+              (match-beginning 2) (match-end 2) `(display ,bullet)))
+            ;; Definition lists
+            ((string-equal ":" (match-string 2))
+             (let ((display-string
+                    (char-to-string (markdown--first-displayable
+                                     markdown-definition-display-char))))
+               (add-text-properties (match-beginning 2) (match-end 2)
+                                    `(display ,display-string)))))))
+       t)))
+  
   ;; to support azure markdown format with =WxH after file link
   (setq markdown-regex-link-inline
         "\\(?1:!\\)?\\(?2:\\[\\)\\(?3:\\^?\\(?:\\\\\\]\\|\
@@ -3463,11 +3520,15 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
         (if full
             (browse-url url)
           (when (and file (> (length file) 0))
-            (let ((link-file (funcall markdown-translate-filename-function file)))
-              (if (and markdown-open-image-command (string-match-p (image-file-name-regexp) link-file))
+            (let ((link-file
+                   (funcall markdown-translate-filename-function file)))
+              (if (and markdown-open-image-command
+                       (string-match-p
+                        (image-file-name-regexp) link-file))
                   (if (functionp markdown-open-image-command)
                       (funcall markdown-open-image-command link-file)
-                    (process-file markdown-open-image-command nil nil nil link-file))
+                    (process-file
+                     markdown-open-image-command nil nil nil link-file))
                 (find-file-other-window link-file))))))))
 
   (defun markdown-display-inline-images ()
@@ -3494,10 +3555,16 @@ or \\[markdown-toggle-inline-images]."
             (when (and imagep
                        (not (zerop (length file))))
               (unless (file-exists-p file)
-                (let* ((download-file (funcall markdown-translate-filename-function file))
-                       (valid-url (ignore-errors
-                                    (member (downcase (url-type (url-generic-parse-url download-file)))
-                                            markdown-remote-image-protocols))))
+                (let* ((download-file
+                        (funcall
+                         markdown-translate-filename-function file))
+                       (valid-url
+                        (ignore-errors
+                          (member
+                           (downcase
+                            (url-type
+                             (url-generic-parse-url download-file)))
+                           markdown-remote-image-protocols))))
                   (if (and markdown-display-remote-images valid-url)
                       (setq file (markdown--get-remote-image download-file))
                     (when (not valid-url)
@@ -3517,27 +3584,16 @@ or \\[markdown-toggle-inline-images]."
                                 :max-width (car markdown-max-image-size)
                                 :max-height (cdr markdown-max-image-size)))
                               (markdown-max-image-size
-                               (create-image abspath nil nil
-                                             :max-width (car markdown-max-image-size)
-                                             :max-height (cdr markdown-max-image-size)))
+                               (create-image
+                                abspath nil nil
+                                :max-width (car markdown-max-image-size)
+                                :max-height (cdr markdown-max-image-size)))
                               (t (create-image abspath)))))
                   (when image
                     (let ((ov (make-overlay start end)))
                       (overlay-put ov 'display image)
                       (overlay-put ov 'face 'default)
                       (push ov markdown-inline-image-overlays))))))))))))
-#+end_src
-
-** org-transclusion
-
-Add a virtual piece of other org file to current one.
-
-#+begin_src emacs-lisp
-(use-package org-transclusion
-  :after org
-  :custom (org-transclusion-include-first-section nil)
-  :hook (org-mode . org-transclusion-add-all)
-  :bind ("<f12>" . org-transclusion-add-all))
 #+end_src
 
 * Task Management
