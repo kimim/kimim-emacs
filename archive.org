@@ -1,3 +1,25 @@
+* Orgmode
+** org-superstar
+#+begin_src emacs-lisp
+(use-package org-superstar
+  :ensure t
+  :hook
+  ((org-mode . org-superstar-mode)
+   (org-mode . (lambda ()
+                 "Beautify Org Symbols"
+                 (push '(":category:" . "▲") prettify-symbols-alist)
+                 (push '("[X]" . "☑" ) prettify-symbols-alist)
+                 (push '("[ ]" . "☐" ) prettify-symbols-alist)
+                 (push '("#+begin_src" . "«" ) prettify-symbols-alist)
+                 (push '("#+end_src" . "»" ) prettify-symbols-alist)
+                 (prettify-symbols-mode))))
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list
+   '(?⦿ ?○ ?● ?◌))
+  (org-superstar-item-bullet-alist
+   '((?* . ?●) (?+ . ?♦) (?- . ?▬))))
+#+end_src
 
 * Frame
 Before an emacsclient first connect to daemon, the daemon is working
@@ -20,6 +42,16 @@ new frame to the front and apply the gui related settings.
 #+end_src
 
 * Edit
+** swiper replaces isearch
+
+#+begin_src emacs-lisp
+(use-package swiper
+  :custom
+  (swiper-action-recenter t)
+  :bind
+  ("C-s" . swiper)
+  ("M-s ." . swiper-thing-at-point))
+#+end_src
 
 ** visual-fill-column
 

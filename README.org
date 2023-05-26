@@ -1019,17 +1019,6 @@ and jump to any window by triggering ~ace-window~ (~C-x m w~).
 #+end_src
 
 * Search and Finding
-** swiper replaces isearch
-
-#+begin_src emacs-lisp
-(use-package swiper
-  :custom
-  (swiper-action-recenter t)
-  :bind
-  ("C-s" . swiper)
-  ("M-s ." . swiper-thing-at-point))
-#+end_src
-
 ** imenu & imenu-anywhere
 
 =imenu= is used to navigate the function definitions in current buffer.
@@ -2693,27 +2682,40 @@ support more functions from =org-ref=:
   :hook (org-mode . org-appear-mode))
 #+end_src
 
-** org-superstar
+** org-modern
 
 #+begin_src emacs-lisp
-(use-package org-superstar
-  :ensure t
-  :hook
-  ((org-mode . org-superstar-mode)
-   (org-mode . (lambda ()
-                 "Beautify Org Symbols"
-                 (push '(":category:" . "▲") prettify-symbols-alist)
-                 (push '("[X]" . "☑" ) prettify-symbols-alist)
-                 (push '("[ ]" . "☐" ) prettify-symbols-alist)
-                 (push '("#+begin_src" . "«" ) prettify-symbols-alist)
-                 (push '("#+end_src" . "»" ) prettify-symbols-alist)
-                 (prettify-symbols-mode))))
+(use-package org-modern
   :custom
-  (org-superstar-remove-leading-stars t)
-  (org-superstar-headline-bullets-list
-   '(?⦿ ?○ ?● ?◌))
-  (org-superstar-item-bullet-alist
-   '((?* . ?●) (?+ . ?♦) (?- . ?▬))))
+  (org-modern-star '("⦿" "○" "●" "◌" "⯈"))
+  (org-modern-list
+   '((?- . "▬")
+     (?+ . "♦")
+     (?* . "●")))
+  :hook
+  (org-mode . (lambda ()
+                "Beautify Org Symbols"
+                (push '(":category:" . ":▲:") prettify-symbols-alist)
+                (prettify-symbols-mode)
+                (global-org-modern-mode)))
+  :config
+  (setq
+   org-modern-timestamp nil
+   org-modern-tag nil
+   org-modern-todo nil
+   org-modern-block-name t)
+  (advice-add
+   'org-modern--make-font-lock-keywords
+   :filter-return
+   (lambda (result)
+     (append
+      result
+      (when-let ((bullet (alist-get ?- org-modern-list)))
+        `(("^\\(-\\)[ \t]" 1 '(face nil display ,bullet))))
+      (when-let ((bullet (alist-get ?+ org-modern-list)))
+        `(("^[ ]\\{2\\}\\(-\\)[ \t]" 1 '(face nil display ,bullet))))
+      (when-let ((bullet (alist-get ?* org-modern-list)))
+        `(("^[ ]\\{4\\}\\(-\\)[ \t]" 1 '(face nil display ,bullet))))))))
 #+end_src
 
 ** org-indent
@@ -3461,7 +3463,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
   :mode ("\\.\\(?:md\\|markdown\\)\\'" . markdown-mode)
   :functions (s-starts-with?
               markdown--get-remote-image)
-  :custom ((markdown-hide-urls nil)
+  :custom ((markdown-hide-urls t)
            (markdown-command "pandoc")
            (markdown-max-image-size
             `(,(* (+ fill-column 10)
