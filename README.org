@@ -1502,16 +1502,18 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
 (use-package company
   :defer 10
   :functions (company-abort)
-  :bind (:map company-active-map
-              ("C-n" . company--select-next-and-warn)
-              ("C-p" . company--select-previous-and-warn)
-              ("C-h" . delete-backward-char)
-              ("C-d" . delete-forward-char)
-              ("SPC" . (lambda ()
-                         (interactive)
-                         (company-abort)
-                         (insert-char ?\x20))))
-  :diminish company-mode
+  :bind
+  (("C-x m c" . company-mode)
+   :map company-active-map
+   ("C-n" . company--select-next-and-warn)
+   ("C-p" . company--select-previous-and-warn)
+   ("C-h" . delete-backward-char)
+   ("C-d" . delete-forward-char)
+   ("SPC" . (lambda ()
+              (interactive)
+              (company-abort)
+              (insert-char ?\x20))))
+:diminish company-mode
   :commands (global-company-mode)
   :custom
   (company-idle-delay 0)
@@ -2004,7 +2006,9 @@ in Clojure.
   :custom (org-babel-clojure-backend 'cider)
   :config
   (add-to-list 'org-src-lang-modes '("clojure" . clojure))
-  (add-to-list 'org-babel-load-languages '(clojure . t)))
+  (add-to-list 'org-src-lang-modes '("clojurescript" . clojure))
+  (add-to-list 'org-babel-load-languages '(clojure . t))
+  (add-to-list 'org-babel-load-languages '(clojurescript . t)))
 #+end_src
 
 *** clj-refactor
@@ -2682,6 +2686,58 @@ support more functions from =org-ref=:
   :hook (org-mode . org-appear-mode))
 #+end_src
 
+** org-indent
+
+#+begin_src emacs-lisp
+(use-package org-indent
+  :ensure nil
+  :hook (org-mode . org-indent-mode)
+  :diminish org-indent-mode
+  :config
+  (defun org-indent--compute-prefixes ()
+    "Compute prefix strings for regular text and headlines."
+    (setq org-indent--heading-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (setq org-indent--inlinetask-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (setq org-indent--text-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (dotimes (n org-indent--deepest-level)
+      (let ((indentation (if (<= n 1) 0
+                           (* (1- org-indent-indentation-per-level)
+                              (1- n)))))
+        ;; Headlines line prefixes.
+        (let ((heading-prefix (make-string indentation ?*)))
+          (aset org-indent--heading-line-prefixes
+                n
+                (org-add-props heading-prefix nil 'face 'org-indent))
+          ;; Inline tasks line prefixes
+          (aset org-indent--inlinetask-line-prefixes
+                n
+                (cond ((<= n 1) "")
+                      ((bound-and-true-p org-inlinetask-show-first-star)
+                       (concat org-indent-inlinetask-first-star
+                               (substring heading-prefix 1)))
+                      (t (org-add-props heading-prefix nil
+                           'face 'org-indent)))))
+        ;; Text line prefixes.
+        ;; remove one prefix char in indent
+        (let ((remove-space (if (> n 0)
+                                (- n 1)
+                              0)))
+          (aset org-indent--text-line-prefixes
+                n
+                (org-add-props
+                    (concat
+                     (make-string
+                      (- (+ n indentation) remove-space) ?\s)
+                     (and (> n 0)
+                          (char-to-string org-indent-boundary-char)))
+                    nil 'face 'org-indent)))))))
+#+end_src
+
+
+
 ** org-modern
 
 #+begin_src emacs-lisp
@@ -2692,18 +2748,24 @@ support more functions from =org-ref=:
    '((?- . "▬")
      (?+ . "♦")
      (?* . "●")))
+  (org-modern-checkbox
+   '((?X . "☑")
+     (?- . #("☐–" 0 2 (composition ((2)))))
+     (?\s . "☐")))
+  (org-modern-timestamp nil)
+  (org-modern-tag nil)
+  (org-modern-todo nil)
+  (org-modern-block-name nil)
+  (org-modern-block-fringe nil)
   :hook
   (org-mode . (lambda ()
                 "Beautify Org Symbols"
                 (push '(":category:" . ":▲:") prettify-symbols-alist)
+                (push '("#+begin_src" . "«" ) prettify-symbols-alist)
+                (push '("#+end_src" . "»" ) prettify-symbols-alist)
                 (prettify-symbols-mode)
-                (global-org-modern-mode)))
+                (org-modern-mode)))
   :config
-  (setq
-   org-modern-timestamp nil
-   org-modern-tag nil
-   org-modern-todo nil
-   org-modern-block-name t)
   (advice-add
    'org-modern--make-font-lock-keywords
    :filter-return
@@ -2716,52 +2778,6 @@ support more functions from =org-ref=:
         `(("^[ ]\\{2\\}\\(-\\)[ \t]" 1 '(face nil display ,bullet))))
       (when-let ((bullet (alist-get ?* org-modern-list)))
         `(("^[ ]\\{4\\}\\(-\\)[ \t]" 1 '(face nil display ,bullet))))))))
-#+end_src
-
-** org-indent
-
-#+begin_src emacs-lisp
-(use-package org-indent
-  :ensure nil
-  :hook (org-mode . org-indent-mode)
-  :diminish org-indent-mode
-  :config
-  (defun org-indent--compute-prefixes ()
-    "Compute prefix strings for regular text and headlines."
-    (setq org-indent--heading-line-prefixes
-	      (make-vector org-indent--deepest-level nil))
-    (setq org-indent--inlinetask-line-prefixes
-	      (make-vector org-indent--deepest-level nil))
-    (setq org-indent--text-line-prefixes
-	      (make-vector org-indent--deepest-level nil))
-    (dotimes (n org-indent--deepest-level)
-      (let ((indentation (if (<= n 1) 0
-			               (* (1- org-indent-indentation-per-level)
-			                  (1- n)))))
-        ;; Headlines line prefixes.
-        (let ((heading-prefix (make-string indentation ?*)))
-	      (aset org-indent--heading-line-prefixes
-	            n
-	            (org-add-props heading-prefix nil 'face 'org-indent))
-	      ;; Inline tasks line prefixes
-	      (aset org-indent--inlinetask-line-prefixes
-	            n
-	            (cond ((<= n 1) "")
-		              ((bound-and-true-p org-inlinetask-show-first-star)
-		               (concat org-indent-inlinetask-first-star
-			                   (substring heading-prefix 1)))
-		              (t (org-add-props heading-prefix nil 'face 'org-indent)))))
-        ;; Text line prefixes.
-        (let ((remove-space (if (> n 0)
-                                (- n 1)
-                              0)))
-          (aset org-indent--text-line-prefixes
-	            n
-	            (org-add-props
-		            (concat (make-string (- (+ n indentation) remove-space) ?\s)
-			                (and (> n 0)
-			                     (char-to-string org-indent-boundary-char)))
-		            nil 'face 'org-indent)))))))
 #+end_src
 
 ** orgalist
@@ -3029,6 +3045,8 @@ sudo apt install python3-pygments
                '(plantuml "text"))
   (add-to-list 'org-latex-minted-langs
                '(ditaa "text"))
+  (add-to-list 'org-latex-minted-langs
+               '(bb "clojure"))
   (add-to-list 'org-latex-minted-langs
                '(conf "text"))
   (add-to-list 'org-latex-minted-langs
