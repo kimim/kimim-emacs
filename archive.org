@@ -1,4 +1,50 @@
 * Orgmode
+** org-indent
+If ~org-modern-star~ is not enabled, not workaround is required for
+org-indent:
+
+#+begin_src emacs-lisp
+  (defun org-indent--compute-prefixes ()
+    "Compute prefix strings for regular text and headlines."
+    (setq org-indent--heading-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (setq org-indent--inlinetask-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (setq org-indent--text-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (dotimes (n org-indent--deepest-level)
+      (let ((indentation (if (<= n 1) 0
+                           (* (1- org-indent-indentation-per-level)
+                              (1- n)))))
+        ;; Headlines line prefixes.
+        (let ((heading-prefix (make-string indentation ?*)))
+          (aset org-indent--heading-line-prefixes
+                n
+                (org-add-props heading-prefix nil 'face 'org-indent))
+          ;; Inline tasks line prefixes
+          (aset org-indent--inlinetask-line-prefixes
+                n
+                (cond ((<= n 1) "")
+                      ((bound-and-true-p org-inlinetask-show-first-star)
+                       (concat org-indent-inlinetask-first-star
+                               (substring heading-prefix 1)))
+                      (t (org-add-props heading-prefix nil
+                           'face 'org-indent)))))
+        ;; Text line prefixes.
+        ;; remove one prefix char in indent
+        (let ((remove-space (if (> n 0)
+                                (- n 1)
+                              0)))
+          (aset org-indent--text-line-prefixes
+                n
+                (org-add-props
+                    (concat
+                     (make-string
+                      (- (+ n indentation) remove-space) ?\s)
+                     (and (> n 0)
+                          (char-to-string org-indent-boundary-char)))
+                    nil 'face 'org-indent))))))
+#+end_src
 ** org-superstar
 #+begin_src emacs-lisp
 (use-package org-superstar

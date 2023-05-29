@@ -474,9 +474,9 @@ moralische Gesetz in mir.
   :config
   ;; use smaller symbols, the original one expand the modeline
   (setq celestial-mode-line-sunrise-sunset-alist
-        '((sunrise . "○ꜛ") (sunset . "○ꜜ")))
+        '((sunrise . "☼ꜛ") (sunset . "☼ꜜ")))
   (setq celestial-mode-line-phase-representation-alist
-        '((0 . "○") (1 . ">") (2 . "●") (3 . "<")))
+        '((0 . "●") (1 . ">") (2 . "○") (3 . "<")))
   (setq global-mode-string '("" celestial-mode-line-string
                              "  " display-time-string ""))
   (celestial-mode-line-start-timer))
@@ -697,16 +697,6 @@ A translator extension written by [[https://condy0919.github.io][Youmu]].
 
 #+begin_src emacs-lisp
 (setq inhibit-eol-conversion nil)
-;; fill-column is a buffer-local variable
-;; use setq-default to change it globally
-;; (if window-system
-;;     (setq-default fill-column
-;;                   (min 70
-;;                        (ceiling
-;;                         (/ (x-display-pixel-width)
-;;                            (frame-char-width)
-;;                            2.3))))
-;;   (setq-default fill-column 70))
 (setq-default fill-column 70)
 (use-package drag-stuff
   :diminish drag-stuff-mode
@@ -2692,58 +2682,17 @@ support more functions from =org-ref=:
 (use-package org-indent
   :ensure nil
   :hook (org-mode . org-indent-mode)
-  :diminish org-indent-mode
-  :config
-  (defun org-indent--compute-prefixes ()
-    "Compute prefix strings for regular text and headlines."
-    (setq org-indent--heading-line-prefixes
-          (make-vector org-indent--deepest-level nil))
-    (setq org-indent--inlinetask-line-prefixes
-          (make-vector org-indent--deepest-level nil))
-    (setq org-indent--text-line-prefixes
-          (make-vector org-indent--deepest-level nil))
-    (dotimes (n org-indent--deepest-level)
-      (let ((indentation (if (<= n 1) 0
-                           (* (1- org-indent-indentation-per-level)
-                              (1- n)))))
-        ;; Headlines line prefixes.
-        (let ((heading-prefix (make-string indentation ?*)))
-          (aset org-indent--heading-line-prefixes
-                n
-                (org-add-props heading-prefix nil 'face 'org-indent))
-          ;; Inline tasks line prefixes
-          (aset org-indent--inlinetask-line-prefixes
-                n
-                (cond ((<= n 1) "")
-                      ((bound-and-true-p org-inlinetask-show-first-star)
-                       (concat org-indent-inlinetask-first-star
-                               (substring heading-prefix 1)))
-                      (t (org-add-props heading-prefix nil
-                           'face 'org-indent)))))
-        ;; Text line prefixes.
-        ;; remove one prefix char in indent
-        (let ((remove-space (if (> n 0)
-                                (- n 1)
-                              0)))
-          (aset org-indent--text-line-prefixes
-                n
-                (org-add-props
-                    (concat
-                     (make-string
-                      (- (+ n indentation) remove-space) ?\s)
-                     (and (> n 0)
-                          (char-to-string org-indent-boundary-char)))
-                    nil 'face 'org-indent)))))))
+  :diminish org-indent-mode)
 #+end_src
-
-
 
 ** org-modern
 
 #+begin_src emacs-lisp
 (use-package org-modern
   :custom
-  (org-modern-star '("⦿" "○" "●" "◌" "⯈"))
+  ;; https://github.com/minad/org-modern/issues/134
+  ;;(org-modern-star '("⦿" "○" "●" "◌" "⯈"))
+  (org-modern-star nil)
   (org-modern-list
    '((?- . "▬")
      (?+ . "♦")
@@ -2757,6 +2706,7 @@ support more functions from =org-ref=:
   (org-modern-todo nil)
   (org-modern-block-name nil)
   (org-modern-block-fringe nil)
+  (org-modern-keyword nil)
   :hook
   (org-mode . (lambda ()
                 "Beautify Org Symbols"
@@ -3443,8 +3393,9 @@ sqlite3 is shipped in macOS by default.
 
 ** org-roam-bibtex
 
-It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~ used in
-~org-ref~ is calling ~orb-org-ref-edit-note~ to edit ~org-roam~ note.
+It is useful to create reference notes with ~org-roam-bibtex~. ~C-c C-z~
+used in ~org-ref~ is calling ~orb-org-ref-edit-note~ to edit ~org-roam~
+note.
 
 #+begin_src emacs-lisp
 (use-package org-roam-bibtex
