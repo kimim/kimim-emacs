@@ -1259,6 +1259,7 @@ binding to ~ace-window~. Unbind ~M-o~ from ~ibuffer-mode-map~.
 
 #+begin_src emacs-lisp
 (use-package ibuffer
+  :defines ibuffer-mode-map
   :bind (("C-x C-b" . ibuffer-other-window)
          :map ibuffer-mode-map
          ("<right>" . ibuffer-visit-buffer))
@@ -1279,9 +1280,12 @@ binding to ~ace-window~. Unbind ~M-o~ from ~ibuffer-mode-map~.
   (define-ibuffer-column size-h
     (:name "Size" :inline t)
     (cond
-     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
-     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+     ((> (buffer-size) 1000000)
+      (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+     ((> (buffer-size) 100000)
+      (format "%7.0fk" (/ (buffer-size) 1000.0)))
+     ((> (buffer-size) 1000)
+      (format "%7.1fk" (/ (buffer-size) 1000.0)))
      (t (format "%8d" (buffer-size))))))
 #+end_src
 
@@ -1996,9 +2000,7 @@ in Clojure.
   :custom (org-babel-clojure-backend 'cider)
   :config
   (add-to-list 'org-src-lang-modes '("clojure" . clojure))
-  (add-to-list 'org-src-lang-modes '("clojurescript" . clojure))
-  (add-to-list 'org-babel-load-languages '(clojure . t))
-  (add-to-list 'org-babel-load-languages '(clojurescript . t)))
+  (add-to-list 'org-babel-load-languages '(clojure . t)))
 #+end_src
 
 *** clj-refactor
@@ -2323,6 +2325,7 @@ emacs theme color.
 
 #+begin_src emacs-lisp
 (use-package pdf-tools
+  :diminish pdf-view-themed-minor-mode
   :functions (pdf-view-refresh-themed-buffer)
   :defines (pdf-view-themed-minor-mode)
   :mode ("\\.pdf\\'" . pdf-view-mode)
@@ -2678,11 +2681,33 @@ support more functions from =org-ref=:
 
 ** org-indent
 
+Add advice to ~org-indent--compute-prefixes~ to remove needless indent
+spaces before plain text line.
+
 #+begin_src emacs-lisp
 (use-package org-indent
   :ensure nil
+  :custom (org-indent-mode-turns-on-hiding-stars nil)
   :hook (org-mode . org-indent-mode)
-  :diminish org-indent-mode)
+  :diminish org-indent-mode
+  :config
+  (advice-add 'org-indent--compute-prefixes :after
+              #'kimim/org-indent-adjust-indent)
+
+  (defun kimim/org-indent-adjust-indent ()
+    (dotimes (n org-indent--deepest-level)
+      (let ((indentation (if (<= n 1) 0
+                           (* (1- org-indent-indentation-per-level)
+                              (1- n)))))
+        ;; Text line prefixes.
+        (aset org-indent--text-line-prefixes
+              n
+              (org-add-props
+                  (concat (make-string (1+ indentation) ?\s)
+                          (and (> n 0)
+                               (char-to-string
+                                org-indent-boundary-char)))
+                  nil 'face 'org-indent))))))
 #+end_src
 
 ** org-modern
@@ -2691,8 +2716,7 @@ support more functions from =org-ref=:
 (use-package org-modern
   :custom
   ;; https://github.com/minad/org-modern/issues/134
-  ;;(org-modern-star '("⦿" "○" "●" "◌" "⯈"))
-  (org-modern-star nil)
+  (org-modern-star '("○" "●" "▼"))
   (org-modern-list
    '((?- . "▬")
      (?+ . "♦")
