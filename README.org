@@ -479,6 +479,34 @@ moralische Gesetz in mir.
         '((0 . "●") (1 . ">") (2 . "○") (3 . "<")))
   (setq global-mode-string '("" celestial-mode-line-string
                              "  " display-time-string ""))
+
+  (defun kimim/celestial-mode-line--sunrise-sunset-string (time)
+    (cl-destructuring-bind (sun-time location)
+        time
+      (let* ((h (truncate sun-time))
+             (m (truncate (* 60 (- sun-time h)))))
+        (concat (assoc-default
+                 (if (< h 12)
+                     'sunrise
+                   'sunset)
+                 celestial-mode-line-sunrise-sunset-alist
+                 'equal celestial-mode-line-polar-representation)
+                (format "%d:%02d" h m)))))
+
+  (defun kimim/celestial-mode-line--sun-description (orig-fun &rest args)
+    (concat
+     (kimim/celestial-mode-line--sunrise-sunset-string
+      (car (solar-sunrise-sunset (car args))))
+     " "
+     (kimim/celestial-mode-line--sunrise-sunset-string
+      (cadr (solar-sunrise-sunset (car args))))
+     ", "
+     (apply orig-fun args)))
+
+    ;; add sun rise/set info to modeline text description
+  (advice-add 'celestial-mode-line--text-description
+              :around
+              #'kimim/celestial-mode-line--sun-description)
   (celestial-mode-line-start-timer))
 #+end_src
 
