@@ -2637,6 +2637,11 @@ support more functions from =org-ref=:
          (nov-mode . (lambda ()
                        (visual-line-mode)
                        (setq line-spacing 0.5))))
+  :bind
+  (:map
+   nov-mode-map
+   ("<home>" . beginning-of-line)
+   ("<end>" . end-of-line))
   :config
   (require 'olivetti)
   (setq nov-text-width (- olivetti-body-width 2)))
