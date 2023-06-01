@@ -2696,14 +2696,13 @@ spaces before plain text line.
 
   (defun kimim/org-indent-adjust-indent ()
     (dotimes (n org-indent--deepest-level)
-      (let ((indentation (if (<= n 1) 0
-                           (* (1- org-indent-indentation-per-level)
-                              (1- n)))))
+      (let ((indentation (* (1- org-indent-indentation-per-level)
+                            n)))
         ;; Text line prefixes.
         (aset org-indent--text-line-prefixes
               n
               (org-add-props
-                  (concat (make-string (1+ indentation) ?\s)
+                  (concat (make-string indentation ?\s)
                           (and (> n 0)
                                (char-to-string
                                 org-indent-boundary-char)))
