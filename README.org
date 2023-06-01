@@ -3460,6 +3460,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
            (markdown-max-image-size
             `(,(* (+ fill-column 10)
                   (frame-char-width)))))
+  :hook (markdown-mode . markdown-toggle-inline-images)
   :bind(:map
         markdown-mode-map
         ("C-<tab>" . outline-hide-entry)
