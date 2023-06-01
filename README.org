@@ -822,7 +822,9 @@ terminal. Because the line highlight will cause the terminal blinking.
 
 #+begin_src emacs-lisp
 (use-package ispell
-  :custom (ispell-program-name "hunspell")
+  :custom
+  (ispell-program-name "hunspell")
+  (ispell-silently-savep t)
   :config
   (cond ((eq system-type 'windows-nt)
          (setq ispell-alternate-dictionary "~/.emacs.d/dict/words.txt"))))
