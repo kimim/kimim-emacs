@@ -698,6 +698,7 @@ A translator extension written by [[https://condy0919.github.io][Youmu]].
 #+begin_src emacs-lisp
 (setq inhibit-eol-conversion nil)
 (setq-default fill-column 70)
+
 (use-package drag-stuff
   :diminish drag-stuff-mode
   :config
@@ -725,6 +726,7 @@ A translator extension written by [[https://condy0919.github.io][Youmu]].
 (setq auto-save-list-file-prefix "~/temp/auto-saves-")
 (setq auto-save-file-name-transforms `((".*"  , "~/temp/")))
 (setq create-lockfiles nil)
+
 (use-package time-stamp
   :config
   (setq time-stamp-active t)
@@ -738,6 +740,7 @@ A translator extension written by [[https://condy0919.github.io][Youmu]].
   (apply orig-fun arg))
 
 (advice-add 'save-buffer :around #'kimim/save-buffer-advice)
+(setq save-silently t)
 
 (diminish 'visual-line-mode)
 (add-hook 'text-mode-hook
@@ -3503,7 +3506,7 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
                (add-text-properties (match-beginning 2) (match-end 2)
                                     `(display ,display-string)))))))
        t)))
-  
+
   ;; to support azure markdown format with =WxH after file link
   (setq markdown-regex-link-inline
         "\\(?1:!\\)?\\(?2:\\[\\)\\(?3:\\^?\\(?:\\\\\\]\\|\
