@@ -2734,6 +2734,11 @@ spaces before plain text line.
   (org-mode . (lambda ()
                 "Beautify Org Symbols"
                 (push '(":category:" . ":▲:") prettify-symbols-alist)
+                (push '(":PROPERTIES:" . "🗅") prettify-symbols-alist)
+                (push '(":END:" . "∎") prettify-symbols-alist)
+                (push '("#+TITLE:" . "🗎") prettify-symbols-alist)
+                (push '("#+SUBTITLE:" . "⮱") prettify-symbols-alist)
+                (push '(":SETTINGS:" . "⌘") prettify-symbols-alist)
                 (push '("#+begin_src" . "«" ) prettify-symbols-alist)
                 (push '("#+end_src" . "»" ) prettify-symbols-alist)
                 (prettify-symbols-mode)
