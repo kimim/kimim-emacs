@@ -16,3 +16,6 @@
 [submodule "site-lisp/nine-grid"]
 	path = site-lisp/nine-grid
 	url = git@github.com:kimim/nine-grid.git
+[submodule "site-lisp/wraplish"]
+	path = site-lisp/wraplish
+	url = git@github.com:manateelazycat/wraplish.git

@@ -894,6 +894,19 @@ Check spell on the fly.
   (setq cns-debug nil))
 #+end_src
 
+** wraplish
+
+Automatically add space between Chinese and English, and more.
+
+#+begin_src emacs-lisp
+(use-package wraplish
+  :after text-mode
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                "site-lisp/wraplish"))
+  :hook (text-mode . wraplish-mode))
+#+end_src
+
 * Controlling
 ** Window and Frame
 
