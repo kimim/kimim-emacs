@@ -510,6 +510,76 @@ moralische Gesetz in mir.
   (celestial-mode-line-start-timer))
 #+end_src
 
+** awesome tray
+
+~awesome-tray~ adds an overlay to minibuffer and hides mode line to save
+window space.
+
+#+begin_src emacs-lisp
+(use-package awesome-tray
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                "site-lisp/awesome-tray"))
+  :commands (awesome-tray-mode)
+  :custom
+  (awesome-tray-date-format "%-m-%-e %H:%M")
+  (awesome-tray-active-modules '("org-pomodoro" "changed" "git"
+                                 "location" "belong" "celestial"
+                                 "date"))
+  (awesome-tray-mode-line-default-height 0.85)
+  (awesome-tray-location-info-top "↑")
+  (awesome-tray-location-info-bottom "↓")
+
+  :custom-face
+  (awesome-tray-grey-face
+   ((((background light)) :foreground "dim grey" :bold nil)
+    (t :foreground "dark grey" :bold nil)))
+  (awesome-tray-module-location-face
+   ((t :inherit awesome-tray-grey-face)))
+  (awesome-tray-module-git-face
+   ((t :inherit awesome-tray-grey-face)))
+  (org-mode-line-clock
+   ((t :inherit unspecified)))
+  (org-mode-line-clock-overrun
+   ((t :inherit unspecified)))
+
+  :config
+  (advice-add
+   'awesome-tray-enable
+   :before
+   (lambda ()
+     (setq awesome-tray-mode-line-colors nil)
+     (setq awesome-tray-mode-line-active-color
+           (face-attribute 'mode-line :background))
+     (setq awesome-tray-mode-line-inactive-color
+           (face-attribute 'mode-line-inactive :background))))
+
+  (defun kimim/awesome-tray-module-buffer-changed-info ()
+    (if (and (buffer-modified-p)
+             (not (eq buffer-file-name nil)))
+        "✶"))
+  (add-to-list
+   'awesome-tray-module-alist
+   '("changed" . (kimim/awesome-tray-module-buffer-changed-info
+                  awesome-tray-grey-face)))
+
+  (setq kimim/awesome-tray-original-modules nil)
+  (defun kimim/awesome-tray-minimalistic ()
+    (interactive)
+    (if kimim/awesome-tray-original-modules
+        (progn
+          (message "restore awesome tray modules")
+          (setq awesome-tray-active-modules
+                kimim/awesome-tray-original-modules)
+          (setq kimim/awesome-tray-original-modules nil))
+      (progn
+        (message "awesome tray minimalistic")
+        (setq kimim/awesome-tray-original-modules
+              awesome-tray-active-modules)
+        (setq awesome-tray-active-modules
+              '("changed" "location" "date"))))))
+#+end_src
+
 ** Color Theme
 
 Use =rainbow-mode= to edit colorful color string and symbol. In the

@@ -19,3 +19,6 @@
 [submodule "site-lisp/wraplish"]
 	path = site-lisp/wraplish
 	url = git@github.com:manateelazycat/wraplish.git
+[submodule "site-lisp/awesome-tray"]
+	path = site-lisp/awesome-tray
+	url = git@github.com:manateelazycat/awesome-tray.git
