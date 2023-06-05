@@ -495,14 +495,6 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
             (split-string file-list "\n" t)))))
 
 
-(defun kimim/toggle-path-header ()
-  "Toggle display path header"
-  (interactive)
-  (if header-line-format
-      (path-header-line-off)
-    (path-header-line-on)))
-
-
 (defvar sumantrapdf-config
   (concat kimim/path-kimikit "sumatrapdf/SumatraPDF-settings.txt"))
 

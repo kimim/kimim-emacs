@@ -580,6 +580,23 @@ window space.
               '("changed" "location" "date"))))))
 #+end_src
 
+** path in headerline
+
+When minimalistic emacs is on with awesome tray, we sometimes need to
+lookup buffer file name with header line.
+
+#+begin_src emacs-lisp
+(use-package path-headerline-mode
+  :bind ("C-x /" . kimim/toggle-path-header)
+  :config
+  (defun kimim/toggle-path-header ()
+    "Toggle display path header"
+    (interactive)
+    (if header-line-format
+        (path-header-line-off)
+      (path-header-line-on))))
+#+end_src
+
 ** Color Theme
 
 Use =rainbow-mode= to edit colorful color string and symbol. In the
@@ -4339,7 +4356,6 @@ from system PATH, so you should set these to system PATH.
    ("C-x  ‘" . hippie-expand)
    ("C-x  ’" . hippie-expand)
    ("C-x M-s" . eshell)
-   ("C-x /" . kimim/toggle-path-header)
    ("C-x m 0" . kimim/frame-and-font)
    ("C-x m -" . kimim/frame-and-font-mini)
    ("C-x m SPC" . kimim/shrink-down)
