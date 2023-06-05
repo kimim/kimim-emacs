@@ -1044,6 +1044,51 @@ and jump to any window by triggering ~ace-window~ (~C-x m w~).
 #+end_src
 
 * Search and Finding
+** isearch in minibuffer
+
+Emacs default ~isearch~ does not allow key binding in minibuffer,
+~isearch-mb~ enhances at this aspect.
+
+#+begin_src emacs-lisp
+(use-package isearch-mb
+  :defer 1
+  :bind
+  (:map
+   isearch-mb-minibuffer-map
+   ("C-l" . recenter-other-window)
+   ("C-n" . isearch-repeat-forward)
+   ("C-p" . isearch-repeat-backward)
+   ("C-." . (lambda () (interactive)
+              (isearch-exit)
+              (sdcv-search-pointer+))))
+  :custom
+  (isearch-repeat-on-direction-change t)
+  ;; Show match count next to the minibuffer prompt
+  (isearch-lazy-count t)
+  ;; Don't be stingy with history; default is to keep just 16 entries
+  (search-ring-max 200)
+  (regexp-search-ring-max 200)
+  :config
+  (defun isearch-mb--update-prompt (&rest _)
+    "Update the minibuffer prompt according to search status."
+    (when isearch-mb--prompt-overlay
+      (let ((count (isearch-lazy-count-format))
+            (len (or (overlay-get isearch-mb--prompt-overlay
+                                  'isearch-mb--len)
+                     0)))
+        (overlay-put isearch-mb--prompt-overlay
+                     'isearch-mb--len (max len (length count)))
+        (overlay-put isearch-mb--prompt-overlay
+                     'before-string
+                     (concat count ;; Count is padded so that it only grows.
+                             (make-string (max 0 (- len (length count))) ?\ )
+                             (capitalize
+                              (or
+                               (isearch--describe-regexp-mode
+                                isearch-regexp-function)
+                               "")))))))
+  (isearch-mb-mode))
+#+end_src
 ** imenu & imenu-anywhere
 
 =imenu= is used to navigate the function definitions in current buffer.
