@@ -959,7 +959,19 @@ specified functions.
   (ispell-silently-savep t)
   :config
   (cond ((eq system-type 'windows-nt)
-         (setq ispell-alternate-dictionary "~/.emacs.d/dict/words.txt"))))
+         (setq ispell-alternate-dictionary
+               "~/.emacs.d/dict/words.txt")))
+  ;; remove minibuffer message "Starting look.exe process ...",
+  ;; which is annoying
+  (advice-add
+   'ispell-lookup-words
+   :around
+   (lambda (orig-fun &rest args)
+     (advice-add
+      'message :override (lambda (format-string &rest args) ""))
+     (let ((result (apply orig-fun args)))
+       (advice-remove 'message (lambda (format-string &rest args) ""))
+       result))))
 #+end_src
 
 ** flyspell
