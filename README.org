@@ -820,6 +820,66 @@ terminal. Because the line highlight will cause the terminal blinking.
   (global-hl-line-mode -1))
 #+end_src
 
+** pulsar
+
+Frequently, you may lose your point in multiple windows. ~pulsar~ can
+show a transient highlight line for you to find your point after
+specified functions.
+
+#+begin_src emacs-lisp
+(use-package pulsar
+  :defer 5
+  :custom
+  (pulsar-pulse t)
+  (pulsar-face 'pulsar-green)
+  (pulsar-highlight-face 'pulsar-yellow)
+  :config
+  (setq pulsar-pulse-functions
+        '(recenter-top-bottom
+          move-to-window-line-top-bottom
+          reposition-window
+          bookmark-jump
+          consult-bookmark
+          other-window
+          delete-window
+          delete-other-windows
+          forward-page
+          backward-page
+          scroll-up-command
+          scroll-down-command
+          windmove-right
+          windmove-left
+          windmove-up
+          windmove-down
+          windmove-swap-states-right
+          windmove-swap-states-left
+          windmove-swap-states-up
+          windmove-swap-states-down
+          org-next-visible-heading
+          org-previous-visible-heading
+          org-forward-heading-same-level
+          org-backward-heading-same-level
+          markdown-next-visible-heading
+          markdown-previous-visible-heading
+          markdown-forward-heading-same-level
+          markdown-backward-heading-same-level
+          markdown-outline-next-same-level
+          markdown-outline-previous-same-level
+          outline-backward-same-level
+          outline-forward-same-level
+          outline-next-visible-heading
+          outline-previous-visible-heading
+          outline-up-heading
+          ace-window))
+  (advice-add 'switch-to-buffer :after
+              (lambda (_ &optional _ _)
+                (pulsar-pulse-line)))
+  ;; turn on visual line, pulsar will high light only visual line, but
+  ;; this mode will mess up some buffer, such as org agenda.
+  ;; (global-visual-line-mode)
+  (pulsar-global-mode 1))
+#+end_src
+
 ** ispell
 
 #+begin_src emacs-lisp
