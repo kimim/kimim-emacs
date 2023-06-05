@@ -604,6 +604,8 @@ clearly in dark color theme.
 #+begin_src emacs-lisp
 (use-package info
   :commands (info)
+  :hook (Info-mode . (lambda ()
+                      (setq line-spacing 0.5)))
   :config
   (add-to-list 'Info-additional-directory-list
                (concat kimim/path-root "usr/share/info"))
