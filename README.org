@@ -1494,12 +1494,11 @@ binding to ~ace-window~. Unbind ~M-o~ from ~ibuffer-mode-map~.
 
 #+begin_src emacs-lisp
 (use-package ibuffer
-  :defines ibuffer-mode-map
   :bind (("C-x C-b" . ibuffer-other-window)
          :map ibuffer-mode-map
          ("<right>" . ibuffer-visit-buffer))
   :init
-  (unbind-key "M-o" ibuffer-mode-map)
+  (unbind-key "M-o" 'ibuffer-mode-map)
   :custom
   (ibuffer-formats
    '((mark modified read-only " "
@@ -2027,11 +2026,7 @@ UI helper for lsp-mode.
 
 #+begin_src emacs-lisp
 (use-package cmake-mode
-  :config
-  (delete '("CMakeLists\\.txt\\'" . cmake-mode) auto-mode-alist)
-  (setq auto-mode-alist
-        (append '(("CMakeLists\\.txt\\'" . cmake-mode))
-                auto-mode-alist)))
+  :mode ("CMakeLists\\.txt\\'" . cmake-mode))
 #+end_src
 
 * Programming Language
@@ -2069,6 +2064,7 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
          ("M->" . end-of-buffer))
   :hook ((c-mode c++-mode) . ggtags-mode)
   :config
+  (setq ggtags-mode-line-project-name nil)
   (setq ggtags-global-ignore-case t)
   (setq ggtags-sort-by-nearness t))
 #+end_src
