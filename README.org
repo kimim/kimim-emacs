@@ -538,11 +538,12 @@ window space.
    ((t :inherit awesome-tray-grey-face)))
   (awesome-tray-module-git-face
    ((t :inherit awesome-tray-grey-face)))
+  (awesome-tray-module-pdf-view-page-face
+   ((t :inherit awesome-tray-grey-face)))
   (org-mode-line-clock
    ((t :inherit unspecified)))
   (org-mode-line-clock-overrun
    ((t :inherit unspecified)))
-
   :config
   (advice-add
    'awesome-tray-enable
