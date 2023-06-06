@@ -2577,36 +2577,50 @@ emacs theme color.
   :functions (pdf-view-refresh-themed-buffer)
   :defines (pdf-view-themed-minor-mode)
   :mode ("\\.pdf\\'" . pdf-view-mode)
-  :hook (pdf-view-mode . pdf-view-themed-minor-mode)
+  :hook (pdf-view-mode
+         .
+         (lambda ()
+           (pdf-view-themed-minor-mode)
+           ;; show page if in pdf-view mode
+           (setq-local
+            awesome-tray-active-modules
+            (mapcar
+             (lambda (item)
+               (if (string= item "location")
+                   "pdf-view-page"
+                 item))
+             awesome-tray-active-modules))))
   :custom (pdf-view-display-size 3.85)
-  :bind (:map pdf-view-mode-map
-         ("C-s" . isearch-forward)
-         ("C-r" . isearch-backward)
-         ("C-o" . pdf-occur)
-         ("j" . (lambda ()
-                  "Next line within page"
-                  (interactive)
-                  (image-next-line 1)))
-         ("k" . (lambda ()
-                  "Previous line within page"
-                  (interactive)
-                  (image-next-line -1)))
-         ("n" . kimim/pdf-view-next-page)
-         ("p" . kimim/pdf-view-previous-page)
-         ("<home>". (lambda ()
-                      (interactive)
-                      (image-scroll-up -999)))
-         ("<end>". (lambda ()
-                      (interactive)
-                      (image-scroll-up 999)))
-         ("C-c C-z" . pdf-view-open-bibtex-notes)
-         ("/" . (lambda ()
-                  (interactive)
-                  (let ((filename (file-name-nondirectory
-                                   (buffer-file-name))))
-                    (kill-new
-                     filename)
-                    (message "Copied %s" filename)))))
+  :bind
+  (:map
+   pdf-view-mode-map
+   ("C-s" . isearch-forward)
+   ("C-r" . isearch-backward)
+   ("C-o" . pdf-occur)
+   ("j" . (lambda ()
+            "Next line within page"
+            (interactive)
+            (image-next-line 1)))
+   ("k" . (lambda ()
+            "Previous line within page"
+            (interactive)
+            (image-next-line -1)))
+   ("n" . kimim/pdf-view-next-page)
+   ("p" . kimim/pdf-view-previous-page)
+   ("<home>". (lambda ()
+                (interactive)
+                (image-scroll-up -999)))
+   ("<end>". (lambda ()
+               (interactive)
+               (image-scroll-up 999)))
+   ("C-c C-z" . pdf-view-open-bibtex-notes)
+   ("/" . (lambda ()
+            (interactive)
+            (let ((filename (file-name-nondirectory
+                             (buffer-file-name))))
+              (kill-new
+               filename)
+              (message "Copied %s" filename)))))
   :config
   (advice-add 'enable-theme :after
               (lambda (&rest _)
