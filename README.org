@@ -564,7 +564,7 @@ window space.
    '("changed" . (kimim/awesome-tray-module-buffer-changed-info
                   awesome-tray-grey-face)))
 
-  (setq kimim/awesome-tray-original-modules nil)
+  (defvar kimim/awesome-tray-original-modules nil)
   (defun kimim/awesome-tray-minimalistic ()
     (interactive)
     (if kimim/awesome-tray-original-modules
@@ -1515,8 +1515,6 @@ binding to ~ace-window~. Unbind ~M-o~ from ~ibuffer-mode-map~.
   :bind (("C-x C-b" . ibuffer-other-window)
          :map ibuffer-mode-map
          ("<right>" . ibuffer-visit-buffer))
-  :init
-  (unbind-key "M-o" 'ibuffer-mode-map)
   :custom
   (ibuffer-formats
    '((mark modified read-only " "
@@ -1528,6 +1526,7 @@ binding to ~ace-window~. Unbind ~M-o~ from ~ibuffer-mode-map~.
            " "
            filename-and-process)))
   :config
+  (unbind-key "M-o" 'ibuffer-mode-map)
   ;; Use human readable Size column instead of original one
   (define-ibuffer-column size-h
     (:name "Size" :inline t)
