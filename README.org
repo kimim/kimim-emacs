@@ -1258,10 +1258,8 @@ Emacs default ~isearch~ does not allow key binding in minibuffer,
 #+begin_src emacs-lisp
 (use-package imenu
   :functions kimim/imenu-default-goto-function-advice
-  :bind (("C-x i" . imenu)
-         ("C-c i" . lsp-ui-imenu))
+  :bind ("C-x i" . imenu)
   :config
-  (require 'lsp-ui)
   (advice-add 'imenu-default-goto-function
               :around
               #'kimim/imenu-default-goto-function-advice))
@@ -1848,83 +1846,6 @@ With ~yafolding-mode~, you can:
   (flycheck-global-modes '(not org-mode)))
 #+end_src
 
-** lsp mode
-
-~lsp-mode~ aims to provide IDE-like experience.
-
-If you got error: =Symbol’s function definition is void: -compose=, make sure
-that dash version higher than 2.18 is installed[fn:11].
-
-#+begin_src emacs-lisp
-(use-package dash
-  :ensure t)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package goto-addr
-  :config
-  ;;(setq goto-address-uri-schemes-ignored '("mailto:" "data:" "jar:"))
-  (setq goto-address-uri-schemes
-        (cons "C:" (seq-reduce (lambda (accum elt) (delete elt accum))
-                        goto-address-uri-schemes-ignored
-                        (copy-sequence thing-at-point-uri-schemes))))
-  (setq goto-address-url-regexp
-        (concat "\\<"
-                (regexp-opt goto-address-uri-schemes t)
-                thing-at-point-url-path-regexp)))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package treemacs)
-#+end_src
-
-~lsp-mode~ will add ~company-capf~ in front for ~company-backends~, then it
-will prevent my global ~company-backends~ settings. You can customize
-~lsp-completion-provider~ to ~:none~ prevent this.
-
-#+begin_src emacs-lisp
-(use-package lsp-mode
-  :after goto-addr
-  :commands lsp
-  :custom
-  (lsp-headerline-breadcrumb-icons-enable t)
-  (lsp-headerline-breadcrumb-enable t)
-  (lsp-modeline-code-action-fallback-icon "✶")
-  (lsp-completion-provider :none)
-  :bind (:map
-         lsp-mode-map
-         ("C-x l l" . lsp-ui-doc-glance)
-         ("C-." . lsp-find-definition)
-         ("C-," . xref-go-back)
-         ("C-x ." . kimim/lsp-find-definition-other-window)
-         ("C-x l t s" . lsp-treemacs-symbols))
-  :config
-  (require 'dash)
-  (require 'goto-addr)
-  (define-key lsp-mode-map (kbd "C-x l") lsp-command-map)
-  (add-hook 'xref-after-return-hook 'recenter)
-  (defun kimim/lsp-find-definition-other-window ()
-    (interactive)
-    (lsp-find-definition :display-action 'window)
-    (other-window 1)))
-#+end_src
-
-** lsp-ui
-
-UI helper for lsp-mode.
-
-#+begin_src emacs-lisp
-(use-package lsp-ui
-  :commands lsp-ui-mode
-  :custom
-  (lsp-ui-doc-text-scale-level -1)
-  (lsp-ui-doc-show-with-cursor nil)
-  (lsp-ui-doc-show-with-mouse nil)
-  (lsp-ui-sideline-show-code-actions t)
-  (lsp-ui-doc-alignment 'window)
-  (lsp-ui-doc-max-width 90))
-#+end_src
-
 ** eldoc
 
 #+begin_src emacs-lisp
@@ -1946,24 +1867,6 @@ UI helper for lsp-mode.
 #+begin_src emacs-lisp
 (use-package clang-format)
 #+End_src
-
-#+begin_src emacs-lisp
-(use-package lsp-clangd
-  :ensure lsp-mode
-  :custom (lsp-clients-clangd-args
-           '("--header-insertion-decorators=0"
-             "--all-scopes-completion"
-             "--completion-style=detailed"
-             "--background-index"
-             "--clang-tidy"
-             "--header-insertion=iwyu"
-             "--pch-storage=memory"
-             "-j=12")))
-#+end_src
-
-~lsp-clangd~ cannot find definition before visiting the ~.c~ file, so we
-will use ~ggtags~ to locate the definition in ~.c~ file. After that,
-~lsp-clangd~ can index ~.c~ files.
 
 #+begin_src emacs-lisp
 (use-package ggtags
@@ -1993,7 +1896,6 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
   :bind (:map
          c++-mode-map
          ("C-<tab>" . clang-format))
-  :hook ((c-mode c++-mode cc-mode) . lsp-mode)
   :config
   (require 'clang-format)
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
@@ -2060,7 +1962,7 @@ will use ~ggtags~ to locate the definition in ~.c~ file. After that,
 
 ** Clojure
 
-Clojure[fn:12] is a lisp over JVM. Emm, I like it.
+Clojure[fn:11] is a lisp over JVM. Emm, I like it.
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
@@ -2068,24 +1970,19 @@ Clojure[fn:12] is a lisp over JVM. Emm, I like it.
          ("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode)
          ("\\.cljc\\'" . clojurec-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
-  :hook (clojure-mode . lsp-mode)
   :config
   (require 'cider)
   ;;(require 'company)
   (require 'flycheck)
   (require 'flycheck-clj-kondo)
   (require 'clojure-mode-extra-font-locking)
-  (require 'lsp-mode)
   ;;(add-hook 'cider-repl-mode-hook #'company-mode)
   ;;(add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'cider-mode)
-  (add-hook 'clojure-mode-hook #'lsp)
   ;;(add-hook 'clojure-mode-hook #'clj-refactor-mode)
   (add-hook 'clojurec-mode-hook #'cider-mode)
-  (add-hook 'clojurec-mode-hook #'lsp)
   ;;(add-hook 'clojurec-mode-hook #'clj-refactor-mode)
   (add-hook 'clojurescript-mode-hook #'cider-mode)
-  (add-hook 'clojurescript-mode-hook #'lsp)
   ;;(add-hook 'clojurescript-mode-hook #'clj-refactor-mode)
   )
 #+end_src
@@ -2108,7 +2005,7 @@ npm install -g clj-kondo
 
 *** Cider
 
-Cider[fn:13] extends Emacs with support for interactive programming
+Cider[fn:12] extends Emacs with support for interactive programming
 in Clojure.
 
 #+begin_src emacs-lisp
@@ -2145,7 +2042,7 @@ in Clojure.
 
 ** Python
 
-Python development configuration is quite easy. =elpy= [fn:14] is used here:
+Python development configuration is quite easy. =elpy= [fn:13] is used here:
 
 #+begin_src emacs-lisp
 ;; (use-package elpy
@@ -2196,10 +2093,10 @@ curl https://sh.rustup.rs -sSf | sh
 
 #+begin_src emacs-lisp
 (use-package rustic
-  :hook ((rustic-mode . lsp-mode)
-         (rustic-mode . (lambda ()
-	                      (set (make-local-variable 'compile-command)
-		                       "cargo run")))))
+  :hook
+  (rustic-mode . (lambda ()
+	               (set (make-local-variable 'compile-command)
+		                "cargo run"))))
 #+end_src
 
 ** Swift
@@ -2214,8 +2111,7 @@ Open =.go= file with go-mode.
 
 #+begin_src emacs-lisp
 (use-package go-mode
-  :mode ("\\.go\\'" . go-mode)
-  :hook (go-mode . lsp-mode))
+  :mode ("\\.go\\'" . go-mode))
 #+end_src
 
 ** Docker file
@@ -2225,12 +2121,6 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 #+begin_src emacs-lisp
 (use-package dockerfile-mode
   :mode ("\\dockerfile\\'" . dockerfile-mode))
-#+end_src
-
-~lsp-docker~ requires ~yaml~:
-
-#+begin_src emacs-lisp
-(use-package yaml)
 #+end_src
 
 ** Emacs lisp
@@ -2245,7 +2135,7 @@ Some dockerfile is not end with =.dockerfile=, so lets guess:
 
 ** AutoHotKey
 
-=ahk-mode= developed by Rich Alesi[fn:15]
+=ahk-mode= developed by Rich Alesi[fn:14]
 
 #+begin_src emacs-lisp
   (use-package ahk-mode
@@ -2363,7 +2253,7 @@ it is a long sequence diagram, I can use key ~s i~ to invoke
 
 ** Mermaid
 
-Mermaid [fn:16] is another js based diagramming and charting tool. To
+Mermaid [fn:15] is another js based diagramming and charting tool. To
 use it inside orgmode, mermaid-cli should be installed:
 
 #+begin_src shell
@@ -3447,8 +3337,8 @@ New link to use Office Onenote.
 * Note Taking
 ** org-roam
 
-Org-roam implements =zettelkasten= method [fn:17] used by famous German socialogist
-Niklas Luhmann[fn:18].
+Org-roam implements =zettelkasten= method [fn:16] used by famous German socialogist
+Niklas Luhmann[fn:17].
 
 First you should install =sqlite3=, which is used to index the links.
 
@@ -3589,7 +3479,7 @@ Add a virtual piece of other org file to current one.
 
 ** Markdown mode
 
-Markdown is widely used as plain text file format. Pandoc [fn:19] can
+Markdown is widely used as plain text file format. Pandoc [fn:18] can
 be used to convert markdown file to html and other formats. We can
 download the [[https://github.com/jgm/pandoc/releases/latest][latest version]] and put the binary file to system path,
 such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
@@ -4296,26 +4186,24 @@ from system PATH, so you should set these to system PATH.
 
 [fn:10] https://github.com/Fuco1/smartparens
 
-[fn:11] https://github.com/emacs-lsp/lsp-mode/issues/2622
+[fn:11] https://clojure.org/
 
-[fn:12] https://clojure.org/
+[fn:12] https://cider.mx/
 
-[fn:13] https://cider.mx/
+[fn:13] https://github.com/jorgenschaefer/elpy
 
-[fn:14] https://github.com/jorgenschaefer/elpy
+[fn:14] https://github.com/ralesi/ahk-mode
 
-[fn:15] https://github.com/ralesi/ahk-mode
+[fn:15] https://mermaid-js.github.io/
 
-[fn:16] https://mermaid-js.github.io/
+[fn:16] https://zettelkasten.de/
 
-[fn:17] https://zettelkasten.de/
+[fn:17] https://en.wikipedia.org/wiki/Niklas_Luhmann
 
-[fn:18] https://en.wikipedia.org/wiki/Niklas_Luhmann
+[fn:18] https://pandoc.org/
 
-[fn:19] https://pandoc.org/
+[fn:19] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
 
-[fn:22] https://github.com/transcode-open/apt-cyg
+[fn:20] https://emacs.stackexchange.com/questions/22283/dired-group-directories-and-symlinks-to-directories-first
 
-[fn:21] https://emacs.stackexchange.com/questions/22283/dired-group-directories-and-symlinks-to-directories-first
-
-[fn:20] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
+[fn:21] https://github.com/transcode-open/apt-cyg

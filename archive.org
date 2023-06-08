@@ -1,3 +1,104 @@
+* lsp-mode
+** lsp mode
+
+~lsp-mode~ aims to provide IDE-like experience.
+
+If you got error: =Symbol’s function definition is void: -compose=, make sure
+that dash version higher than 2.18 is installed[fn:11].
+
+#+begin_src emacs-lisp
+(use-package dash
+  :ensure t)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package goto-addr
+  :config
+  ;;(setq goto-address-uri-schemes-ignored '("mailto:" "data:" "jar:"))
+  (setq goto-address-uri-schemes
+        (cons "C:" (seq-reduce (lambda (accum elt) (delete elt accum))
+                        goto-address-uri-schemes-ignored
+                        (copy-sequence thing-at-point-uri-schemes))))
+  (setq goto-address-url-regexp
+        (concat "\\<"
+                (regexp-opt goto-address-uri-schemes t)
+                thing-at-point-url-path-regexp)))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package treemacs)
+#+end_src
+
+~lsp-mode~ will add ~company-capf~ in front for ~company-backends~, then it
+will prevent my global ~company-backends~ settings. You can customize
+~lsp-completion-provider~ to ~:none~ prevent this.
+
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :after goto-addr
+  :commands lsp
+  :custom
+  (lsp-headerline-breadcrumb-icons-enable t)
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-modeline-code-action-fallback-icon "✶")
+  (lsp-completion-provider :none)
+  :bind (:map
+         lsp-mode-map
+         ("C-x l l" . lsp-ui-doc-glance)
+         ("C-." . lsp-find-definition)
+         ("C-," . xref-go-back)
+         ("C-x ." . kimim/lsp-find-definition-other-window)
+         ("C-x l t s" . lsp-treemacs-symbols))
+  :config
+  (require 'dash)
+  (require 'goto-addr)
+  (define-key lsp-mode-map (kbd "C-x l") lsp-command-map)
+  (add-hook 'xref-after-return-hook 'recenter)
+  (defun kimim/lsp-find-definition-other-window ()
+    (interactive)
+    (lsp-find-definition :display-action 'window)
+    (other-window 1)))
+#+end_src
+
+
+** lsp-ui
+
+UI helper for lsp-mode.
+
+#+begin_src emacs-lisp
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :custom
+  (lsp-ui-doc-text-scale-level -1)
+  (lsp-ui-doc-show-with-cursor nil)
+  (lsp-ui-doc-show-with-mouse nil)
+  (lsp-ui-sideline-show-code-actions t)
+  (lsp-ui-doc-alignment 'window)
+  (lsp-ui-doc-max-width 90))
+#+end_src
+
+
+
+** lsp-clangd
+
+#+begin_src emacs-lisp
+(use-package lsp-clangd
+  :ensure lsp-mode
+  :custom (lsp-clients-clangd-args
+           '("--header-insertion-decorators=0"
+             "--all-scopes-completion"
+             "--completion-style=detailed"
+             "--background-index"
+             "--clang-tidy"
+             "--header-insertion=iwyu"
+             "--pch-storage=memory"
+             "-j=12")))
+#+end_src
+
+~lsp-clangd~ cannot find definition before visiting the ~.c~ file, so we
+will use ~ggtags~ to locate the definition in ~.c~ file. After that,
+~lsp-clangd~ can index ~.c~ files.
+
 * Completion
 ** yasnippet
 
