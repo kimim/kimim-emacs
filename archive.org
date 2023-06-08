@@ -1,3 +1,151 @@
+* Completion
+** yasnippet
+
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :defer 10
+  :diminish yas-minor-mode
+  :defines warning-suppress-types
+  :config
+  (require 'warnings)
+  (add-to-list
+   'yas-snippet-dirs (concat kimim/path-sync-emacs "snippets"))
+  (yas-global-mode 1)
+  (setq warning-suppress-types '((yasnippet backquote-change))))
+#+end_src
+
+In order to remove following warning:
+
+#+BEGIN_QUOTE
+Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
+  To hide this warning, add (yasnippet backquote-change) to ‘warning-suppress-types’.
+#+END_QUOTE
+
+** clj-refactor
+
+#+begin_src emacs-lisp
+(use-package clj-refactor
+  :config
+  (setq clojure-thread-all-but-last t)
+  (cljr-add-keybindings-with-prefix "C-c r")
+  (define-key clj-refactor-map "\C-ctf" #'clojure-thread-first-all)
+  (define-key clj-refactor-map "\C-ctl" #'clojure-thread-last-all)
+  (define-key clj-refactor-map "\C-cu" #'clojure-unwind)
+  (define-key clj-refactor-map "\C-cU" #'clojure-unwind-all)
+  (add-to-list 'cljr-magic-require-namespaces '("s"  . "clojure.string")))
+#+end_src
+
+
+** company mode
+
+#+begin_src emacs-lisp
+(use-package company
+  :defer 10
+  :functions (company-abort)
+  :bind
+  (("C-x m c" . company-mode)
+   :map company-active-map
+   ("C-n" . company--select-next-and-warn)
+   ("C-p" . company--select-previous-and-warn)
+   ("C-h" . delete-backward-char)
+   ("C-d" . delete-forward-char)
+   ("SPC" . (lambda ()
+              (interactive)
+              (company-abort)
+              (insert-char ?\x20))))
+:diminish company-mode
+  :commands (global-company-mode)
+  :custom
+  (company-idle-delay 0)
+  (company-minimum-prefix-length 1)
+  :config
+  (require 'company-posframe)
+  (global-company-mode t)
+  (setq company-backends
+        '((company-yasnippet
+           company-keywords
+           company-capf
+           company-files :separate)
+          (company-dabbrev
+           company-dabbrev-code
+           company-ebdb
+           company-ispell :with))))
+#+end_src
+
+** company-shell
+ #+begin_src emacs-lisp
+(use-package company-shell
+  :commands company-shell
+  :config
+  (add-hook
+   'eshell-mode-hook
+   (lambda ()
+     (make-local-variable company-backends)
+     (setq company-backends
+           '((company-shell company-files)
+             company-capf company-yasnippet
+             company-dabbrev company-ebdb company-ispell
+             (company-dabbrev-code
+              company-gtags
+              company-etags company-keywords))))))
+#+end_src
+
+
+** company-try-hard
+
+If no candidates satisfies our needs, we can type ~C-\~ to get more
+candidates from following backends from ~company-backends~.
+
+#+begin_src emacs-lisp
+(use-package company-try-hard
+  :bind ("C-\\" . company-try-hard))
+#+end_src
+
+** company-posframe
+
+This extension won't clutter the buffer contents.
+
+#+begin_src emacs-lisp
+(use-package company-posframe
+  :diminish company-posframe-mode
+  :config
+  (company-posframe-mode 1))
+#+end_src
+
+** company-ebdb
+
+#+begin_src emacs-lisp
+(use-package company-ebdb)
+#+end_src
+
+** company statistics
+
+Sort candidates using completion history.
+
+#+begin_src emacs-lisp
+(use-package company-statistics
+  :config
+  (company-statistics-mode 1))
+#+end_src
+
+
+** Text Mode company
+
+#+begin_src emacs-lisp
+(use-package text-mode
+  :ensure nil
+  :config
+  (add-hook
+   'text-mode-hook
+   (lambda ()
+     (make-local-variable 'company-backends)
+     (setq company-backends
+           '((company-ispell company-capf
+              company-yasnippet company-dabbrev
+              company-ebdb company-files :seperate))))))
+#+end_src
+
+
 * Orgmode
 ** org-indent
 If ~org-modern-star~ is not enabled, not workaround is required for

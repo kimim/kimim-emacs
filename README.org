@@ -1156,18 +1156,7 @@ frequency report by =M-x keyfreq-show=.
 ** eshell
 
 #+begin_src emacs-lisp
-(use-package company-shell
-  :commands company-shell)
-
-(use-package eshell
-  :config
-  (add-hook 'eshell-mode-hook
-            (lambda ()
-              (make-local-variable company-backends)
-              (setq company-backends
-                    '((company-shell company-files)
-                      company-capf company-yasnippet company-dabbrev company-ebdb company-ispell
-                      (company-dabbrev-code company-gtags company-etags company-keywords))))))
+(use-package eshell)
 #+end_src
 
 ** Navigation
@@ -1719,101 +1708,6 @@ Rich annotations in the minibuffer.
 (diminish 'abbrev-mode)
 #+end_src
 
-** yasnippet
-
-#+begin_src emacs-lisp
-(use-package yasnippet
-  :defer 10
-  :diminish yas-minor-mode
-  :defines warning-suppress-types
-  :config
-  (require 'warnings)
-  (add-to-list
-   'yas-snippet-dirs (concat kimim/path-sync-emacs "snippets"))
-  (yas-global-mode 1)
-  (setq warning-suppress-types '((yasnippet backquote-change))))
-#+end_src
-
-In order to remove following warning:
-
-#+BEGIN_QUOTE
-Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
-  To hide this warning, add (yasnippet backquote-change) to ‘warning-suppress-types’.
-#+END_QUOTE
-
-** company mode
-
-#+begin_src emacs-lisp
-(use-package company
-  :defer 10
-  :functions (company-abort)
-  :bind
-  (("C-x m c" . company-mode)
-   :map company-active-map
-   ("C-n" . company--select-next-and-warn)
-   ("C-p" . company--select-previous-and-warn)
-   ("C-h" . delete-backward-char)
-   ("C-d" . delete-forward-char)
-   ("SPC" . (lambda ()
-              (interactive)
-              (company-abort)
-              (insert-char ?\x20))))
-:diminish company-mode
-  :commands (global-company-mode)
-  :custom
-  (company-idle-delay 0)
-  (company-minimum-prefix-length 1)
-  :config
-  (require 'company-posframe)
-  (global-company-mode t)
-  (setq company-backends
-        '((company-yasnippet
-           company-keywords
-           company-capf
-           company-files :separate)
-          (company-dabbrev
-           company-dabbrev-code
-           company-ebdb
-           company-ispell :with))))
-#+end_src
-
-** company-try-hard
-
-If no candidates satisfies our needs, we can type ~C-\~ to get more
-candidates from following backends from ~company-backends~.
-
-#+begin_src emacs-lisp
-(use-package company-try-hard
-  :bind ("C-\\" . company-try-hard))
-#+end_src
-
-** company-posframe
-
-This extension won't clutter the buffer contents.
-
-#+begin_src emacs-lisp
-(use-package company-posframe
-  :diminish company-posframe-mode
-  :config
-  (company-posframe-mode 1))
-#+end_src
-
-** company-ebdb
-
-#+begin_src emacs-lisp
-(use-package company-ebdb)
-#+end_src
-
-** company statistics
-
-Sort candidates using completion history.
-
-#+begin_src emacs-lisp
-(use-package company-statistics
-  :config
-  (company-statistics-mode 1))
-#+end_src
-
 * Programming General
 
 ** Project
@@ -2177,28 +2071,26 @@ Clojure[fn:12] is a lisp over JVM. Emm, I like it.
   :hook (clojure-mode . lsp-mode)
   :config
   (require 'cider)
-  (require 'company)
+  ;;(require 'company)
   (require 'flycheck)
   (require 'flycheck-clj-kondo)
-  (require 'clj-refactor)
-  (require 'clojure-snippets)
   (require 'clojure-mode-extra-font-locking)
   (require 'lsp-mode)
-  (add-hook 'cider-repl-mode-hook #'company-mode)
-  (add-hook 'cider-mode-hook #'company-mode)
+  ;;(add-hook 'cider-repl-mode-hook #'company-mode)
+  ;;(add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'cider-mode)
   (add-hook 'clojure-mode-hook #'lsp)
-  (add-hook 'clojure-mode-hook #'clj-refactor-mode)
+  ;;(add-hook 'clojure-mode-hook #'clj-refactor-mode)
   (add-hook 'clojurec-mode-hook #'cider-mode)
   (add-hook 'clojurec-mode-hook #'lsp)
-  (add-hook 'clojurec-mode-hook #'clj-refactor-mode)
+  ;;(add-hook 'clojurec-mode-hook #'clj-refactor-mode)
   (add-hook 'clojurescript-mode-hook #'cider-mode)
   (add-hook 'clojurescript-mode-hook #'lsp)
-  (add-hook 'clojurescript-mode-hook #'clj-refactor-mode))
+  ;;(add-hook 'clojurescript-mode-hook #'clj-refactor-mode)
+  )
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package clojure-snippets)
 (use-package clojure-mode-extra-font-locking)
 #+end_src
 
@@ -2251,43 +2143,30 @@ in Clojure.
   (add-to-list 'org-babel-load-languages '(clojure . t)))
 #+end_src
 
-*** clj-refactor
-
-#+begin_src emacs-lisp
-(use-package clj-refactor
-  :config
-  (setq clojure-thread-all-but-last t)
-  (cljr-add-keybindings-with-prefix "C-c r")
-  (define-key clj-refactor-map "\C-ctf" #'clojure-thread-first-all)
-  (define-key clj-refactor-map "\C-ctl" #'clojure-thread-last-all)
-  (define-key clj-refactor-map "\C-cu" #'clojure-unwind)
-  (define-key clj-refactor-map "\C-cU" #'clojure-unwind-all)
-  (add-to-list 'cljr-magic-require-namespaces '("s"  . "clojure.string")))
-#+end_src
-
 ** Python
 
 Python development configuration is quite easy. =elpy= [fn:14] is used here:
 
 #+begin_src emacs-lisp
-  (use-package elpy
-    :config
-    (elpy-enable))
+;; (use-package elpy
+;;   :config
+;;   (elpy-enable))
 
-  (use-package python
-    :ensure nil
-    :defines elpy-rpc-backend
-    :mode ("\\.py\\'" . python-mode)
-    :interpreter ("python" . python-mode)
-    :config
-    (add-hook 'python-mode-hook
-              (lambda ()
-                (setq yas-indent-line nil)))
-    (add-to-list 'python-shell-completion-native-disabled-interpreters "python"))
+(use-package python
+  :ensure nil
+;;  :defines elpy-rpc-backend
+  :mode ("\\.py\\'" . python-mode)
+  :interpreter ("python" . python-mode)
+  :config
+  ;; (add-hook 'python-mode-hook
+  ;;           (lambda ()
+  ;;             (setq yas-indent-line nil)))
+  (add-to-list
+   'python-shell-completion-native-disabled-interpreters "python"))
 
-  (use-package company-jedi
-    :config
-    (setq elpy-rpc-backend "jedi"))
+;;  (use-package company-jedi
+;;    :config
+;;    (setq elpy-rpc-backend "jedi"))
 #+end_src
 
 Following =python= package is required according to =elpy= mannual:
@@ -2876,22 +2755,6 @@ support more functions from =org-ref=:
   (setq nov-text-width (- olivetti-body-width 2)))
 #+end_src
 
-* Text Mode
-
-#+begin_src emacs-lisp
-(use-package text-mode
-  :ensure nil
-  :config
-  (add-hook
-   'text-mode-hook
-   (lambda ()
-     (make-local-variable 'company-backends)
-     (setq company-backends
-           '((company-ispell company-capf
-              company-yasnippet company-dabbrev
-              company-ebdb company-files :seperate))))))
-#+end_src
-
 * Orgmode
 ** org general setting
 
@@ -2926,7 +2789,7 @@ support more functions from =org-ref=:
   :config
   ;; no use for me, I always press this key accidentally
   (unbind-key "C-'" 'org-mode-map)
-  (setq company-minimum-prefix-length 2)
+;;  (setq company-minimum-prefix-length 2)
   (setq org-hide-emphasis-markers t)
   (setq org-support-shift-select t)
   ;; no empty line after collapsed
@@ -2958,9 +2821,6 @@ spaces before plain text line.
   :hook (org-mode . org-indent-mode)
   :diminish org-indent-mode
   :config
-  (advice-add 'org-indent--compute-prefixes :after
-              #'kimim/org-indent-adjust-indent)
-
   (defun kimim/org-indent-adjust-indent ()
     (dotimes (n org-indent--deepest-level)
       (let ((indentation (* (1- org-indent-indentation-per-level)
@@ -2973,7 +2833,9 @@ spaces before plain text line.
                           (and (> n 0)
                                (char-to-string
                                 org-indent-boundary-char)))
-                  nil 'face 'org-indent))))))
+                  nil 'face 'org-indent)))))
+    (advice-add 'org-indent--compute-prefixes :after
+              #'kimim/org-indent-adjust-indent))
 #+end_src
 
 ** org-modern
@@ -2998,18 +2860,7 @@ spaces before plain text line.
   (org-modern-block-fringe nil)
   (org-modern-keyword nil)
   :hook
-  (org-mode . (lambda ()
-                "Beautify Org Symbols"
-                (push '(":category:" . ":▲:") prettify-symbols-alist)
-                (push '(":PROPERTIES:" . "🗅") prettify-symbols-alist)
-                (push '(":END:" . "∎") prettify-symbols-alist)
-                (push '("#+TITLE:" . "🗎") prettify-symbols-alist)
-                (push '("#+SUBTITLE:" . "⮱") prettify-symbols-alist)
-                (push '(":SETTINGS:" . "⌘") prettify-symbols-alist)
-                (push '("#+begin_src" . "«" ) prettify-symbols-alist)
-                (push '("#+end_src" . "»" ) prettify-symbols-alist)
-                (prettify-symbols-mode)
-                (org-modern-mode)))
+  (org-mode . org-modern-mode)
   :config
   (advice-add
    'org-modern--make-font-lock-keywords
@@ -3023,6 +2874,27 @@ spaces before plain text line.
         `(("^[ ]\\{2\\}\\(-\\)[ \t]" 1 '(face nil display ,bullet))))
       (when-let ((bullet (alist-get ?* org-modern-list)))
         `(("^[ ]\\{4\\}\\(-\\)[ \t]" 1 '(face nil display ,bullet))))))))
+#+end_src
+
+** pretty-symbols-in-org-mode
+
+#+begin_src emacs-lisp
+(use-package org
+  :ensure nil
+  :hook
+  (org-mode . prettify-symbols-in-org-mode)
+  :config
+  (defun prettify-symbols-in-org-mode ()
+    "Beautify Org Symbols"
+    (push '(":category:" . "▲") prettify-symbols-alist)
+    (push '(":PROPERTIES:" . "🗅") prettify-symbols-alist)
+    (push '(":END:" . "∎") prettify-symbols-alist)
+    (push '("#+TITLE:" . "🗎") prettify-symbols-alist)
+    (push '("#+SUBTITLE:" . "⮱") prettify-symbols-alist)
+    (push '(":SETTINGS:" . "⌘") prettify-symbols-alist)
+    (push '("#+begin_src" . "«" ) prettify-symbols-alist)
+    (push '("#+end_src" . "»" ) prettify-symbols-alist)
+    (prettify-symbols-mode)))
 #+end_src
 
 ** orgalist
@@ -3740,7 +3612,6 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
         ("M-<down>" . markdown-move-down)
         ("C-c C-x C-v" . markdown-toggle-inline-images))
   :config
-  (require 'org)
   (setq markdown-fontify-code-blocks-natively t)
   (setq markdown-list-item-bullets
         '("▬" "►" "•"))
@@ -4329,7 +4200,9 @@ from system PATH, so you should set these to system PATH.
 (use-package kimim
   :load-path "~/kimim-emacs/site-lisp"
   :ensure nil
-  :commands (kimim/mail-setup)
+  :commands (kimim/mail-setup
+             kimim/open-external
+             kimim/open-external-pdf)
   :defines (mac-option-modifier
             mac-command-modifier)
   :bind
