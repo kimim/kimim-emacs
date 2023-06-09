@@ -686,6 +686,89 @@ clearly in dark color theme.
   :custom (hi-lock-auto-select-face t))
 #+end_src
 
+* kimim utils
+
+In Windows environment, =kimim/xterm= and =kimim/dc= will look up the program
+from system PATH, so you should set these to system PATH.
+
+#+begin_src emacs-lisp
+(use-package kimim
+  :load-path "~/kimim-emacs/site-lisp"
+  :ensure nil
+  :commands (kimim/mail-setup
+             kimim/open-external
+             kimim/open-external-pdf)
+  :defines (mac-option-modifier
+            mac-command-modifier)
+  :bind
+  (("C-x m y" . kimim/mail-attach-files)
+   ("<f9>" . kimim/xterm)
+   ("S-<f9>" . kimim/cmd)
+   ;; when deploy clojars, need msys2 term to use pinetry
+   ("C-<f9>" . kimim/msys2-term)
+   ("C-c r" . kimim/rename-file-and-buffer)
+   ("C-x m o" . kimim/open-external)
+   ("C-x m O" . kimim/open-external-pdf)
+   ("C-x m d" . kimim/dc)
+   ("C-c d" . kimim/lookinsight)
+   ("<f1>" . delete-other-windows)
+   ("C-<f1>" . nuke-other-buffers)
+   ("M-<f1>" . kimim/switch-to-scratch-and-nuke-others)
+   ("<f2>" . other-window)
+   ("<f5>" . kimim/switch-to-scratch-buffer)
+   ("C-<f5>" . kimim/switch-to-scratch-other-window)
+   ("<f7>" . bury-buffer)
+   ("<f8>" . unbury-buffer)
+   ("C-h" . delete-backward-char)
+   ("M-h" . backward-kill-word)
+   ("M-?" . mark-paragraph)
+   ("C-x k" . kill-current-buffer)
+   ("C-x C-v" . view-file-other-window)
+   ("C-c C-o" . occur)
+   ("C-z" . set-mark-command)
+   ("M-n" . next-error)
+   ("M-p" . previous-error)
+   ("C-c C-/" . comment-or-uncomment-region)
+   ("RET" . newline-and-indent)
+   ("C-x m h" . help)
+   ("C-x ," . bury-buffer)
+   ("C-x ." . unbury-buffer)
+   ("C-x  ，" . bury-buffer)
+   ("C-x  。" . unbury-buffer)
+   ("C-x  ‘" . hippie-expand)
+   ("C-x  ’" . hippie-expand)
+   ("C-x M-s" . eshell)
+   ("C-x m 0" . kimim/frame-and-font)
+   ("C-x m -" . kimim/frame-and-font-mini)
+   ("C-x m SPC" . kimim/shrink-down)
+   ("C-x m ]" . kimim/shrink-right)
+   ("C-x m [" . kimim/shrink-left)
+   ("C-x m ^" . kimim/shrink-up)
+   ("C-x m '" . kimim/top-right-mouse)
+   ("C-x m r" . kimim/rename-file-and-buffer)
+   ("C-<pause>" . iconify-frame))
+  :config
+  (unbind-key "C-x C-z")
+  (when (eq system-type 'darwin) ;; mac specific settings
+    (setq mac-option-modifier 'meta)
+    (setq mac-command-modifier 'meta)
+    ;; sets fn-delete to be right-delete
+    (global-set-key [kp-delete] 'delete-char))
+  (defun kimim/switch-to-scratch-and-nuke-others ()
+    (interactive)
+    (switch-to-buffer "*scratch*") (nuke-other-buffers))
+  (defun kimim/switch-to-scratch-buffer ()
+    (interactive)
+    (switch-to-buffer "*scratch*")
+    (delete-other-windows))
+  (defun kimim/switch-to-scratch-other-window ()
+    (interactive)
+    (switch-to-buffer-other-window "*scratch*"))
+  (defun kimim/restore-text-scale ()
+    (interactive)
+    (text-scale-increase 0)))
+#+end_src
+
 * Help & References
 ** Info
 
@@ -3477,7 +3560,7 @@ Add a virtual piece of other org file to current one.
   :bind ("<f12>" . org-transclusion-add-all))
 #+end_src
 
-** Markdown mode
+** markdown mode
 
 Markdown is widely used as plain text file format. Pandoc [fn:18] can
 be used to convert markdown file to html and other formats. We can
@@ -4079,89 +4162,6 @@ should install postscript in cygwin.
   (doc-view-continuous t)
   (doc-view-image-width 500)
   (doc-view-resolution 300))
-#+end_src
-
-* kimim utils
-
-In Windows environment, =kimim/xterm= and =kimim/dc= will look up the program
-from system PATH, so you should set these to system PATH.
-
-#+begin_src emacs-lisp
-(use-package kimim
-  :load-path "~/kimim-emacs/site-lisp"
-  :ensure nil
-  :commands (kimim/mail-setup
-             kimim/open-external
-             kimim/open-external-pdf)
-  :defines (mac-option-modifier
-            mac-command-modifier)
-  :bind
-  (("C-x m y" . kimim/mail-attach-files)
-   ("<f9>" . kimim/xterm)
-   ("S-<f9>" . kimim/cmd)
-   ;; when deploy clojars, need msys2 term to use pinetry
-   ("C-<f9>" . kimim/msys2-term)
-   ("C-c r" . kimim/rename-file-and-buffer)
-   ("C-x m o" . kimim/open-external)
-   ("C-x m O" . kimim/open-external-pdf)
-   ("C-x m d" . kimim/dc)
-   ("C-c d" . kimim/lookinsight)
-   ("<f1>" . delete-other-windows)
-   ("C-<f1>" . nuke-other-buffers)
-   ("M-<f1>" . kimim/switch-to-scratch-and-nuke-others)
-   ("<f2>" . other-window)
-   ("<f5>" . kimim/switch-to-scratch-buffer)
-   ("C-<f5>" . kimim/switch-to-scratch-other-window)
-   ("<f7>" . bury-buffer)
-   ("<f8>" . unbury-buffer)
-   ("C-h" . delete-backward-char)
-   ("M-h" . backward-kill-word)
-   ("M-?" . mark-paragraph)
-   ("C-x k" . kill-current-buffer)
-   ("C-x C-v" . view-file-other-window)
-   ("C-c C-o" . occur)
-   ("C-z" . set-mark-command)
-   ("M-n" . next-error)
-   ("M-p" . previous-error)
-   ("C-c C-/" . comment-or-uncomment-region)
-   ("RET" . newline-and-indent)
-   ("C-x m h" . help)
-   ("C-x ," . bury-buffer)
-   ("C-x ." . unbury-buffer)
-   ("C-x  ，" . bury-buffer)
-   ("C-x  。" . unbury-buffer)
-   ("C-x  ‘" . hippie-expand)
-   ("C-x  ’" . hippie-expand)
-   ("C-x M-s" . eshell)
-   ("C-x m 0" . kimim/frame-and-font)
-   ("C-x m -" . kimim/frame-and-font-mini)
-   ("C-x m SPC" . kimim/shrink-down)
-   ("C-x m ]" . kimim/shrink-right)
-   ("C-x m [" . kimim/shrink-left)
-   ("C-x m ^" . kimim/shrink-up)
-   ("C-x m '" . kimim/top-right-mouse)
-   ("C-x m r" . kimim/rename-file-and-buffer)
-   ("C-<pause>" . iconify-frame))
-  :config
-  (unbind-key "C-x C-z")
-  (when (eq system-type 'darwin) ;; mac specific settings
-    (setq mac-option-modifier 'meta)
-    (setq mac-command-modifier 'meta)
-    ;; sets fn-delete to be right-delete
-    (global-set-key [kp-delete] 'delete-char))
-  (defun kimim/switch-to-scratch-and-nuke-others ()
-    (interactive)
-    (switch-to-buffer "*scratch*") (nuke-other-buffers))
-  (defun kimim/switch-to-scratch-buffer ()
-    (interactive)
-    (switch-to-buffer "*scratch*")
-    (delete-other-windows))
-  (defun kimim/switch-to-scratch-other-window ()
-    (interactive)
-    (switch-to-buffer-other-window "*scratch*"))
-  (defun kimim/restore-text-scale ()
-    (interactive)
-    (text-scale-increase 0)))
 #+end_src
 
 * Footnotes
