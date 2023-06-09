@@ -1162,6 +1162,25 @@ Automatically add space between Chinese and English, and more.
   :hook (text-mode . wraplish-mode))
 #+end_src
 
+** tempel
+
+Use ~tempel~ to expand template.
+
+#+begin_src emacs-lisp
+;; Configure Tempel
+(use-package tempel
+  :bind (("M-+" . tempel-complete)
+         ("M-*" . tempel-insert)
+         :map tempel-map
+         ("M-RET" . tempel-done)
+         ("S-<tab>" . tempel-previous)
+         ("<tab>" . tempel-next)
+         ("M-<up>" . tempel-previous)
+         ("M-<down>" . tempel-next)))
+
+(use-package tempel-collection)
+#+end_src
+
 * Controlling
 ** Window and Frame
 
@@ -1801,8 +1820,108 @@ Rich annotations in the minibuffer.
 (diminish 'abbrev-mode)
 #+end_src
 
-* Programming General
+** corfu
 
+#+begin_src emacs-lisp
+(use-package emacs
+  :init
+  ;; TAB cycle if there are only few candidates
+  (setq completion-cycle-threshold 2)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (setq tab-always-indent t))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package corfu
+  :defer 1
+  :bind
+  (:map
+   corfu-map
+   ("M-h" . backward-kill-word))
+  :config
+  (setq corfu-auto t
+        corfu-fancy t
+        corfu-count 5
+        corfu-min-width 60
+        corfu-max-width corfu-min-width
+        corfu-auto-delay 0.01
+        corfu-preview-current t
+        corfu-auto-prefix 2
+        corfu-quit-no-match 'separator
+        corfu-popupinfo-delay '(1.0 . 0.5))
+  (global-corfu-mode)
+  (corfu-popupinfo-mode)
+  (corfu-prescient-mode)
+  (corfu-history-mode 1)
+  (savehist-mode 1)
+  (add-to-list 'savehist-additional-variables 'corfu-history))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package corfu-prescient
+  :commands (corfu-prescient-mode)
+  :config
+  (setq corfu-prescient-override-sorting t))
+#+end_src
+
+** cape
+
+#+begin_src emacs-lisp
+(use-package cape
+  :init
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-symbol)
+  :custom
+  (cape-dabbrev-check-other-buffers nil)
+  (cape-dict-grep nil)
+  (cape-dict-file "~/.emacs.d/dict/words.txt")
+  :hook
+  (emacs-lisp-mode
+   .
+   (lambda ()
+     (setq-local
+      completion-at-point-functions
+      (list
+       (cape-super-capf
+        #'tempel-expand
+        #'cape-symbol
+        ;;#'cape-yasnippet
+        #'cape-dabbrev)))))
+
+  ((text-mode org-mode markdown-mode)
+   .
+   (lambda ()
+     (setq-local
+      completion-at-point-functions
+      (list
+       (cape-super-capf
+        #'tempel-expand
+        #'cape-dabbrev
+        #'cape-dict
+        ;;#'cape-yasnippet
+        )))))
+
+  (plantuml-mode
+   .
+   (lambda ()
+     (setq-local
+      completion-at-point-functions
+      (list
+       (cape-super-capf
+        ;;#'cape-yasnippet
+        #'cape-dabbrev)))))
+
+  (eshell-mode
+   .
+   (lambda ()
+     (setq-local corfu-auto nil)
+     (corfu-mode))))
+#+end_src
+
+* Programming General
 ** Project
 
 ~project-find-file~ (~C-x p f~) can find files of current project, indicated by git
@@ -1884,6 +2003,49 @@ menu). From Properties select the Tab “Security” and then select the button
 this directory as secure because you are the owner.
 #+END_QUOTE
 
+** Use tempel for LSP
+
+#+begin_src emacs-lisp
+(use-package lsp-snippet-tempel
+  :load-path "~/kimim-emacs/site-lisp/lsp-snippet"
+  :config
+  (when (featurep 'lsp-mode)
+    ;; Initialize lsp-snippet -> tempel in lsp-mode
+    (lsp-snippet-tempel-lsp-mode-init))
+  (when (featurep 'eglot)
+    ;; Initialize lsp-snippet -> tempel in eglot
+    (lsp-snippet-tempel-eglot-init)))
+#+end_src
+
+** LSP with Eglot
+
+~eglot~ is simple and built-in LSP support in emacs.
+
+#+begin_src emacs-lisp
+(use-package eglot
+  :bind
+  (:map
+   eglot-mode-map
+   ("C-x l a" . eglot-code-actions))
+  :hook
+  ((c-mode c++-mode clojure-mode rust-mode) . eglot-ensure)
+  (eglot-managed-mode
+   . kimim/eglot-completion)
+  :config
+  (require 'lsp-snippet-tempel)
+  (defun kimim/eglot-completion ()
+    (setf (alist-get
+           'styles
+           (alist-get 'eglot completion-category-defaults))
+          '(orderless basic flex substring partial-completion))
+    (setq-local completion-at-point-functions
+                (list
+                 (cape-super-capf
+                  #'eglot-completion-at-point
+                  #'cape-dabbrev)))))
+#+end_src
+
+
 ** Parenthesis
 
 ~smartparens-mode~[fn:10] is a general purpose mode for dealing with
@@ -1919,6 +2081,26 @@ parenthesis. We define some keys for it:
     ;; also only use the pseudo-quote inside strings where it
     ;; serves as hyperlink.
     (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p))))
+#+end_src
+
+** tree-sitter
+
+#+begin_src emacs-lisp
+(use-package tree-sitter-langs)
+(use-package tree-sitter
+  :ensure nil
+  :hook (((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-mode)
+         ((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-hl-mode)))
+#+end_src
+
+** ts-fold
+
+#+begin_src emacs-lisp
+(use-package ts-fold
+  :init
+  (require 'ts-fold)
+  :load-path  "~/kimim-emacs/site-lisp/ts-fold"
+  :bind ("C-<return>" . ts-fold-toggle))
 #+end_src
 
 ** COMMENT Code folding
@@ -1973,6 +2155,8 @@ With ~yafolding-mode~, you can:
          ("M->" . end-of-buffer))
   :hook ((c-mode c++-mode) . ggtags-mode)
   :config
+  ;; eglot use M-. for code navigation
+  (unbind-key "M-." ggtags-mode-map)
   (setq ggtags-mode-line-project-name nil)
   (setq ggtags-global-ignore-case t)
   (setq ggtags-sort-by-nearness t))
@@ -2190,7 +2374,9 @@ curl https://sh.rustup.rs -sSf | sh
   :hook
   (rustic-mode . (lambda ()
 	               (set (make-local-variable 'compile-command)
-		                "cargo run"))))
+		                "cargo run")))
+  :custom
+  (rustic-lsp-client 'eglot))
 #+end_src
 
 ** Swift

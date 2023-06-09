@@ -22,3 +22,9 @@
 [submodule "site-lisp/awesome-tray"]
 	path = site-lisp/awesome-tray
 	url = git@github.com:manateelazycat/awesome-tray.git
+[submodule "site-lisp/lsp-snippet"]
+	path = site-lisp/lsp-snippet
+	url = git@github.com:svaante/lsp-snippet.git
+[submodule "site-lisp/ts-fold"]
+	path = site-lisp/ts-fold
+	url = git@github.com:emacs-tree-sitter/ts-fold.git
