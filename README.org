@@ -520,6 +520,18 @@ window space.
   :load-path (lambda ()
                (concat kimim/path-kimim-emacs
                 "site-lisp/awesome-tray"))
+  :hook (pdf-view-mode
+         .
+         (lambda ()
+           ;; show page if in pdf-view mode
+           (setq-local
+            awesome-tray-active-modules
+            (mapcar
+             (lambda (item)
+               (if (string= item "location")
+                   "pdf-view-page"
+                 item))
+             awesome-tray-active-modules))))
   :commands (awesome-tray-mode)
   :custom
   (awesome-tray-date-format "%-m-%-e %H:%M")
@@ -1909,7 +1921,7 @@ parenthesis. We define some keys for it:
     (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p))))
 #+end_src
 
-** Code folding
+** COMMENT Code folding
 
 With ~yafolding-mode~, you can:
 - toggle the code folding with ~yafolding-toggle-element~ (~C-<return>~)
@@ -2119,8 +2131,7 @@ in Clojure.
   :ensure org
   :custom (org-babel-clojure-backend 'cider)
   :config
-  (add-to-list 'org-src-lang-modes '("clojure" . clojure))
-  (add-to-list 'org-babel-load-languages '(clojure . t)))
+  (add-to-list 'org-src-lang-modes '("clojure" . clojure)))
 #+end_src
 
 ** Python
@@ -2302,8 +2313,7 @@ place and assign ~plantuml-jar-path~ to there.
     ;; WARNING: if variables are from other package, setq them at :config
     (setq org-plantuml-jar-path plantuml-jar-path)
     (setq org-plantuml-args plantuml-executable-args)
-    (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-    (add-to-list 'org-babel-load-languages '(plantuml . t)))
+    (add-to-list 'org-src-lang-modes '("plantuml" . plantuml)))
 #+end_src
 
 I want to preview plantuml result in a full window, so I set
@@ -2330,8 +2340,7 @@ it is a long sequence diagram, I can use key ~s i~ to invoke
         (expand-file-name
          (concat kimim/path-kimikit "ditaa/ditaa.jar")))
   :config
-  (add-to-list 'org-src-lang-modes '("ditaa" . artist))
-  (add-to-list 'org-babel-load-languages '(ditaa . t)))
+  (add-to-list 'org-src-lang-modes '("ditaa" . artist)))
 #+end_src
 
 ** Mermaid
@@ -2429,19 +2438,7 @@ emacs theme color.
   :functions (pdf-view-refresh-themed-buffer)
   :defines (pdf-view-themed-minor-mode)
   :mode ("\\.pdf\\'" . pdf-view-mode)
-  :hook (pdf-view-mode
-         .
-         (lambda ()
-           (pdf-view-themed-minor-mode)
-           ;; show page if in pdf-view mode
-           (setq-local
-            awesome-tray-active-modules
-            (mapcar
-             (lambda (item)
-               (if (string= item "location")
-                   "pdf-view-page"
-                 item))
-             awesome-tray-active-modules))))
+  :hook (pdf-view-mode . pdf-view-themed-minor-mode)
   :custom (pdf-view-display-size 3.85)
   :bind
   (:map
@@ -2525,26 +2522,8 @@ Add indicator of remaining text when scrolling PDF pages.
   :hook (pdf-view-mode . pdf-view-pagemark-mode))
 #+end_src
 
-** ebib
-
-#+begin_src emacs-lisp
-(use-package ebib
-  :bind (:map ebib-entry-mode-map
-         ("N" . kimim/ebib-open-note)
-         :map ebib-index-mode-map
-         ("N" . kimim/ebib-open-note))
-  :functions (ebib--get-key-at-point
-              bibtex-completion-edit-notes)
-  :custom
-  (ebib-preload-bib-files (list bibtex-completion-bibliography))
-  :config
-  (defun kimim/ebib-open-note ()
-    "open bib note at ebib entry"
-    (interactive)
-    (bibtex-completion-edit-notes (list (ebib--get-key-at-point)))))
-#+end_src
-
 ** org-ref
+
 #+begin_src emacs-lisp
 (use-package bibtex-completion
   :defines bibtex-completion-bibliography
@@ -2935,14 +2914,7 @@ spaces before plain text line.
   (setq org-edit-src-content-indentation 0)
   (setq org-confirm-babel-evaluate nil)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-  ;; load diagram languages, I frequently use in orgmode
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((plantuml . t)
-     (ditaa . t)
-     (clojure .t)))
-  ;; get the idea from John Kitchen(author of org-ref):
-  ;; https://emacs.stackexchange.com/questions/20577/org-babel-load-all-languages-on-demand
+  ;; get the idea from John Kitchen(author of org-ref)
   (defadvice org-babel-execute-src-block (around load-language nil activate)
     "Load language if needed"
     (let* ((language (org-element-property :language (org-element-at-point)))
@@ -3123,7 +3095,6 @@ sudo apt install python3-pygments
       (lambda (_)
         "\\documentclass[preview]{standalone}"))
   :config
-  (require 'org-ref)
   (require 'ox)
   (require 'ox-beamer)
   (require 'latex-classes)
@@ -3441,9 +3412,6 @@ sqlite3 is shipped in macOS by default.
 
 #+begin_src emacs-lisp
 (use-package org-roam
-  :functions (orb-get-node-citekey
-              orb--new-note
-              -contains?)
   :commands (kimim/non-cite-filter)
   :ensure t
   :custom
@@ -3505,7 +3473,7 @@ sqlite3 is shipped in macOS by default.
    '(file . find-file))
   ;;(setq org-roam-v2-ack t)
   (setq emacsql-global-timeout 60) ;; default 30 seconds will timeout
-  (org-roam-db-autosync-enable)
+  ;;(org-roam-db-autosync-enable)
   (defvar orb-templates
     '(("r" "reference" plain
        "#+ROAM_KEY: %^{citekey}\n\n%?"
@@ -3539,13 +3507,13 @@ note.
 
 #+begin_src emacs-lisp
 (use-package org-roam-bibtex
-  :hook ((org-mode bibtex-mode) . org-roam-bibtex-mode)
+  :functions (orb-get-node-citekey
+              orb--new-note)
+  :hook (bibtex-mode . org-roam-bibtex-mode)
   :diminish org-roam-bibtex-mode
   ;; use the original title captalization
   :custom (orb-bibtex-entry-get-value-function
-           #'bibtex-completion-get-value)
-  :config
-  (require 'org-ref))
+           #'bibtex-completion-get-value))
 #+end_src
 
 ** org-transclusion

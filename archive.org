@@ -49,6 +49,7 @@ will prevent my global ~company-backends~ settings. You can customize
          ("C-," . xref-go-back)
          ("C-x ." . kimim/lsp-find-definition-other-window)
          ("C-x l t s" . lsp-treemacs-symbols))
+  :hook ((c-mode c++-mode clojure-mode) . lsp)
   :config
   (require 'dash)
   (require 'goto-addr)
@@ -76,8 +77,6 @@ UI helper for lsp-mode.
   (lsp-ui-doc-alignment 'window)
   (lsp-ui-doc-max-width 90))
 #+end_src
-
-
 
 ** lsp-clangd
 
@@ -173,6 +172,16 @@ Warning (yasnippet): ‘xxx’ modified buffer in a backquote expression.
            company-ispell :with))))
 #+end_src
 
+** company dict
+
+complete with keyword and annotation. need special dict files for different mode.
+
+#+begin_src emacs-lisp
+(use-package company-dict
+  :config
+  ;; Where to look for dictionary files
+  (setq company-dict-dir (concat kimim/path-sync-emacs "dict")))
+#+end_src
 ** company-shell
  #+begin_src emacs-lisp
 (use-package company-shell
@@ -1190,16 +1199,6 @@ name handling function can be found from emacs manual[fn:22].
         (message msg))))
 #+end_src
 
-** company dict
-
-complete with keyword and annotation. need special dict files for different mode.
-
-#+begin_src emacs-lisp
-(use-package company-dict
-  :config
-  ;; Where to look for dictionary files
-  (setq company-dict-dir (concat kimim/path-sync-emacs "dict")))
-#+end_src
 ** sunrise commander
 
 The Sunrise Commmander is a powerful and versatile double-pane file manager for
