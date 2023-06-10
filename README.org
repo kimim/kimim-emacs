@@ -412,13 +412,15 @@ calculated with original default font height and width:
 (kimim/frame-and-font)
 #+end_src
 
-** Frame Title
+** Frames
 
 Customize the frame title to display buffer file name.
 
 #+begin_src emacs-lisp
 (setq frame-title-format
       '((:eval (buffer-name))))
+;; don't expand minibuffer in other frame
+(setq minibuffer-follows-selected-frame nil)
 #+end_src
 
 ** Mode Line
@@ -911,15 +913,18 @@ A translator extension written by [[https://condy0919.github.io][Youmu]].
 #+begin_src emacs-lisp
 (setq inhibit-eol-conversion nil)
 (setq-default fill-column 70)
+;; see discussion https://emacs-china.org/t/topic/2616/30
+(setq word-wrap-by-category t)
+(setq require-final-newline t)
 
 (use-package drag-stuff
   :diminish drag-stuff-mode
   :config
   (drag-stuff-global-mode 1))
+
 (delete-selection-mode 1)
 (setq kill-ring-max 200)
 (setq kill-whole-line t)
-(setq require-final-newline t)
 (setq-default tab-width 4)
 (setq tab-stop-list
       (number-sequence 4 120 4))
@@ -1170,6 +1175,7 @@ Use ~tempel~ to expand template.
 ;; Configure Tempel
 (use-package tempel
   :bind (("M-+" . tempel-complete)
+         ("M-=" . tempel-complete)
          ("M-*" . tempel-insert)
          :map tempel-map
          ("M-RET" . tempel-done)
