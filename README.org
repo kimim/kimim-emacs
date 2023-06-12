@@ -1140,8 +1140,9 @@ Check spell on the fly.
                                     (frame-char-width))))
                 (setq org-image-actual-width `(,frame-width))
                 (setq markdown-max-image-size org-image-actual-width)
-                (org-redisplay-inline-images)
-                (when markdown-inline-image-overlays
+                (when (bound-and-true-p org-inline-image-overlays)
+                  (org-redisplay-inline-images))
+                (when (bound-and-true-p markdown-inline-image-overlays)
                   (markdown-remove-inline-images)
                   (markdown-display-inline-images))))))
 #+end_src
