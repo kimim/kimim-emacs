@@ -522,24 +522,12 @@ window space.
   :load-path (lambda ()
                (concat kimim/path-kimim-emacs
                 "site-lisp/awesome-tray"))
-  :hook (pdf-view-mode
-         .
-         (lambda ()
-           ;; show page if in pdf-view mode
-           (setq-local
-            awesome-tray-active-modules
-            (mapcar
-             (lambda (item)
-               (if (string= item "location")
-                   "pdf-view-page"
-                 item))
-             awesome-tray-active-modules))))
   :commands (awesome-tray-mode)
   :custom
   (awesome-tray-date-format "%-m-%-e %H:%M")
   (awesome-tray-active-modules '("org-pomodoro" "changed" "git"
-                                 "location" "belong" "celestial"
-                                 "date"))
+                                 "location-or-page" "belong" "celestial"
+                                 "date" "input-method"))
   (awesome-tray-mode-line-default-height 0.85)
   (awesome-tray-location-info-top "↑")
   (awesome-tray-location-info-bottom "↓")
@@ -548,11 +536,13 @@ window space.
   (awesome-tray-grey-face
    ((((background light)) :foreground "dim grey" :bold nil)
     (t :foreground "dark grey" :bold nil)))
-  (awesome-tray-module-location-face
+  (awesome-tray-module-location-or-page-face
    ((t :inherit awesome-tray-grey-face)))
   (awesome-tray-module-git-face
    ((t :inherit awesome-tray-grey-face)))
   (awesome-tray-module-pdf-view-page-face
+   ((t :inherit awesome-tray-grey-face)))
+  (awesome-tray-module-input-method-face
    ((t :inherit awesome-tray-grey-face)))
   (org-mode-line-clock
    ((t :inherit unspecified)))
@@ -592,7 +582,7 @@ window space.
         (setq kimim/awesome-tray-original-modules
               awesome-tray-active-modules)
         (setq awesome-tray-active-modules
-              '("changed" "location" "date"))))))
+              '("changed" "location-or-page" "date" "input-method"))))))
 #+end_src
 
 ** path in headerline
