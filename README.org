@@ -531,7 +531,7 @@ window space.
   (awesome-tray-mode-line-default-height 0.85)
   (awesome-tray-location-info-top "↑")
   (awesome-tray-location-info-bottom "↓")
-
+  (awesome-tray-input-method-local-style "Ѱ")
   :custom-face
   (awesome-tray-grey-face
    ((((background light)) :foreground "dim grey" :bold nil)
@@ -879,13 +879,16 @@ A translator extension written by [[https://condy0919.github.io][Youmu]].
 #+begin_src emacs-lisp
 (use-package rime
   :bind
-  (:map
+  (("C-|" . (lambda ()
+               (interactive)
+               (setq rime--temporarily-ignore-predicates t)))
+   :map
    rime-active-mode-map
    ("C-h" . rime--backspace)
    ("M-h" . rime--backspace))
   :custom
   (default-input-method "rime")
-  (rime-title "R")
+  (rime-title "Ѱ")
   (rime-disable-predicates
    '(rime-predicate-current-uppercase-letter-p
      rime-predicate-space-after-cc-p
