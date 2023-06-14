@@ -557,7 +557,21 @@ window space.
      (setq awesome-tray-mode-line-active-color
            (face-attribute 'mode-line :background))
      (setq awesome-tray-mode-line-inactive-color
-           (face-attribute 'mode-line-inactive :background))))
+           (face-attribute 'default :background))))
+
+  (advice-add
+   'awesome-tray-enable
+   :after
+   (lambda ()
+     (set-face-attribute 'mode-line-inactive nil
+                         :underline (face-attribute 'mode-line :foreground))))
+
+  (advice-add
+   'awesome-tray-disable
+   :after
+   (lambda ()
+     (set-face-attribute 'mode-line-inactive nil
+                         :underline 'unspecified)))
 
   (defun kimim/awesome-tray-module-buffer-changed-info ()
     (if (and (buffer-modified-p)
