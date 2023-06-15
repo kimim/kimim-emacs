@@ -534,27 +534,27 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
 (defun kimim/theme-night ()
   "Change emacs theme and sumatrapdf theme to night color"
   (interactive)
-  (load-theme 'kimim-night)
-  (kimim/sumantrapdf-theme "#333333"))
-
+  (load-theme 'hippo-themes-night)
+  ;;(kimim/sumantrapdf-theme "#333333")
+  (w32-shell-execute
+   "open" "reg"
+   "add HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0x00000000 /f"))
 
 (defun kimim/theme-light ()
   "Change emacs theme and sumatrapdf theme to light color"
   (interactive)
-  (load-theme 'kimim-light)
-  (kimim/sumantrapdf-theme "#aaaaaa"))
-
+  (load-theme 'hippo-themes-light)
+  ;;(kimim/sumantrapdf-theme "#aaaaaa")
+  (w32-shell-execute
+   "open" "reg"
+   "add HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0x00000001 /f"))
 
 (defun kimim/theme-paper ()
   "Change emacs theme and sumatrapdf theme to paper color"
   (interactive)
-  (load-theme 'kimim-paper)
-  (kimim/sumantrapdf-theme "#e4dcc8"))
-
-
-(defun kimim/org-roam-migrate-buffer ()
-  (interactive)
-  (org-roam-migrate-v1-to-v2))
+  (load-theme 'hippo-themes-paper)
+  ;;(kimim/sumantrapdf-theme "#e4dcc8")
+  )
 
 
 (defun kimim/shake-mouse ()
@@ -569,9 +569,6 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
                     (lambda (x y)
                       (set-mouse-pixel-position (selected-frame) x y))
                     x y)))
-
-;; (advice-add 'recenter-top-bottom
-;;             :after #'kimim/shake-mouse)
 
 (defun kimim/top-right-mouse ()
   "Move mouse to top right corner"
