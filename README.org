@@ -525,9 +525,9 @@ window space.
   :commands (awesome-tray-mode)
   :custom
   (awesome-tray-date-format "%-m-%-e %H:%M")
-  (awesome-tray-active-modules '("org-pomodoro" "changed" "git"
-                                 "location-or-page" "belong" "celestial"
-                                 "date" "input-method"))
+  (awesome-tray-active-modules '("buffer-name" "changed" "org-pomodoro"
+                                 "git" "location-or-page" "belong"
+                                 "celestial" "date" "input-method"))
   (awesome-tray-mode-line-default-height 0.85)
   (awesome-tray-location-info-top "↑")
   (awesome-tray-location-info-bottom "↓")
@@ -536,6 +536,8 @@ window space.
   (awesome-tray-grey-face
    ((((background light)) :foreground "dim grey" :bold nil)
     (t :foreground "dark grey" :bold nil)))
+  (awesome-tray-module-buffer-name-face
+   ((t :inherit awesome-tray-grey-face)))
   (awesome-tray-module-location-or-page-face
    ((t :inherit awesome-tray-grey-face)))
   (awesome-tray-module-git-face
@@ -596,7 +598,8 @@ window space.
         (setq kimim/awesome-tray-original-modules
               awesome-tray-active-modules)
         (setq awesome-tray-active-modules
-              '("changed" "location-or-page" "date" "input-method"))))))
+              '("buffer-name" "changed" "location-or-page"
+                "date" "input-method"))))))
 #+end_src
 
 ** path in headerline
@@ -1874,8 +1877,8 @@ Rich annotations in the minibuffer.
   (setq corfu-auto t
         corfu-fancy t
         corfu-count 5
-        corfu-min-width 60
-        corfu-max-width corfu-min-width
+        corfu-min-width 30
+        corfu-max-width 60
         corfu-auto-delay 0.01
         corfu-preview-current t
         corfu-auto-prefix 2
@@ -2177,12 +2180,12 @@ With ~yafolding-mode~, you can:
 
 #+begin_src emacs-lisp
 (use-package ggtags
-  :bind (:map ggtags-mode-map
-         ("M-." . ggtags-find-definition)
-         :map ggtags-navigation-mode-map
-         ("M-o" . other-window)
-         ("M-<" . beginning-of-buffer)
-         ("M->" . end-of-buffer))
+  :bind
+  (:map
+   ggtags-navigation-mode-map
+   ("M-o" . other-window)
+   ("M-<" . beginning-of-buffer)
+   ("M->" . end-of-buffer))
   :hook ((c-mode c++-mode) . ggtags-mode)
   :config
   ;; eglot use M-. for code navigation
