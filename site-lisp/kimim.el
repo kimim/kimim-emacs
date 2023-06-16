@@ -534,20 +534,22 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
 (defun kimim/theme-night ()
   "Change emacs theme and sumatrapdf theme to night color"
   (interactive)
-  (load-theme 'hippo-themes-night)
-  ;;(kimim/sumantrapdf-theme "#333333")
   (w32-shell-execute
    "open" "reg"
-   "add HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0x00000000 /f"))
+   "add HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0x00000000 /f")
+  (load-theme 'hippo-themes-night)
+  ;;(kimim/sumantrapdf-theme "#333333")
+  )
 
 (defun kimim/theme-light ()
   "Change emacs theme and sumatrapdf theme to light color"
   (interactive)
-  (load-theme 'hippo-themes-light)
-  ;;(kimim/sumantrapdf-theme "#aaaaaa")
   (w32-shell-execute
    "open" "reg"
-   "add HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0x00000001 /f"))
+   "add HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0x00000001 /f")
+  (load-theme 'hippo-themes-light)
+  ;;(kimim/sumantrapdf-theme "#aaaaaa")
+  )
 
 (defun kimim/theme-paper ()
   "Change emacs theme and sumatrapdf theme to paper color"
