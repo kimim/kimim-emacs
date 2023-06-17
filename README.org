@@ -977,6 +977,49 @@ look up local dictionary with help from ~sdcv~.
               #'kimim/fanyi-dwim-add-sdcv))
 #+end_src
 
+** Wordreference
+
+#+begin_src emacs-lisp
+(use-package wordreference
+  :commands (wordreference-search)
+  :config
+  (defun kimim/wr-ende ()
+    (interactive)
+    (let ((wordreference-source-lang "en")
+          (wordreference-target-lang "de"))
+      (wordreference-search)))
+
+  (defun kimim/wr-ensv ()
+    (interactive)
+    (let ((wordreference-source-lang "en")
+          (wordreference-target-lang "sv"))
+      (wordreference-search)))
+
+  (defun kimim/wr-enfr ()
+    (interactive)
+    (let ((wordreference-source-lang "en")
+          (wordreference-target-lang "fr"))
+      (wordreference-search)))
+
+  (defun kimim/wr-deen ()
+    (interactive)
+    (let ((wordreference-source-lang "de")
+          (wordreference-target-lang "en"))
+      (wordreference-search)))
+
+  (defun kimim/wr-sven ()
+    (interactive)
+    (let ((wordreference-source-lang "sv")
+          (wordreference-target-lang "en"))
+      (wordreference-search)))
+
+  (defun kimim/wr-fren ()
+    (interactive)
+    (let ((wordreference-source-lang "fr")
+          (wordreference-target-lang "en"))
+      (wordreference-search))))
+#+end_src
+
 * Editing
 ** Input Method
 
