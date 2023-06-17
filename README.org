@@ -971,7 +971,8 @@ look up local dictionary with help from ~sdcv~.
          (sdcv-search-with-dictionary
           word sdcv-dictionary-complete-list))
         (insert "\n\n")
-        (beginning-of-buffer)))))
+        (beginning-of-buffer)
+        (window-resize nil (- 35 (window-size nil t)) t)))))
 
   (advice-add 'fanyi-dwim :after
               #'kimim/fanyi-dwim-add-sdcv))
