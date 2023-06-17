@@ -28,3 +28,6 @@
 [submodule "site-lisp/ts-fold"]
 	path = site-lisp/ts-fold
 	url = git@github.com:emacs-tree-sitter/ts-fold.git
+[submodule "site-lisp/sdcv"]
+	path = site-lisp/sdcv
+	url = git@github.com:manateelazycat/sdcv.git

@@ -869,13 +869,62 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
        (car kill-ring)))))
 #+end_src
 
+** sdcv
+
+A local dictionary tool is useful when network connection has
+problems. You can get dictionary files from [[https://github.com/manateelazycat/lazycat-emacs/tree/master/site-lisp/sdcv-dict][lazycat-emacs]], or
+[[http://download.huzheng.org/dict.org/][huzheng.org]].
+
+#+begin_src emacs-lisp
+(use-package sdcv
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                       "site-lisp/sdcv"))
+  :bind
+  ("C-M-z" . sdcv-search-input)
+  ("C-x m ," . sdcv-search-pointer)
+  ("C-x m ." . sdcv-search-pointer+)
+  :config
+  (require 'sdcv)
+  (setq sdcv-say-word-p t)
+  ;; set your local dictionaries path
+  (setq sdcv-dictionary-data-dir (file-truename "~/.emacs.d/dict"))
+  (setq sdcv-dictionary-simple-list
+        '("懒虫简明英汉词典"))
+  (setq sdcv-dictionary-complete-list
+        '(
+          "懒虫简明英汉词典"
+          "英汉汉英专业词典"
+          "XDICT 英汉辞典"
+          "stardict1.3 英汉辞典"
+          "WordNet"
+          "XDICT 汉英辞典"
+          "Jargon"
+          "懒虫简明汉英词典"
+          "FOLDOC"
+          "新世纪英汉科技大词典"
+          "KDic11 万英汉词典"
+          "朗道汉英字典 5.0"
+          "CDICT5 英汉辞典"
+          "新世纪汉英科技大词典"
+          "牛津英汉双解美化版"
+          "21 世纪双语科技词典"
+          "quick_eng-zh_CN"
+          )))
+#+end_src
+
 ** fanyi.el
 
 A translator extension written by [[https://condy0919.github.io][Youmu]].
 
+I added ~kimim/fanyi-dwim-add-sdcv~ as ~:after~ advice for ~fanyi-dwim~ to
+look up local dictionary with help from ~sdcv~.
+
 #+begin_src emacs-lisp
 (use-package fanyi
   :ensure t
+  :bind
+  ("C-x m f" . fanyi-dwim)
   :custom
   (fanyi-providers '(;; 海词
                      fanyi-haici-provider
@@ -887,7 +936,45 @@ A translator extension written by [[https://condy0919.github.io][Youmu]].
                      fanyi-longman-provider))
   :bind (:map fanyi-mode-map
               ("n" . outline-next-visible-heading)
-              ("p" . outline-previous-visible-heading)))
+              ("p" . outline-previous-visible-heading))
+  :config
+  (require 'sdcv)
+  (defun kimim/sdcv-translate-result-advice (word dictionary-list)
+    (let* ((arguments
+            (cons word
+                  (mapcan
+                   (lambda (d) (list "-u" d)) dictionary-list)))
+         (result (mapconcat
+                  (lambda (result)
+                    (let-alist result
+                      (format
+                       "## %s\n%s\n\n" .dict .definition)))
+                  (apply #'sdcv-call-process arguments)
+                  "")))
+    (if (string-empty-p result)
+        sdcv-fail-notify-string
+      result)))
+
+  (advice-add 'sdcv-translate-result
+              :override
+              #'kimim/sdcv-translate-result-advice)
+
+  (defun kimim/fanyi-dwim-add-sdcv (word)
+    (let ((buf (get-buffer fanyi-buffer-name)))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t)
+            (inhibit-point-motion-hooks t))
+        ;; Clear the previous search result.
+        (point-max)
+        (insert "# SDCV\n\n")
+        (insert
+         (sdcv-search-with-dictionary
+          word sdcv-dictionary-complete-list))
+        (insert "\n\n")
+        (beginning-of-buffer)))))
+
+  (advice-add 'fanyi-dwim :after
+              #'kimim/fanyi-dwim-add-sdcv))
 #+end_src
 
 * Editing
@@ -1701,7 +1788,6 @@ Rich annotations in the minibuffer.
          ("C-x M-b" . consult-buffer-other-window)
          ("C-x m j" . consult-bookmark)            ;; orig. bookmark-jump
          ("C-x m v" . find-variable)
-         ("C-x m f" . find-function)
          ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
          ;; Custom M-# bindings for fast register access
          ("M-#" . consult-register-load)
@@ -2657,7 +2743,8 @@ emacs theme color.
   :functions (pdf-view-refresh-themed-buffer)
   :defines (pdf-view-themed-minor-mode)
   :mode ("\\.pdf\\'" . pdf-view-mode)
-  :hook (pdf-view-mode . pdf-view-themed-minor-mode)
+  :hook ((pdf-view-mode . pdf-view-themed-minor-mode)
+         (pdf-view-mode . pdf-isearch-minor-mode))
   :custom (pdf-view-display-size 3.85)
   :bind
   (:map
@@ -2690,6 +2777,7 @@ emacs theme color.
                filename)
               (message "Copied %s" filename)))))
   :config
+  (require 'pdf-tools)
   (advice-add 'enable-theme :after
               (lambda (&rest _)
                 (when pdf-view-themed-minor-mode
