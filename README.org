@@ -972,7 +972,8 @@ look up local dictionary with help from ~sdcv~.
           word sdcv-dictionary-complete-list))
         (insert "\n\n")
         (beginning-of-buffer)
-        (window-resize nil (- 35 (window-size nil t)) t)))))
+        (window-resize nil (- 35 (window-size nil t)) t)))
+    (other-window 1)))
 
   (advice-add 'fanyi-dwim :after
               #'kimim/fanyi-dwim-add-sdcv))
@@ -982,7 +983,13 @@ look up local dictionary with help from ~sdcv~.
 
 #+begin_src emacs-lisp
 (use-package wordreference
-  :commands (wordreference-search)
+  :commands (wordreference-search
+             kimim/wr-fren
+             kimim/wr-enfr
+             kimim/wr-deen
+             kimim/wr-ende
+             kimim/wr-sven
+             kimim/wr-ensv)
   :config
   (defun kimim/wr-ende ()
     (interactive)
@@ -2715,6 +2722,16 @@ yarn add @mermaid-js/mermaid-cli
 #+begin_src emacs-lisp
 (use-package mermaid-mode
   :mode ("\\.mermaid\\'" . mermaid-mode))
+#+end_src
+
+** iscroll
+
+scroll images line by line.
+
+#+begin_src emacs-lisp
+(use-package iscroll
+  :diminish iscroll-mode
+  :hook ((org-mode markdown-mode) . iscroll-mode))
 #+end_src
 
 * Music
