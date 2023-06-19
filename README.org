@@ -2813,6 +2813,7 @@ emacs theme color.
    ("C-s" . isearch-forward)
    ("C-r" . isearch-backward)
    ("C-o" . pdf-occur)
+   ("C-l" . pdf-view-center-in-window)
    ("j" . (lambda ()
             "Next line within page"
             (interactive)
