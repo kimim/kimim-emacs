@@ -2837,7 +2837,8 @@ emacs theme color.
                              (buffer-file-name))))
               (kill-new
                filename)
-              (message "Copied %s" filename)))))
+              (message "Copied %s" filename))))
+   ("t" . kimim/pdf-view-pagetext))
   :config
   (require 'pdf-tools)
   (advice-add 'enable-theme :after
@@ -2861,10 +2862,17 @@ emacs theme color.
     (interactive)
     (bibtex-completion-edit-notes (list (pdf-view-get-bibtex-key))))
 
-
   (defun pdf-view-get-bibtex-key ()
     "Get bibtex key from PDF buffer name in pdf-view mode"
-    (car (string-split (buffer-name) "[-\\(_\\.]+"))))
+    (car (string-split (buffer-name) "[-\\(_\\.]+")))
+
+  (defun kimim/pdf-view-pagetext ()
+    "Show pdf text in a buffer."
+    (interactive)
+    (pdf-view-mark-whole-page)
+    (pdf-view-kill-ring-save)
+    (switch-to-buffer "*pdf-view-pagetext*")
+    (yank)))
 #+end_src
 
 ** pdf-view-store
