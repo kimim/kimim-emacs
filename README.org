@@ -4145,9 +4145,7 @@ second name, ..., N congruent to 60 gives the sixtieth name."
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          :map org-agenda-mode-map
-         ("g" . (lambda ()
-                  (interactive)
-                  (org-agenda-redo-all t)))
+         ("o" . other-window)
          ("C-c C-x C-p" . org-previous-link)
          ("C-c C-x C-n" . org-next-link)
          ("C-c C-k" . org-agenda-kill-files)
@@ -4160,7 +4158,6 @@ second name, ..., N congruent to 60 gives the sixtieth name."
                           (interactive)
                           (org-agenda-todo 'right))))
   :custom
-  (org-agenda-sticky t)
   (org-directory kimim/path-org)
   (org-agenda-files
    (file-expand-wildcards (concat kimim/path-org "*.org")))
