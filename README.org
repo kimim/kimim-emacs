@@ -4250,6 +4250,36 @@ second name, ..., N congruent to 60 gives the sixtieth name."
             org-agenda-files)))
 #+end_src
 
+Keep several agenda buffers by turning on ~org-agenda-sticky~, and
+rebind ~g~ in ~org-aganda-mode-map~ to redo all agenda buffers.
+
+Bind ~C-c j~ to ~kimim/org-agenda-planning~ to open agenda list and todo
+list for planning side by side.
+
+#+begin_src emacs-lisp
+(use-package org
+  :bind
+  (("C-c j" . kimim/org-agenda-planning)
+   :map
+   org-agenda-mode-map
+   ("g" . kimim/org-agenda-redo-all-buffers))
+
+  :custom
+  (org-agenda-sticky t)
+
+  :config
+  (defun kimim/org-agenda-redo-all-buffers ()
+    "Redo all agenda buffers."
+    (interactive)
+    (org-agenda-redo-all t))
+
+  (defun kimim/org-agenda-planning ()
+    "Open todo list and agenda list for task planning."
+    (interactive)
+    (org-todo-list nil)
+    (org-agenda-list nil)))
+#+end_src
+
 * Mail and Contacts
 ** EBDB - a replacement for BBDB, as contact management
 
