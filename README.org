@@ -936,7 +936,8 @@ look up local dictionary with help from ~sdcv~.
                      fanyi-longman-provider))
   :bind (:map fanyi-mode-map
               ("n" . outline-next-visible-heading)
-              ("p" . outline-previous-visible-heading))
+              ("p" . outline-previous-visible-heading)
+              ("o" . other-window))
   :config
   (require 'sdcv)
   (defun kimim/sdcv-translate-result-advice (word dictionary-list)
@@ -2823,6 +2824,7 @@ emacs theme color.
             (image-next-line -1)))
    ("n" . kimim/pdf-view-next-page)
    ("p" . kimim/pdf-view-previous-page)
+   ("o" . other-window)
    ("<home>". (lambda ()
                 (interactive)
                 (image-scroll-up -999)))
