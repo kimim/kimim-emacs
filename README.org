@@ -2981,6 +2981,10 @@ Add indicator of remaining text when scrolling PDF pages.
           (find-file pdf-file)
         (message "no pdf found for %s" key))))
 
+  (defun kimim/org-ref-open-bibtex-pdf ()
+    (interactive)
+    (kimim/org-ref-open-pdf-action (bibtex-completion-get-key-bibtex)))
+
   (defun kimim/org-ref-open-pdf (&optional arg)
     (interactive)
     (kimim/org-ref-open-pdf-action (org-ref-read-key)))
@@ -3055,7 +3059,7 @@ support more functions from =org-ref=:
 (use-package bibtex
   :ensure nil
   :bind (:map bibtex-mode-map
-         ("C-x m p" . org-ref-open-bibtex-pdf)
+         ("C-x m p" . kimim/org-ref-open-bibtex-pdf)
          ("C-x m n" . org-ref-open-bibtex-notes)
          ("C-x m d" . kimim/org-ref-open-bibtex-in-dired)
          ("C-c C-z" . org-ref-open-bibtex-notes))
