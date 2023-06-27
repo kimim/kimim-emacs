@@ -4101,6 +4101,7 @@ or \\[markdown-toggle-inline-images]."
   (calendar-chinese-terrestrial-branch
    ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
   :config
+  (require 'ebdb)
   ;; redefine Chinese sexagesimal format
   (defun calendar-chinese-sexagesimal-name (n)
     "The N-th name of the Chinese sexagesimal cycle.
