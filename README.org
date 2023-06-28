@@ -1211,6 +1211,7 @@ specified functions.
           org-previous-visible-heading
           org-forward-heading-same-level
           org-backward-heading-same-level
+          org-agenda-goto
           markdown-next-visible-heading
           markdown-previous-visible-heading
           markdown-forward-heading-same-level
@@ -4277,7 +4278,7 @@ list for planning side by side.
   (defun kimim/org-agenda-planning ()
     "Open todo list and agenda list for task planning."
     (interactive)
-    (org-todo-list nil)
+    (org-agenda nil "d")
     (org-agenda-list nil)))
 #+end_src
 
