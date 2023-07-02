@@ -480,8 +480,14 @@ moralische Gesetz in mir.
   (setq celestial-mode-line-phase-representation-alist
         '((0 . "●") (1 . ">") (2 . "○") (3 . "<")))
   (setq global-mode-string '("" celestial-mode-line-string
-                             "  " display-time-string ""))
+                             "  " display-time-string "")))
+#+end_src
 
+Add sunrise/sunset info to modeline text description.
+
+#+begin_src emacs-lisp
+(use-package celestial-mode-line
+  :config
   (defun kimim/celestial-mode-line--sunrise-sunset-string (time)
     (cl-destructuring-bind (sun-time location)
         time
@@ -505,10 +511,55 @@ moralische Gesetz in mir.
      ", "
      (apply orig-fun args)))
 
-    ;; add sun rise/set info to modeline text description
+  ;; add sun rise/set info to modeline text description
   (advice-add 'celestial-mode-line--text-description
               :around
-              #'kimim/celestial-mode-line--sun-description)
+              #'kimim/celestial-mode-line--sun-description))
+#+end_src
+
+Update theme with sun.
+
+#+begin_src emacs-lisp
+(use-package celestial-mode-line
+  :config
+  (require 'kimim)
+  (defun kimim/update-theme-with-sun (orig-fun &optional date)
+    (let ((sun-before (and (< 0 (length celestial-mode-line-string))
+                           (substring
+                            (substring-no-properties
+                             celestial-mode-line-string 0 -5)
+                            -2 nil))))
+      (apply orig-fun date)
+      (let ((sun-after (substring
+                        (substring-no-properties
+                         celestial-mode-line-string 0 -5)
+                        -2 nil)))
+        (cond
+         ((and (or (not sun-before)
+                   (equal sun-before
+                          (cdr (assoc
+                                'sunrise
+                                celestial-mode-line-sunrise-sunset-alist))))
+               (equal sun-after
+                      (cdr (assoc
+                            'sunset
+                            celestial-mode-line-sunrise-sunset-alist))))
+          (kimim/theme-light))
+         ((and (or (not sun-before)
+                   (equal sun-before
+                          (cdr (assoc
+                                'sunset
+                                celestial-mode-line-sunrise-sunset-alist))))
+               (equal sun-after
+                      (cdr (assoc
+                            'sunrise
+                            celestial-mode-line-sunrise-sunset-alist))))
+          (kimim/theme-night))))))
+
+  (advice-add 'celestial-mode-line-update
+              :around
+              #'kimim/update-theme-with-sun)
+  ;;(advice-remove 'celestial-mode-line-update #'kimim/update-theme-with-sun)
   (celestial-mode-line-start-timer))
 #+end_src
 
