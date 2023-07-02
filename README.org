@@ -1235,10 +1235,46 @@ specified functions.
 
 ** ispell
 
+[[https://git.savannah.gnu.org/cgit/emacs.git/tree/etc/NEWS.26#n1155][Emacs 26]] supports Enchant, which is a meta-spell-checker that uses
+providers such as Hunspell to do the actual checking.  With it, users
+can use spell-checkers not directly supported by Emacs, such as
+Voikko, Hspell and AppleSpell, more easily share personal word-lists
+with other programs, and configure different spelling-checkers for
+different languages.
+
+The benefit is that you can use the same personal word-lists for
+different spell checkers in Windows, Linux or macOS.
+
+I get this idea from [[https://github.com/Eason0210][Eason0210]] at [[https://emacs-china.org/t/emacs-enchant-spell-checker/24035][Emacs China]] on [2023-07-02 Sun].
+
+Install ~enchant~.
+
+Windows/msys64:
+
+#+begin_src shell
+pacman -S mingw64/mingw-w64-x86_64-enchant
+#+end_src
+
+macOS
+
+#+begin_src shell
+sudo port install enchant2
+# or
+brew install enchant
+#+end_src
+
+Add ~ENCHANT_CONFIG_DIR~ to your ~.bashrc~, if you want to keep enchant
+settings in your home folder. Otherwise, it keeps personal dictionary
+at ~Local Settings~. see [[https://abiword.github.io/enchant/src/enchant.html][enchant manual]].
+
+#+begin_src shell
+export ENCHANT_CONFIG_DIR=~/.config/enchant/
+#+end_src
+
 #+begin_src emacs-lisp
 (use-package ispell
   :custom
-  (ispell-program-name "hunspell")
+  (ispell-program-name "enchant-2")
   (ispell-silently-savep t)
   :config
   (cond ((eq system-type 'windows-nt)
