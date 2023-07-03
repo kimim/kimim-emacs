@@ -4362,7 +4362,7 @@ list for planning side by side.
   (defun kimim/org-agenda-planning ()
     "Open todo list and agenda list for task planning."
     (interactive)
-    (org-agenda nil "d")
+    (org-agenda nil "t")
     (org-agenda-list nil)))
 #+end_src
 
