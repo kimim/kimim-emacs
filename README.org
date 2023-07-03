@@ -524,42 +524,39 @@ Update theme with sun.
   :config
   (require 'kimim)
   (defun kimim/update-theme-with-sun (orig-fun &optional date)
-    (let ((sun-before (and (< 0 (length celestial-mode-line-string))
-                           (substring
-                            (substring-no-properties
-                             celestial-mode-line-string 0 -5)
-                            -2 nil))))
+    (let* ((sunrise-symbol
+            (cdr (assoc
+                  'sunrise
+                  celestial-mode-line-sunrise-sunset-alist)))
+           (sunset-symbol
+            (cdr (assoc
+                  'sunset
+                  celestial-mode-line-sunrise-sunset-alist)))
+           (sunrise-before
+            (string-search sunrise-symbol
+                           celestial-mode-line-string))
+           (sunset-before
+            (string-search sunset-symbol
+                           celestial-mode-line-string)))
       (apply orig-fun date)
-      (let ((sun-after (substring
-                        (substring-no-properties
-                         celestial-mode-line-string 0 -5)
-                        -2 nil)))
+      (let* ((sunrise-after
+              (string-search sunrise-symbol
+                             celestial-mode-line-string))
+             (sunset-after
+              (string-search sunset-symbol
+                             celestial-mode-line-string)))
         (cond
-         ((and (or (not sun-before)
-                   (equal sun-before
-                          (cdr (assoc
-                                'sunrise
-                                celestial-mode-line-sunrise-sunset-alist))))
-               (equal sun-after
-                      (cdr (assoc
-                            'sunset
-                            celestial-mode-line-sunrise-sunset-alist))))
+         ((and (not sunset-before)
+               sunset-after)
           (kimim/theme-light))
-         ((and (or (not sun-before)
-                   (equal sun-before
-                          (cdr (assoc
-                                'sunset
-                                celestial-mode-line-sunrise-sunset-alist))))
-               (equal sun-after
-                      (cdr (assoc
-                            'sunrise
-                            celestial-mode-line-sunrise-sunset-alist))))
+         ((and (not sunrise-before)
+               sunrise-after)
           (kimim/theme-night))))))
 
   (advice-add 'celestial-mode-line-update
               :around
               #'kimim/update-theme-with-sun)
-  ;;(advice-remove 'celestial-mode-line-update #'kimim/update-theme-with-sun)
+
   (celestial-mode-line-start-timer))
 #+end_src
 
