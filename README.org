@@ -1076,6 +1076,16 @@ look up local dictionary with help from ~sdcv~.
       (wordreference-search))))
 #+end_src
 
+** eldoc-box
+
+Show eldoc in a childframe box.
+
+#+begin_src emacs-lisp
+(use-package eldoc-box
+  :diminish eldoc-box-hover-mode
+  :hook (prog-mode . eldoc-box-hover-mode))
+#+end_src
+
 * Editing
 ** Input Method
 
