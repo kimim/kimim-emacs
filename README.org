@@ -1781,7 +1781,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
     (let ((filename (dired-get-filename)))
       (kill-new (concat
                  "[["
-                 filename
+                 (concat "~/" (file-relative-name filename "~"))
                  "]["
                  (file-name-nondirectory filename)
                  "]]"))))
@@ -3094,7 +3094,7 @@ Add indicator of remaining text when scrolling PDF pages.
                                 (buffer-local-value
                                  'major-mode (current-buffer)))
                             (org-ref-get-bibtex-key-and-file))
-                        (error nil))))
+                      (error nil))))
       (if (or (null results)
               (string= "" (car results))
               (null (car results)))
