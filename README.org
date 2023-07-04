@@ -3035,7 +3035,8 @@ Add indicator of remaining text when scrolling PDF pages.
          ("C-x m P" . kimim/org-ref-open-pdf-in-dired-at-point)
          ("C-x m n" . kimim/org-ref-open-notes-at-point)
          :map org-mode-map
-         ("C-c ]" . org-ref-insert-cite-link))
+         ("C-c ]" . org-ref-insert-cite-link)
+         ("C-c o" . kimim/org-roam-ref-open-pdf))
   :config
   (require 'bibtex-completion)
   (require 'org-roam-bibtex)
@@ -3146,7 +3147,16 @@ Add indicator of remaining text when scrolling PDF pages.
            (key (car results)))
       (if (or (string= "" key) (null key))
           (kimim/org-ref-open-notes)
-        (kimim/org-ref-open-notes-action key)))))
+        (kimim/org-ref-open-notes-action key))))
+
+  (defun kimim/org-roam-ref-open-pdf ()
+    "Open pdf from ROAM_REFS of a note."
+    (interactive)
+    (kimim/org-ref-open-pdf-action
+     (cadr
+      (string-split
+       (car (org-property-values "ROAM_REFS"))
+       ":")))))
 #+end_src
 
 There is a built-in =bibtex-mode= to manage references. We can extend it to
