@@ -1083,7 +1083,7 @@ Show eldoc in a childframe box.
 #+begin_src emacs-lisp
 (use-package eldoc-box
   :diminish eldoc-box-hover-mode
-  :hook (prog-mode . eldoc-box-hover-mode))
+  :hook (eglot-managed-mode . eldoc-box-hover-mode))
 #+end_src
 
 * Editing
