@@ -3288,6 +3288,7 @@ spaces before plain text line.
   (org-modern-block-name nil)
   (org-modern-block-fringe nil)
   (org-modern-keyword nil)
+  (org-modern-priority nil)
   :hook
   (org-mode . org-modern-mode)
   :config
