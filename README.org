@@ -2014,13 +2014,15 @@ Rich annotations in the minibuffer.
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
   (consult-customize
+   consult-xref
+   :preview-key '(:debounce 0 any)
    consult-theme consult--source-buffer
    :preview-key '(:debounce 5 any)
    consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file consult-xref
+   consult-bookmark consult-recent-file
    consult--source-bookmark consult--source-recent-file
    consult--source-project-recent-file
-   :preview-key "M-.")
+   :preview-key "C-.")
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
@@ -2401,6 +2403,17 @@ With ~yafolding-mode~, you can:
 #+begin_src emacs-lisp
 (use-package cmake-mode
   :mode ("CMakeLists\\.txt\\'" . cmake-mode))
+#+end_src
+
+** xref
+
+#+begin_src emacs-lisp
+(use-package xref
+  :ensure nil
+  :bind
+  (:map
+   prog-mode-map
+   ("C-." . xref-find-references)))
 #+end_src
 
 * Programming Language
