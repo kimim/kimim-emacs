@@ -613,8 +613,9 @@ window space.
    'awesome-tray-enable
    :after
    (lambda ()
-     (set-face-attribute 'mode-line-inactive nil
-                         :underline (face-attribute 'mode-line :foreground))))
+     (set-face-attribute
+      'mode-line-inactive nil
+      :underline (face-attribute 'mode-line :foreground))))
 
   (advice-add
    'awesome-tray-disable
