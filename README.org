@@ -4314,7 +4314,15 @@ second name, ..., N congruent to 60 gives the sixtieth name."
   (org-agenda-skip-scheduled-if-done t)
   (org-agenda-skip-deadline-if-done t)
   (org-agenda-custom-commands
-   '(("t" todo "TODO|OPEN"
+   '(("j" "agenda"
+      ((agenda "" ((org-agenda-span 2)
+                   (org-agenda-show-log t)))
+       (todo "TODO|OPEN"
+             ((org-agenda-sorting-strategy '(priority-down))))
+       (tags "+LEVEL>=2-category-habit-info
+                /-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-ABORT-SOMEDAY-REPEAT"
+                ((org-agenda-sorting-strategy '(priority-down))))))
+     ("t" todo "TODO|OPEN"
       ((org-agenda-sorting-strategy '(priority-down))))
      ("w" todo "SCHED|WAIT"
       ((org-agenda-sorting-strategy '(priority-down))))
@@ -4369,56 +4377,6 @@ second name, ..., N congruent to 60 gives the sixtieth name."
               (if-let (buf (get-file-buffer file))
                   (kill-buffer buf)))
             org-agenda-files)))
-#+end_src
-
-Keep several agenda buffers by turning on ~org-agenda-sticky~, and
-rebind ~g~ in ~org-aganda-mode-map~ to redo all agenda buffers.
-
-Bind ~C-c j~ to ~kimim/org-agenda-planning~ to open agenda list and todo
-list for planning side by side.
-
-#+begin_src emacs-lisp
-(use-package org
-  :bind
-  (("C-c j" . kimim/org-agenda-today)
-   :map
-   org-agenda-mode-map
-   ("g" . kimim/org-agenda-redo-all-buffers)
-   ("M-j" . kimim/org-agenda-today)
-   ("M-p" . kimim/org-agenda-planning)
-   ("M-q" . kimim/org-agenda-quit-all-agenda-buffers))
-  :custom
-  (org-agenda-sticky t)
-
-  :config
-  (defun kimim/org-agenda-redo-all-buffers ()
-    "Redo all agenda buffers."
-    (interactive)
-    (org-agenda-redo-all t))
-
-  (defun kimim/org-agenda-today ()
-    "Open todo list and agenda list for task in today."
-    (interactive)
-    (org-agenda nil "t")
-    (org-agenda-list nil))
-
-  (defun kimim/org-agenda-planning ()
-    "Open todo list and agenda list for task planning."
-    (interactive)
-    (org-agenda nil "#")
-    (org-agenda-list nil))
-
-  (defun kimim/org-agenda-quit-all-agenda-buffers ()
-    "Quit all buffers in `org-agenda-mode'."
-    (interactive)
-    (let (blist)
-      (dolist (buf (buffer-list))
-        (when (with-current-buffer buf (eq major-mode 'org-agenda-mode))
-          (push buf blist)))
-      (mapc (lambda (b)
-              (with-current-buffer b
-                (org-agenda-quit)))
-            blist))))
 #+end_src
 
 * Mail and Contacts
