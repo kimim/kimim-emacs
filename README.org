@@ -1091,7 +1091,9 @@ Show eldoc in a childframe box.
 #+begin_src emacs-lisp
 (use-package rime
   :bind
-  (("C-|" . (lambda ()
+  (:map
+   rime-mode-map
+   ("C-;" . (lambda ()
                (interactive)
                (setq rime--temporarily-ignore-predicates t)))
    :map
