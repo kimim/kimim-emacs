@@ -4267,6 +4267,8 @@ second name, ..., N congruent to 60 gives the sixtieth name."
          ("C-c c" . org-capture)
          :map org-agenda-mode-map
          ("o" . other-window)
+         ("C-c M-s" . kimim/org-agenda-unschedule)
+         ("C-c M-d" . kimim/org-agenda-undeadline)
          ("C-c C-x C-p" . org-previous-link)
          ("C-c C-x C-n" . org-next-link)
          ("C-c C-k" . org-agenda-kill-files)
@@ -4369,6 +4371,16 @@ second name, ..., N congruent to 60 gives the sixtieth name."
             (string= "CLOSE" (org-get-todo-state)))
         (org-todo "WAIT")
       (org-todo "SCHED")))
+
+  (defun kimim/org-agenda-unschedule ()
+    (interactive)
+    (org-agenda-schedule `(4))
+      (org-agenda-todo "TODO"))
+
+  (defun kimim/org-agenda-undeadline ()
+    (interactive)
+    (org-agenda-deadline `(4))
+    (org-agenda-todo "TODO"))
 
   (defun org-agenda-kill-files ()
     (interactive)
