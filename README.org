@@ -4380,11 +4380,13 @@ list for planning side by side.
 #+begin_src emacs-lisp
 (use-package org
   :bind
-  (("C-c j" . kimim/org-agenda-planning)
+  (("C-c j" . kimim/org-agenda-today)
    :map
    org-agenda-mode-map
-   ("g" . kimim/org-agenda-redo-all-buffers))
-
+   ("g" . kimim/org-agenda-redo-all-buffers)
+   ("M-j" . kimim/org-agenda-today)
+   ("M-p" . kimim/org-agenda-planning)
+   ("M-q" . kimim/org-agenda-quit-all-agenda-buffers))
   :custom
   (org-agenda-sticky t)
 
@@ -4394,11 +4396,29 @@ list for planning side by side.
     (interactive)
     (org-agenda-redo-all t))
 
+  (defun kimim/org-agenda-today ()
+    "Open todo list and agenda list for task in today."
+    (interactive)
+    (org-agenda nil "t")
+    (org-agenda-list nil))
+
   (defun kimim/org-agenda-planning ()
     "Open todo list and agenda list for task planning."
     (interactive)
-    (org-agenda nil "t")
-    (org-agenda-list nil)))
+    (org-agenda nil "#")
+    (org-agenda-list nil))
+
+  (defun kimim/org-agenda-quit-all-agenda-buffers ()
+    "Quit all buffers in `org-agenda-mode'."
+    (interactive)
+    (let (blist)
+      (dolist (buf (buffer-list))
+        (when (with-current-buffer buf (eq major-mode 'org-agenda-mode))
+          (push buf blist)))
+      (mapc (lambda (b)
+              (with-current-buffer b
+                (org-agenda-quit)))
+            blist))))
 #+end_src
 
 * Mail and Contacts
