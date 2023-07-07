@@ -796,8 +796,6 @@ from system PATH, so you should set these to system PATH.
    ("C-x C-v" . view-file-other-window)
    ("C-c C-o" . occur)
    ("C-z" . set-mark-command)
-   ("M-n" . next-error)
-   ("M-p" . previous-error)
    ("C-c C-/" . comment-or-uncomment-region)
    ("RET" . newline-and-indent)
    ("C-x m h" . help)
