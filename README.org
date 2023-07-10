@@ -2186,7 +2186,37 @@ Rich annotations in the minibuffer.
    .
    (lambda ()
      (setq-local corfu-auto nil)
-     (corfu-mode))))
+     (corfu-mode)))
+  :config
+  (defvar cape--dict-all-words nil)
+  (defun kimim/cape--dict-list (input)
+    "Return all words from `cape-dict-file' matching INPUT without grep."
+    (unless (equal input "")
+      (let* ((inhibit-message t)
+             (message-log-max nil)
+             (files (ensure-list
+                     (if (functionp cape-dict-file)
+                         (funcall cape-dict-file)
+                       cape-dict-file)))
+             (_ (unless cape--dict-all-words
+                  (setq cape--dict-all-words
+                        (split-string (with-temp-buffer
+                                        (mapc #'insert-file-contents
+                                              files)
+                                        (buffer-string))
+                                      "\n" 'omit-nulls))))
+             (words (let ((completion-ignore-case t)
+                          (completion-regexp-list
+                           (list (regexp-quote input))))
+                      (all-completions "" cape--dict-all-words))))
+        (cons
+         (apply-partially
+          (if (and cape-dict-limit (length= words cape-dict-limit))
+              #'equal #'string-search)
+          input)
+         (cape--case-replace-list cape-dict-case-replace input words)))))
+
+  (advice-add 'cape--dict-list :override #'kimim/cape--dict-list))
 #+end_src
 
 * Programming General
