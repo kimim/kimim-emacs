@@ -3198,6 +3198,8 @@ support more functions from =org-ref=:
          (nov-mode . (lambda ()
                        (visual-line-mode)
                        (setq line-spacing 0.5))))
+  :custom
+  (nov-header-line-format nil)
   :bind
   (:map
    nov-mode-map
