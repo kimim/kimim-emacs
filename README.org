@@ -4407,12 +4407,12 @@ second name, ..., N congruent to 60 gives the sixtieth name."
   (defun kimim/org-agenda-unschedule ()
     (interactive)
     (org-agenda-schedule `(4))
-      (org-agenda-todo "TODO"))
+    (org-agenda-todo 'left))
 
   (defun kimim/org-agenda-undeadline ()
     (interactive)
     (org-agenda-deadline `(4))
-    (org-agenda-todo "TODO"))
+    (org-agenda-todo 'left))
 
   (defun org-agenda-kill-files ()
     (interactive)
