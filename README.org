@@ -972,6 +972,9 @@ look up local dictionary with help from ~sdcv~.
   :ensure t
   :bind
   ("C-x m f" . fanyi-dwim)
+  :custom-face
+  (fanyi-word-face
+   ((t (:height 1 :weight bold :foreground "dark cyan"))))
   :custom
   (fanyi-providers '(;; 海词
                      fanyi-haici-provider
@@ -2109,6 +2112,7 @@ Rich annotations in the minibuffer.
    corfu-map
    ("M-h" . backward-kill-word))
   :config
+  (require 'cape)
   (setq corfu-auto t
         corfu-fancy t
         corfu-count 5
@@ -2330,6 +2334,7 @@ this directory as secure because you are the owner.
   (eglot-managed-mode
    . kimim/eglot-completion)
   :config
+  (require 'cape)
   (require 'lsp-snippet-tempel)
   (defun kimim/eglot-completion ()
     (setf (alist-get
