@@ -935,7 +935,9 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
   (require 'sdcv)
   (setq sdcv-say-word-p t)
   ;; set your local dictionaries path
-  (setq sdcv-dictionary-data-dir (file-truename "~/.emacs.d/dict"))
+  (setq sdcv-dictionary-data-dir (file-truename
+                                  (concat kimim/path-kimim-emacs
+                                          "site-lisp/sdcv-dict")))
   (setq sdcv-dictionary-simple-list
         '("懒虫简明英汉词典"))
   (setq sdcv-dictionary-complete-list

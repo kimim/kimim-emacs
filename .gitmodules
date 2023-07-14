@@ -31,3 +31,6 @@
 [submodule "site-lisp/sdcv"]
 	path = site-lisp/sdcv
 	url = git@github.com:manateelazycat/sdcv.git
+[submodule "site-lisp/sdcv-dict"]
+	path = site-lisp/sdcv-dict
+	url = git@github.com:kimim/sdcv-dict.git
