@@ -3852,7 +3852,7 @@ New link to use Office Onenote.
   :custom ((o2jk-blog-author "kimim")
            (o2jk-source-directory "~/notes/kimi.im/_notes/_posts")
            (o2jk-jekyll-directory "~/notes/kimi.im/_posts")
-           (o2jk-jekyll-drafts-dir "~/notes/_draft")
+           (o2jk-jekyll-drafts-dir "~/OneDrive/_draft")
            (o2jk-jekyll-posts-dir ""))
   :config
 
