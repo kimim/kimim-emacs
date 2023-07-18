@@ -4430,6 +4430,43 @@ second name, ..., N congruent to 60 gives the sixtieth name."
             org-agenda-files)))
 #+end_src
 
+** org-pomodoro
+
+Type ~C-x m m~ on agenda task to invoke ~org-pomodoro~. When an pomodoro
+is completed, a posframe showing break countdown in large font.
+
+#+begin_src emacs-lisp
+(use-package org-pomodoro
+  :after org
+  :custom ((org-pomodoro-audio-player "mpg123")
+           (org-pomodoro-format "(*) %s"))
+  :bind ("C-x m m" . org-pomodoro)
+  :config
+  (require 'posframe)
+
+  (defun kimim/org-pomodoro-tick-hook ()
+    (if (or (eq org-pomodoro-state :short-break)
+            (eq org-pomodoro-state :long-break))
+        (posframe-show
+         "*pomodoro*"
+         :string (propertize
+                  (cadr org-pomodoro-mode-line)
+                  'face
+                  '(:height 400 :inherit org-pomodoro-mode-line-break))
+         :poshandler 'posframe-poshandler-frame-center
+         :timeout 10)
+      (posframe-delete "*pomodoro*")))
+
+  (add-hook 'org-pomodoro-tick-hook
+            #'kimim/org-pomodoro-tick-hook)
+
+  (defun kimim/org-pomodoro-finished-action ()
+    (raise-frame))
+
+  (add-hook 'org-pomodoro-finished-hook
+            #'kimim/org-pomodoro-finished-action))
+#+end_src
+
 * Mail and Contacts
 ** EBDB - a replacement for BBDB, as contact management
 
