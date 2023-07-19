@@ -976,7 +976,7 @@ look up local dictionary with help from ~sdcv~.
   ("C-x m f" . fanyi-dwim)
   :custom-face
   (fanyi-word-face
-   ((t (:height 1 :weight bold :foreground "dark cyan"))))
+   ((t :height 1.1 :weight bold :foreground "dark cyan")))
   :custom
   (fanyi-providers '(;; 海词
                      fanyi-haici-provider
@@ -1137,12 +1137,12 @@ for buffers and contexts.
 #+begin_src emacs-lisp
 (use-package sis
   :defer 1
-  :custom-face
-  (sis-inline-face
-   ((t :foreground ,(face-attribute 'font-lock-constant-face :foreground)
-       :underline t
-       :inverse-video nil)))
   :config
+  (set-face-attribute
+   'sis-inline-face nil
+   :foreground (face-attribute 'font-lock-constant-face :foreground)
+   :underline t
+   :inverse-video 'unspecified)
   (setq sis-other-cursor-color "tomato")
   (sis-ism-lazyman-config nil t 'w32)
   ;; enable the /cursor color/ mode
