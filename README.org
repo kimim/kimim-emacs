@@ -1458,6 +1458,13 @@ Automatically add space between Chinese and English, and more.
   :hook (text-mode . wraplish-mode))
 #+end_src
 
+Before enable wraplish, you need to install python, pip and epc.
+
+#+begin_src shell
+pacman -S mingw-w64-x86_64-python mingw-w64-x86_64-python3-pip
+pip install epc
+#+end_src
+
 ** tempel
 
 Use ~tempel~ to expand template.
@@ -2220,6 +2227,7 @@ Rich annotations in the minibuffer.
      (corfu-mode)))
   :config
   (defvar cape--dict-all-words nil)
+  (defvar cape-dict-limit 100)
   (defun kimim/cape--dict-list (input)
     "Return all words from `cape-dict-file' matching INPUT without grep."
     (unless (equal input "")
