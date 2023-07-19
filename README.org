@@ -4323,7 +4323,7 @@ second name, ..., N congruent to 60 gives the sixtieth name."
   (org-directory kimim/path-org)
   (org-agenda-files
    (file-expand-wildcards (concat kimim/path-org "*.org")))
-  (org-tags-exclude-from-inheritance '("project" "category"))
+  (org-tags-exclude-from-inheritance '("project" "category" "info"))
   (org-log-done t)
   (org-fontify-done-headline nil)
   (org-todo-repeat-to-state "REPEAT")
@@ -4339,11 +4339,9 @@ second name, ..., N congruent to 60 gives the sixtieth name."
      (sequence "REPEAT(r)" "|")))
   (org-tag-alist
    '(("@office" . ?o) ("@home" . ?h)
-     ("team" . ?t) ("leader" . ?l)
-     ("risk" . ?k)
+     ("team" . ?t) ("leader" . ?l) ("risk" . ?k)
      ("reading" . ?r) ("writing" . ?w)
-     ("project" . ?p) ("category" . ?c)
-     ("habit" . ?H)))
+     ("project" . ?p) ("category" . ?c) ("info" . ?i)))
   (org-stuck-projects
    '("+LEVEL>=2-category-habit-info"
      ("TODO" "SCHED"  "DONE"
@@ -4367,7 +4365,6 @@ second name, ..., N congruent to 60 gives the sixtieth name."
       ((org-agenda-sorting-strategy '(priority-down))))
      ("w" todo "SCHED|WAIT"
       ((org-agenda-sorting-strategy '(priority-down))))
-     ;; all task should be done or doing
      ("d" todo "TODO|SCHED|OPEN|WAIT"
       ((org-agenda-sorting-strategy '(priority-down))))
      ("f" todo "SOMEDAY"
@@ -4376,6 +4373,15 @@ second name, ..., N congruent to 60 gives the sixtieth name."
       ((org-agenda-sorting-strategy '(todo-state-down))))
      ("c" tags "clock"
       ((org-agenda-sorting-strategy '(priority-down))))))
+  (org-refile-targets
+   '(;; refile to maxlevel 1 of current file
+     (nil . (:maxlevel . 1))
+     ;; refile to maxlevel 1 of org-agenda-files
+     (org-agenda-files . (:maxlevel . 1))
+     ;; refile to item with `project' or `category'
+     ;; tag in org-agenda-files
+     (org-agenda-files . (:tag . "project"))
+     (org-agenda-files . (:tag . "category"))))
   :config
   (require 'org-capture)
   (require 'org-agenda)
@@ -4387,15 +4393,6 @@ second name, ..., N congruent to 60 gives the sixtieth name."
   (advice-add 'org-agenda-exit
               :after (lambda () (kill-buffer "diary")))
   (diminish 'auto-fill-function)
-
-  (setq org-refile-targets
-        '(;; refile to maxlevel 2 of current file
-          (nil . (:maxlevel . 1))
-          ;; refile to maxlevel 1 of org-agenda-files
-          (org-agenda-files :maxlevel . 1)
-          ;; refile to item with 'project' tag in org-agenda-files
-          (org-agenda-files :tag . "project")
-          (org-agenda-files :tag . "category")))
 
   (defadvice org-schedule (after add-todo activate)
     (if (or (string= "OPEN" (org-get-todo-state))
