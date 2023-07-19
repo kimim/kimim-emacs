@@ -1091,7 +1091,7 @@ Show eldoc in a childframe box.
 #+end_src
 
 * Editing
-** Input Method
+** emacs-rime
 
 #+begin_src emacs-lisp
 (use-package rime
@@ -1128,6 +1128,31 @@ Show eldoc in a childframe box.
                 (not (string-match-p "[\x2a\x2b\x2d] $" string)) ;; -+* bullet items
                 (not (string-match-p "\\cc +$" string))
                 (not (string-match-p "  $" string)))))))
+#+end_src
+
+** sis
+Emacs smart input source ([[https://github.com/laishulu/emacs-smart-input-source][sis]]) can automatically switch input method
+for buffers and contexts.
+
+#+begin_src emacs-lisp
+(use-package sis
+  :defer 1
+  :custom-face
+  (sis-inline-face
+   ((t :foreground ,(face-attribute 'font-lock-constant-face :foreground)
+       :underline t
+       :inverse-video nil)))
+  :config
+  (setq sis-other-cursor-color "tomato")
+  (sis-ism-lazyman-config nil t 'w32)
+  ;; enable the /cursor color/ mode
+  (sis-global-cursor-color-mode t)
+  ;; enable the /respect/ mode
+  (sis-global-respect-mode t)
+  ;; enable the /context/ mode for all buffers
+  (sis-global-context-mode t)
+  ;; enable the /inline english/ mode for all buffers
+  (sis-global-inline-mode t))
 #+end_src
 
 ** General
