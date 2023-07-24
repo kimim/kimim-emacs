@@ -1742,6 +1742,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
   :bind
   (("C-x C-j" . dired-jump)
    :map dired-mode-map
+   ("C-c l" . kimim/dired-get-org-link)
    ("<left>" . dired-up-directory)
    ("<right>" . dired-find-file)
    ("b" . dired-up-directory)
@@ -1828,8 +1829,8 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
     (interactive)
     (let* ((filename (dired-get-filename)))
       (w32-shell-execute
-       "open" (concat (getenv "MSYS64_PATH") "\\kimikit\\inkscape\\bin\\inkscape.exe")
-       filename)))
+       "open" "inkscape"
+       (concat "\"" filename "\""))))
 
   (defun kimim/pdf2svg ()
     (interactive)
@@ -1837,7 +1838,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
            (exportname (replace-regexp-in-string ".pdf$" ".svg" filename))
            (counter 10))
       (w32-shell-execute
-       "open" (concat (getenv "MSYS64_PATH") "\\kimikit\\inkscape\\bin\\inkscape.exe")
+       "open" "inkscape"
        (format "--export-filename=\"%s\" \"%s\""
                exportname filename))
       (while (and (not (file-exists-p exportname))
@@ -2421,7 +2422,7 @@ parenthesis. We define some keys for it:
     (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p))))
 #+end_src
 
-** tree-sitter
+** COMMENT tree-sitter
 
 #+begin_src emacs-lisp
 (use-package tree-sitter-langs)
@@ -2431,7 +2432,7 @@ parenthesis. We define some keys for it:
          ((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-hl-mode)))
 #+end_src
 
-** ts-fold
+** COMMENT ts-fold
 
 #+begin_src emacs-lisp
 (use-package ts-fold
@@ -2527,6 +2528,7 @@ With ~yafolding-mode~, you can:
   :config
   (require 'clang-format)
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   (add-hook 'c-mode-common-hook
             (lambda ()
               ;;(c-set-style "gnu")
