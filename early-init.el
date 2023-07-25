@@ -14,7 +14,7 @@
 ;; synchronization driver, for example ~/Dropbox/
 (defvar kimim/path-sync "~/")
 ;; path to synchronize some files in .emacs.d
-(defvar kimim/path-sync-emacs (concat kimim/path-sync ".emacs.d/"))
+(defvar kimim/path-emacs (concat kimim/path-sync ".emacs.d/"))
 ;; path for the GTD files
 (defvar kimim/path-org (concat kimim/path-sync "org/"))
 ;; path to keep notes

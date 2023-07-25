@@ -115,7 +115,7 @@ This configuration uses several path to keep different information,
 you need to define them in =~/.emacs=:
 
 - =kimim/path-sync= is the root of sync folder
-- =kimim/path-sync-emacs= to sync emacs settings
+- =kimim/path-emacs= to sync emacs settings
 - =kimim/path-org= to sync todo list and journals
 - =kimim/path-notes= to sync notes
 - =kimim/path-docs= to keep reference documents
@@ -131,7 +131,7 @@ set, but not exists, create it.
           (if (not (file-exists-p (symbol-value path)))
               (make-directory (symbol-value path)))))
       '(kimim/path-sync
-        kimim/path-sync-emacs
+        kimim/path-emacs
         kimim/path-org
         kimim/path-notes
         kimim/path-docs
@@ -915,6 +915,7 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
          (gui-get-selection)
        (car kill-ring)))))
 #+end_src
+
 
 ** sdcv
 
@@ -3890,7 +3891,7 @@ New link to use Office Onenote.
   :custom ((o2jk-blog-author "kimim")
            (o2jk-source-directory "~/notes/kimi.im/_notes/_posts")
            (o2jk-jekyll-directory "~/notes/kimi.im/_posts")
-           (o2jk-jekyll-drafts-dir "~/OneDrive/_draft")
+           (o2jk-jekyll-drafts-dir (concat kimim/path-sync "_draft"))
            (o2jk-jekyll-posts-dir ""))
   :config
 
@@ -4577,7 +4578,7 @@ is completed, a posframe showing break countdown in large font.
   (mail-user-agent 'sendmail-user-agent)
   (mail-signature nil)
   (mail-self-blind t)
-  (mail-signature-file (concat kimim/path-sync-emacs "signature.txt")))
+  (mail-signature-file (concat kimim/path-emacs "signature.txt")))
 #+end_src
 
 #+begin_src emacs-lisp
