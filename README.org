@@ -574,7 +574,7 @@ window space.
   :custom
   (awesome-tray-date-format "%-m-%-e %H:%M")
   (awesome-tray-active-modules '("buffer-name" "changed" "org-pomodoro"
-                                 "git" "location-or-page" "belong"
+                                 "location-or-page" "belong"
                                  "celestial" "date" "input-method"))
   (awesome-tray-mode-line-default-height 0.85)
   (awesome-tray-location-info-top "↑")
