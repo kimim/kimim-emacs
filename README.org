@@ -1648,6 +1648,7 @@ Emacs default ~isearch~ does not allow key binding in minibuffer,
   (isearch-lazy-count t)
   ;; Don't be stingy with history; default is to keep just 16 entries
   (search-ring-max 200)
+  (search-invisible nil)
   (regexp-search-ring-max 200)
   :config
   (defun isearch-mb--update-prompt (&rest _)
@@ -4702,7 +4703,7 @@ is completed, a posframe showing break countdown in large font.
          ("C-c C-v" . restclient-http-send-current)))
 #+end_src
 
-** Reading News
+** COMMENT Reading News
 
 #+begin_src emacs-lisp
 (use-package elfeed

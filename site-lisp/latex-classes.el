@@ -154,12 +154,16 @@ sorting=none]{biblatex}
   T\\kern-.1667em\\lower.7ex\\hbox{E}\\kern-.125emX}}"))
 
 (defvar cn-beamer
-  `("ctexbeamer"
-    "\\documentclass[presentation, aspectratio=169]{ctexbeamer}
+  `("cn-beamer"
+    "\\documentclass[presentation, aspectratio=169]{beamer}
+\\usepackage{xeCJK}
 \\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
 backref=true, maxcitenames=3, url=true]{biblatex}
+\\setCJKmainfont{微软雅黑} % sets the roman font
+\\setCJKsansfont{微软雅黑} % sets the sans font
+\\setCJKmonofont{Consolas} % otherwise FangSong is not found
 \\setlength{\\baselineskip}{20pt}
-\\setlength{\\parskip}{5pt}"
+\\setlength{\\parskip}{7pt}"
     ("\\section{%s}" . "\\section*{%s}")
     ("\\subsection{%s}" . "\\subsection*{%s}")
     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
