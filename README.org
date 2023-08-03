@@ -2838,7 +2838,7 @@ place and assign ~plantuml-jar-path~ to there.
   (plantuml-default-exec-mode 'jar)
   (plantuml-jar-path (expand-file-name
                       (concat kimim/path-kimikit "plantuml/plantuml.jar")))
-  (plantuml-executable-args '("-charset" "UTF-8"))
+  (plantuml-executable-args '("-charset" "utf-8"))
   :config
   (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode)))
 #+end_src
@@ -3891,7 +3891,7 @@ New link to use Office Onenote.
   :custom ((o2jk-blog-author "kimim")
            (o2jk-source-directory "~/notes/kimi.im/_notes/_posts")
            (o2jk-jekyll-directory "~/notes/kimi.im/_posts")
-           (o2jk-jekyll-drafts-dir (concat kimim/path-sync "_draft"))
+           (o2jk-jekyll-drafts-dir "~/notes/_draft")
            (o2jk-jekyll-posts-dir ""))
   :config
 
