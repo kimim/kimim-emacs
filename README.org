@@ -1118,15 +1118,19 @@ Show eldoc in a childframe box.
   (rime-posframe-properties
    (list :internal-border-width 14))
   :config
+
   (when (eq (window-system) 'mac)
     (setq rime-librime-root "~/.emacs.d/librime/dist"))
 
   (defun kimim/rime-predicate-space-after-ascii-p ()
     "If cursor is after only ONE whitespace which follow a ascii character."
     (and (> (point) (save-excursion (back-to-indentation) (point)))
-         (let ((string (buffer-substring (point) (max (line-beginning-position) (- (point) 80)))))
+         (let ((string (buffer-substring
+                        (point)
+                        (max (line-beginning-position) (- (point) 80)))))
            (and (string-match-p " $" string)
-                (not (string-match-p "[\x2a\x2b\x2d] $" string)) ;; -+* bullet items
+                ;; -+* bullet items
+                (not (string-match-p "[\x2a\x2b\x2d] $" string))
                 (not (string-match-p "\\cc +$" string))
                 (not (string-match-p "  $" string)))))))
 #+end_src
