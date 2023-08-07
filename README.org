@@ -4309,7 +4309,17 @@ second name, ..., N congruent to 60 gives the sixtieth name."
     (format
      "%s%s 年"
      (aref calendar-chinese-celestial-stem (% (1- n) 10))
-     (aref calendar-chinese-terrestrial-branch (% (1- n) 12)))))
+     (aref calendar-chinese-terrestrial-branch (% (1- n) 12))))
+  ;; https://www.emacswiki.org/emacs/CalendarWeekNumbers
+  (setq calendar-week-start-day 1
+        calendar-intermonth-text
+        '(propertize
+          (format "%2d|"
+                  (car
+                   (calendar-iso-from-absolute
+                    (calendar-absolute-from-gregorian
+                     (list month day year)))))
+          'font-lock-face 'calendar-weekday-header)))
 #+end_src
 
 ** org as GTD system
