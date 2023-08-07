@@ -2873,6 +2873,21 @@ it is a long sequence diagram, I can use key ~s i~ to invoke
   (add-to-list 'auto-mode-alist '("\\.svg\\'" . image-mode)))
 #+end_src
 
+** graphviz & dot
+
+~dot~ is used to draw simple diagram in code. You need to install ~graphviz~:
+
+#+begin_src shell
+pacman -S mingw-w64-ucrt-x86_64-graphviz
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package graphviz-dot-mode
+  :ensure t
+  :custom
+  (graphviz-dot-preview-extension "svg"))
+#+end_src
+
 ** ditaa
 
 #+begin_src emacs-lisp
