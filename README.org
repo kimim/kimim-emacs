@@ -2327,6 +2327,9 @@ strong relationship.
   :bind (("C-x p m" . magit-status-here)
          (:map magit-revision-mode-map)
          ("C-<return>" . magit-diff-visit-file-other-window)
+         ("<SPC>" . magit-diff-visit-worktree-file-other-window)
+         (:map magit-diff-mode-map)
+         ("C-<return>" . magit-diff-visit-file-other-window)
          ("<SPC>" . magit-diff-visit-worktree-file-other-window))
   :custom (magit-log-show-refname-after-summary t))
 #+end_src
