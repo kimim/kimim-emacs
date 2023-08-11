@@ -536,7 +536,10 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
   (interactive)
   (w32-shell-execute
    "open" "reg"
-   "add HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0x00000000 /f")
+   "add HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0x00000000 /f")
+  (w32-shell-execute
+   "open" "reg"
+   "add HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v SystemUsesLightTheme /t REG_DWORD /d 0x00000000 /f")
   (load-theme 'hippo-themes-night)
   ;;(kimim/sumantrapdf-theme "#333333")
   )
@@ -546,7 +549,10 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
   (interactive)
   (w32-shell-execute
    "open" "reg"
-   "add HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0x00000001 /f")
+   "add HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0x00000001 /f")
+  (w32-shell-execute
+   "open" "reg"
+   "add HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize /v SystemUsesLightTheme /t REG_DWORD /d 0x00000001 /f")
   (load-theme 'hippo-themes-light)
   ;;(kimim/sumantrapdf-theme "#aaaaaa")
   )
