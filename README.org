@@ -974,7 +974,8 @@ look up local dictionary with help from ~sdcv~.
 (use-package fanyi
   :ensure t
   :bind
-  ("C-x m f" . fanyi-dwim)
+  (("C-x m f" . fanyi-dwim)
+   ("C-x m y" . kimim/fanyi-current-kill))
   :custom-face
   (fanyi-word-face
    ((t :height 1.1 :weight bold :foreground "dark cyan")))
@@ -993,6 +994,11 @@ look up local dictionary with help from ~sdcv~.
               ("o" . other-window))
   :config
   (require 'sdcv)
+
+  (defun kimim/fanyi-current-kill ()
+    (interactive)
+    (fanyi-dwim (current-kill 0)))
+
   (defun kimim/sdcv-translate-result-advice (word dictionary-list)
     (let* ((arguments
             (cons word
@@ -1026,7 +1032,8 @@ look up local dictionary with help from ~sdcv~.
           word sdcv-dictionary-complete-list))
         (insert "\n\n")
         (beginning-of-buffer)
-        (window-resize nil (- 35 (window-size nil t)) t)))))
+        ;;(window-resize nil (- 35 (window-size nil t)) t)
+        ))))
 
   (advice-add 'fanyi-dwim :after
               #'kimim/fanyi-dwim-add-sdcv))
