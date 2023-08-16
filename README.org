@@ -1110,10 +1110,7 @@ Show eldoc in a childframe box.
   (default-input-method "rime")
   (rime-title "Ѱ")
   (rime-disable-predicates
-   '(rime-predicate-current-uppercase-letter-p
-     rime-predicate-space-after-cc-p
-     rime-predicate-after-ascii-char-p
-     kimim/rime-predicate-space-after-ascii-p))
+   '(kimim/rime-predicate-p))
   (rime-show-candidate 'posframe)
   (rime-posframe-properties
    (list :internal-border-width 14))
@@ -1132,10 +1129,19 @@ Show eldoc in a childframe box.
                 ;; -+* bullet items
                 (not (string-match-p "[\x2a\x2b\x2d] $" string))
                 (not (string-match-p "\\cc +$" string))
-                (not (string-match-p "  $" string)))))))
+                (not (string-match-p "  $" string))))))
+
+  (defun kimim/rime-predicate-p ()
+    "Always use rime punctuation."
+    (if (rime-predicate-current-input-punctuation-p)
+        nil
+      (or (rime-predicate-current-uppercase-letter-p)
+          (rime-predicate-space-after-cc-p)
+          (rime-predicate-after-ascii-char-p)
+          (kimim/rime-predicate-space-after-ascii-p)))))
 #+end_src
 
-** sis
+** COMMENT sis
 Emacs smart input source ([[https://github.com/laishulu/emacs-smart-input-source][sis]]) can automatically switch input method
 for buffers and contexts.
 
