@@ -514,48 +514,7 @@ Add sunrise/sunset info to modeline text description.
   ;; add sun rise/set info to modeline text description
   (advice-add 'celestial-mode-line--text-description
               :around
-              #'kimim/celestial-mode-line--sun-description))
-#+end_src
-
-Update theme with sun.
-
-#+begin_src emacs-lisp
-(use-package celestial-mode-line
-  :config
-  (require 'kimim)
-  (defun kimim/update-theme-with-sun (orig-fun &optional date)
-    (let* ((sunrise-symbol
-            (cdr (assoc
-                  'sunrise
-                  celestial-mode-line-sunrise-sunset-alist)))
-           (sunset-symbol
-            (cdr (assoc
-                  'sunset
-                  celestial-mode-line-sunrise-sunset-alist)))
-           (sunrise-before
-            (string-search sunrise-symbol
-                           celestial-mode-line-string))
-           (sunset-before
-            (string-search sunset-symbol
-                           celestial-mode-line-string)))
-      (apply orig-fun date)
-      (let* ((sunrise-after
-              (string-search sunrise-symbol
-                             celestial-mode-line-string))
-             (sunset-after
-              (string-search sunset-symbol
-                             celestial-mode-line-string)))
-        (cond
-         ((and (not sunset-before)
-               sunset-after)
-          (kimim/theme-light))
-         ((and (not sunrise-before)
-               sunrise-after)
-          (kimim/theme-night))))))
-
-  (advice-add 'celestial-mode-line-update
-              :around
-              #'kimim/update-theme-with-sun)
+              #'kimim/celestial-mode-line--sun-description)
 
   (celestial-mode-line-start-timer))
 #+end_src
