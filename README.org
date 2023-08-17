@@ -1434,11 +1434,11 @@ Automatically add space between Chinese and English, and more.
 
 #+begin_src emacs-lisp
 (use-package wraplish
+  :commands wraplish-mode
   :after text-mode
   :load-path (lambda ()
                (concat kimim/path-kimim-emacs
-                "site-lisp/wraplish"))
-  :hook (text-mode . wraplish-mode))
+                       "site-lisp/wraplish")))
 #+end_src
 
 Before enable wraplish, you need to install python, pip and epc.
