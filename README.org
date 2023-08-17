@@ -928,6 +928,12 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
               #'kimim/sdcv-call-process-advice))
 #+end_src
 
+Need to install ~mpg123~ or ~mpv~ to play the pronunciations.
+
+#+begin_src shell
+pacman -S mingw-w64-ucrt-x86_64-mpg123
+#+end_src
+
 ** fanyi.el
 
 A translator extension written by [[https://condy0919.github.io][Youmu]].
