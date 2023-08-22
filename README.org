@@ -4317,9 +4317,10 @@ second name, ..., N congruent to 60 gives the sixtieth name."
      (aref calendar-chinese-celestial-stem (% (1- n) 10))
      (aref calendar-chinese-terrestrial-branch (% (1- n) 12))))
   ;; https://www.emacswiki.org/emacs/CalendarWeekNumbers
-  (set-face-attribute 'calendar-iso-week-face nil
-                      :inherit 'calendar-weekend-header
-                      :height 0.7 :bold t)
+  (defface calendar-iso-week-face
+    '((t :inherit 'calendar-weekend-header
+        :height 0.7 :bold t))
+    "Week number.")
   (setq calendar-week-start-day 1
         calendar-intermonth-header
         '(propertize
