@@ -1440,6 +1440,7 @@ Check spell on the fly.
   :bind ((:map cns-mode-map)
          ("M-h" . cns-backward-kill-word))
   :config
+  (setq cns-process-buffer "*cns*")
   (setq cns-prog
         (concat kimim/path-kimim-emacs
                 "site-lisp/cns/cnws.exe"))
