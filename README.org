@@ -1059,6 +1059,24 @@ look up local dictionary with help from ~sdcv~.
       (wordreference-search))))
 #+end_src
 
+** dict.leo.org
+Translate word between English and German.
+
+#+begin_src emacs-lisp
+(use-package leo
+  :bind
+  (:map leo-mode-map
+        ("s" . leo-translate-word))
+  :custom-face
+  (leo-auxiliary-face
+   ((t :inherit default)))
+  (leo-match-face
+   ((t :inherit font-lock-keyword-face)))
+  (leo-link-face
+   ((t :inherit font-lock-keyword-face
+       :foreground "tomato"))))
+#+end_src
+
 ** eldoc-box
 
 Show eldoc in a childframe box.
