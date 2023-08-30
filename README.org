@@ -1095,9 +1095,7 @@ Show eldoc in a childframe box.
   :bind
   (:map
    rime-mode-map
-   ("C-;" . (lambda ()
-               (interactive)
-               (setq rime--temporarily-ignore-predicates t)))
+   ("C-|" . rime-force-enable)
    :map
    rime-active-mode-map
    ("C-h" . rime--backspace)
