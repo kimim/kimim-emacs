@@ -1662,6 +1662,9 @@ Emacs default ~isearch~ does not allow key binding in minibuffer,
   (search-invisible nil)
   (regexp-search-ring-max 200)
   :config
+  (add-hook 'isearch-mode-hook #'display-line-numbers-mode)
+  (add-hook 'isearch-mode-end-hook
+            (lambda () (display-line-numbers-mode -1)))
   (defun isearch-mb--update-prompt (&rest _)
     "Update the minibuffer prompt according to search status."
     (when isearch-mb--prompt-overlay
