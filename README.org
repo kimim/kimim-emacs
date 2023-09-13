@@ -1500,13 +1500,16 @@ Use ~tempel~ to expand template.
 * Controlling
 ** Window and Frame
 
-By enabling ~winner-mode~, you can restore to previous window configuration by
-typing ~C-c <left>~.
+By enabling ~winner-mode~, you can restore to previous window
+configuration by typing ~C-c M-<left>~.
 
 #+begin_src emacs-lisp
 (use-package winner
   ;; restore windows configuration, built-in package
   :commands winner-mode
+  :bind
+  ("C-x M-<left>" . winner-undo)
+  ("C-x M-<right>" . winner-redo)
   :config
   (winner-mode t))
 #+end_src
@@ -1521,7 +1524,7 @@ configuration.
   :bind ("C-x m w" . make-frame))
 #+end_src
 
-preserve the point in screen during scrolling looks nice(see
+preserve the point in screen during scrolling looks nice (see
 [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Scrolling.html][scrolling]]). scroll slowly with touchpad, thus we adjust the scroll
 amount.
 
@@ -1543,6 +1546,16 @@ Move frame to one of the nine grids on the screen with ~C-x y <N>~ keys.
   :config
   (require 'nine-grid)
   (nine-grid-mode))
+#+end_src
+
+** Windmove
+#+begin_src emacs-lisp
+(use-package windmove
+  :bind
+  ("C-x <left>" . windmove-swap-states-left)
+  ("C-x <right>" . windmove-swap-states-right)
+  ("C-x <up>" . windmove-swap-states-up)
+  ("C-x <down>" . windmove-swap-states-down))
 #+end_src
 
 ** Command
