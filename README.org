@@ -1084,8 +1084,14 @@ Show eldoc in a childframe box.
 #+begin_src emacs-lisp
 (use-package eldoc-box
   :diminish eldoc-box-hover-mode
-  :hook (eglot-managed-mode . eldoc-box-hover-mode))
+  :hook (eglot-managed-mode . eldoc-box-hover-mode)
+  :custom (eldoc-box-offset '(10 40 10))
+  :bind (:map
+         eglot-mode-map
+         ("C-x l d" . eldoc-box-help-at-point)))
 #+end_src
+
+Increase right margin from default 16 to 40 to remove some overlap.
 
 * Editing
 ** emacs-rime
