@@ -2398,7 +2398,7 @@ this directory as secure because you are the owner.
    eglot-mode-map
    ("C-x l a" . eglot-code-actions))
   :hook
-  ((c-mode c++-mode clojure-mode rust-mode) . eglot-ensure)
+  ((c-mode c++-mode rust-mode python-mode r-mode) . eglot-ensure)
   (eglot-managed-mode
    . kimim/eglot-completion)
   :config
@@ -2760,6 +2760,15 @@ curl https://sh.rustup.rs -sSf | sh
 		                "cargo run")))
   :custom
   (rustic-lsp-client 'eglot))
+#+end_src
+
+** R ESS
+#+begin_src emacs-lisp
+(use-package ess
+  :custom
+  (inferior-ess-r-program
+   (concat kimim/path-kimikit "R-4.3.1/bin/R.exe")))
+
 #+end_src
 
 ** Swift
