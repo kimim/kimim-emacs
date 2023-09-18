@@ -2454,7 +2454,7 @@ parenthesis. We define some keys for it:
     (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p))))
 #+end_src
 
-** COMMENT tree-sitter
+** tree-sitter
 
 #+begin_src emacs-lisp
 (use-package tree-sitter-langs)
@@ -2464,7 +2464,7 @@ parenthesis. We define some keys for it:
          ((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-hl-mode)))
 #+end_src
 
-** COMMENT ts-fold
+** ts-fold
 
 #+begin_src emacs-lisp
 (use-package ts-fold
