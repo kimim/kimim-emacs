@@ -4437,7 +4437,7 @@ second name, ..., N congruent to 60 gives the sixtieth name."
   :custom
   (org-directory kimim/path-org)
   (org-agenda-files
-   (file-expand-wildcards (concat kimim/path-org "*.org")))
+   (file-expand-wildcards (concat kimim/path-org "*.org*")))
   (org-tags-exclude-from-inheritance '("project" "category" "info"))
   (org-log-done t)
   (org-fontify-done-headline nil)
@@ -4588,7 +4588,7 @@ is completed, a posframe showing break countdown in large font.
   :commands ebdb ebdb-mail-aliases
   :custom (ebdb-mua-pop-up nil)
   :config
-  (setq ebdb-sources (concat kimim/path-org "ebdb"))
+  (setq ebdb-sources (concat kimim/path-org "ebdb.gpg"))
   (require 'ebdb-gnus)
   (require 'ebdb-message)
   (require 'ebdb-org)
