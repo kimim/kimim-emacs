@@ -3477,6 +3477,8 @@ spaces before plain text line.
     (push '(":SETTINGS:" . "⌘") prettify-symbols-alist)
     (push '("#+begin_src" . "«" ) prettify-symbols-alist)
     (push '("#+end_src" . "»" ) prettify-symbols-alist)
+    (push '("#+begin_comment" . "♯" ) prettify-symbols-alist)
+    (push '("#+end_comment" . "▪" ) prettify-symbols-alist)
     (prettify-symbols-mode)))
 #+end_src
 
