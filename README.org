@@ -1131,9 +1131,22 @@ Increase right margin from default 16 to 40 to remove some overlap.
                 (not (string-match-p "\\cc +$" string))
                 (not (string-match-p "  $" string))))))
 
+  (defun kimim/rime-predicate-current-input-punctuation-p ()
+    "If the current charactor entered is a punctuation."
+    (and rime--current-input-key
+         (or (and (<= #x21 rime--current-input-key)
+                  (<= rime--current-input-key #x2c))
+             (= rime--current-input-key #x2e)
+             (and (<= #x3a rime--current-input-key)
+                  (<= rime--current-input-key #x40))
+             (and (<= #x5b rime--current-input-key)
+                  (<= rime--current-input-key #x5e))
+             (and (<= #x7b rime--current-input-key)
+                  (<= rime--current-input-key #x7f)))))
+
   (defun kimim/rime-predicate-p ()
     "Always use rime punctuation."
-    (if (rime-predicate-current-input-punctuation-p)
+    (if (kimim/rime-predicate-current-input-punctuation-p)
         nil
       (or (rime-predicate-current-uppercase-letter-p)
           (rime-predicate-space-after-cc-p)
