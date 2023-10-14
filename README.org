@@ -4602,6 +4602,8 @@ is completed, a posframe showing break countdown in large font.
   :functions ebdb-gethash
   :commands ebdb ebdb-mail-aliases
   :custom (ebdb-mua-pop-up nil)
+  :bind (:map ebdb-mode-map
+              ("C-c C-z" . kimim/ebdb-note-find))
   :config
   (setq ebdb-sources (concat kimim/path-org "ebdb.gpg"))
   (require 'ebdb-gnus)
@@ -4609,16 +4611,81 @@ is completed, a posframe showing break countdown in large font.
   (require 'ebdb-org)
   (add-hook 'message-setup-hook 'ebdb-mail-aliases)
   (setq org-link-make-description-function
-      (lambda (link desc)
-        (let* ((link-content (split-string link ":"))
-               (key (car link-content))
-               (link-str (cadr link-content))
-               (link-uuid (cadr (split-string link-str "/"))))
-          (if desc
-              desc
-            (if (string= "ebdb" key)
-                (ebdb-record-name-string
-                 (ebdb-gethash link-uuid 'uuid))))))))
+        (lambda (link desc)
+          (let* ((link-content (split-string link ":"))
+                 (key (car link-content))
+                 (link-str (cadr link-content))
+                 (link-uuid (cadr (split-string link-str "/"))))
+            (if desc
+                desc
+              (if (string= "ebdb" key)
+                  (ebdb-record-name-string
+                   (ebdb-gethash link-uuid 'uuid)))))))
+
+  (defvar kimim/ebdb-notes-cache nil
+    "Cache of EBDB notes.")
+
+  (defun kimim/ebdb-get-db-cite-refs ()
+    "Get a list of `cite` refs from Org Roam database."
+    (let* ((types "ebdb")
+           (refs (org-roam-db-query
+                  [:select [ref nodes:file id pos title type]
+                           :from refs
+                           :left-join nodes
+                           :on (= refs:node-id nodes:id)
+                           :where (= type $s1)]
+                  types))
+           result)
+      (dolist (ref refs result)
+        (push (-interleave '(:ref :file :id :pos :title :type) ref) result))))
+
+  (defun kimim/ebdb-make-notes-cache ()
+    "Update ORB notes hash table `kimim/ebdb-notes-cache'."
+    (let* ((db-entries (kimim/ebdb-get-db-cite-refs))
+           (size (round (/ (length db-entries) 0.8125))) ;; ht oversize
+           (ht (make-hash-table :test #'equal :size size)))
+      (dolist (entry db-entries)
+        (puthash (plist-get entry :ref)
+                 (org-roam-node-create
+                  :id (plist-get entry :id)
+                  :file (plist-get entry :file)
+                  :title (plist-get entry :title)
+                  :point (plist-get entry :pos))
+                 ht))
+      (setq kimim/ebdb-notes-cache ht)))
+
+  (defun kimim/ebdb-note-exists-p (uuid)
+    "Check if a note exists whose :ROAM_REFS is uuid.
+Return Org Roam node or nil."
+    (gethash uuid (kimim/ebdb-make-notes-cache)))
+
+  (defun kimim/ebdb-note-new (uuid)
+    "Create people note."
+    (if-let* ((record (ebdb-current-record))
+              (name (ebdb-record-name-string record))
+              (uuid (ebdb-record-uuid record))
+              (citekey-ref (format "[[ebdb:uuid/%s][%s]]" uuid name))
+              (title name)
+              (node (org-roam-node-create
+                     :title title
+                     :file (concat kimim/path-notes
+                                   "people/"
+                                   (kimim/genfile-timestamp)
+                                   title ".txt"))))
+        (org-roam-capture-
+         :node node
+         :info (list :ref citekey-ref))
+      (user-error "Abort")))
+
+  (defun kimim/ebdb-note-find ()
+    "Find or create people note."
+    (interactive)
+    (let* ((record (ebdb-current-record))
+           (uuid (ebdb-record-uuid record))
+           (ebdb-ref (concat "uuid/" uuid)))
+      (if (kimim/ebdb-note-exists-p ebdb-ref)
+          (org-roam-node-open (kimim/ebdb-note-exists-p ebdb-ref))
+        (kimim/ebdb-note-new uuid)))))
 #+end_src
 
 ** erc
