@@ -4682,9 +4682,10 @@ Return Org Roam node or nil."
     (interactive)
     (let* ((record (ebdb-current-record))
            (uuid (ebdb-record-uuid record))
-           (ebdb-ref (concat "uuid/" uuid)))
-      (if (kimim/ebdb-note-exists-p ebdb-ref)
-          (org-roam-node-open (kimim/ebdb-note-exists-p ebdb-ref))
+           (ebdb-ref (concat "uuid/" uuid))
+           (node (kimim/ebdb-note-exists-p ebdb-ref)))
+      (if node
+          (org-roam-node-open node)
         (kimim/ebdb-note-new uuid)))))
 #+end_src
 
