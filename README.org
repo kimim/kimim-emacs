@@ -4671,7 +4671,11 @@ Return Org Roam node or nil."
                      :file (concat kimim/path-notes
                                    "people/"
                                    (kimim/genfile-timestamp)
-                                   title ".txt"))))
+                                   (s-downcase
+                                    (s-join
+                                     "_"
+                                     (s-split-words title)))
+                                    ".txt"))))
         (org-roam-capture-
          :node node
          :info (list :ref citekey-ref))
