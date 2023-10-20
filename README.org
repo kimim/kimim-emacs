@@ -3369,7 +3369,9 @@ support more functions from =org-ref=:
    ("M-*" . org-mark-ring-last-goto)
    ("M-h" . nil)
    ("C-'" . org-emphasize)
-   ("C-c p" . kimim/preview-babel-image))
+   ("C-c p" . kimim/preview-babel-image)
+   ("C-c C-w" . org-refile-reverse)
+   ("C-c C-M-w" . org-refile))
   :custom
   (org-modules '(org-habit
                  ol-w3m ol-bbdb ol-bibtex
@@ -4448,7 +4450,9 @@ second name, ..., N congruent to 60 gives the sixtieth name."
                          (org-agenda-todo 'left)))
          ("<S-right>" . (lambda ()
                           (interactive)
-                          (org-agenda-todo 'right))))
+                          (org-agenda-todo 'right)))
+         ("C-c C-w" . org-agenda-refile-reverse)
+         ("C-c C-M-w" . org-agenda-refile))
   :custom
   (org-directory kimim/path-org)
   (org-agenda-files
@@ -4554,7 +4558,33 @@ second name, ..., N congruent to 60 gives the sixtieth name."
     (mapcar (lambda (file)
               (if-let (buf (get-file-buffer file))
                   (kill-buffer buf)))
-            org-agenda-files)))
+            org-agenda-files))
+
+  (defun org-agenda-refile-reverse (&optional goto rfloc no-update)
+    "Refile the item at point, reversely."
+    (interactive "P")
+    (cond
+     ((member goto '(0 (64)))
+      (org-refile-cache-clear))
+     ((equal goto '(16))
+      (org-refile-goto-last-stored))
+     (t
+      (let* ((buffer-orig (buffer-name))
+             (marker (or (org-get-at-bol 'org-hd-marker)
+                         (org-agenda-error)))
+             (buffer (marker-buffer marker))
+             ;; (pos (marker-position marker))
+             (rfloc (or rfloc
+                        (org-refile-get-location
+                         (if goto "Goto" "Refile to") buffer
+                         org-refile-allow-creating-parent-nodes))))
+        (with-current-buffer buffer
+          (org-with-wide-buffer
+           (goto-char marker)
+           (let ((org-agenda-buffer-name buffer-orig))
+             (org-remove-subtree-entries-from-agenda))
+           (org-refile-reverse goto buffer rfloc))))
+      (unless no-update (org-agenda-redo))))))
 #+end_src
 
 ** org-pomodoro
