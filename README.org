@@ -383,7 +383,9 @@ calculated with original default font height and width:
            (left (/ (display-pixel-width) 10)))
       (kimim/menu-and-bar)
       (kimim/set-frame-alist
-       top left height width))))
+       top left height width))
+    ;; sis is only available in window system
+    (kimim/sis-enable)))
 
 (defun kimim/frame-and-font-mini ()
   (interactive)
@@ -410,6 +412,7 @@ calculated with original default font height and width:
      (/ (display-pixel-height) 2))))
 
 (kimim/frame-and-font)
+(add-hook 'server-after-make-frame-hook 'kimim/frame-and-font)
 #+end_src
 
 ** Frames
@@ -1154,13 +1157,18 @@ Increase right margin from default 16 to 40 to remove some overlap.
           (kimim/rime-predicate-space-after-ascii-p)))))
 #+end_src
 
-** COMMENT sis
+** sis
 Emacs smart input source ([[https://github.com/laishulu/emacs-smart-input-source][sis]]) can automatically switch input method
 for buffers and contexts.
 
+When sis is enabled, =C-x C-c= a emacs client frame will crash, so, add
+an advice to disable sis when ~save-buffers-kill-terminal~.
+
 #+begin_src emacs-lisp
 (use-package sis
-  :defer 1
+  :functions (kimim/sis-enable
+              kimim/sis-disable)
+  :hook (server-after-make-frame . kimim/sis-enable)
   :config
   (set-face-attribute
    'sis-inline-face nil
@@ -1169,14 +1177,28 @@ for buffers and contexts.
    :inverse-video 'unspecified)
   (setq sis-other-cursor-color "tomato")
   (sis-ism-lazyman-config nil t 'w32)
-  ;; enable the /cursor color/ mode
-  (sis-global-cursor-color-mode t)
-  ;; enable the /respect/ mode
-  (sis-global-respect-mode t)
-  ;; enable the /context/ mode for all buffers
-  (sis-global-context-mode t)
-  ;; enable the /inline english/ mode for all buffers
-  (sis-global-inline-mode t))
+
+  (defun kimim/sis-enable ()
+    ;; enable the /cursor color/ mode
+    (sis-global-cursor-color-mode t)
+    ;; enable the /respect/ mode
+    (sis-global-respect-mode t)
+    ;; enable the /context/ mode for all buffers
+    (sis-global-context-mode t)
+    ;; enable the /inline english/ mode for all buffers
+    (sis-global-inline-mode t))
+
+  (defun kimim/sis-disable ()
+    (sis-global-cursor-color-mode -1)
+    (sis-global-respect-mode -1)
+    (sis-global-context-mode -1)
+    (sis-global-inline-mode -1))
+
+  (advice-add 'save-buffers-kill-terminal
+              :before
+              (lambda (&optional arg)
+                (if (eq 1 (length server-clients))
+                    (kimim/sis-disable)))))
 #+end_src
 
 ** General
