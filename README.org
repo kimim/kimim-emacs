@@ -4490,7 +4490,7 @@ second name, ..., N congruent to 60 gives the sixtieth name."
    '(("j" "agenda"
       ((agenda "" ((org-agenda-span 2)
                    (org-agenda-show-log t)))
-       (todo "TODO|OPEN"
+       (todo "TODO|OPEN|WAIT"
              ((org-agenda-sorting-strategy '(priority-down))))
        (tags "+LEVEL>=2-category-habit-info
                 /-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-ABORT-SOMEDAY-REPEAT"
