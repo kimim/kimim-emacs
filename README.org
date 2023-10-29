@@ -4516,6 +4516,8 @@ second name, ..., N congruent to 60 gives the sixtieth name."
      ;; tag in org-agenda-files
      (org-agenda-files . (:tag . "project"))
      (org-agenda-files . (:tag . "category"))))
+  (org-log-into-drawer t)
+  (org-habit-show-all-today t)
   :config
   (require 'org-capture)
   (require 'org-agenda)
