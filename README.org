@@ -8,9 +8,9 @@
 * Introduction
 
 This Emacs configuration file is written in literate programming
-method [fn:1].  The =emacs-lisp= code is extracted from this
-=orgmode= [fn:2] file, and then compiled to binary =elc= file for fast
-loading in the future.
+method [fn:1].  The =emacs-lisp= code is extracted from this =orgmode= [fn:2]
+file, and then compiled to binary =elc= file for fast loading in the
+future.
 
 * Installation
 
@@ -177,8 +177,8 @@ Environment variable =PATH= is the the searching path of executables by
 the shell running in Emacs while =exec-path= is the search path of Emacs
 itself. So we should set both of them to almost the same paths.
 
-As I have a Windows box in the office, and a Apple macOS at home, so I
-need to specify these variables in different way.
+As I have a Windows box in the office, and an Apple macOS at home, so
+I need to specify these variables in different way.
 
 #+begin_src emacs-lisp
 (cond
@@ -186,8 +186,7 @@ need to specify these variables in different way.
   (setq kimim/path-root "/"))
  ((eq system-type 'darwin)
   (setq kimim/path-root "/")
-  (add-to-list 'exec-path "/Library/TeX/texbin")
-  (add-to-list 'exec-path (concat (getenv "HOME") "/Library/Python/2.7/bin")))
+  (add-to-list 'exec-path "/Library/TeX/texbin"))
  ((eq system-type 'gnu/linux)
   (setq kimim/path-root "/")
   (add-to-list 'exec-path "/usr/local/texlive/2020/bin/x86_64-linux/")))
@@ -314,9 +313,7 @@ a ~byte-force-recompile~ in =~/.emacs.d= could work.
 ** Menu Bar and Tool Bar
 
 Don't display menu-bar, tool-bar, tooltip and scroll-bar. Because
-sometimes, they may catch your attention. But you cannot hide menu bar
-in macOS desktop environment, because the system preserves menu bar
-for every applications.
+sometimes, they may catch your attention.
 
 #+begin_src emacs-lisp
 (defun kimim/menu-and-bar ()
@@ -4538,7 +4535,6 @@ second name, ..., N congruent to 60 gives the sixtieth name."
      ;; tag in org-agenda-files
      (org-agenda-files . (:tag . "project"))
      (org-agenda-files . (:tag . "category"))))
-  (org-log-into-drawer t)
   (org-habit-show-all-today t)
   :config
   (require 'org-capture)
