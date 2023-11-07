@@ -380,9 +380,7 @@ calculated with original default font height and width:
            (left (/ (display-pixel-width) 10)))
       (kimim/menu-and-bar)
       (kimim/set-frame-alist
-       top left height width))
-    ;; sis is only available in window system
-    (kimim/sis-enable)))
+       top left height width))))
 
 (defun kimim/frame-and-font-mini ()
   (interactive)
@@ -409,7 +407,6 @@ calculated with original default font height and width:
      (/ (display-pixel-height) 2))))
 
 (kimim/frame-and-font)
-(add-hook 'server-after-make-frame-hook 'kimim/frame-and-font)
 #+end_src
 
 ** Frames
@@ -1195,7 +1192,8 @@ an advice to disable sis when ~save-buffers-kill-terminal~.
               :before
               (lambda (&optional arg)
                 (if (eq 1 (length server-clients))
-                    (kimim/sis-disable)))))
+                    (kimim/sis-disable))))
+  (add-hook 'server-after-make-frame-hook 'kimim/sis-enable))
 #+end_src
 
 ** General
@@ -4509,7 +4507,7 @@ second name, ..., N congruent to 60 gives the sixtieth name."
    '(("j" "agenda"
       ((agenda "" ((org-agenda-span 2)
                    (org-agenda-show-log t)))
-       (todo "TODO|OPEN|WAIT"
+       (todo "TODO|OPEN"
              ((org-agenda-sorting-strategy '(priority-down))))
        (tags "+LEVEL>=2-category-habit-info
                 /-TODO-SCHED-DONE-OPEN-WAIT-CLOSE-ABORT-SOMEDAY-REPEAT"
