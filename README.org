@@ -3388,7 +3388,7 @@ support more functions from =org-ref=:
    ("C-'" . org-emphasize)
    ("C-c p" . kimim/preview-babel-image)
    ("C-c C-w" . org-refile-reverse)
-   ("C-c C-M-w" . org-refile))
+   ("C-c w" . org-refile))
   :custom
   (org-modules '(org-habit
                  ol-w3m ol-bbdb ol-bibtex
@@ -4426,6 +4426,10 @@ second name, ..., N congruent to 60 gives the sixtieth name."
 #+begin_src emacs-lisp
 (use-package org-capture
   :ensure nil
+  :bind (:map
+         org-capture-mode-map
+         ("C-c C-w" . kimim/org-capture-refile-reverse)
+         ("C-c w" . org-capture-refile))
   :custom
   (org-capture-templates
    '(("c" "Capture" entry (file+headline "capture.org" "Inbox")
@@ -4439,7 +4443,12 @@ second name, ..., N congruent to 60 gives the sixtieth name."
      ("w" "WAIT Task"    entry (file+headline "capture.org" "Inbox")
       "* WAIT %?\nSCHEDULED: %t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")
      ("h" "Habit"   entry (file+headline "global.org"   "Habit")
-      "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n"))))
+      "* %?  :habit:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n")))
+  :config
+  (defun kimim/org-capture-refile-reverse ()
+    (interactive)
+    (let ((org-reverse-note-order t))
+      (org-capture-refile))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4469,7 +4478,7 @@ second name, ..., N congruent to 60 gives the sixtieth name."
                           (interactive)
                           (org-agenda-todo 'right)))
          ("C-c C-w" . org-agenda-refile-reverse)
-         ("C-c C-M-w" . org-agenda-refile))
+         ("C-c w" . org-agenda-refile))
   :custom
   (org-directory kimim/path-org)
   (org-agenda-files
