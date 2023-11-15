@@ -2648,6 +2648,8 @@ With ~yafolding-mode~, you can:
 #+begin_src emacs-lisp
 (use-package csharp-mode
   :ensure nil
+  :hook ((csharp-mode . tree-sitter-mode)
+         (csharp-mode . tree-sitter-hl-mode))
   :mode ("\\.cs\\'" . csharp-mode))
 #+end_src
 
@@ -2806,6 +2808,15 @@ curl https://sh.rustup.rs -sSf | sh
 #+begin_src emacs-lisp
   (use-package swift-mode
     :mode ("\\.swift\\'" . swift-mode))
+#+end_src
+
+** TypeScript
+
+#+begin_src emacs-lisp
+(use-package typescript-mode
+  :hook ((typescript-mode . tree-sitter-mode)
+         (typescript-mode . tree-sitter-hl-mode)
+         (typescript-mode . eglot-ensure)))
 #+end_src
 
 ** Golang
