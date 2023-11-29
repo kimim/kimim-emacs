@@ -2733,6 +2733,17 @@ in Clojure.
   (add-to-list 'org-src-lang-modes '("clojure" . clojure)))
 #+end_src
 
+** Babashka
+Download ~bb~ from https://github.com/babashka/babashka/releases and put
+~bb~ to execute PATH.
+
+#+begin_src emacs-lisp
+(use-package ob-bb
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                       "site-lisp/ob-bb")))
+#+end_src
+
 ** Python
 
 Python development configuration is quite easy. =elpy= [fn:13] is used here:

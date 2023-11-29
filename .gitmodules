@@ -34,3 +34,6 @@
 [submodule "site-lisp/sdcv-dict"]
 	path = site-lisp/sdcv-dict
 	url = git@github.com:kimim/sdcv-dict.git
+[submodule "site-lisp/ob-bb"]
+	path = site-lisp/ob-bb
+	url = git@github.com:kimim/ob-bb.git
