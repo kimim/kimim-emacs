@@ -760,7 +760,7 @@ from system PATH, so you should set these to system PATH.
    ("C-x  。" . unbury-buffer)
    ("C-x  ‘" . hippie-expand)
    ("C-x  ’" . hippie-expand)
-   ("C-x M-s" . eshell)
+   ("C-x M-s" . kimim/save-buffer-no-tws)
    ("C-x m 0" . kimim/frame-and-font)
    ("C-x m -" . kimim/frame-and-font-mini)
    ("C-x m SPC" . kimim/shrink-down)
@@ -769,7 +769,8 @@ from system PATH, so you should set these to system PATH.
    ("C-x m ^" . kimim/shrink-up)
    ("C-x m '" . kimim/top-right-mouse)
    ("C-x m r" . kimim/rename-file-and-buffer)
-   ("C-<pause>" . iconify-frame))
+   ("C-<pause>" . iconify-frame)
+   ("C-x S" . eshell))
   :config
   (unbind-key "C-x C-z")
   (when (eq system-type 'darwin) ;; mac specific settings
@@ -777,6 +778,10 @@ from system PATH, so you should set these to system PATH.
     (setq mac-command-modifier 'meta)
     ;; sets fn-delete to be right-delete
     (global-set-key [kp-delete] 'delete-char))
+  (defun kimim/save-buffer-no-tws (&optional arg)
+    (interactive "p")
+    (delete-trailing-whitespace)
+    (save-buffer arg))
   (defun kimim/switch-to-scratch-and-nuke-others ()
     (interactive)
     (switch-to-buffer "*scratch*") (nuke-other-buffers))
@@ -5047,9 +5052,3 @@ should install postscript in cygwin.
 [fn:17] https://en.wikipedia.org/wiki/Niklas_Luhmann
 
 [fn:18] https://pandoc.org/
-
-[fn:19] https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Components.html
-
-[fn:20] https://emacs.stackexchange.com/questions/22283/dired-group-directories-and-symlinks-to-directories-first
-
-[fn:21] https://github.com/transcode-open/apt-cyg
