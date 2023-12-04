@@ -770,7 +770,8 @@ from system PATH, so you should set these to system PATH.
    ("C-x m '" . kimim/top-right-mouse)
    ("C-x m r" . kimim/rename-file-and-buffer)
    ("C-<pause>" . iconify-frame)
-   ("C-x S" . eshell))
+   ("C-x S" . eshell)
+   ("C-x M-q" . kimim/unfill-paragraph-or-region))
   :config
   (unbind-key "C-x C-z")
   (when (eq system-type 'darwin) ;; mac specific settings
