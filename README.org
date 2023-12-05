@@ -3639,6 +3639,13 @@ When exporting, do not export with author and date.
   (org-export-with-date t)
   :config
   (require 'ox-latex)
+
+  (defmacro by-backend (&rest body)
+    `(case
+         (if (boundp 'backend)
+             (org-export-backend-name backend) nil)
+       ,@body))
+
   (defun org-export--collect-tree-properties (data info)
     "Extract tree properties from parse tree.
 
