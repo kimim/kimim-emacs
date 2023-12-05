@@ -770,7 +770,8 @@ from system PATH, so you should set these to system PATH.
    ("C-x m '" . kimim/top-right-mouse)
    ("C-x m r" . kimim/rename-file-and-buffer)
    ("C-<pause>" . iconify-frame)
-   ("C-x S" . eshell))
+   ("C-x S" . eshell)
+   ("C-x M-q" . kimim/unfill-paragraph-or-region))
   :config
   (unbind-key "C-x C-z")
   (when (eq system-type 'darwin) ;; mac specific settings
@@ -2431,7 +2432,8 @@ this directory as secure because you are the owner.
   :bind
   (:map
    eglot-mode-map
-   ("C-x l a" . eglot-code-actions))
+   ("C-x l a" . eglot-code-actions)
+   ("C-x l b" . eldoc))
   :hook
   ((c-mode c++-mode rust-mode python-mode r-mode) . eglot-ensure)
   (eglot-managed-mode
@@ -3639,6 +3641,13 @@ When exporting, do not export with author and date.
   (org-export-with-date t)
   :config
   (require 'ox-latex)
+
+  (defmacro by-backend (&rest body)
+    `(case
+         (if (boundp 'backend)
+             (org-export-backend-name backend) nil)
+       ,@body))
+
   (defun org-export--collect-tree-properties (data info)
     "Extract tree properties from parse tree.
 
