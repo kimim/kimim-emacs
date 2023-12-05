@@ -3415,7 +3415,8 @@ support more functions from =org-ref=:
    ("C-'" . org-emphasize)
    ("C-c p" . kimim/preview-babel-image)
    ("C-c C-w" . org-refile-reverse)
-   ("C-c w" . org-refile))
+   ("C-c w" . org-refile)
+   ("M-," . org-mark-ring-goto))
   :custom
   (org-modules '(org-habit
                  ol-w3m ol-bbdb ol-bibtex
