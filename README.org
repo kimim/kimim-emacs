@@ -2432,7 +2432,8 @@ this directory as secure because you are the owner.
   :bind
   (:map
    eglot-mode-map
-   ("C-x l a" . eglot-code-actions))
+   ("C-x l a" . eglot-code-actions)
+   ("C-x l b" . eldoc))
   :hook
   ((c-mode c++-mode rust-mode python-mode r-mode) . eglot-ensure)
   (eglot-managed-mode
