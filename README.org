@@ -3039,7 +3039,7 @@ scroll images line by line.
     (cond ((eq system-type 'darwin)
            "/usr/local/share/emacs/site-lisp/lilypond")
           ((eq system-type 'windows-nt)
-           (concat kimim/path-kimikit "/LilyPond/usr/share/emacs/site-lisp"))
+           (concat kimim/path-kimikit "/lilypond-2.24.3/share/emacs/site-lisp"))
           ((eq system-type 'gnu/linux)
            "/usr/local/share/emacs/site-lisp/lilypond"))))
 
@@ -3064,9 +3064,7 @@ scroll images line by line.
       (org-babel-eval
        (concat
         org-babel-lilypond-ly-command
-        " -dbackend=eps "
-        "-dno-gs-load-fonts "
-        "-dinclude-eps-fonts -dno-print-pages -dpreview "
+        " -dcrop --loglevel=ERROR "
         (or (cdr (assoc (file-name-extension out-file)
                         '(("pdf" . "--pdf ")
                           ("ps" . "--ps ")
@@ -3076,12 +3074,12 @@ scroll images line by line.
         "--output="
         (file-name-sans-extension out-file)
         " "
-        cmdline " "
+        cmdline
         in-file
         ;; copy .preview file to sans .preview file
         " && mv -f "
         (file-name-sans-extension out-file)
-        ".preview."
+        ".cropped."
         (file-name-extension out-file)
         " "
         out-file) "")) nil))
@@ -3561,13 +3559,17 @@ spaces before plain text line.
   (org-structure-template-alist '(("a" . "export ascii")
                                   ("c" . "center")
                                   ("C" . "comment")
+                                  ("d" . "definition")
                                   ("e" . "example")
                                   ("E" . "export")
                                   ("h" . "export html")
                                   ("l" . "export latex")
+                                  ("L" . "lemma")
+                                  ("p" . "proof")
                                   ("q" . "quote")
                                   ("Q" . "quotation")
                                   ("s" . "src")
+                                  ("t" . "theorem")
                                   ("v" . "verse")))
   :functions kimim/org-download-annotate
   :config
@@ -3643,7 +3645,7 @@ When exporting, do not export with author and date.
   (require 'ox-latex)
 
   (defmacro by-backend (&rest body)
-    `(case
+    `(pcase
          (if (boundp 'backend)
              (org-export-backend-name backend) nil)
        ,@body))
@@ -3789,7 +3791,7 @@ sudo apt install python3-pygments
   :custom
   (org-latex-listings 'minted)
   (org-latex-minted-options
-   '(("frame" "single") ("fontsize" "\\small")))
+   '(("frame" "single") ("fontsize" "\\scriptsize")))
   (org-latex-pdf-process
    '("latexmk -xelatex -shell-escape -output-directory=%o %F"))
   ;; avoid warning when preview tikz in org babel
