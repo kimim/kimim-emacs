@@ -3791,7 +3791,7 @@ sudo apt install python3-pygments
   :custom
   (org-latex-listings 'minted)
   (org-latex-minted-options
-   '(("frame" "single") ("fontsize" "\\scriptsize")))
+   '(("frame" "lines") ("fontsize" "\\scriptsize")))
   (org-latex-pdf-process
    '("latexmk -xelatex -shell-escape -output-directory=%o %F"))
   ;; avoid warning when preview tikz in org babel
@@ -3844,8 +3844,9 @@ sudo apt install python3-pygments
   (require 'latex-classes)
   (setq org-latex-classes kimim/latex-classes)
   (setq org-latex-default-class "article")
-  (setq org-latex-image-default-option
-        "height=0.8\\textheight,width=\\textwidth,keepaspectratio")
+  ;; removed, it will make small image too large!
+  ;;(setq org-latex-image-default-option
+  ;;      "height=0.8\\textheight,width=\\textwidth,keepaspectratio")
   (setq org-latex-image-default-width "")
   ;; remove fontenc, and AUTO in front of inputenc,
   ;; then francais can be processed
