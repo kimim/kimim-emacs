@@ -1087,7 +1087,7 @@ Show eldoc in a childframe box.
 #+begin_src emacs-lisp
 (use-package eldoc-box
   :diminish eldoc-box-hover-mode
-  :hook (eglot-managed-mode . eldoc-box-hover-mode)
+  ;;:hook (eglot-managed-mode . eldoc-box-hover-mode)
   :custom (eldoc-box-offset '(10 40 10))
   :bind (:map
          eglot-mode-map
@@ -2210,7 +2210,8 @@ Rich annotations in the minibuffer.
   :bind
   (:map
    corfu-map
-   ("M-h" . backward-kill-word))
+   ("M-h" . backward-kill-word)
+   ("RET" . nil))
   :config
   (require 'cape)
   (setq corfu-auto t
@@ -2245,7 +2246,7 @@ Rich annotations in the minibuffer.
   :init
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-symbol)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
   :custom
   (cape-dabbrev-check-other-buffers nil)
   (cape-dict-grep nil)
@@ -2257,9 +2258,9 @@ Rich annotations in the minibuffer.
      (setq-local
       completion-at-point-functions
       (list
-       (cape-super-capf
+       (cape-capf-super
         #'tempel-expand
-        #'cape-symbol
+        #'cape-elisp-symbol
         ;;#'cape-yasnippet
         #'cape-dabbrev)))))
 
@@ -2269,7 +2270,7 @@ Rich annotations in the minibuffer.
      (setq-local
       completion-at-point-functions
       (list
-       (cape-super-capf
+       (cape-capf-super
         #'tempel-expand
         #'cape-dabbrev
         #'cape-dict
@@ -2282,7 +2283,7 @@ Rich annotations in the minibuffer.
      (setq-local
       completion-at-point-functions
       (list
-       (cape-super-capf
+       (cape-capf-super
         ;;#'cape-yasnippet
         #'cape-dabbrev)))))
 
@@ -2448,7 +2449,7 @@ this directory as secure because you are the owner.
           '(orderless basic flex substring partial-completion))
     (setq-local completion-at-point-functions
                 (list
-                 (cape-super-capf
+                 (cape-capf-super
                   #'eglot-completion-at-point
                   #'cape-dabbrev)))))
 #+end_src
