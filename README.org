@@ -771,7 +771,12 @@ from system PATH, so you should set these to system PATH.
    ("C-x m r" . kimim/rename-file-and-buffer)
    ("C-<pause>" . iconify-frame)
    ("C-x S" . eshell)
-   ("C-x M-q" . kimim/unfill-paragraph-or-region))
+   ("C-x M-q" . kimim/unfill-paragraph-or-region)
+   ("C-x _ a" . (lambda() (interactive) (insert "ā")))
+   ("C-x _ e" . (lambda() (interactive) (insert "ē")))
+   ("C-x _ i" . (lambda() (interactive) (insert "ī")))
+   ("C-x _ o" . (lambda() (interactive) (insert "ō")))
+   ("C-x _ u" . (lambda() (interactive) (insert "ū"))))
   :config
   (unbind-key "C-x C-z")
   (when (eq system-type 'darwin) ;; mac specific settings
@@ -904,6 +909,7 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
         '("懒虫简明英汉词典"))
   (setq sdcv-dictionary-complete-list
         '(
+          "牛津英汉双解美化版"
           "懒虫简明英汉词典"
           "英汉汉英专业词典"
           "XDICT英汉辞典"
@@ -918,7 +924,6 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
           "朗道汉英字典5.0"
           "CDICT5英汉辞典"
           "新世纪汉英科技大词典"
-          "牛津英汉双解美化版"
           "21世纪双语科技词典"
           "quick_eng-zh_CN"
           ))
@@ -2209,8 +2214,7 @@ Rich annotations in the minibuffer.
   :bind
   (:map
    corfu-map
-   ("M-h" . backward-kill-word)
-   ("RET" . nil))
+   ("M-h" . backward-kill-word))
   :config
   (require 'cape)
   (setq corfu-auto t
@@ -3039,7 +3043,8 @@ scroll images line by line.
     (cond ((eq system-type 'darwin)
            "/usr/local/share/emacs/site-lisp/lilypond")
           ((eq system-type 'windows-nt)
-           (concat kimim/path-kimikit "/lilypond-2.24.3/share/emacs/site-lisp"))
+           (concat kimim/path-kimikit
+                   "lilypond-2.24.3/share/emacs/site-lisp"))
           ((eq system-type 'gnu/linux)
            "/usr/local/share/emacs/site-lisp/lilypond"))))
 
@@ -4699,7 +4704,10 @@ is completed, a posframe showing break countdown in large font.
 (use-package ebdb
   :functions ebdb-gethash
   :commands ebdb ebdb-mail-aliases
-  :custom (ebdb-mua-pop-up nil)
+  :custom
+  (ebdb-mua-pop-up nil)
+  (ebdb-i18n-countries-pref-scripts
+   '(("中国" . chn)))
   :bind (:map ebdb-mode-map
               ("C-c C-z" . kimim/ebdb-note-find))
   :config
