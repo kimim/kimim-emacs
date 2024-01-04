@@ -1169,6 +1169,9 @@ for buffers and contexts.
 When sis is enabled, =C-x C-c= a emacs client frame will crash, so, add
 an advice to disable sis when ~save-buffers-kill-terminal~.
 
+By the way, you need to use =C-<space>= to toggle between IME and
+NonIME, otherwise, ~sis~ will bring IME back after some keycords.
+
 #+begin_src emacs-lisp
 (use-package sis
   :functions (kimim/sis-enable
@@ -2226,7 +2229,8 @@ Rich annotations in the minibuffer.
         corfu-preview-current t
         corfu-auto-prefix 2
         corfu-quit-no-match 'separator
-        corfu-popupinfo-delay '(1.0 . 0.5))
+        corfu-popupinfo-delay '(1.0 . 0.5)
+        corfu--state-vars corfu--initial-state)
   (global-corfu-mode)
   (corfu-popupinfo-mode)
   (corfu-prescient-mode)
