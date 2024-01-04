@@ -4160,6 +4160,7 @@ sqlite3 is shipped in macOS by default.
                   (interactive)
                   (org-roam-node-find
                    nil nil 'kimim/cite-filter)))
+   ("C-c n o" . kimim/ebdb-link-open-note)
    ("C-c n c" . org-roam-capture)
    ("C-c n j" . org-roam-dailies-capture-today)
    ("C-c n ." . org-roam-dailies-goto-today)
@@ -4202,6 +4203,7 @@ sqlite3 is shipped in macOS by default.
        :unnarrowed t)))
   (defun kimim/cite-filter (node)
     (orb-get-node-citekey node))
+
   (defun kimim/non-cite-filter (node)
     (or
      (not (orb-get-node-citekey node))
@@ -4214,7 +4216,20 @@ sqlite3 is shipped in macOS by default.
    #'orb--new-note :around
    (lambda (origin-fun &rest args)
      (let ((org-roam-capture-templates orb-templates))
-       (apply origin-fun args)))))
+       (apply origin-fun args))))
+
+  (defun kimim/ebdb-link-open-note ()
+    (interactive)
+    (let* ((context (org-element-context))
+           (name (buffer-substring
+                  (org-element-property :contents-begin context)
+                  (org-element-property :contents-end context)))
+      (path (org-element-property :path context))
+      ;; TODO: extend to citeref in the future
+      (node (kimim/ebdb-note-exists-p path)))
+    (if node
+        (org-roam-node-open node)
+      (kimim/ebdb-note-new uuid name)))))
 #+end_src
 
 ** org-roam-bibtex
@@ -4706,12 +4721,12 @@ is completed, a posframe showing break countdown in large font.
   :commands ebdb ebdb-mail-aliases
   :custom
   (ebdb-mua-pop-up nil)
-  (ebdb-i18n-countries-pref-scripts
-   '(("中国" . chn)))
   :bind (:map ebdb-mode-map
               ("C-c C-z" . kimim/ebdb-note-find))
   :config
   (setq ebdb-sources (concat kimim/path-org "ebdb.gpg"))
+  (setq ebdb-i18n-countries-pref-scripts
+        '(("中国" . chn)))
   (require 'ebdb-gnus)
   (require 'ebdb-message)
   (require 'ebdb-org)
@@ -4765,12 +4780,18 @@ is completed, a posframe showing break countdown in large font.
 Return Org Roam node or nil."
     (gethash uuid (kimim/ebdb-make-notes-cache)))
 
-  (defun kimim/ebdb-note-new (uuid)
-    "Create people note."
+  (defun kimim/ebdb-citekey ()
+    "Get people citekey"
+    (interactive)
     (if-let* ((record (ebdb-current-record))
               (name (ebdb-record-name-string record))
               (uuid (ebdb-record-uuid record))
-              (citekey-ref (format "[[ebdb:uuid/%s][%s]]" uuid name))
+              (citekey-ref (format "[[ebdb:uuid/%s][%s]]" uuid name)))
+        (kill-new citekey-ref)))
+
+  (defun kimim/ebdb-note-new (uuid name)
+    "Create people note."
+    (if-let* ((citekey-ref (format "[[ebdb:uuid/%s][%s]]" uuid name))
               (title name)
               (node (org-roam-node-create
                      :title title
@@ -4791,12 +4812,13 @@ Return Org Roam node or nil."
     "Find or create people note."
     (interactive)
     (let* ((record (ebdb-current-record))
+           (name (ebdb-record-name-string record))
            (uuid (ebdb-record-uuid record))
            (ebdb-ref (concat "uuid/" uuid))
            (node (kimim/ebdb-note-exists-p ebdb-ref)))
       (if node
           (org-roam-node-open node)
-        (kimim/ebdb-note-new uuid)))))
+        (kimim/ebdb-note-new uuid name)))))
 #+end_src
 
 ** erc
