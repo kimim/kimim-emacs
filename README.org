@@ -4725,8 +4725,10 @@ is completed, a posframe showing break countdown in large font.
   :commands ebdb ebdb-mail-aliases
   :custom
   (ebdb-mua-pop-up nil)
-  :bind (:map ebdb-mode-map
-              ("C-c C-z" . kimim/ebdb-note-find))
+  :bind (:map
+         ebdb-mode-map
+         ("C-c C-z" . kimim/ebdb-note-find)
+         ("w i" . kimim/ebdb-citekey))
   :config
   (setq ebdb-sources (concat kimim/path-org "ebdb.gpg"))
   (setq ebdb-i18n-countries-pref-scripts
