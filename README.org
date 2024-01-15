@@ -382,6 +382,35 @@ calculated with original default font height and width:
       (kimim/set-frame-alist
        top left height width))))
 
+(defun kimim/frame-and-font-phone ()
+  (interactive)
+  (when window-system
+    (require 'cnfonts)
+    (cnfonts-enable)
+    (cnfonts-set-font)
+    ;; top, left ... must be integer
+    (let* ((width (ceiling (* 0.36 (kimim/screen-width))))
+           (height (ceiling (* 0.8 (kimim/screen-height))))
+           (top (/ (display-pixel-height) 10))
+           (left (/ (* 32 (display-pixel-width)) 100)))
+      (kimim/menu-and-bar)
+      (kimim/set-frame-alist
+       top left height width))))
+
+(defun kimim/frame-and-font-cast ()
+  (interactive)
+  (when window-system
+    (require 'cnfonts)
+    (cnfonts-enable)
+    (cnfonts-set-font)
+    ;; top, left ... must be integer
+    (let* ((width (ceiling (* 0.36 (kimim/screen-width))))
+           (height (ceiling (* 0.36 (kimim/screen-height))))
+           (top (/ (display-pixel-height) 10))
+           (left (/ (* 32 (display-pixel-width)) 100)))
+      (kimim/set-frame-alist
+       top left height width))))
+
 (defun kimim/frame-and-font-mini ()
   (interactive)
   ;; top, left ... must be integer
