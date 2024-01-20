@@ -37,3 +37,6 @@
 [submodule "site-lisp/ob-bb"]
 	path = site-lisp/ob-bb
 	url = git@github.com:kimim/ob-bb.git
+[submodule "site-lisp/org-drawio"]
+	path = site-lisp/org-drawio
+	url = git@github.com:kimim/org-drawio.git
