@@ -390,9 +390,9 @@ calculated with original default font height and width:
     (cnfonts-set-font)
     ;; top, left ... must be integer
     (let* ((width (ceiling (* 0.36 (kimim/screen-width))))
-           (height (ceiling (* 0.8 (kimim/screen-height))))
-           (top (/ (display-pixel-height) 10))
-           (left (/ (* 32 (display-pixel-width)) 100)))
+           (height (ceiling (* 0.9 (kimim/screen-height))))
+           (top (/ (display-pixel-height) 20))
+           (left (/ (* 34 (display-pixel-width)) 100)))
       (kimim/menu-and-bar)
       (kimim/set-frame-alist
        top left height width))))
@@ -405,9 +405,9 @@ calculated with original default font height and width:
     (cnfonts-set-font)
     ;; top, left ... must be integer
     (let* ((width (ceiling (* 0.36 (kimim/screen-width))))
-           (height (ceiling (* 0.36 (kimim/screen-height))))
+           (height (ceiling (* 0.34 (kimim/screen-height))))
            (top (/ (display-pixel-height) 10))
-           (left (/ (* 32 (display-pixel-width)) 100)))
+           (left (/ (* 33 (display-pixel-width)) 100)))
       (kimim/set-frame-alist
        top left height width))))
 
@@ -801,11 +801,11 @@ from system PATH, so you should set these to system PATH.
    ("C-<pause>" . iconify-frame)
    ("C-x S" . eshell)
    ("C-x M-q" . kimim/unfill-paragraph-or-region)
-   ("C-x _ a" . (lambda() (interactive) (insert "ā")))
-   ("C-x _ e" . (lambda() (interactive) (insert "ē")))
-   ("C-x _ i" . (lambda() (interactive) (insert "ī")))
-   ("C-x _ o" . (lambda() (interactive) (insert "ō")))
-   ("C-x _ u" . (lambda() (interactive) (insert "ū"))))
+   ("C-x ` a" . (lambda() (interactive) (insert "ā")))
+   ("C-x ` e" . (lambda() (interactive) (insert "ē")))
+   ("C-x ` i" . (lambda() (interactive) (insert "ī")))
+   ("C-x ` o" . (lambda() (interactive) (insert "ō")))
+   ("C-x ` u" . (lambda() (interactive) (insert "ū"))))
   :config
   (unbind-key "C-x C-z")
   (when (eq system-type 'darwin) ;; mac specific settings
@@ -3065,6 +3065,18 @@ scroll images line by line.
 (use-package iscroll
   :diminish iscroll-mode
   :hook ((org-mode markdown-mode) . iscroll-mode))
+#+end_src
+
+** org-drawio
+
+#+begin_src emacs-lisp
+(use-package org-drawio
+  :commands (org-drawio-add
+             org-drawio-open)
+  :load-path (lambda ()
+               (concat
+                kimim/path-kimim-emacs
+                "site-lisp/org-drawio"))
 #+end_src
 
 * Music
