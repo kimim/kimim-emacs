@@ -3076,7 +3076,7 @@ scroll images line by line.
   :load-path (lambda ()
                (concat
                 kimim/path-kimim-emacs
-                "site-lisp/org-drawio"))
+                "site-lisp/org-drawio")))
 #+end_src
 
 * Music
