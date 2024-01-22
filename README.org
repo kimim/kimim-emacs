@@ -2470,6 +2470,9 @@ this directory as secure because you are the owner.
   (:map
    eglot-mode-map
    ("C-x l a" . eglot-code-actions)
+   ("C-x l t" . eglot-find-typeDefinition)
+   ("C-x l d" . eglot-find-declaration)
+   ("C-x l i" . eglot-find-implemetation)
    ("C-x l b" . eldoc))
   :hook
   ((c-mode c++-mode rust-mode python-mode r-mode) . eglot-ensure)
