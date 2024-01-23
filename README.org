@@ -2713,7 +2713,7 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
 #+begin_src emacs-lisp
 (use-package clojure-mode
   :mode (("\\.cljs\\'" . clojurescript-mode)
-         ("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode)
+         ("\\.\\(clj\\|dtm\\|edn\\|bb\\)\\'" . clojure-mode)
          ("\\.cljc\\'" . clojurec-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
   :config
