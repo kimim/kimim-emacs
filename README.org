@@ -850,6 +850,8 @@ from system PATH, so you should set these to system PATH.
                (concat kimim/path-root "usr/share/info"))
   (add-to-list 'Info-additional-directory-list
                (concat kimim/path-root "usr/local/share/info"))
+  (add-to-list 'Info-additional-directory-list
+               (concat kimim/path-root "ucrt64/share/info"))
   ;; additional info, collected from internet
   (add-to-list 'Info-additional-directory-list
                "~/info"))
@@ -1617,6 +1619,7 @@ Move frame to one of the nine grids on the screen with ~C-x y <N>~ keys.
 #+begin_src emacs-lisp
 (use-package nine-grid
   :diminish nine-grid-minor-mode
+  :commands (nine-grid)
   :load-path (lambda ()
                (concat kimim/path-kimim-emacs
                        "site-lisp/nine-grid"))
@@ -3422,7 +3425,23 @@ Add indicator of remaining text when scrolling PDF pages.
      (cadr
       (string-split
        (car (org-property-values "ROAM_REFS"))
-       ":")))))
+       ":"))))
+
+
+  (defun kimim/bibtex-completion-get-title ()
+    "Copy the title by KEY."
+    (interactive)
+    (kill-new
+     (s-format
+      "${title}"
+      'bibtex-completion-apa-get-value
+      (bibtex-completion-get-entry
+       (org-ref-get-bibtex-key-under-cursor)))))
+
+  (defhydra+ org-ref-citation-hydra ()
+    "Add copy action to `org-ref-citation-hydra'."
+    ("y" kimim/bibtex-completion-get-title
+     "Copy title" :column "Copy")))
 #+end_src
 
 There is a built-in =bibtex-mode= to manage references. We can extend it to
@@ -3709,8 +3728,27 @@ When exporting, do not export with author and date.
   ;;(org-export-with-sub-superscripts '{})
   (org-export-with-author nil)
   (org-export-with-date t)
+  (org-html-head "<style>
+  pre.src-bad { background: wheat; }
+  pre { margin: 0.0em;
+        padding: 4pt;
+  }
+</style>")
   :config
   (require 'ox-latex)
+
+  (defun kimim/org-html-src-block-advice (oldfun src-block contents info)
+    (let* ((class-tag (org-export-read-attribute
+                       :attr_html src-block :class))
+           (html-block (funcall oldfun src-block contents info)))
+      (if (string-empty-p class-tag)
+          html-block
+        (string-replace
+         ;; add src-bad class
+         "class=\"src" (concat "class=\"src src-" class-tag) html-block))))
+
+  (advice-add 'org-html-src-block :around
+              #'kimim/org-html-src-block-advice)
 
   (defmacro by-backend (&rest body)
     `(pcase
