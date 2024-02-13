@@ -2548,6 +2548,12 @@ parenthesis. We define some keys for it:
     (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p))))
 #+end_src
 
+** parinfer-rust-mode
+#+begin_src emacs-lisp
+(use-package parinfer-rust-mode
+   :commands parinfer-rust-mode)
+#+end_src
+
 ** tree-sitter
 
 #+begin_src emacs-lisp
@@ -2728,21 +2734,13 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
          ("\\.\\(clj\\|dtm\\|edn\\|bb\\)\\'" . clojure-mode)
          ("\\.cljc\\'" . clojurec-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
+  :hook ((clojure-mode clojurec-mode clojurescript-mode) .
+         parinfer-rust-mode)
   :config
   (require 'cider)
-  ;;(require 'company)
   (require 'flycheck)
   (require 'flycheck-clj-kondo)
-  (require 'clojure-mode-extra-font-locking)
-  ;;(add-hook 'cider-repl-mode-hook #'company-mode)
-  ;;(add-hook 'cider-mode-hook #'company-mode)
-  (add-hook 'clojure-mode-hook #'cider-mode)
-  ;;(add-hook 'clojure-mode-hook #'clj-refactor-mode)
-  (add-hook 'clojurec-mode-hook #'cider-mode)
-  ;;(add-hook 'clojurec-mode-hook #'clj-refactor-mode)
-  (add-hook 'clojurescript-mode-hook #'cider-mode)
-  ;;(add-hook 'clojurescript-mode-hook #'clj-refactor-mode)
-  )
+  (require 'clojure-mode-extra-font-locking))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3087,16 +3085,16 @@ scroll images line by line.
   :hook ((org-mode markdown-mode) . iscroll-mode))
 #+end_src
 
-** org-drawio
+** chatu
 
 #+begin_src emacs-lisp
-(use-package org-drawio
-  :commands (org-drawio-add
-             org-drawio-open)
+(use-package chatu
   :load-path (lambda ()
                (concat
-                kimim/path-kimim-emacs
-                "site-lisp/org-drawio")))
+                kimim/path-kimim-emacs "site-lisp/chatu"))
+  :commands (chatu-add
+             chatu-open)
+  :hook ((org-mode markdown-mode) . chatu-mode))
 #+end_src
 
 * Music
@@ -3114,7 +3112,8 @@ scroll images line by line.
            "/usr/local/share/emacs/site-lisp/lilypond"))))
 
 (use-package lilypond-mode
-  :load-path (lambda () (list (lilypond-load-path))))
+  :load-path (lambda () (list (lilypond-load-path)))
+  :mode ("\\.ly\\'" . LilyPond-mode))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3181,11 +3180,11 @@ emacs theme color.
    ("j" . (lambda ()
             "Next line within page"
             (interactive)
-            (image-next-line 1)))
+            (image-next-line 10)))
    ("k" . (lambda ()
             "Previous line within page"
             (interactive)
-            (image-next-line -1)))
+            (image-next-line -10)))
    ("n" . kimim/pdf-view-next-page)
    ("p" . kimim/pdf-view-previous-page)
    ("o" . other-window)
@@ -4142,31 +4141,11 @@ New link to use Office Onenote.
            :publishing-directory ,(o2jk-output-directory)
            :publishing-function org-ref-html-publish-to-html
            :headline-levels 4
-           :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
            :html-preamble t
            :recursive t
            :make-index t
            :html-extension "html"
-           :body-only t)
-          ("images"
-           :base-directory ,(o2jk-input-directory "img")
-           :base-extension "jpg\\|gif\\|png"
-           :publishing-directory ,(o2jk-output-directory "img")
-           :publishing-function org-publish-attachment
-           :recursive t)
-          ("js"
-           :base-directory ,(o2jk-input-directory "js")
-           :base-extension "js"
-           :publishing-directory ,(o2jk-output-directory "js")
-           :publishing-function org-publish-attachment
-           :recursive t)
-          ("css"
-           :base-directory ,(o2jk-input-directory "css")
-           :base-extension "css\\|el"
-           :publishing-directory ,(o2jk-output-directory "css")
-           :publishing-function org-publish-attachment
-           :recursive t)
-          ("web" :components ("images" "js" "css"))))
+           :body-only t)))
   ;; Very simplified version of org-ref-export-to from org-ref-export.el
   ;; that export to filename
   (defun org-ref-export-to-file-nomarks-noopen
@@ -4378,7 +4357,8 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
            (markdown-max-image-size
             `(,(* (+ fill-column 10)
                   (frame-char-width)))))
-  :hook (markdown-mode . markdown-toggle-inline-images)
+  :hook ((markdown-mode . markdown-toggle-inline-images)
+         (markdown-mode . olivetti-mode))
   :bind(:map
         markdown-mode-map
         ("C-<tab>" . outline-hide-entry)
