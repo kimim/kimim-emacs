@@ -40,3 +40,6 @@
 [submodule "site-lisp/chatu"]
 	path = site-lisp/chatu
 	url = git@github.com:kimim/chatu.git
+[submodule "site-lisp/ob-nbb"]
+	path = site-lisp/ob-nbb
+	url = git@github.com:kimim/ob-nbb.git
