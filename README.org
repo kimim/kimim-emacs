@@ -710,7 +710,9 @@ clearly in dark color theme.
         (append '(("\\.svg\\'" . image-mode))
                 auto-mode-alist))
   (defun create-image-advice (im)
-    (nconc im (list :background "#f8f8f8")))
+    (when im
+      ;; only add property when im is non-nil
+      (nconc im (list :background "#f8f8f8"))))
   (advice-add 'create-image :filter-return #'create-image-advice))
 #+end_src
 
