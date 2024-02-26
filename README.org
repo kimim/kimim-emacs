@@ -2275,8 +2275,7 @@ Rich annotations in the minibuffer.
         corfu-preview-current t
         corfu-auto-prefix 2
         corfu-quit-no-match 'separator
-        corfu-popupinfo-delay '(1.0 . 0.5)
-        corfu--state-vars corfu--initial-state)
+        corfu-popupinfo-delay '(1.0 . 0.5))
   (global-corfu-mode)
   (corfu-popupinfo-mode)
   (corfu-prescient-mode)
