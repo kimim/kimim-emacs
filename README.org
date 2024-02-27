@@ -1456,7 +1456,8 @@ export ENCHANT_CONFIG_DIR=~/.config/enchant/
 #+begin_src emacs-lisp
 (use-package ispell
   :custom
-  (ispell-program-name "enchant-2")
+  ;; enchant-2 becomes very slow in Windows 11
+  (ispell-program-name "hunspell")
   (ispell-silently-savep t)
   :config
   (cond ((eq system-type 'windows-nt)
