@@ -944,29 +944,28 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
                                   (concat kimim/path-kimim-emacs
                                           "site-lisp/sdcv-dict")))
   (setq sdcv-dictionary-simple-list
-        '("懒虫简明英汉词典"))
+        '("lazyworm-zh-en"
+          "lazyworm-en-zh"))
   (setq sdcv-dictionary-complete-list
-        '(
-          "牛津英汉双解美化版"
-          "懒虫简明英汉词典"
-          "英汉汉英专业词典"
-          "XDICT英汉辞典"
-          "stardict1.3英汉辞典"
+        '("oxford"
+          "lazyworm-en-zh"
+          "professional"
+          "xdict-en-zh"
+          "stardict-en-zh"
           "WordNet"
-          "XDICT汉英辞典"
+          "xdict-zh-en"
           "Jargon"
-          "懒虫简明汉英词典"
+          "lazyworm-zh-en"
           "FOLDOC"
-          "新世纪英汉科技大词典"
-          "KDic11万英汉词典"
-          "朗道汉英字典5.0"
-          "CDICT5英汉辞典"
-          "新世纪汉英科技大词典"
-          "21世纪双语科技词典"
-          "quick_eng-zh_CN"
-          ))
+          "newcentury-en-zh"
+          "kdic11w"
+          "langdao-zh-en"
+          "cdict-en-zh"
+          "newcentury-zh-en"
+          "21centurybiling"
+          "quick_eng-zh_CN"))
   (defun kimim/sdcv-call-process-advice (orig-fun &rest args)
-    (let ((default-process-coding-system '(utf-8 . gbk)))
+    (let ((default-process-coding-system '(utf-8 . utf-8)))
       (apply orig-fun args)))
 
   (advice-add 'sdcv-call-process
@@ -2305,7 +2304,9 @@ Rich annotations in the minibuffer.
   :custom
   (cape-dabbrev-check-other-buffers nil)
   (cape-dict-grep nil)
-  (cape-dict-file "~/.emacs.d/dict/words.txt")
+  (cape-dict-file
+   (concat kimim/path-kimim-emacs
+           "site-lisp/english-words/words_alpha.txt"))
   :hook
   (emacs-lisp-mode
    .
