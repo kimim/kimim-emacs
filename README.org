@@ -963,7 +963,9 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
           "cdict-en-zh"
           "newcentury-zh-en"
           "21centurybiling"
-          "quick_eng-zh_CN"))
+          "quick_eng-zh_CN"
+          "english-root"
+          "swjz"))
   (defun kimim/sdcv-call-process-advice (orig-fun &rest args)
     (let ((default-process-coding-system '(utf-8 . utf-8)))
       (apply orig-fun args)))
@@ -3629,6 +3631,17 @@ spaces before plain text line.
     (push '("#+begin_comment" . "♯" ) prettify-symbols-alist)
     (push '("#+end_comment" . "▪" ) prettify-symbols-alist)
     (prettify-symbols-mode)))
+#+end_src
+
+** org-inline-pdf
+Sometimes, SVG images are not properly converted in LaTeX PDF
+file. Including a PDF image can solve this problem. Then we need a
+method to toggle PDF image display. =org-inline-pdf= solves this issue
+by using =pdf2svg= to convert PDF to SVG on-the-fly.
+
+#+begin_src emacs-lisp
+(use-package org-inline-pdf
+  :hook (org-mode org-inline-pdf))
 #+end_src
 
 ** orgalist
