@@ -692,7 +692,9 @@ Use kimim-light as default theme.
 #+begin_src emacs-lisp
 (use-package hippo-themes
   :ensure nil
-  :load-path "~/kimim-emacs/site-lisp/emacs-hippo-theme"
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                "site-lisp/emacs-hippo-theme"))
   :custom (;; do not warning when load new theme
            (custom-safe-themes t)))
 #+end_src
@@ -750,7 +752,9 @@ from system PATH, so you should set these to system PATH.
 
 #+begin_src emacs-lisp
 (use-package kimim
-  :load-path "~/kimim-emacs/site-lisp"
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                "site-lisp"))
   :ensure nil
   :commands (kimim/mail-setup
              kimim/open-external
@@ -2472,7 +2476,9 @@ this directory as secure because you are the owner.
 
 #+begin_src emacs-lisp
 (use-package lsp-snippet-tempel
-  :load-path "~/kimim-emacs/site-lisp/lsp-snippet"
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                "site-lisp/lsp-snippet"))
   :config
   (when (featurep 'lsp-mode)
     ;; Initialize lsp-snippet -> tempel in lsp-mode
@@ -2575,7 +2581,9 @@ parenthesis. We define some keys for it:
 (use-package ts-fold
   :init
   (require 'ts-fold)
-  :load-path  "~/kimim-emacs/site-lisp/ts-fold"
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                "site-lisp/ts-fold"))
   :bind ("C-<return>" . ts-fold-toggle))
 #+end_src
 
@@ -3895,7 +3903,9 @@ sudo apt install python3-pygments
 
 #+begin_src emacs-lisp
 (use-package latex-classes
-  :load-path "~/kimim-emacs/site-lisp"
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                "site-lisp"))
   :config
   (require 'bibtex-completion))
 #+end_src
@@ -4129,7 +4139,9 @@ New link to use Office Onenote.
 
 #+begin_src emacs-lisp
 (use-package o2jk
-  :load-path "~/kimim-emacs/site-lisp/o2jk"
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                       "site-lisp/o2jk"))
   :functions (o2jk-input-directory
               org-publish-cache-get-file-property
               org-ref-export-to-file-nomarks-noopen
@@ -4276,7 +4288,9 @@ sqlite3 is shipped in macOS by default.
     ("C-c n g" . org-id-get-create)
     ("C-c n b" . org-roam-buffer-toggle)))
   :config
-  (add-to-list 'load-path "~/kimim-emacs/site-lisp")
+  (add-to-list 'load-path
+               (concat kimim/path-kimim-emacs
+                       "site-lisp/"))
   (require 'org-roam-dailies)
   (require 'org-roam-bibtex)
   (require 'emacsql)
