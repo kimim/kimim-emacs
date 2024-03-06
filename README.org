@@ -1125,6 +1125,15 @@ Translate word between English and German.
        :foreground "tomato"))))
 #+end_src
 
+** reverso
+Translate between almost any languages.
+
+#+begin_src emacs-lisp
+(use-package reverso
+  :commands (reverso
+             reverso-translate))
+#+end_src
+
 ** eldoc-box
 
 Show eldoc in a childframe box.
