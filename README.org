@@ -965,8 +965,7 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
           "kdic11w"
           "langdao-zh-en"
           "cdict-en-zh"
-          "newcentury-zh-en"
-          "21centurybiling"))
+          "newcentury-zh-en"))
   (defun kimim/sdcv-call-process-advice (orig-fun &rest args)
     (let ((default-process-coding-system '(utf-8 . utf-8)))
       (apply orig-fun args)))
