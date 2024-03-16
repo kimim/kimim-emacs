@@ -2276,7 +2276,8 @@ Rich annotations in the minibuffer.
   :bind
   (:map
    corfu-map
-   ("M-h" . backward-kill-word))
+   ("M-h" . backward-kill-word)
+   ("<escape>" . corfu-quit))
   :config
   (require 'cape)
   (setq corfu-auto t
