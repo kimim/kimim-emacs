@@ -953,16 +953,12 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
   (setq sdcv-dictionary-complete-list
         '("oxford"
           "lazyworm-en-zh"
-          "professional"
           "xdict-en-zh"
           "stardict-en-zh"
           "WordNet"
           "xdict-zh-en"
           "Jargon"
           "lazyworm-zh-en"
-          "FOLDOC"
-          "newcentury-en-zh"
-          "kdic11w"
           "langdao-zh-en"
           "cdict-en-zh"
           "newcentury-zh-en"))
