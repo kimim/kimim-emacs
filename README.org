@@ -3216,9 +3216,21 @@ emacs theme color.
               (kill-new
                filename)
               (message "Copied %s" filename))))
-   ("t" . kimim/pdf-view-pagetext))
+   ("t" . kimim/pdf-view-pagetext)
+   ("`" . kimim/fanyi-in-pdf-tool))
   :config
   (require 'pdf-tools)
+  (require 'fanyi)
+  (defun kimim/fanyi-in-pdf ()
+    "Invoke fanyi in pdf-view."
+    (interactive)
+    (pdf-view-assert-active-region)
+    (if-let ((word (car (pdf-view-active-region-text))))
+        (progn
+          (fanyi-dwim word)
+          (cl-pushnew word fanyi-history))
+      (call-interactively #'fanyi-dwim)))
+
   (advice-add 'enable-theme :after
               (lambda (&rest _)
                 (when pdf-view-themed-minor-mode
