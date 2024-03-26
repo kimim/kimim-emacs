@@ -3216,7 +3216,7 @@ emacs theme color.
                filename)
               (message "Copied %s" filename))))
    ("t" . kimim/pdf-view-pagetext)
-   ("`" . kimim/fanyi-in-pdf-tool))
+   ("`" . kimim/fanyi-in-pdf))
   :config
   (require 'pdf-tools)
   (require 'fanyi)
