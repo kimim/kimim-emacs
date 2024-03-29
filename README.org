@@ -939,7 +939,7 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
   :bind
   ("C-M-z" . sdcv-search-input)
   ("C-x m ," . sdcv-search-pointer)
-  ("C-x m ." . sdcv-search-pointer+)
+  ("C-`" . sdcv-search-pointer+)
   :config
   (require 'sdcv)
   (setq sdcv-say-word-p t)
@@ -960,7 +960,10 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
           "WordNet"
           "Jargon"
           "langdao-zh-en"
-          "cdict-en-zh"))
+          "cdict-en-zh"
+          "georges-de-lat"
+          "georges-lat-de"
+          "etymonline"))
   (defun kimim/sdcv-call-process-advice (orig-fun &rest args)
     (let ((default-process-coding-system '(utf-8 . utf-8)))
       (apply orig-fun args)))
@@ -987,7 +990,7 @@ look up local dictionary with help from ~sdcv~.
 (use-package fanyi
   :ensure t
   :bind
-  (("C-x m f" . fanyi-dwim)
+  (("C-x m ." . kimim/fanyi-dwim)
    ("C-x m y" . kimim/fanyi-current-kill))
   :custom-face
   (fanyi-word-face
@@ -1004,9 +1007,18 @@ look up local dictionary with help from ~sdcv~.
   :bind (:map fanyi-mode-map
               ("n" . outline-next-visible-heading)
               ("p" . outline-previous-visible-heading)
-              ("o" . other-window))
+              ("o" . other-window)
+              ("<mouse-3>" . quit-window))
   :config
   (require 'sdcv)
+
+  (defun kimim/fanyi-dwim ()
+    (interactive)
+    (if-let ((word (thing-at-point 'word)))
+        (progn
+          (fanyi-dwim word)
+          (cl-pushnew word fanyi-history))
+      (call-interactively #'fanyi-dwim)))
 
   (defun kimim/fanyi-current-kill ()
     (interactive)
@@ -3499,10 +3511,23 @@ support more functions from =org-ref=:
   (:map
    nov-mode-map
    ("<home>" . beginning-of-line)
-   ("<end>" . end-of-line))
+   ("<end>" . end-of-line)
+   ("<mouse-3>" . kimim/fanyi-in-epub))
   :config
   (require 'olivetti)
-  (setq nov-text-width (- olivetti-body-width 2)))
+  (require 'fanyi)
+  (setq nov-text-width (- olivetti-body-width 2))
+
+  (defun kimim/fanyi-in-epub ()
+    "Invoke fanyi in epub view."
+    (interactive)
+    ;;(mouse-set-point last-input-event)
+    (mark-thing-at-mouse last-input-event 'word)
+    (if-let ((word (thing-at-point 'word)))
+        (progn
+          (fanyi-dwim word)
+          (cl-pushnew word fanyi-history))
+      (call-interactively #'fanyi-dwim))))
 #+end_src
 
 * Orgmode
