@@ -3686,7 +3686,7 @@ by using =pdf2svg= to convert PDF to SVG on-the-fly.
 
 #+begin_src emacs-lisp
 (use-package org-inline-pdf
-  :hook (org-mode org-inline-pdf))
+  :hook (org-mode . org-inline-pdf-mode))
 #+end_src
 
 ** orgalist
