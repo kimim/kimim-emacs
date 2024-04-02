@@ -3186,7 +3186,7 @@ Hook ~pdf-view-themed-minor-mode~ to ~pdf-view-mode~ and add
 ~pdf-view-refresh-themed-buffer~ to ~enable-theme-functions~ to follow
 emacs theme color.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results value silent
 (use-package pdf-tools
   :diminish pdf-view-themed-minor-mode
   :functions (pdf-view-refresh-themed-buffer)
@@ -3228,7 +3228,8 @@ emacs theme color.
                filename)
               (message "Copied %s" filename))))
    ("t" . kimim/pdf-view-pagetext)
-   ("`" . kimim/fanyi-in-pdf))
+   ("`" . kimim/fanyi-in-pdf)
+   ("<mouse-3>" . kimim/fanyi-in-pdf))
   :config
   (require 'pdf-tools)
   (require 'fanyi)
