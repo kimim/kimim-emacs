@@ -1545,8 +1545,12 @@ Check spell on the fly.
   :config
   (setq cns-process-buffer "*cns*")
   (setq cns-prog
-        (concat kimim/path-kimim-emacs
-                "site-lisp/cns/cnws.exe"))
+        (cond ((eq system-type 'windows-nt)
+               (concat kimim/path-kimim-emacs
+                       "site-lisp/cns/cnws.exe"))
+              ((eq system-type 'darwin)
+               (concat kimim/path-kimim-emacs
+                       "site-list/cns/cnws"))))
   (setq cns-dict-directory
         (concat kimim/path-kimim-emacs
                 "site-lisp/cns/cppjieba/dict"))
