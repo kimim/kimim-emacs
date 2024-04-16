@@ -2577,10 +2577,12 @@ parenthesis. We define some keys for it:
     (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p))))
 #+end_src
 
-** parinfer-rust-mode
+** COMMENT parinfer-rust-mode
 #+begin_src emacs-lisp
 (use-package parinfer-rust-mode
-   :commands parinfer-rust-mode)
+   :commands parinfer-rust-mode
+   :hook ((clojure-mode clojurec-mode clojurescript-mode) .
+          parinfer-rust-mode))
 #+end_src
 
 ** tree-sitter
@@ -2766,8 +2768,6 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
          ("\\.\\(clj\\|dtm\\|edn\\|bb\\)\\'" . clojure-mode)
          ("\\.cljc\\'" . clojurec-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
-  :hook ((clojure-mode clojurec-mode clojurescript-mode) .
-         parinfer-rust-mode)
   :config
   (require 'cider)
   (require 'flycheck)
