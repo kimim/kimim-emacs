@@ -2598,6 +2598,7 @@ parenthesis. We define some keys for it:
 #+begin_src emacs-lisp
 (use-package ts-fold
   :init
+  (use-package fringe-helper)
   (require 'ts-fold)
   :load-path (lambda ()
                (concat kimim/path-kimim-emacs
@@ -2921,6 +2922,15 @@ curl https://sh.rustup.rs -sSf | sh
   :hook ((typescript-mode . tree-sitter-mode)
          (typescript-mode . tree-sitter-hl-mode)
          (typescript-mode . eglot-ensure)))
+#+end_src
+
+** json
+
+#+begin_src emacs-lisp :results none
+(use-package json-mode
+  :mode ("\\.json\\'" . json-mode)
+  :hook ((json-mode . tree-sitter-mode)
+         (json-mode . tree-sitter-hl-mode)))
 #+end_src
 
 ** Golang
