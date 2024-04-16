@@ -1228,7 +1228,7 @@ an advice to disable sis when ~save-buffers-kill-terminal~.
 By the way, you need to use =C-<space>= to toggle between IME and
 NonIME, otherwise, ~sis~ will bring IME back after some keycords.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results none
 (use-package sis
   :functions (kimim/sis-enable
               kimim/sis-disable)
@@ -1240,7 +1240,12 @@ NonIME, otherwise, ~sis~ will bring IME back after some keycords.
    :underline t
    :inverse-video 'unspecified)
   (setq sis-other-cursor-color "tomato")
-  (sis-ism-lazyman-config nil t 'w32)
+  (cond ((eq system-type 'windows-nt)
+         (sis-ism-lazyman-config nil t 'w32))
+        ((eq system-type 'darwin)
+         (sis-ism-lazyman-config
+          "com.apple.keylayout.ABC"
+          "im.rime.inputmethod.Squirrel.Hans")))
 
   (defun kimim/sis-enable ()
     ;; enable the /cursor color/ mode
@@ -2545,7 +2550,7 @@ this directory as secure because you are the owner.
 ~smartparens-mode~[fn:10] is a general purpose mode for dealing with
 parenthesis. We define some keys for it:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results none
 (use-package smartparens
   :bind (:map
          smartparens-mode-map
@@ -2565,6 +2570,7 @@ parenthesis. We define some keys for it:
   :hook (prog-mode . smartparens-mode)
   :diminish smartparens-mode
   :config
+  (defalias 'sp--syntax-class-to-char 'syntax-class-to-char)
   (sp-with-modes '(c-mode c++-mode)
     (sp-local-pair "<" ">" :actions '(wrap autoskip navigate)))
   (sp-with-modes sp-lisp-modes
