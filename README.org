@@ -322,7 +322,6 @@ sometimes, they may catch your attention.
    (window-system
     ;; Enable copy and paste in Win32
     (setq select-enable-clipboard t)
-    (menu-bar-mode 0)
     (tool-bar-mode -1)
     (tooltip-mode -1)
     (scroll-bar-mode -1))
@@ -357,8 +356,7 @@ calculated with original default font height and width:
           (height . ,height)
           (width . ,width)
           (vertical-scroll-bars)
-          (tool-bar-lines)
-          (menu-bar-lines))))
+          (tool-bar-lines))))
 
 (defun kimim/screen-width ()
   (/ (display-pixel-width)
@@ -1556,7 +1554,7 @@ Check spell on the fly.
                        "site-lisp/cns/cnws.exe"))
               ((eq system-type 'darwin)
                (concat kimim/path-kimim-emacs
-                       "site-list/cns/cnws"))))
+                       "site-lisp/cns/cnws"))))
   (setq cns-dict-directory
         (concat kimim/path-kimim-emacs
                 "site-lisp/cns/cppjieba/dict"))
