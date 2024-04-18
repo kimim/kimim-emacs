@@ -324,7 +324,9 @@ sometimes, they may catch your attention.
     (setq select-enable-clipboard t)
     (tool-bar-mode -1)
     (tooltip-mode -1)
-    (scroll-bar-mode -1))
+    (scroll-bar-mode -1)
+    (when (eq window-system 'w32)
+      (menu-bar-mode 0)))
    ((eq window-system nil)
     (menu-bar-mode 0))))
 #+end_src
