@@ -942,6 +942,7 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
   ("C-`" . sdcv-search-pointer+)
   :config
   (require 'sdcv)
+  (setq sdcv-program "sdcv")
   (setq sdcv-say-word-p t)
   ;; set your local dictionaries path
   (setq sdcv-dictionary-data-dir (file-truename
