@@ -4072,6 +4072,9 @@ sudo apt install python3-pygments
   ;;    (concat "\addbibresource{" (expand-file-name it) "}\n"))
   ;;  bibtex-completion-bibliography)
 
+  ;; increase latex preview size.
+  (setq org-format-latex-options
+        (plist-put org-format-latex-options :scale 2.3))
   ;; preview latex equation with SVG image
   (add-to-list
    'org-preview-latex-process-alist
