@@ -3017,6 +3017,12 @@ Major mode to edit ethereum solidity smart contract code.
   :mode ("\\.sol\\'" . solidity-mode))
 #+end_src
 
+** lua
+
+#+begin_src emacs-lisp
+(use-package lua-mode)
+#+end_src
+
 * Diagram
 ** PlantUML
 
