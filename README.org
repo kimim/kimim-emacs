@@ -186,8 +186,7 @@ I need to specify these variables in different way.
   (setq kimim/path-root "/"))
  ((eq system-type 'darwin)
   (setq kimim/path-root "/")
-  (add-to-list 'exec-path "/Library/TeX/texbin")
-  (add-to-list 'exec-path "/opt/homebrew/bin"))
+  (add-to-list 'exec-path "/Library/TeX/texbin"))
  ((eq system-type 'gnu/linux)
   (setq kimim/path-root "/")
   (add-to-list 'exec-path "/usr/local/texlive/2020/bin/x86_64-linux/")))
@@ -1529,7 +1528,8 @@ Check spell on the fly.
               (let ((frame-width (* (+ fill-column 7)
                                     (frame-char-width))))
                 (setq org-image-actual-width `(,frame-width))
-                (setq markdown-max-image-size org-image-actual-width)
+                (setq markdown-max-image-size
+                      `(,frame-width . ,(* 2 frame-width)))
                 (when (bound-and-true-p org-inline-image-overlays)
                   (org-redisplay-inline-images))
                 (when (bound-and-true-p markdown-inline-image-overlays)
@@ -4451,7 +4451,9 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
            (markdown-command "pandoc")
            (markdown-max-image-size
             `(,(* (+ fill-column 10)
-                  (frame-char-width)))))
+                  (frame-char-width))
+              . ,(* 2 (+ fill-column 10)
+                    (frame-char-width)))))
   :hook ((markdown-mode . markdown-toggle-inline-images)
          (markdown-mode . olivetti-mode))
   :bind(:map
