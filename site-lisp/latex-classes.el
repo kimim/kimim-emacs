@@ -94,9 +94,6 @@ backref=true, maxcitenames=3, url=true]{biblatex}
 \\usepackage{hyperref}
 \\hypersetup{hidelinks}
 \\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
-\\setCJKmainfont{微软雅黑} % sets the roman font
-\\setCJKsansfont{微软雅黑} % sets the sans font
-\\setCJKmonofont{Consolas} % otherwise FangSong is not found
 \\pagestyle{plain}
 \\setlist[1]{labelindent=\\parindent,nosep,leftmargin= *}
 \\geometry{a4paper,scale=0.8}
