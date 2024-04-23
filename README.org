@@ -821,9 +821,12 @@ from system PATH, so you should set these to system PATH.
   (unbind-key "C-x C-z")
   (when (eq system-type 'darwin) ;; mac specific settings
     (setq mac-option-modifier 'meta)
-    (setq mac-command-modifier 'meta)
+    (setq mac-command-modifier 'super)
     ;; sets fn-delete to be right-delete
-    (global-set-key [kp-delete] 'delete-char))
+    (global-set-key [kp-delete] 'delete-char)
+    ;; get back hide other key
+    (bind-key "C-s-h" (lambda () (interactive)
+                        (mac-send-action 'hideOtherApplications))))
   (defun kimim/save-buffer-no-tws (&optional arg)
     (interactive "p")
     (delete-trailing-whitespace)
