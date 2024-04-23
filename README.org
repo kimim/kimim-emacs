@@ -825,7 +825,7 @@ from system PATH, so you should set these to system PATH.
     ;; sets fn-delete to be right-delete
     (global-set-key [kp-delete] 'delete-char)
     ;; get back hide other key
-    (bind-key "C-s-h" (lambda () (interactive)
+    (bind-key "M-s-h" (lambda () (interactive)
                         (mac-send-action 'hideOtherApplications))))
   (defun kimim/save-buffer-no-tws (&optional arg)
     (interactive "p")
