@@ -1980,9 +1980,15 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
   (defun kimim/open-with-inkscape ()
     (interactive)
     (let* ((filename (dired-get-filename)))
-      (w32-shell-execute
-       "open" "inkscape"
-       (concat "\"" filename "\""))))
+      (cond
+       ((string-equal system-type "windows-nt")
+        (w32-shell-execute "open" "inkscape" filename))
+       ((string-equal system-type "darwin")
+        (start-process "" nil "open" "-a" "inkscape" filename))
+       ((string-equal system-type "gnu/linux")
+        (start-process "" nil "xdg-open" "inkscape" filename))
+       ((string-equal system-type "cygwin")
+        (start-process "" nil "xdg-open" "inkscape" filename)))))
 
   (defun kimim/pdf2svg ()
     (interactive)
