@@ -4080,8 +4080,14 @@ sudo apt install python3-pygments
   ;;  bibtex-completion-bibliography)
 
   ;; increase latex preview size.
-  (setq org-format-latex-options
-        (plist-put org-format-latex-options :scale 2.3))
+  ;;(setq org-format-latex-options
+  ;;    (plist-put org-format-latex-options :scale 2.3))
+  ;; scale latex equation preview according to frame char height
+  (add-hook 'cnfonts-set-font-finish-hook
+            (lambda (args)
+              (setq org-format-latex-options
+                    (plist-put org-format-latex-options :scale
+                               (* 1.1 (/ (frame-char-height) 36.0))))))
   ;; preview latex equation with SVG image
   ;; [2024-04-25 Thu] kimim: use %F for input file,
   ;; because the relative path is not correct when in a symbol link folder.
