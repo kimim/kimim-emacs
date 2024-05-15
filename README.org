@@ -2919,9 +2919,7 @@ curl https://sh.rustup.rs -sSf | sh
 #+begin_src emacs-lisp
 (use-package ess
   :custom
-  (inferior-ess-r-program
-   (concat kimim/path-kimikit "R-4.3.1/bin/R.exe")))
-
+  (inferior-ess-r-program "r"))
 #+end_src
 
 ** Swift
