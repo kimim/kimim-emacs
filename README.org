@@ -4143,8 +4143,14 @@ ATTRIBUTES is a plist, as returned by
 a communication channel."
     (if (string= "svg" (file-name-extension source))
         ;;(plist-get attributes :embed-svg)
-        (format
-         "<div align=\"center\">%s</div>" (f-read source))
+        ;; remove width and height information, to fix image to the parent div
+        (let ((svg-txt (replace-regexp-in-string
+                         "<svg.*\\(width=\"\\w+\"\s+height=\"\\w+\"\\).*>"
+                        ""
+                        (f-read source)
+                        nil nil 1)))
+          (format
+           "<div align=\"center\">%s</div>" svg-txt))
       (org-html-close-tag
        "img"
        (org-html--make-attribute-string
