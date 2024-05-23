@@ -1151,11 +1151,8 @@ Show eldoc in a childframe box.
 #+begin_src emacs-lisp
 (use-package eldoc-box
   :diminish eldoc-box-hover-mode
-  :hook (eglot-managed-mode . eldoc-box-hover-mode)
-  :custom (eldoc-box-offset '(10 40 10))
-  :bind (:map
-         eglot-mode-map
-         ("C-x l d" . eldoc-box-help-at-point)))
+  ;;:hook (eglot-managed-mode . eldoc-box-hover-mode)
+  :custom (eldoc-box-offset '(10 40 10)))
 #+end_src
 
 Increase right margin from default 16 to 40 to remove some overlap.
@@ -2533,8 +2530,9 @@ this directory as secure because you are the owner.
    ("C-x l a" . eglot-code-actions)
    ("C-x l t" . eglot-find-typeDefinition)
    ("C-x l d" . eglot-find-declaration)
-   ("C-x l i" . eglot-find-implemetation)
-   ("C-x l b" . eldoc))
+   ("C-x l i" . eglot-find-implementation)
+   ("C-x l b" . eldoc)
+   ("C-x l l" . eldoc-box-help-at-point))
   :hook
   ((c-mode c++-mode rust-mode python-mode r-mode) . eglot-ensure)
   (eglot-managed-mode
