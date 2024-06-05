@@ -4090,7 +4090,11 @@ sudo apt install python3-pygments
             (lambda (args)
               (setq org-format-latex-options
                     (plist-put org-format-latex-options :scale
-                               (/ (frame-char-height) 30.0)))))
+                               (cond
+                                ((eq system-type 'darwin)
+                                 (/ (frame-char-height) 9.0))
+                                ((eq system-type 'windows-nt)
+                                 (/ (frame-char-height) 30.0)))))))
   ;; preview latex equation with SVG image
   ;; [2024-04-25 Thu] kimim: use %F for input file,
   ;; because the relative path is not correct when in a symbol link folder.
