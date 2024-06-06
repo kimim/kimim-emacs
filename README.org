@@ -4086,14 +4086,18 @@ sudo apt install python3-pygments
   ;;(setq org-format-latex-options
   ;;    (plist-put org-format-latex-options :scale 2.3))
   ;; scale latex equation preview according to frame char height
-  (add-hook 'cnfonts-set-font-finish-hook
-            (lambda (args)
-              (setq org-format-latex-options
-                    (plist-put org-format-latex-options :scale
-                               (cond
-                                ((eq system-type 'darwin)
-                                 (/ (frame-char-height) 9.0))
-                                ((eq system-type 'windows-nt)
+  (cond
+   ((eq system-type 'darwin)
+    (add-hook 'cnfonts-set-font-finish-hook
+              (lambda (args)
+                (setq org-format-latex-options
+                      (plist-put org-format-latex-options :scale
+                               (/ (frame-char-height) 9.0))))))
+   ((eq system-type 'windows-nt)
+    (add-hook 'cnfonts-set-font-finish-hook
+              (lambda (args)
+                (setq org-format-latex-options
+                      (plist-put org-format-latex-options :scale
                                  (/ (frame-char-height) 30.0)))))))
   ;; preview latex equation with SVG image
   ;; [2024-04-25 Thu] kimim: use %F for input file,
