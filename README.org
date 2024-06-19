@@ -1152,7 +1152,9 @@ Show eldoc in a childframe box.
 (use-package eldoc-box
   :diminish eldoc-box-hover-mode
   ;;:hook (eglot-managed-mode . eldoc-box-hover-mode)
-  :custom (eldoc-box-offset '(10 40 10)))
+  :custom ((eldoc-box-offset '(10 40 10))
+           (eldoc-box-max-pixel-width 1200)
+           (eldoc-box-max-pixel-height 800)))
 #+end_src
 
 Increase right margin from default 16 to 40 to remove some overlap.
@@ -2551,7 +2553,6 @@ this directory as secure because you are the owner.
                   #'eglot-completion-at-point
                   #'cape-dabbrev)))))
 #+end_src
-
 
 ** Parenthesis
 
