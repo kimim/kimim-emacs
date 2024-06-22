@@ -2607,7 +2607,13 @@ parenthesis. We define some keys for it:
 (use-package tree-sitter
   :ensure nil
   :hook (((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-mode)
-         ((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-hl-mode)))
+         ((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-hl-mode))
+  :config
+  ;; assoc bb-mode to clojure
+  (setq tree-sitter-major-mode-language-alist
+        (put-alist 'bb-mode 'clojure
+                   tree-sitter-major-mode-language-alist)))
+
 #+end_src
 
 ** ts-fold
