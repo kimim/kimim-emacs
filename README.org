@@ -2654,7 +2654,9 @@ With ~yafolding-mode~, you can:
 #+begin_src emacs-lisp
 (use-package eldoc
   :hook (prog-mode . eldoc-mode)
-  :diminish eldoc-mode)
+  :diminish eldoc-mode
+  :custom
+  (eldoc-echo-area-use-multiline-p nil))
 #+end_src
 
 ** cmake mode
