@@ -1432,7 +1432,9 @@ specified functions.
           outline-next-visible-heading
           outline-previous-visible-heading
           outline-up-heading
-          ace-window))
+          ace-window
+          xref-find-definitions
+          xref-go-back))
   (advice-add 'switch-to-buffer :after
               (lambda (_ &optional _ _)
                 (pulsar-pulse-line)))
@@ -2673,6 +2675,8 @@ With ~yafolding-mode~, you can:
 #+begin_src emacs-lisp
 (use-package xref
   :ensure nil
+  :custom
+  (xref-after-return-hook '(xref-pulse-momentarily recenter))
   :bind
   (:map
    prog-mode-map
