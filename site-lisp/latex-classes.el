@@ -156,8 +156,8 @@ sorting=none]{biblatex}
 \\usepackage{xeCJK}
 \\usepackage[backend=biber,style=gb7714-2015,hyperref=true,
 backref=true, maxcitenames=3, url=true]{biblatex}
-\\setCJKmainfont{微软雅黑} % sets the roman font
-\\setCJKsansfont{微软雅黑} % sets the sans font
+\\setCJKmainfont{Microsoft YaHei} % sets the roman font
+\\setCJKsansfont{Microsoft YaHei} % sets the sans font
 \\setCJKmonofont{Consolas} % otherwise FangSong is not found
 \\setlength{\\baselineskip}{20pt}
 \\setlength{\\parskip}{7pt}"
