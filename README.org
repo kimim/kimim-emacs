@@ -2306,6 +2306,10 @@ Rich annotations in the minibuffer.
   :bind
   (:map
    corfu-map
+   ("<remap> <move-beginning-of-line>" . move-beginning-of-line)
+   ("<remap> <move-end-of-line" . move-end-of-line)
+   ("<remap> <next-line>" . next-line)
+   ("<remap> <previous-line>" . previous-line)
    ("M-h" . backward-kill-word)
    ("<escape>" . corfu-quit))
   :config
@@ -3614,6 +3618,7 @@ support more functions from =org-ref=:
   (org-export-with-sub-superscripts '{})
   (org-startup-folded 'showall)
   (org-startup-with-inline-images t)
+  (org-export-with-tags nil)
   (org-tags-column (- fill-column))
   ;; image width in preview
   (org-image-actual-width `(,(* (+ fill-column 10)
