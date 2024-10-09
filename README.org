@@ -4027,6 +4027,16 @@ sudo apt install python3-pygments
   (org-babel-latex-preamble
    (lambda (_)
      "\\documentclass[preview]{standalone}"))
+  ;; emacs cannot handle relative path correctly in OneDrive folder
+  ;; use full-name instead. %f -> %F
+  (org-babel-latex-pdf-svg-process
+        "inkscape \
+--pdf-poppler \
+--export-area-drawing \
+--export-text-to-path \
+--export-plain-svg \
+--export-filename=%O \
+%F")
   :config
   (require 'ox)
   (require 'ox-beamer)
