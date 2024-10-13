@@ -2308,8 +2308,6 @@ Rich annotations in the minibuffer.
    corfu-map
    ("<remap> <move-beginning-of-line>" . move-beginning-of-line)
    ("<remap> <move-end-of-line" . move-end-of-line)
-   ("<remap> <next-line>" . next-line)
-   ("<remap> <previous-line>" . previous-line)
    ("M-h" . backward-kill-word)
    ("<escape>" . corfu-quit))
   :config
@@ -4285,7 +4283,7 @@ New link to use Office Onenote.
              o2jk-list-drafts
              o2jk-create-draft)
   :bind (("C-x m k" . o2jk-create-draft)
-         ("C-x m l" . o2jk-list-posts))
+         ("C-x m l" . o2jk-list-source))
   :custom ((o2jk-blog-author "kimim")
            (o2jk-source-directory "~/notes/kimi.im/_notes/_posts")
            (o2jk-jekyll-directory "~/notes/kimi.im/_posts")
