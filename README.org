@@ -324,7 +324,8 @@ sometimes, they may catch your attention.
     (tool-bar-mode -1)
     (tooltip-mode -1)
     (scroll-bar-mode -1)
-    (when (eq window-system 'w32)
+    (when (or (eq window-system 'w32)
+              (eq window-system 'x))
       (menu-bar-mode 0)))
    ((eq window-system nil)
     (menu-bar-mode 0))))
@@ -1551,7 +1552,7 @@ Check spell on the fly.
   :after text-mode
   :load-path (lambda ()
                (concat kimim/path-kimim-emacs
-                "site-lisp/cns"))
+                       "site-lisp/cns"))
   :hook (text-mode . cns-mode)
   :bind ((:map cns-mode-map)
          ("M-h" . cns-backward-kill-word))
@@ -1562,6 +1563,9 @@ Check spell on the fly.
                (concat kimim/path-kimim-emacs
                        "site-lisp/cns/cnws.exe"))
               ((eq system-type 'darwin)
+               (concat kimim/path-kimim-emacs
+                       "site-lisp/cns/cnws"))
+              ((eq system-type 'gnu/linux)
                (concat kimim/path-kimim-emacs
                        "site-lisp/cns/cnws"))))
   (setq cns-dict-directory
@@ -4377,7 +4381,7 @@ sqlite3 is shipped in macOS by default.
                                  "org-roam.db")))
   (org-roam-link-auto-replace nil)
   (org-roam-file-extensions '("txt" "org"))
-  (org-roam-node-display-template "${title:70}${tags:30}${refs}")
+  (org-roam-node-display-template "${title:100}${tags:30}${refs}")
   (org-roam-capture-templates
    '(("d" "default" plain "%?"
       :if-new
