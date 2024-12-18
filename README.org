@@ -4417,7 +4417,8 @@ sqlite3 is shipped in macOS by default.
     ("C-c n t" . org-roam-tag-add)
     ("C-c n a" . org-roam-alias-add)
     ("C-c n g" . org-id-get-create)
-    ("C-c n b" . org-roam-buffer-toggle)))
+    ("C-c n b" . org-roam-buffer-toggle)
+    ("C-c M-z" . kimim/org-roam-open-ref-pdf)))
   :config
   (add-to-list 'load-path
                (concat kimim/path-kimim-emacs
@@ -4441,6 +4442,7 @@ sqlite3 is shipped in macOS by default.
         "references/%(concat (kimim/genfile-timestamp) \"${citekey}.txt\")"
         "#+title: ${title}\n")
        :unnarrowed t)))
+
   (defun kimim/cite-filter (node)
     (orb-get-node-citekey node))
 
@@ -4469,7 +4471,17 @@ sqlite3 is shipped in macOS by default.
       (node (kimim/ebdb-note-exists-p path)))
     (if node
         (org-roam-node-open node)
-      (kimim/ebdb-note-new uuid name)))))
+      (kimim/ebdb-note-new uuid name))))
+
+  (defun kimim/org-roam-open-ref-pdf ()
+    (interactive)
+    (kimim/org-ref-open-pdf-action
+     (car (cdr
+           (split-string
+            (cdr (assoc "ROAM_REFS"
+                        (org-roam-node-properties
+                         (org-roam-node-at-point))))
+            ":"))))))
 #+end_src
 
 ** org-roam-bibtex
