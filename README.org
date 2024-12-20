@@ -486,7 +486,7 @@ Show (line, column) numbers in mode line:
   (toggle-word-wrap -1))
 #+end_src
 
-** Celestial modeline
+** COMMENT Celestial modeline
 
 #+begin_quote
 Zwei Dinge erfüllen das Gemüt mit immer neuer und zunehmender
