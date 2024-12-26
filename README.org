@@ -1184,6 +1184,7 @@ Increase right margin from default 16 to 40 to remove some overlap.
   (rime-show-candidate 'posframe)
   (rime-posframe-properties
    (list :internal-border-width 14))
+  (rime-share-data-dir "~/Library/Rime")
   :config
 
   (when (eq (window-system) 'mac)
