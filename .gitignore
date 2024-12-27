@@ -19,3 +19,5 @@ README.run.xml
 references.bib
 references.back*
 _minted-*
+/.clj-kondo/
+/.lsp/
