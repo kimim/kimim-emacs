@@ -3257,8 +3257,7 @@ emacs theme color.
   :functions (pdf-view-refresh-themed-buffer)
   :defines (pdf-view-themed-minor-mode)
   :mode ("\\.pdf\\'" . pdf-view-mode)
-  :hook ((pdf-view-mode . pdf-view-themed-minor-mode)
-         (pdf-view-mode . pdf-isearch-minor-mode))
+  :hook (pdf-view-mode . pdf-isearch-minor-mode)
   :custom (pdf-view-display-size 3.85)
   :bind
   (:map
