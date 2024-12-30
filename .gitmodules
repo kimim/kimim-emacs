@@ -49,3 +49,6 @@
 [submodule "site-lisp/cloel-rand-quote"]
 	path = site-lisp/cloel-rand-quote
 	url = git@github.com:kimim/cloel-rand-quote.git
+[submodule "site-lisp/cns"]
+	path = site-lisp/cns
+	url = git@github.com:kimim/emacs-chinese-word-segmentation.git
