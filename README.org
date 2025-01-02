@@ -1292,7 +1292,9 @@ NonIME, otherwise, ~sis~ will bring IME back after some keycords.
 ;; see discussion https://emacs-china.org/t/topic/2616/30
 (setq word-wrap-by-category t)
 (setq require-final-newline t)
-
+;; enable clipboard btw for wslg linux and host
+;; https://www.lukas-barth.net/blog/emacs-wsl-copy-clipboard/
+(setq select-active-regions 'only)
 (use-package drag-stuff
   :diminish drag-stuff-mode
   :config
