@@ -1621,6 +1621,24 @@ Use ~tempel~ to expand template.
 (use-package tempel-collection)
 #+end_src
 
+** ediff
+
+#+begin_src emacs-lisp
+(use-package ediff
+  :ensure nil
+  :custom
+  (ediff-split-window-function 'split-window-horizontally)
+  :config
+  ;; https://emacs.stackexchange.com/questions/9322
+  (setq ediff-split-window-function (quote split-window-horizontally))
+
+  (defun disable-y-or-n-p (orig-fun &rest args)
+    (cl-letf (((symbol-function 'y-or-n-p) (lambda (prompt) t)))
+      (apply orig-fun args)))
+
+  (advice-add 'ediff-quit :around #'disable-y-or-n-p))
+#+end_src
+
 * Controlling
 ** Window and Frame
 
