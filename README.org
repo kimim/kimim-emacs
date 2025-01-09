@@ -945,7 +945,6 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
                        "site-lisp/sdcv"))
   :bind
   ("C-M-z" . sdcv-search-input)
-  ("C-x m ," . sdcv-search-pointer)
   ("C-`" . sdcv-search-pointer+)
   :config
   (require 'sdcv)
@@ -956,14 +955,10 @@ problems. You can get dictionary files from [[https://github.com/manateelazycat/
                                   (concat kimim/path-kimim-emacs
                                           "site-lisp/sdcv-dict")))
   (setq sdcv-dictionary-simple-list
-        '("lazyworm-zh-en"
-          "lazyworm-en-zh"))
+        '("xdict-en-zh"
+          "xdict-zh-en"))
   (setq sdcv-dictionary-complete-list
         '("oxford"
-          "lazyworm-en-zh"
-          "lazyworm-zh-en"
-          "xdict-en-zh"
-          "xdict-zh-en"
           "stardict-en-zh"
           "WordNet"
           "Jargon"
@@ -999,6 +994,7 @@ look up local dictionary with help from ~sdcv~.
   :ensure t
   :bind
   (("C-x m ." . kimim/fanyi-dwim)
+   ("C-x m ," . kimim/fanyi-dwim-local)
    ("C-x m y" . kimim/fanyi-current-kill))
   :custom-face
   (fanyi-word-face
@@ -1028,6 +1024,11 @@ look up local dictionary with help from ~sdcv~.
           (cl-pushnew word fanyi-history))
       (call-interactively #'fanyi-dwim)))
 
+  (defun kimim/fanyi-dwim-local ()
+    (interactive)
+    (setq-local fanyi-providers nil)
+    (call-interactively #'fanyi-dwim))
+
   (defun kimim/fanyi-current-kill ()
     (interactive)
     (fanyi-dwim (current-kill 0)))
@@ -1037,16 +1038,16 @@ look up local dictionary with help from ~sdcv~.
             (cons word
                   (mapcan
                    (lambda (d) (list "-u" d)) dictionary-list)))
-         (result (mapconcat
-                  (lambda (result)
-                    (let-alist result
-                      (format
-                       "## %s\n%s\n\n" .dict .definition)))
-                  (apply #'sdcv-call-process arguments)
-                  "")))
-    (if (string-empty-p result)
-        sdcv-fail-notify-string
-      result)))
+           (result (mapconcat
+                    (lambda (result)
+                      (let-alist result
+                        (format
+                         "## %s\n%s\n\n" .dict .definition)))
+                    (apply #'sdcv-call-process arguments)
+                    "")))
+      (if (string-empty-p result)
+          sdcv-fail-notify-string
+        result)))
 
   (advice-add 'sdcv-translate-result
               :override
@@ -1054,19 +1055,19 @@ look up local dictionary with help from ~sdcv~.
 
   (defun kimim/fanyi-dwim-add-sdcv (word)
     (let ((buf (get-buffer fanyi-buffer-name)))
-    (with-current-buffer buf
-      (let ((inhibit-read-only t)
-            (inhibit-point-motion-hooks t))
-        ;; Clear the previous search result.
-        (point-max)
-        (insert "# SDCV\n\n")
-        (insert
-         (sdcv-search-with-dictionary
-          word sdcv-dictionary-complete-list))
-        (insert "\n\n")
-        (beginning-of-buffer)
-        ;;(window-resize nil (- 35 (window-size nil t)) t)
-        ))))
+      (with-current-buffer buf
+        (let ((inhibit-read-only t)
+              (inhibit-point-motion-hooks t))
+          ;; Clear the previous search result.
+          (point-max)
+          (insert "# SDCV\n\n")
+          (insert
+           (sdcv-search-with-dictionary
+            word sdcv-dictionary-complete-list))
+          (insert "\n\n")
+          (beginning-of-buffer)
+          ;;(window-resize nil (- 35 (window-size nil t)) t)
+          ))))
 
   (advice-add 'fanyi-dwim :after
               #'kimim/fanyi-dwim-add-sdcv))
