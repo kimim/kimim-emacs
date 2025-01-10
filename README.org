@@ -1755,6 +1755,14 @@ frequency report by =M-x keyfreq-show=.
 (use-package eshell)
 #+end_src
 
+** vterm
+#+begin_src emacs-lisp
+(use-package vterm
+  :bind
+  (:map vterm-mode-map
+   ("C-h" . vterm-send-backspace)))
+#+end_src
+
 ** Navigation
 
 #+begin_src emacs-lisp
@@ -3278,7 +3286,8 @@ emacs theme color.
   :functions (pdf-view-refresh-themed-buffer)
   :defines (pdf-view-themed-minor-mode)
   :mode ("\\.pdf\\'" . pdf-view-mode)
-  :hook (pdf-view-mode . pdf-isearch-minor-mode)
+  :hook ((pdf-view-mode . pdf-isearch-minor-mode)
+         (pdf-view-mode . pdf-view-themed-minor-mode))
   :custom (pdf-view-display-size 3.85)
   :bind
   (:map
