@@ -1533,7 +1533,8 @@ Check spell on the fly.
           eww-mode
           Info-mode
           woman-mode
-          fanyi-mode)
+          fanyi-mode
+          magit-diff-mode)
 	     . olivetti-mode)
   :config
   (add-hook 'cnfonts-set-font-finish-hook
