@@ -1172,7 +1172,7 @@ Increase right margin from default 16 to 40 to remove some overlap.
   :bind
   (:map
    rime-mode-map
-   ("C-|" . rime-force-enable)
+   ("C-SPC" . rime-force-enable)
    :map
    rime-active-mode-map
    ("C-h" . rime--backspace)
