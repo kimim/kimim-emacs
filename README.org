@@ -1810,6 +1810,15 @@ and jump to any window by triggering ~ace-window~ (~C-x m w~).
   :bind ("C-x u" . vundo))
 #+end_src
 
+** image-mode scrolling
+#+begin_src emacs-lisp
+(use-package image
+  :ensure nil
+  :bind
+  (:map image-mode-map
+        ("j" . (lambda ()(interactive) (image-next-line 10)))
+        ("k" . (lambda ()(interactive) (image-previous-line 10)))))
+#+end_src
 * Search and Finding
 ** isearch in minibuffer
 
