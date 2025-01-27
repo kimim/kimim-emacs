@@ -1812,7 +1812,7 @@ and jump to any window by triggering ~ace-window~ (~C-x m w~).
 
 ** image-mode scrolling
 #+begin_src emacs-lisp
-(use-package image
+(use-package image-mode
   :ensure nil
   :bind
   (:map image-mode-map
