@@ -177,6 +177,14 @@ sorting=none]{biblatex}"
     ("\\subsection{%s}" . "\\subsection*{%s}")
     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
+(defvar elegantbook
+  `("elegantbook"
+    "\\documentclass[12pt]{elegantbook}
+\\usepackage{xeCJK}"
+    ("\\chapter{%s}" . "\\chapter*{%s}")
+    ("\\section{%s}" . "\\section*{%s}")
+    ("\\subsection{%s}" . "\\subsection*{%s}")))
+
 (defvar kimim/latex-classes
       ;; use backquote ` to evaluate element before put to list
       `(
@@ -187,6 +195,7 @@ sorting=none]{biblatex}"
         ,en-article2c    ;; English article in two columns
         ,en-beamer       ;; English beamer slides
         ,IEEEtrans       ;; IEEE transaction paper
+        ,elegantbook
         ))
 
 (provide 'latex-classes)
