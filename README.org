@@ -2981,9 +2981,7 @@ curl https://sh.rustup.rs -sSf | sh
 
 ** R ESS
 #+begin_src emacs-lisp
-(use-package ess
-  :custom
-  (inferior-ess-r-program "r"))
+(use-package ess)
 #+end_src
 
 ** Swift
