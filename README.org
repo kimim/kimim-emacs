@@ -793,6 +793,7 @@ from system PATH, so you should set these to system PATH.
    ("C-c C-o" . occur)
    ("C-z" . set-mark-command)
    ("C-x C-z" . pop-to-mark-command)
+   ("C-x y" . kimim/wsl-paste-from-clipboard)
    ("C-c C-/" . comment-or-uncomment-region)
    ("RET" . newline-and-indent)
    ("C-x m h" . help)

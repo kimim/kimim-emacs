@@ -750,4 +750,28 @@ documents."
       (image-transform-fit-to-window)
       (other-window 1))))
 
+(defun kimim/wsl-copy-region-to-clipboard (start end)
+  "Copy region to Windows clipboard."
+  (interactive "r")
+  (call-process-region start end "wl-copy" nil 0))
+
+(defun kimim/wsl-cut-region-to-clipboard (start end)
+  (interactive "r")
+  (call-process-region start end "wl-copy" nil 0)
+  (kill-region start end))
+
+(defun kimim/wsl-clipboard-to-string ()
+  "Return Windows clipboard as string."
+  (let ((coding-system-for-read 'dos))
+    (substring; remove added trailing \n
+     (shell-command-to-string
+      "wl-paste") 0 -1)))
+
+(defun kimim/wsl-paste-from-clipboard ()
+  "Insert Windows clipboard at point and add it to kill-ring"
+  (interactive)
+  (let ((clip (kimim/wsl-clipboard-to-string)))
+    (insert clip)))
+
+
 (provide 'kimim)
