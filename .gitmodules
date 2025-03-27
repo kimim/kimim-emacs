@@ -4,9 +4,6 @@
 [submodule "site-lisp/pdf-view-pagemark"]
 	path = site-lisp/pdf-view-pagemark
 	url = git@github.com:kimim/pdf-view-pagemark.git
-[submodule "site-lisp/blink-search"]
-	path = site-lisp/blink-search
-	url = git@github.com:manateelazycat/blink-search.git
 [submodule "site-lisp/emacs-hippo-theme"]
 	path = site-lisp/emacs-hippo-theme
 	url = git@github.com:kimim/emacs-hippo-theme.git
