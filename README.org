@@ -3115,7 +3115,11 @@ place and assign ~plantuml-jar-path~ to there.
   :mode ("\\.puml\\'" . plantuml-mode)
   :custom
   (plantuml-output-type "svg")
-  (plantuml-default-exec-mode 'jar)
+  (plantuml-default-exec-mode
+   (cond
+    ((eq system-type 'darwin)
+     'executable)
+    (t 'jar)))
   (plantuml-jar-path
    (or
     ;; use system plantuml.jar when exists, path in my gentoo
@@ -3131,6 +3135,10 @@ place and assign ~plantuml-jar-path~ to there.
     :ensure nil
     :config
     (require 'plantuml-mode)
+    (setq org-plantuml-exec-mode
+          (cond ((eq system-type 'darwin)
+                 'plantuml)
+                (t 'jar)))
     ;; WARNING: if variables are from other package, setq them at :config
     (setq org-plantuml-jar-path plantuml-jar-path)
     (setq org-plantuml-args plantuml-executable-args)
