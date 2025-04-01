@@ -4152,9 +4152,7 @@ sudo apt install python3-pygments
   (require 'latex-classes)
   (setq org-latex-classes kimim/latex-classes)
   (setq org-latex-default-class "article")
-  ;; removed, it will make small image too large!
-  ;;(setq org-latex-image-default-option
-  ;;      "height=0.8\\textheight,width=\\textwidth,keepaspectratio")
+  (setq org-latex-image-default-option "keepaspectratio")
   (setq org-latex-image-default-width "")
   ;; remove fontenc, and AUTO in front of inputenc,
   ;; then francais can be processed
