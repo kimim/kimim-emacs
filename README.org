@@ -3917,7 +3917,7 @@ When exporting, do not export with author and date.
   :config
   (require 'ox-latex)
 
-  (defun kimim/org-beamer-to-pdf-async ()
+  (defun kimim/org-beamer-to-pdf-ppt-async ()
     (interactive)
     (setq-local org-latex-default-class "beamer")
     (org-beamer-export-to-pdf t))
