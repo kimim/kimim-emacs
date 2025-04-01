@@ -3917,6 +3917,16 @@ When exporting, do not export with author and date.
   :config
   (require 'ox-latex)
 
+  (defun kimim/org-beamer-to-pdf-async ()
+    (interactive)
+    (setq-local org-latex-default-class "beamer")
+    (org-beamer-export-to-pdf t))
+
+  (defun kimim/org-latex-to-pdf-article-async ()
+    (interactive)
+    (setq-local org-latex-default-class "article")
+    (org-beamer-export-to-pdf t))
+
   (defun kimim/org-html-src-block-advice (oldfun src-block contents info)
     (let* ((class-tag (org-export-read-attribute
                        :attr_html src-block :class))
