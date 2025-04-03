@@ -813,7 +813,6 @@ from system PATH, so you should set these to system PATH.
    ("C-x m '" . kimim/top-right-mouse)
    ("C-x m r" . kimim/rename-file-and-buffer)
    ("C-<pause>" . iconify-frame)
-   ("C-x S" . eshell)
    ("C-x M-q" . kimim/unfill-paragraph-or-region)
    ("C-x 7 `" . (lambda() (interactive) (insert "à")))
    ("C-x 7 a" . (lambda() (interactive) (insert "ā")))
@@ -1758,14 +1757,20 @@ frequency report by =M-x keyfreq-show=.
 ** eshell
 
 #+begin_src emacs-lisp
-(use-package eshell)
+(use-package eshell
+  :bind
+  ("C-x S" . eshell))
 #+end_src
 
 ** vterm
 #+begin_src emacs-lisp
 (use-package vterm
   :bind
-  (:map vterm-mode-map
+  (("C-x t" . vterm)
+   ("C-x T" . (lambda ()
+                (interactive)
+                (vterm t)))
+   :map vterm-mode-map
    ("C-h" . vterm-send-backspace)))
 #+end_src
 
