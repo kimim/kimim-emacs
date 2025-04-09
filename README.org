@@ -4451,7 +4451,7 @@ sqlite3 is shipped in macOS by default.
                                  "org-roam.db")))
   (org-roam-link-auto-replace nil)
   (org-roam-file-extensions '("txt" "org"))
-  (org-roam-node-display-template "${title:100}${tags:30}${refs}")
+  (org-roam-node-display-template "${title:70}${tags:15}${refs}")
   (org-roam-capture-templates
    '(("d" "default" plain "%?"
       :if-new
