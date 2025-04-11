@@ -452,6 +452,28 @@
   (let ((wsl-distro-name (getenv "WSL_DISTRO_NAME")))
     (not (null wsl-distro-name))))
 
+(defun kimim/open-file-external (path)
+  (cond
+   ((string-equal system-type "windows-nt")
+    (w32-shell-execute "open"
+                       (replace-regexp-in-string "/" "\\" path t t)))
+   ((string-equal system-type "darwin")
+    (shell-command (format "open \"%s\"" path)))
+   ((string-equal system-type "gnu/linux")
+    (if (running-in-wsl-p)
+        (let ((process-connection-type nil))
+          (start-process "" nil "/mnt/c/Windows/System32/cmd.exe"
+                         "/C" "start" ""
+                         (string-trim
+                          (shell-command-to-string
+                           (format "wslpath -aw '%s'" path)))))
+      (let ((process-connection-type nil))
+        (start-process "" nil "xdg-open" path))))
+   ((string-equal system-type "cygwin")
+    (let ((process-connection-type nil))
+      (start-process "" nil "xdg-open" path)))))
+
+
 (defun kimim/open-external (&optional file)
   "Open the current file or dired marked files in external app.
 The app is chosen from your OS's preference.
@@ -472,31 +494,7 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
 
     (when doit
       (cond
-       ((string-equal system-type "windows-nt")
-        (mapc (lambda (path)
-                (w32-shell-execute "open"
-                                   (replace-regexp-in-string "/" "\\" path t t)))
-              flist))
-       ((string-equal system-type "darwin")
-        (mapc (lambda (path)
-                (shell-command (format "open \"%s\"" path)))
-              flist))
-       ((string-equal system-type "gnu/linux")
-        (if (running-in-wsl-p)
-            (mapc (lambda (path) (let ((process-connection-type nil))
-                                   (start-process "" nil "/mnt/c/Windows/System32/cmd.exe"
-                                                  "/C" "start" ""
-                                                  (string-trim
-                                                   (shell-command-to-string
-                                                    (format "wslpath -aw '%s'" path))))))
-                  flist)
-          (mapc (lambda (path) (let ((process-connection-type nil))
-                                 (start-process "" nil "xdg-open" path)))
-                flist)))
-       ((string-equal system-type "cygwin")
-        (mapc (lambda (path) (let ((process-connection-type nil))
-                               (start-process "" nil "xdg-open" path)))
-              flist))))))
+       (mapc #'kimim/open-file-external flist)))))
 
 (defun kimim/open-external-pdf ()
   (interactive)
