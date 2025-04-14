@@ -493,8 +493,7 @@ copy from xah lee: http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.
                  (y-or-n-p "Open more than 5 files? ")))
 
     (when doit
-      (cond
-       (mapc #'kimim/open-file-external flist)))))
+      (mapc #'kimim/open-file-external flist))))
 
 (defun kimim/open-external-pdf ()
   (interactive)
