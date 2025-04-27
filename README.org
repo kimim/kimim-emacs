@@ -1645,6 +1645,16 @@ Use ~tempel~ to expand template.
   (advice-add 'ediff-quit :around #'disable-y-or-n-p))
 #+end_src
 
+** auto-revert
+Automatically update new log items in log file:
+
+#+begin_src elisp
+(use-package autorevert
+  :config
+  (add-to-list 'auto-mode-alist
+               '("\\.log\\'" . auto-revert-mode)))
+#+end_src
+
 * Controlling
 ** Window and Frame
 
@@ -2489,7 +2499,13 @@ or other version control information.
 #+begin_src emacs-lisp :results none
 (use-package project
   :bind (("C-x p r" . project-find-ripgrep-regexp)
-         ("C-x p s" . kimim/magit-stage-file))
+         ("C-x p s" . kimim/magit-stage-file)
+         ("C-x p f" . (lambda()
+                        (interactive)
+                        (project-find-file t))))
+  :custom (vc-directory-exclusion-list
+           (append vc-directory-exclusion-list
+                   '(".cache" "CMakeFiles")))
   :functions (magit-stage-1
               magit-with-toplevel
               magit-untracked-files
