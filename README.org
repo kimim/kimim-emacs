@@ -2377,7 +2377,7 @@ Rich annotations in the minibuffer.
    ("<escape>" . corfu-quit))
   :config
   (require 'cape)
-  (setq corfu-auto t
+  (setq corfu-auto nil
         corfu-fancy t
         corfu-count 5
         corfu-min-width 30
@@ -2386,7 +2386,8 @@ Rich annotations in the minibuffer.
         corfu-preview-current t
         corfu-auto-prefix 2
         corfu-quit-no-match 'separator
-        corfu-popupinfo-delay '(1.0 . 0.5))
+        corfu-popupinfo-delay '(1.0 . 0.5)
+        tab-always-indent 'complete)
   (global-corfu-mode)
   (corfu-popupinfo-mode)
   (corfu-prescient-mode)
