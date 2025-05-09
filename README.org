@@ -2501,6 +2501,7 @@ or other version control information.
 (use-package project
   :bind (("C-x p r" . project-find-ripgrep-regexp)
          ("C-x p s" . kimim/magit-stage-file)
+         ("C-x p ;" . project-recompile)
          ("C-x p f" . (lambda()
                         (interactive)
                         (project-find-file t))))
