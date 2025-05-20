@@ -2710,7 +2710,7 @@ UI helper for lsp-mode.
   (lsp-ui-doc-text-scale-level -1)
   (lsp-ui-doc-show-with-cursor nil)
   (lsp-ui-doc-show-with-mouse nil)
-  (lsp-ui-sideline-show-code-actions t)
+  (lsp-ui-sideline-show-code-actions nil)
   (lsp-ui-doc-alignment 'window)
   (lsp-ui-doc-max-width 90))
 #+end_src
