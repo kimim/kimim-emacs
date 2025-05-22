@@ -2671,6 +2671,10 @@ will prevent my global ~company-backends~ settings. You can customize
 
 #+begin_src emacs-lisp :results silent
 (use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-x l")
+  :hook (((c-mode c++-mode clojure-mode) . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
   :functions lsp--expand-snippet
   :commands lsp
   :custom
@@ -2685,17 +2689,11 @@ will prevent my global ~company-backends~ settings. You can customize
          ("C-," . xref-go-back)
          ("C-x ." . kimim/lsp-find-definition-other-window)
          ("C-x l t s" . lsp-treemacs-symbols))
-  :hook ((c-mode c++-mode clojure-mode) . lsp)
-  :init
-  (unless (fboundp 'yas-minor-mode)
-    (defun yas-minor-mode (&rest _)
-      (error "Stub created by `lsp-snippet-tempel-lsp-mode-init'")))
   :config
   (require 'lsp)
   (require 'dash)
   (require 'goto-addr)
   (require 'lsp-snippet-tempel)
-  (define-key lsp-mode-map (kbd "C-x l") lsp-command-map)
   (add-hook 'xref-after-return-hook 'recenter)
   (defun kimim/lsp-find-definition-other-window ()
     (interactive)
