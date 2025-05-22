@@ -2365,7 +2365,7 @@ Rich annotations in the minibuffer.
   (setq tab-always-indent t))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
 (use-package corfu
   :defer 1
   :bind
@@ -2377,12 +2377,12 @@ Rich annotations in the minibuffer.
    ("<escape>" . corfu-quit))
   :config
   (require 'cape)
-  (setq corfu-auto nil
+  (setq corfu-auto t
         corfu-fancy t
         corfu-count 5
         corfu-min-width 30
         corfu-max-width 60
-        corfu-auto-delay 0.01
+        corfu-auto-delay 0.5
         corfu-preview-current t
         corfu-auto-prefix 2
         corfu-quit-no-match 'separator
@@ -2590,7 +2590,9 @@ this directory as secure because you are the owner.
   :load-path (lambda ()
                (concat kimim/path-kimim-emacs
                 "site-lisp/lsp-snippet"))
+  :after (lsp-mode)
   :config
+  (require 'lsp-snippet)
   (when (featurep 'lsp-mode)
     ;; Initialize lsp-snippet -> tempel in lsp-mode
     (lsp-snippet-tempel-lsp-mode-init))
@@ -2669,7 +2671,7 @@ will prevent my global ~company-backends~ settings. You can customize
 
 #+begin_src emacs-lisp :results silent
 (use-package lsp-mode
-  :after goto-addr
+  :functions lsp--expand-snippet
   :commands lsp
   :custom
   (lsp-headerline-breadcrumb-icons-enable t)
@@ -2682,12 +2684,17 @@ will prevent my global ~company-backends~ settings. You can customize
          ("C-." . lsp-find-definition)
          ("C-," . xref-go-back)
          ("C-x ." . kimim/lsp-find-definition-other-window)
-         ("C-x l t s" . lsp-treemacs-symbols)
-         ("<tab>" . completion-at-point))
+         ("C-x l t s" . lsp-treemacs-symbols))
   :hook ((c-mode c++-mode clojure-mode) . lsp)
+  :init
+  (unless (fboundp 'yas-minor-mode)
+    (defun yas-minor-mode (&rest _)
+      (error "Stub created by `lsp-snippet-tempel-lsp-mode-init'")))
   :config
+  (require 'lsp)
   (require 'dash)
   (require 'goto-addr)
+  (require 'lsp-snippet-tempel)
   (define-key lsp-mode-map (kbd "C-x l") lsp-command-map)
   (add-hook 'xref-after-return-hook 'recenter)
   (defun kimim/lsp-find-definition-other-window ()
@@ -2695,9 +2702,6 @@ will prevent my global ~company-backends~ settings. You can customize
     (lsp-find-definition :display-action 'window)
     (other-window 1)))
 #+end_src
-
-#+RESULTS:
-
 
 ** lsp-mode lsp-ui
 
