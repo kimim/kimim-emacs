@@ -2673,7 +2673,7 @@ will prevent my global ~company-backends~ settings. You can customize
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-x l")
-  :hook (((c-mode c++-mode clojure-mode) . lsp)
+  :hook (((c-mode c++-mode clojure-mode java-mode) . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :functions lsp--expand-snippet
   :commands lsp
@@ -2977,7 +2977,7 @@ Clojure[fn:11] is a lisp over JVM. Emm, I like it.
 (use-package clojure-mode
   :mode (("\\.cljs\\'" . clojurescript-mode)
          ("\\.\\(clj\\|dtm\\|edn\\|bb\\)\\'" . clojure-mode)
-         ("\\.cljc\\'" . clojurec-mode)
+         ("\\.cljc\\'" . clojure-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
   :config
   (require 'cider)
