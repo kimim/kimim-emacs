@@ -2012,20 +2012,19 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
                              nil "attachment")
           (message "skipping non-regular file %s" file)))))
 
-  (define-advice dired-next-line (:after-while (arg) move-down-line)
+  (define-advice dired-next-line (:after (arg) move-down-line)
     "Move down lines when position at filename, advice"
-    (interactive "p")
     (if (eobp)
         (progn
           (goto-char (point-min))
-          (forward-line 1)
-          (dired-move-to-filename))))
+          (dired-next-line 1))))
 
-  (define-advice dired-previous-line (:after-while (arg) move-up-line)
+  (define-advice dired-previous-line (:after (arg) move-up-line)
     "Move up lines then position at filename, advice"
-    (interactive "p")
-    (if (= 2 (line-number-at-pos))
-        (goto-char (point-max))))
+    (if (> 2 (line-number-at-pos))
+        (progn
+          (goto-char (point-max))
+          (dired-previous-line 1))))
 
   (defun kimim/dired-other-window ()
     (interactive)
