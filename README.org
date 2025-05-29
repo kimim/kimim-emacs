@@ -2012,8 +2012,8 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
                              nil "attachment")
           (message "skipping non-regular file %s" file)))))
 
-  (defadvice dired-next-line (after dired-next-line-advice (arg) activate)
-    "Move down lines then position at filename, advice"
+  (define-advice dired-next-line (:after-while (arg) move-down-line)
+    "Move down lines when position at filename, advice"
     (interactive "p")
     (if (eobp)
         (progn
@@ -2021,7 +2021,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
           (forward-line 1)
           (dired-move-to-filename))))
 
-  (defadvice dired-previous-line (before dired-previous-line-advice (arg) activate)
+  (define-advice dired-previous-line (:after-while (arg) move-up-line)
     "Move up lines then position at filename, advice"
     (interactive "p")
     (if (= 2 (line-number-at-pos))
@@ -4018,7 +4018,7 @@ by using =pdf2svg= to convert PDF to SVG on-the-fly.
   (setq org-confirm-babel-evaluate nil)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
   ;; get the idea from John Kitchen(author of org-ref)
-  (defadvice org-babel-execute-src-block (around load-language nil activate)
+  (define-advice org-babel-execute-src-block (:around () load-language)
     "Load language if needed"
     (let* ((language (org-element-property :language (org-element-at-point)))
            (language-to-load (if (string= language "C++")
@@ -4026,7 +4026,8 @@ by using =pdf2svg= to convert PDF to SVG on-the-fly.
                                language)))
       (unless (cdr (assoc (intern language-to-load) org-babel-load-languages))
         (require (intern (concat "ob-" language-to-load)))
-        (add-to-list 'org-babel-load-languages (cons (intern language-to-load) t))
+        (add-to-list 'org-babel-load-languages
+                     (cons (intern language-to-load) t))
         (org-babel-do-load-languages 'org-babel-load-languages
                                      org-babel-load-languages))
       ad-do-it)))
@@ -4387,8 +4388,9 @@ sudo apt install python3-pygments
   :commands (org-html-publish-to-html)
   :config
   (setq org-html-validation-link nil)
-  (defadvice org-html-paragraph (before fsh-org-html-paragraph-advice
-                                        (paragraph contents info) activate)
+  (define-advice org-html-paragraph
+      (:before (paragraph contents info)
+               activatefsh-org-html-paragraph-advice)
     "Join consecutive Chinese lines into a single long line without
   unwanted space when exporting org-mode to html."
     (let ((fixed-contents)
@@ -5066,14 +5068,14 @@ second name, ..., N congruent to 60 gives the sixtieth name."
               :after (lambda () (kill-buffer "diary")))
   (diminish 'auto-fill-function)
 
-  (defadvice org-schedule (after add-todo activate)
+  (define-advice org-schedule (:after () add-todo)
     (if (or (string= "OPEN" (org-get-todo-state))
             (string= "WAIT" (org-get-todo-state))
             (string= "CLOSE" (org-get-todo-state)))
         (org-todo "WAIT")
       (org-todo "SCHED")))
 
-  (defadvice org-deadline (after add-todo activate)
+  (define-advice org-deadline (:after () add-todo)
     (if (or (string= "OPEN" (org-get-todo-state))
             (string= "WAIT" (org-get-todo-state))
             (string= "CLOSE" (org-get-todo-state)))
