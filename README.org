@@ -4389,16 +4389,13 @@ sudo apt install python3-pygments
   (setq org-html-validation-link nil)
   (define-advice org-html-paragraph
       (:before (paragraph contents info)
-               activatefsh-org-html-paragraph-advice)
+               join-consecutive-chinese)
     "Join consecutive Chinese lines into a single long line without
   unwanted space when exporting org-mode to html."
-    (let ((fixed-contents)
-          (orig-contents (ad-get-arg 1))
-          (reg-han "[[:multibyte:]]"))
-      (setq fixed-contents (replace-regexp-in-string
-                            (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
-                            "\\1\\2" orig-contents))
-      (ad-set-arg 1 fixed-contents))))
+    (let ((reg-han "[[:multibyte:]]"))
+      (setq contents (replace-regexp-in-string
+                      (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
+                      "\\1\\2" contents)))))
 #+end_src
 
 ** org to html slides
