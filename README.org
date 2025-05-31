@@ -4017,19 +4017,23 @@ by using =pdf2svg= to convert PDF to SVG on-the-fly.
   (setq org-confirm-babel-evaluate nil)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
   ;; get the idea from John Kitchen(author of org-ref)
-  (define-advice org-babel-execute-src-block (:around () load-language)
+  (define-advice org-babel-execute-src-block
+      (:before (&rest args)
+               load-language)
     "Load language if needed"
-    (let* ((language (org-element-property :language (org-element-at-point)))
-           (language-to-load (if (string= language "C++")
-                                 "C"
-                               language)))
-      (unless (cdr (assoc (intern language-to-load) org-babel-load-languages))
+    (let* ((language (org-element-property
+                      :language (org-element-at-point)))
+           (language-to-load
+            (if (string= language "C++")
+                "C"
+              language)))
+      (unless (cdr (assoc (intern language-to-load)
+                          org-babel-load-languages))
         (require (intern (concat "ob-" language-to-load)))
         (add-to-list 'org-babel-load-languages
                      (cons (intern language-to-load) t))
         (org-babel-do-load-languages 'org-babel-load-languages
-                                     org-babel-load-languages))
-      ad-do-it)))
+                                     org-babel-load-languages)))))
 #+end_src
 
 ** org exporting
