@@ -2490,6 +2490,22 @@ Rich annotations in the minibuffer.
   (advice-add 'cape--dict-list :override #'kimim/cape--dict-list))
 #+end_src
 
+** copilot
+Copilot is an AI-powered code completion tool that can suggest code
+snippets. It can also be used for writing comments and documentation.
+
+#+begin_src emacs-lisp :results silent
+(use-package copilot
+  :hook ((prog-mode org-mode) . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)
+              ("C-n" . 'copilot-next-completion)
+              ("C-p" . 'copilot-previous-completion)))
+#+end_src
+
 * Programming General
 ** Project
 
