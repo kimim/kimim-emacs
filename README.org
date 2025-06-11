@@ -2496,7 +2496,7 @@ snippets. It can also be used for writing comments and documentation.
 
 #+begin_src emacs-lisp :results silent
 (use-package copilot
-  :hook ((prog-mode org-mode) . copilot-mode)
+  :hook ((prog-mode text-mode) . copilot-mode)
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
               ("TAB" . 'copilot-accept-completion)
