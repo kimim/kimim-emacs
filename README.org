@@ -2496,6 +2496,8 @@ snippets. It can also be used for writing comments and documentation.
 
 #+begin_src emacs-lisp :results silent
 (use-package copilot
+  :custom
+  (copilot-max-char-warning-disable t)
   :hook ((prog-mode text-mode) . copilot-mode)
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
