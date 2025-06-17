@@ -2498,7 +2498,7 @@ snippets. It can also be used for writing comments and documentation.
 (use-package copilot
   :custom
   (copilot-max-char-warning-disable t)
-  :hook ((prog-mode text-mode) . copilot-mode)
+  :hook ((prog-mode git-commit-mode) . copilot-mode)
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
               ("TAB" . 'copilot-accept-completion)
