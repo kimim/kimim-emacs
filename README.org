@@ -5019,8 +5019,8 @@ second name, ..., N congruent to 60 gives the sixtieth name."
   (org-tag-alist
    '(("@office" . ?o) ("@home" . ?h)
      ("team" . ?t) ("leader" . ?l) ("risk" . ?k)
-     ("reading" . ?r) ("writing" . ?w)
-     ("project" . ?p) ("category" . ?c) ("info" . ?i)))
+     ("reading" . ?r) ("writing" . ?w) ("project" . ?p)
+     ("category" . ?c) ("info" . ?i) ("noexport" . ?n)))
   (org-stuck-projects
    '("+LEVEL>=2-category-habit-info"
      ("TODO" "SCHED"  "DONE"
