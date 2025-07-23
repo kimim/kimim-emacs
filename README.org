@@ -4338,7 +4338,8 @@ sudo apt install python3-pygments
           ("" "amsmath" t nil)
           ("" "textcomp" t nil)
           ("" "lettrine" t nil)
-          ("" "capt-of" nil nil))))
+          ("" "capt-of" nil nil)
+          ("" "xeCJK" t nil))))
   ;; latex preview report exception with bibref
   ;; (setq org-latex-packages-alist
   ;;       `(,(concat "\\addbibresource{"
