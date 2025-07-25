@@ -4042,6 +4042,14 @@ by using =pdf2svg= to convert PDF to SVG on-the-fly.
                                      org-babel-load-languages)))))
 #+end_src
 
+** org ox-extra
+#+begin_src emacs-lisp
+(use-package ox-extra
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                       "site-lisp")))
+#+end_src
+
 ** org exporting
 
 When exporting, do not export with author and date.
@@ -4157,7 +4165,10 @@ Return updated plist."
                            (let ((pdf-file (concat (file-name-sans-extension file) ".pdf")))
                              (if (file-exists-p pdf-file)
                                  (cons id (file-relative-name pdf-file))
-                               (cons id (file-relative-name file)))))))))))))
+                               (cons id (file-relative-name file))))))))))))
+
+  (require 'ox-extra)
+  (ox-extras-activate '(ignore-headlines)))
 #+end_src
 
 ** org to pdf
