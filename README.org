@@ -3944,7 +3944,6 @@ spaces before plain text line.
   :config
   (defun prettify-symbols-in-org-mode ()
     "Beautify Org Symbols"
-    (push '(":category:" . "▲") prettify-symbols-alist)
     (push '(":PROPERTIES:" . "🗅") prettify-symbols-alist)
     (push '(":END:" . "∎") prettify-symbols-alist)
     (push '("#+TITLE:" . "🗎") prettify-symbols-alist)
