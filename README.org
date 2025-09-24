@@ -2404,18 +2404,21 @@ Rich annotations in the minibuffer.
 
 ** cape
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results none
 (use-package cape
   :init
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+  :bind
+   ("C-c p f" . cape-file)
   :custom
   (cape-dabbrev-check-other-buffers nil)
   (cape-dict-grep nil)
   (cape-dict-file
    (concat kimim/path-kimim-emacs
            "site-lisp/english-words/words_alpha.txt"))
+  (cape-file-prefix '("file:" "\""))
   :hook
   (emacs-lisp-mode
    .
@@ -3828,7 +3831,7 @@ support more functions from =org-ref=:
    ("M-*" . org-mark-ring-last-goto)
    ("M-h" . nil)
    ("C-'" . org-emphasize)
-   ("C-c p" . kimim/preview-babel-image)
+   ("C-c C-v p" . kimim/preview-babel-image)
    ("C-c C-w" . org-refile-reverse)
    ("C-c w" . org-refile)
    ("M-," . org-mark-ring-goto))
