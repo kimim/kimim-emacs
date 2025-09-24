@@ -2412,6 +2412,7 @@ Rich annotations in the minibuffer.
   (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
   :bind
    ("C-c p f" . cape-file)
+   ("C-c p t" . cape-tex)
   :custom
   (cape-dabbrev-check-other-buffers nil)
   (cape-dict-grep nil)
