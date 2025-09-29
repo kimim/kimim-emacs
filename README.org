@@ -936,6 +936,18 @@ Search dictionary with Ctrl+F3 by youdao dictionary.
 #+end_src
 
 
+** Google Translate
+#+begin_src emacs-lisp :results silent
+(use-package google-translate
+  :bind (:map global-map
+              ("C-c t" . google-translate-smooth-translate))
+  :config
+  (setq google-translate-translation-directions-alist
+        '(("en" . "fr") ("en" . "de")
+          ("de" . "en") ("de" . "fr")
+          ("fr" . "en") ("fr" . "de"))))
+#+end_src
+
 ** sdcv
 
 A local dictionary tool is useful when network connection has
@@ -5091,19 +5103,19 @@ second name, ..., N congruent to 60 gives the sixtieth name."
               :after (lambda () (kill-buffer "diary")))
   (diminish 'auto-fill-function)
 
-  (define-advice org-schedule (:after () add-todo)
-    (if (or (string= "OPEN" (org-get-todo-state))
-            (string= "WAIT" (org-get-todo-state))
-            (string= "CLOSE" (org-get-todo-state)))
-        (org-todo "WAIT")
-      (org-todo "SCHED")))
+  ;; (define-advice org-schedule (:after () add-todo)
+  ;;   (if (or (string= "OPEN" (org-get-todo-state))
+  ;;           (string= "WAIT" (org-get-todo-state))
+  ;;           (string= "CLOSE" (org-get-todo-state)))
+  ;;       (org-todo "WAIT")
+  ;;     (org-todo "SCHED")))
 
-  (define-advice org-deadline (:after () add-todo)
-    (if (or (string= "OPEN" (org-get-todo-state))
-            (string= "WAIT" (org-get-todo-state))
-            (string= "CLOSE" (org-get-todo-state)))
-        (org-todo "WAIT")
-      (org-todo "SCHED")))
+  ;; (define-advice org-deadline (:after () add-todo)
+  ;;   (if (or (string= "OPEN" (org-get-todo-state))
+  ;;           (string= "WAIT" (org-get-todo-state))
+  ;;           (string= "CLOSE" (org-get-todo-state)))
+  ;;       (org-todo "WAIT")
+  ;;     (org-todo "SCHED")))
 
   (defun kimim/org-agenda-unschedule ()
     (interactive)
