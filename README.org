@@ -3767,12 +3767,7 @@ Add indicator of remaining text when scrolling PDF pages.
       "${title}"
       'bibtex-completion-apa-get-value
       (bibtex-completion-get-entry
-       (org-ref-get-bibtex-key-under-cursor)))))
-
-  (defhydra+ org-ref-citation-hydra ()
-    "Add copy action to `org-ref-citation-hydra'."
-    ("y" kimim/bibtex-completion-get-title
-     "Copy title" :column "Copy")))
+       (org-ref-get-bibtex-key-under-cursor))))))
 #+end_src
 
 There is a built-in =bibtex-mode= to manage references. We can extend it to
