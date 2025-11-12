@@ -3281,6 +3281,9 @@ place and assign ~plantuml-jar-path~ to there.
 #+begin_src emacs-lisp :results silent
 (use-package plantuml-mode
   :mode ("\\.puml\\'" . plantuml-mode)
+  :bind ("C-c M-c" . (lambda ()
+                       (interactive)
+                       (plantuml-preview 16)))
   :custom
   (plantuml-output-type "svg")
   (plantuml-default-exec-mode
@@ -3295,7 +3298,35 @@ place and assign ~plantuml-jar-path~ to there.
       "/usr/share/plantuml/lib/plantuml.jar")
     (expand-file-name
      (concat kimim/path-kimikit "plantuml/plantuml.jar"))))
-  (plantuml-executable-args '("-charset" "utf-8")))
+  (plantuml-executable-args '("-charset" "utf-8"))
+  :config
+  (add-hook 'plantuml-mode-hook
+            (lambda () (add-hook 'after-save-hook
+                                 #'plantuml-preview nil 'local)))
+  (defun plantuml-update-preview-buffer (prefix buf)
+    "Show the preview in the preview buffer BUF.
+Window is selected according to PREFIX:
+- 4  (when prefixing the command with C-u) -> new window
+- 16 (when prefixing the command with C-u C-u) -> new frame.
+- else -> new buffer"
+    (let ((imagep (and (display-images-p)
+                       (plantuml-is-image-output-p)))
+          ;; capture the output type before switching context to `buf'
+          ;; as `plantuml-output-type' can be local
+          (output-type plantuml-output-type))
+      (cond
+       ((= prefix 16) (switch-to-buffer-other-frame buf))
+       ((= prefix 4)  (switch-to-buffer-other-window buf))
+       (t             (display-buffer buf)))
+      (when imagep
+        (with-current-buffer buf
+          (image-mode)
+          (set-buffer-multibyte t)
+          (when (and (equal "svg" output-type))
+            (let ((inhibit-read-only t)
+                  (svg-data (buffer-string)))
+              (insert-image (create-image svg-data 'svg t :background plantuml-svg-background))))))
+      (set-window-point (get-buffer-window buf 'visible) (point-min)))))
 #+end_src
 
 #+begin_src emacs-lisp
