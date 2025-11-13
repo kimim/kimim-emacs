@@ -2024,19 +2024,13 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
                              nil "attachment")
           (message "skipping non-regular file %s" file)))))
 
-  (define-advice dired-next-line (:after (arg) move-down-line)
-    "Move down lines when position at filename, advice"
-    (if (eobp)
-        (progn
-          (goto-char (point-min))
-          (dired-next-line 1))))
+  (define-advice dired-next-line (:after (arg) jump-min)
+    "Jump to the beginning when at the end"
+    (when (eobp) (goto-char (point-min))))
 
-  (define-advice dired-previous-line (:after (arg) move-up-line)
-    "Move up lines then position at filename, advice"
-    (if (> 2 (line-number-at-pos))
-        (progn
-          (goto-char (point-max))
-          (dired-previous-line 1))))
+  (define-advice dired-previous-line (:after (arg) jump-max)
+    "Jump to the end when at the beginning"
+    (when (bobp) (goto-char (point-max)) (dired-previous-line 1)))
 
   (defun kimim/dired-other-window ()
     (interactive)
@@ -3898,19 +3892,13 @@ support more functions from =org-ref=:
       (setq org-startup-indented t)
     (setq org-startup-indented nil))
 
-  (define-advice org-agenda-next-line (:after nil move-down-line)
+  (define-advice org-agenda-next-line (:before nil jump-min)
     "Jump to the beginning when at the end"
-    (if (eobp)
-        (progn
-          (goto-char (point-min))
-          (org-agenda-next-line))))
+    (when (eobp) (goto-char (point-min))))
 
-  (define-advice org-agenda-previous-line (:after nil move-up-line)
+  (define-advice org-agenda-previous-line (:before nil jump-max)
     "Jump to the end when at the beginning"
-    (if (> 2 (line-number-at-pos))
-        (progn
-          (goto-char (point-max))
-          (org-agenda-previous-line)))))
+    (when (bobp) (goto-char (point-max)))))
 #+end_src
 
 ** org-appear
