@@ -3896,7 +3896,21 @@ support more functions from =org-ref=:
   (setq org-cycle-separator-lines 0)
   (if window-system
       (setq org-startup-indented t)
-    (setq org-startup-indented nil)))
+    (setq org-startup-indented nil))
+
+  (define-advice org-agenda-next-line (:after nil move-down-line)
+    "Jump to the beginning when at the end"
+    (if (eobp)
+        (progn
+          (goto-char (point-min))
+          (org-agenda-next-line))))
+
+  (define-advice org-agenda-previous-line (:after nil move-up-line)
+    "Jump to the end when at the beginning"
+    (if (> 2 (line-number-at-pos))
+        (progn
+          (goto-char (point-max))
+          (org-agenda-previous-line)))))
 #+end_src
 
 ** org-appear
