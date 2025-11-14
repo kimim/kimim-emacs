@@ -2139,7 +2139,8 @@ dired-efap, Edit file at point, can be used to rename file name at the point:
 #+begin_src emacs-lisp
 (use-package dired-filter
   :diminish dired-filter-mode
-  :bind ("|" . dired-filter-pop-all))
+  :bind (:map dired-mode-map
+         ("|" . dired-filter-pop-all)))
 #+end_src
 
 ** ibuffer
