@@ -5033,7 +5033,8 @@ second name, ..., N congruent to 60 gives the sixtieth name."
               org-agenda-todo
               org-agenda-error
               org-agenda-check-no-diary)
-;  :hook (org-agenda-mode . hl-line-mode)
+  ;; high light line in agenda mode to indicate the tags apart
+  :hook (org-agenda-mode . hl-line-mode)
   :defines org-agenda-mode-map
   :commands (org-toggle-office org-toggle-home org-toggle-home-or-office)
   :bind (("C-c a" . org-agenda)
