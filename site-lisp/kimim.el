@@ -448,10 +448,6 @@
 
   (setq-default browse-url-browser-function 'kimim\wsl-browse-url))
 
-(defun running-in-wsl-p ()
-  (let ((wsl-distro-name (getenv "WSL_DISTRO_NAME")))
-    (not (null wsl-distro-name))))
-
 (defun kimim/open-file-external (path)
   (cond
    ((string-equal system-type "windows-nt")

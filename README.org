@@ -348,6 +348,10 @@ calculated with original default font height and width:
 #+end_src
 
 #+begin_src emacs-lisp
+(defun running-in-wsl-p ()
+  (let ((wsl-distro-name (getenv "WSL_DISTRO_NAME")))
+    (not (null wsl-distro-name))))
+
 (defun kimim/set-frame-alist (top left height width)
   (let ((frame (selected-frame)))
     (set-frame-position frame left top)
@@ -381,8 +385,10 @@ calculated with original default font height and width:
            (top (/ (display-pixel-height) 10))
            (left (/ (display-pixel-width) 10)))
       (kimim/menu-and-bar)
-      (kimim/set-frame-alist
-       top left height width))))
+      ;; avoid WSL frame size issue when using Win-Left and Win-Right
+      (when (not (running-in-wsl-p))
+        (kimim/set-frame-alist
+         top left height width)))))
 
 (defun kimim/frame-and-font-phone ()
   (interactive)
