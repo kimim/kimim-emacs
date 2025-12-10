@@ -1962,7 +1962,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
 
 ** dired
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
 (use-package dired
   :ensure nil
   :defines (dired-omit-localp
@@ -1977,6 +1977,9 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
   (ls-lisp-dirs-first t)
   (dired-create-destination-dirs 'ask)
   (dired-dwim-target t)
+  ;; show only size, month, day, year and file name
+  (dired-hide-details-preserved-columns '(3 4 5 6 7))
+  :hook (dired-mode . dired-hide-details-mode)
   :bind
   (("C-x C-j" . dired-jump)
    :map dired-mode-map
