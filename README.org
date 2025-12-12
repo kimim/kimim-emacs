@@ -562,7 +562,7 @@ window space.
 (use-package awesome-tray
   :load-path (lambda ()
                (concat kimim/path-kimim-emacs
-                "site-lisp/awesome-tray"))
+                       "site-lisp/awesome-tray"))
   :commands (awesome-tray-mode)
   :custom
   (awesome-tray-date-format "%-m-%-e %H:%M")
@@ -592,6 +592,19 @@ window space.
   (org-mode-line-clock-overrun
    ((t :inherit unspecified)))
   :config
+  ;; hide buffer name
+  (setq-default mode-line-format
+                '("%e" mode-line-front-space
+                  (:propertize
+                   ("" mode-line-mule-info mode-line-client
+                    mode-line-modified
+                    mode-line-remote mode-line-window-dedicated)
+                   display (min-width (6.0)))
+                  mode-line-frame-identification
+                  mode-line-position (project-mode-line
+                                      project-mode-line-format)
+                  (vc-mode vc-mode) "  " mode-line-modes mode-line-misc-info
+                  mode-line-end-spaces))
   (advice-add
    'awesome-tray-enable
    :before
