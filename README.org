@@ -565,7 +565,7 @@ window space.
                        "site-lisp/awesome-tray"))
   :commands (awesome-tray-mode)
   :custom
-  (awesome-tray-date-format "%-m-%-e %H:%M")
+  (awesome-tray-date-format "%-m/%-e %H:%M")
   (awesome-tray-active-modules '("changed" "org-pomodoro"
                                  "location-or-page" "belong"
                                  "celestial" "date" "input-method"))
