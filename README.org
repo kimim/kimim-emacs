@@ -2310,12 +2310,12 @@ Rich annotations in the minibuffer.
   (consult-customize
    consult-xref
    :preview-key '(:debounce 0 any)
-   consult-theme consult--source-buffer
+   consult-theme consult-source-buffer
    :preview-key '(:debounce 5 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file
-   consult--source-bookmark consult--source-recent-file
-   consult--source-project-recent-file
+   consult-source-bookmark consult-source-recent-file
+   consult-source-project-recent-file
    :preview-key "C-.")
 
   ;; Optionally configure the narrowing key.
