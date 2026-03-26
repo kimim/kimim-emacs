@@ -2767,11 +2767,12 @@ UI helper for lsp-mode.
   :commands lsp-ui-mode
   :custom
   (lsp-ui-doc-text-scale-level -1)
-  (lsp-ui-doc-show-with-cursor nil)
+  (lsp-ui-doc-show-with-cursor 1)
   (lsp-ui-doc-show-with-mouse nil)
   (lsp-ui-sideline-show-code-actions nil)
   (lsp-ui-doc-alignment 'window)
-  (lsp-ui-doc-max-width 90))
+  (lsp-ui-doc-max-width 90)
+  (lsp-ui-doc-max-height 50))
 #+end_src
 
 ** lsp-mode lsp-clangd
@@ -3343,8 +3344,15 @@ Window is selected according to PREFIX:
           (when (and (equal "svg" output-type))
             (let ((inhibit-read-only t)
                   (svg-data (buffer-string)))
-              (insert-image (create-image svg-data 'svg t :background plantuml-svg-background))))))
-      (set-window-point (get-buffer-window buf 'visible) (point-min)))))
+              ;; do not erase buffer, otherwise the image will disappear
+              ;;(erase-buffer)
+              (insert-image (create-image
+                             svg-data 'svg t
+                             :background plantuml-svg-background))))))
+      (set-window-point (get-buffer-window buf 'visible) (point-min))
+      (let ((bufw (get-buffer-window "*PLANTUML Preview*")))
+        (when bufw
+          (select-window bufw))))))
 #+end_src
 
 #+begin_src emacs-lisp
