@@ -2730,7 +2730,13 @@ will prevent my global ~company-backends~ settings. You can customize
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-x l")
-  :hook (((c-mode c++-mode clojure-mode java-mode) . lsp)
+  :hook (((c-mode
+           c++-mode
+           rust-mode
+           clojure-mode
+           java-mode
+           typescript-mode)
+          . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :functions lsp--expand-snippet
   :commands lsp
@@ -4969,10 +4975,11 @@ or \\[markdown-toggle-inline-images]."
       (write-region "" nil kimim/file-diary)))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
 (use-package calendar
   :defines (calendar-chinese-celestial-stem
             calendar-chinese-terrestrial-branch)
+  :bind ("C-c M-k" . calendar)
   :custom
   (diary-file kimim/file-diary)
   (calendar-latitude +30.16)
