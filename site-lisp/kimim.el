@@ -120,7 +120,7 @@
   (unless (buffer-file-name)
     (error "No file for buffer %s" (buffer-name)))
   (let ((msg (format "file:\\\\%s" (replace-regexp-in-string "/" "\\\\"
-                           (file-truename (buffer-file-name))))))
+                                                             (file-truename (buffer-file-name))))))
     (kill-new msg)
     (message msg)))
 
@@ -766,5 +766,33 @@ documents."
   (let ((clip (kimim/wsl-clipboard-to-string)))
     (insert clip)))
 
+(defun kimim/outlook-send-buffer-file ()
+  "Send buffer file as Outlook attachments from WSL2."
+  (interactive)
+  (unless (buffer-file-name)
+    (user-error "Buffer is not visiting a file"))
+
+  (when (not buffer-read-only)
+    (save-buffer))
+
+  (let* ((file (buffer-file-name))
+         (win-file (string-trim
+                    (shell-command-to-string
+                     (format "wslpath -w %s" (shell-quote-argument file)))))
+         (ps-script
+          (concat
+           "$Outlook = New-Object -ComObject Outlook.Application\n"
+           "$Mail = $Outlook.CreateItem(0)\n"
+           (format "$Mail.Attachments.Add('%s')\n"
+                   (replace-regexp-in-string "'" "''" win-file))
+           "$Mail.Display()\n")))
+
+    (call-process
+     "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+     nil 0 nil
+     "-NoProfile"
+     "-STA"
+     "-Command"
+     ps-script)))
 
 (provide 'kimim)

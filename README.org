@@ -771,7 +771,7 @@ clearly in dark color theme.
 In Windows environment, =kimim/xterm= and =kimim/dc= will look up the program
 from system PATH, so you should set these to system PATH.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
 (use-package kimim
   :load-path (lambda ()
                (concat kimim/path-kimim-emacs
@@ -792,6 +792,7 @@ from system PATH, so you should set these to system PATH.
    ("C-x m O" . kimim/open-external-pdf)
    ("C-x m d" . kimim/dc)
    ("C-c d" . kimim/lookinsight)
+   ("C-c s" . kimim/outlook-send-buffer-file)
    ("<f1>" . delete-other-windows)
    ("C-<f1>" . nuke-other-buffers)
    ("M-<f1>" . kimim/switch-to-scratch-and-nuke-others)
@@ -1997,6 +1998,7 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
   (("C-x C-j" . dired-jump)
    :map dired-mode-map
    ("C-c l" . kimim/dired-get-org-link)
+   ("C-c s" . kimim/dired-outlook-send)
    ("<left>" . dired-up-directory)
    ("<right>" . dired-find-file)
    ("b" . dired-up-directory)
