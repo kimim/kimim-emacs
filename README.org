@@ -1692,7 +1692,7 @@ Automatically update new log items in log file:
 By enabling ~winner-mode~, you can restore to previous window
 configuration by typing ~C-c M-<left>~.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
 (use-package winner
   ;; restore windows configuration, built-in package
   :commands winner-mode
@@ -2125,7 +2125,41 @@ To avoid accidentally delete files, let emacs move the deleted file to trash.
 
   (defun kimim/drawio2pdf ()
     (interactive)
-    (kimim/drawio-to "pdf")))
+    (kimim/drawio-to "pdf"))
+
+  (defun kimim/dired-outlook-send ()
+    "Send marked Dired files as Outlook attachments from WSL2."
+    (interactive)
+    (unless (derived-mode-p 'dired-mode)
+      (error "This command must be run in Dired"))
+
+    (let* ((files (dired-get-marked-files))
+           (win-files
+            (mapcar
+             (lambda (f)
+               (string-trim
+                (shell-command-to-string
+                 (format "wslpath -w %s" (shell-quote-argument f)))))
+             files))
+           (ps-script
+            (concat
+             "$Outlook = New-Object -ComObject Outlook.Application\n"
+             "$Mail = $Outlook.CreateItem(0)\n"
+             (mapconcat
+              (lambda (f)
+                (format "$Mail.Attachments.Add('%s')\n"
+                        (replace-regexp-in-string "'" "''" f)))
+              win-files
+              "")
+             "$Mail.Display()\n")))
+
+      (call-process
+       "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+       nil 0 nil
+       "-NoProfile"
+       "-STA"
+       "-Command"
+       ps-script))))
 #+end_src
 
 ** dired-recent
