@@ -2648,7 +2648,7 @@ or other version control information.
 Bind ~magit~ to ~C-x p m~ with the same prefix of ~project~, as they have
 strong relationship.
 
-#+begin_src emacs-lisp :results none
+#+begin_src emacs-lisp :results silent
 (use-package magit
   :bind (("C-x p m" . magit-status-here)
          (:map magit-revision-mode-map)
@@ -2657,7 +2657,16 @@ strong relationship.
          (:map magit-diff-mode-map)
          ("C-<return>" . magit-diff-visit-file-other-window)
          ("<SPC>" . magit-diff-visit-worktree-file-other-window))
-  :custom (magit-log-show-refname-after-summary t))
+  :custom (magit-log-show-refname-after-summary t)
+  :config
+  (defun kimim/kill-magit-buffers ()
+    "Kill all Magit related buffers."
+    (interactive)
+    (let ((magit-buffers (seq-filter (lambda (buf)
+                                       (string-prefix-p "magit" (buffer-name buf)))
+                                     (buffer-list))))
+      (dolist (buf magit-buffers)
+        (kill-buffer buf)))))
 #+end_src
 
 Following error will reported when using magit to commit changes:
