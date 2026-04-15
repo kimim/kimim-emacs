@@ -2788,6 +2788,8 @@ will prevent my global ~company-backends~ settings. You can customize
   :custom
   (lsp-headerline-breadcrumb-icons-enable t)
   (lsp-headerline-breadcrumb-enable t)
+  ;; red squiggly lines are ugly
+  (lsp-headerline-breadcrumb-enable-diagnostics nil)
   (lsp-modeline-code-action-fallback-icon "✶")
   (lsp-completion-provider :none)
   :bind (:map
