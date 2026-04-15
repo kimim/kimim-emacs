@@ -3370,9 +3370,17 @@ place and assign ~plantuml-jar-path~ to there.
      (concat kimim/path-kimikit "plantuml/plantuml.jar"))))
   (plantuml-executable-args '("-charset" "utf-8"))
   :config
+
+  (defun kimim/plantuml-preview-on-save ()
+    "Re-generate PlantUML preview after saving."
+    (when (derived-mode-p 'plantuml-mode)
+      (plantuml-preview 0)))
+
   (add-hook 'plantuml-mode-hook
             (lambda () (add-hook 'after-save-hook
-                                 #'plantuml-preview nil 'local)))
+                                 #'kimim/plantuml-preview-on-save
+                                 nil 'local)))
+
   (defun plantuml-update-preview-buffer (prefix buf)
     "Show the preview in the preview buffer BUF.
 Window is selected according to PREFIX:
@@ -3401,9 +3409,11 @@ Window is selected according to PREFIX:
                              svg-data 'svg t
                              :background plantuml-svg-background))))))
       (set-window-point (get-buffer-window buf 'visible) (point-min))
-      (let ((bufw (get-buffer-window "*PLANTUML Preview*")))
-        (when bufw
-          (select-window bufw))))))
+      ;; do not select the preview window
+      ;; (let ((bufw (get-buffer-window "*PLANTUML Preview*")))
+      ;;   (when bufw
+      ;;     (select-window bufw))))
+      )))
 #+end_src
 
 #+begin_src emacs-lisp
