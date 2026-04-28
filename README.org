@@ -2638,9 +2638,20 @@ or other version control information.
 ** Compiling
 
 #+begin_src emacs-lisp
-(setq next-error-recenter 20)
-(setq compilation-scroll-output t)
-(bind-key "C-<f11>" 'compile)
+(use-package compilation-mode
+  :ensure nil
+  :functions (compiel
+              recompile)
+  :bind ("C-<f11>" . compile)
+  :config
+  (setq next-error-recenter 20)
+  (setq compilation-scroll-output t)
+  (add-hook
+   'compilation-filter-hook
+   (lambda ()
+     (let ((inhibit-read-only t))
+       (ansi-color-apply-on-region
+        compilation-filter-start (point))))))
 #+end_src
 
 ** Version Control
