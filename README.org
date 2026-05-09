@@ -450,11 +450,12 @@ calculated with original default font height and width:
 
 Customize the frame title to display buffer file name.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results silent
 (setq frame-title-format
       '((:eval (buffer-name))))
 ;; don't expand minibuffer in other frame
 (setq minibuffer-follows-selected-frame nil)
+(bind-key "C-x f" 'toggle-frame-maximized)
 #+end_src
 
 ** Mode Line
