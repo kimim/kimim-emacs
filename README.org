@@ -2913,11 +2913,7 @@ parenthesis. We define some keys for it:
 ** tree-sitter
 
 #+begin_src emacs-lisp
-(use-package tree-sitter-langs)
-(use-package tree-sitter
-  :ensure nil
-  :hook (((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-mode)
-         ((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-hl-mode))
+(use-package tree-sitter-langs
   :config
   (mapc
    (lambda (pair)
@@ -2925,6 +2921,11 @@ parenthesis. We define some keys for it:
               tree-sitter-major-mode-language-table))
    '((bb-mode . clojure)
      (clojurescript-mode . clojure))))
+
+(use-package tree-sitter
+  :ensure nil
+  :hook (((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-mode)
+         ((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-hl-mode)))
 #+end_src
 
 ** ts-fold
