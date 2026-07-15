@@ -2792,7 +2792,8 @@ will prevent my global ~company-backends~ settings. You can customize
            rust-mode
            clojure-mode
            java-mode
-           typescript-mode)
+           typescript-mode
+           sh-mode)
           . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :functions lsp--expand-snippet
@@ -2918,10 +2919,12 @@ parenthesis. We define some keys for it:
   :hook (((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-mode)
          ((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-hl-mode))
   :config
-  (setq tree-sitter-major-mode-language-alist
-        (append tree-sitter-major-mode-language-alist
-                '((bb-mode . clojure)
-                  (clojurescript-mode . clojure)))))
+  (mapc
+   (lambda (pair)
+     (puthash (car pair) (cdr pair)
+              tree-sitter-major-mode-language-table))
+   '((bb-mode . clojure)
+     (clojurescript-mode . clojure))))
 #+end_src
 
 ** ts-fold
