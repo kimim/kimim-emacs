@@ -895,68 +895,6 @@ from system PATH, so you should set these to system PATH.
                "~/info"))
 #+end_src
 
-** Youdao dictionary
-
-Search dictionary with Ctrl+F3 by youdao dictionary.
-
-#+begin_src emacs-lisp
-(use-package youdao-dictionary
-  :bind (
-         ("C-x m 1" . youdao-dictionary-search-at-point-posframe)
-         ("C-x m 2" . youdao-dictionary-search)
-         :map youdao-dictionary-mode-map
-         ("C-y" . youdao-dictionary-search-yanked)
-         ("<mouse-3>" . youdao-dictionary-def-copied)
-         ("f" . youdao-dictionary-search-from-input))
-  :config
-  ;; redefine youdao-format-result
-  (defun youdao-dictionary--format-result (json)
-    "Format result in JSON."
-    (let* ((query        (assoc-default 'query       json)) ; string
-           (translation  (assoc-default 'translation json)) ; array
-           (_errorCode    (assoc-default 'errorCode   json)) ; number
-           (web          (assoc-default 'web         json)) ; array
-           (basic        (assoc-default 'basic       json)) ; alist
-           ;; construct data for display
-           (phonetic (assoc-default 'phonetic basic))
-           (translation-str (mapconcat
-                             (lambda (trans) (concat "- " trans))
-                             translation "\n"))
-           (basic-explains-str (mapconcat
-                                (lambda (explain) (concat "- " explain))
-                                (assoc-default 'explains basic) "\n"))
-           (web-str (mapconcat
-                     (lambda (k-v)
-                       (format "- %s :: %s"
-                               (assoc-default 'key k-v)
-                               (mapconcat 'identity (assoc-default 'value k-v) "; ")))
-                     web "\n")))
-      (let ((result-str
-             (if basic
-                 (format "%s [%s]\n\nBasic Explains\n%s\n\nWeb References\n%s\n"
-                         query phonetic basic-explains-str web-str)
-               (format "%s\n\nTranslation\n%s\n"
-                       query translation-str))))
-        (kill-new
-         (mapconcat
-          (lambda (x)
-            (concat x "\n"))
-          (cdr (split-string result-str "\n"))))
-        (kill-new (format "%s [%s]" query phonetic))
-        result-str)))
-
-  (defun youdao-dictionary-def-copied ()
-    (interactive)
-    (youdao-dictionary-search (gui-get-selection)))
-    (defun youdao-dictionary-search-yanked ()
-    (interactive)
-    (youdao-dictionary-search
-     (if (gui-get-selection)
-         (gui-get-selection)
-       (car kill-ring)))))
-#+end_src
-
-
 ** Google Translate
 #+begin_src emacs-lisp :results silent
 (use-package google-translate
