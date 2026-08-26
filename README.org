@@ -1570,8 +1570,7 @@ Check spell on the fly.
           eww-mode
           Info-mode
           woman-mode
-          fanyi-mode
-          magit-diff-mode)
+          fanyi-mode)
 	     . olivetti-mode)
   :config
   (add-hook 'cnfonts-set-font-finish-hook
@@ -2808,6 +2807,7 @@ will prevent my global ~company-backends~ settings. You can customize
   :bind (:map
          lsp-mode-map
          ("C-x l l" . lsp-ui-doc-glance)
+         ("C-x l d" . lsp-describe-thing-at-point)
          ("C-." . xref-find-definitions)
          ("C-," . xref-go-back)
          ("C-x ." . kimim/lsp-find-definition-other-window)
@@ -2833,11 +2833,11 @@ UI helper for lsp-mode.
   :commands lsp-ui-mode
   :custom
   (lsp-ui-doc-text-scale-level -1)
-  (lsp-ui-doc-show-with-cursor 1)
+  (lsp-ui-doc-show-with-cursor nil)
   (lsp-ui-doc-show-with-mouse nil)
   (lsp-ui-sideline-show-code-actions nil)
   (lsp-ui-doc-alignment 'window)
-  (lsp-ui-doc-max-width 90)
+  (lsp-ui-doc-max-width 80)
   (lsp-ui-doc-max-height 50))
 #+end_src
 
@@ -2928,8 +2928,16 @@ parenthesis. We define some keys for it:
          ((c-mode c++-mode clojure-mode rust-mode) . tree-sitter-hl-mode)))
 #+end_src
 
-** ts-fold
+** hs-minor-mode
+#+begin_src emacs-lisp
+(use-package hs-minor
+  :ensure nil
+  :bind ("C-<return>" . hs-toggle-hiding)
+  :hook (prog-mode . hs-minor-mode))
+#+end_src
 
+** COMMENT ts-fold
+Replaced by 'hs-minor-mode'.
 #+begin_src emacs-lisp
 (use-package ts-fold
   :init
@@ -2942,7 +2950,6 @@ parenthesis. We define some keys for it:
 #+end_src
 
 ** COMMENT Code folding
-
 With ~yafolding-mode~, you can:
 - toggle the code folding with ~yafolding-toggle-element~ (~C-<return>~)
 - toggle global folding with ~yafolding-toggle-all~ (~C-M-<return>~)
@@ -3663,7 +3670,7 @@ emacs theme color.
     "Invoke fanyi in pdf-view."
     (interactive)
     (pdf-view-assert-active-region)
-    (if-let ((word (car (pdf-view-active-region-text))))
+    (if-let* ((word (car (pdf-view-active-region-text))))
         (progn
           (fanyi-dwim word)
           (cl-pushnew word fanyi-history))
@@ -4078,11 +4085,11 @@ spaces before plain text line.
    (lambda (result)
      (append
       result
-      (when-let ((bullet (alist-get ?- org-modern-list)))
+      (when-let* ((bullet (alist-get ?- org-modern-list)))
         `(("^\\(-\\)[ \t]" 1 '(face nil display ,bullet))))
-      (when-let ((bullet (alist-get ?+ org-modern-list)))
+      (when-let* ((bullet (alist-get ?+ org-modern-list)))
         `(("^[ ]\\{2\\}\\(-\\)[ \t]" 1 '(face nil display ,bullet))))
-      (when-let ((bullet (alist-get ?* org-modern-list)))
+      (when-let* ((bullet (alist-get ?* org-modern-list)))
         `(("^[ ]\\{4\\}\\(-\\)[ \t]" 1 '(face nil display ,bullet))))))))
 #+end_src
 
