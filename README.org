@@ -834,7 +834,7 @@ from system PATH, so you should set these to system PATH.
    ("C-x m '" . kimim/top-right-mouse)
    ("C-x m r" . kimim/rename-file-and-buffer)
    ("C-<pause>" . iconify-frame)
-   ("C-x M-q" . kimim/unfill-paragraph-or-region)
+   ("C-x M-q" . unfill-paragraph)
    ("C-x 7 `" . (lambda() (interactive) (insert "à")))
    ("C-x 7 a" . (lambda() (interactive) (insert "ā")))
    ("C-x 7 A" . (lambda() (interactive) (insert "Ā")))
@@ -882,7 +882,7 @@ from system PATH, so you should set these to system PATH.
 (use-package info
   :commands (info)
   :hook (Info-mode . (lambda ()
-                      (setq line-spacing 0.5)))
+                      (setq line-spacing '(0.25 . 0.25))))
   :config
   (add-to-list 'Info-additional-directory-list
                (concat kimim/path-root "usr/share/info"))
@@ -3871,7 +3871,7 @@ support more functions from =org-ref=:
   :hook ((nov-mode . olivetti-mode)
          (nov-mode . (lambda ()
                        (visual-line-mode)
-                       (setq line-spacing 0.5))))
+                       (setq line-spacing '(0.25 . 0.25))))))
   :custom
   (nov-header-line-format nil)
   :bind
@@ -5599,7 +5599,7 @@ Return Org Roam node or nil."
   (require 'gnus-art)
   (advice-add 'elfeed-show-entry :after
               (lambda (entry)
-                (setq line-spacing 0.4)
+                (setq line-spacing '(0.2 . 0.2))
                 (elfeed-show-refresh))))
 #+end_src
 

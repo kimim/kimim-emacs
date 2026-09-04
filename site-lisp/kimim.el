@@ -54,15 +54,6 @@
             (mail-to)
           (mail-text))))))
 
-;; unfill paragraph: the opposite of fill-paragraph
-(defun kimim/unfill-paragraph-or-region (&optional region)
-  "Takes a multi-line paragraph and makes it into a single line of text."
-  (interactive (progn (barf-if-buffer-read-only) '(t)))
-  (let ((fill-column (point-max))
-        ;; This would override `fill-column' if it's an integer.
-        (emacs-lisp-docstring-fill-column t))
-    (fill-paragraph nil region)))
-
 ;; generate timestamp such as 2016_1031_ for file name
 (defun kimim/genfile-timestamp()
   (concat (format-time-string "%Y%m%d")
