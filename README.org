@@ -386,6 +386,8 @@ calculated with original default font height and width:
            (left (/ (display-pixel-width) 10)))
       (kimim/menu-and-bar)
       ;; avoid WSL frame size issue when using Win-Left and Win-Right
+      ;; if we set frame alist, after Win-Left, there is a gap between
+      ;; frame and screen bottom.
       (when (not (running-in-wsl-p))
         (kimim/set-frame-alist
          top left height width)))))
@@ -993,7 +995,7 @@ look up local dictionary with help from ~sdcv~.
 
   (defun kimim/fanyi-dwim ()
     (interactive)
-    (if-let ((word (thing-at-point 'word)))
+    (if-let* ((word (thing-at-point 'word)))
         (progn
           (fanyi-dwim word)
           (cl-pushnew word fanyi-history))
@@ -3890,7 +3892,7 @@ support more functions from =org-ref=:
     (interactive)
     ;;(mouse-set-point last-input-event)
     (mark-thing-at-mouse last-input-event 'word)
-    (if-let ((word (thing-at-point 'word)))
+    (if-let* ((word (thing-at-point 'word)))
         (progn
           (fanyi-dwim word)
           (cl-pushnew word fanyi-history))
@@ -5213,7 +5215,7 @@ second name, ..., N congruent to 60 gives the sixtieth name."
     (interactive)
     (org-agenda-kill-all-agenda-buffers)
     (mapcar (lambda (file)
-              (if-let (buf (get-file-buffer file))
+              (if-let* ((buf (get-file-buffer file)))
                   (kill-buffer buf)))
             org-agenda-files))
 
