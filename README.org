@@ -2850,7 +2850,12 @@ parenthesis. We define some keys for it:
           parinfer-rust-mode))
 #+end_src
 
-** tree-sitter
+** treesit
+#+begin_src emacs-lisp
+(setq treesit-enabled-modes t)
+#+end_src
+
+** COMMENT tree-sitter
 
 #+begin_src emacs-lisp
 (use-package tree-sitter-langs
