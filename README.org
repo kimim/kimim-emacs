@@ -3291,7 +3291,6 @@ Major mode to edit ethereum solidity smart contract code.
 ** lua and fennel
 
 #+begin_src emacs-lisp
-(use-package lua-mode)
 (use-package fennel-mode)
 #+end_src
 
@@ -3873,7 +3872,7 @@ support more functions from =org-ref=:
   :hook ((nov-mode . olivetti-mode)
          (nov-mode . (lambda ()
                        (visual-line-mode)
-                       (setq line-spacing '(0.25 . 0.25))))))
+                       (setq line-spacing '(0.25 . 0.25)))))
   :custom
   (nov-header-line-format nil)
   :bind
