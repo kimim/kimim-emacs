@@ -1204,7 +1204,7 @@ Increase right margin from default 16 to 40 to remove some overlap.
           (kimim/rime-predicate-space-after-ascii-p)))))
 #+end_src
 
-** sis
+** COMMENT sis
 Emacs smart input source ([[https://github.com/laishulu/emacs-smart-input-source][sis]]) can automatically switch input method
 for buffers and contexts.
 
