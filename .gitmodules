@@ -49,3 +49,6 @@
 [submodule "site-lisp/cns"]
 	path = site-lisp/cns
 	url = git@github.com:kimim/emacs-chinese-word-segmentation.git
+[submodule "site-lisp/markdown-mermaid"]
+	path = site-lisp/markdown-mermaid
+	url = git@github.com:kimim/markdown-mermaid.git

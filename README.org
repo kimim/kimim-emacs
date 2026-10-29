@@ -3449,17 +3449,38 @@ yarn add @mermaid-js/mermaid-cli
 ~mmdc~ will be installed at ~~/node_modules/.bin/mmdc~. Then we just setup
 ~ob-mermaid~ and ~mermaid-mode~ for babel evaluation and editing.
 
+There is also another rust based command line called ~mmdr~:
+
+#+begin_src shell
+cargo install mermaid-rs-renderer
+#+end_src
+
+~mmdr~ is installed in ~~/.cargo/bin~.
+
 #+begin_src emacs-lisp
 (use-package ob-mermaid
   :custom
-  (ob-mermaid-cli-path "~/node_modules/.bin/mmdc.cmd")
+  (ob-mermaid-cli-path (executable-find "mmdr"))
   :config
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package mermaid-mode
+  :custom
+  (mermaid-mmdc-location (executable-find "mmdr"))
+  (mermaid-output-format ".svg")
   :mode ("\\.mermaid\\'" . mermaid-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package markdown-mermaid
+  :custom
+  (markdown-mermaid-mmdc-path (executable-find "mmdr"))
+  (markdown-mermaid-output-extension ".svg")
+  :load-path (lambda ()
+               (concat kimim/path-kimim-emacs
+                       "site-lisp/markdown-mermaid")))
 #+end_src
 
 ** iscroll
@@ -4854,7 +4875,8 @@ such as ~/usr/local/bin~, and then set ~markdown-command~ to ~pandoc~.
         ("C-<tab>" . outline-hide-entry)
         ("M-<up>" . markdown-move-up)
         ("M-<down>" . markdown-move-down)
-        ("C-c C-x C-v" . markdown-toggle-inline-images))
+        ("C-c C-x C-v" . markdown-toggle-inline-images)
+        ("C-c C-v" . markdown-mermaid-preview))
   :config
   (setq markdown-fontify-code-blocks-natively t)
   (setq markdown-list-item-bullets
